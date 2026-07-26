@@ -9,7 +9,7 @@
     "start": "node dist/server.cjs",
     "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true }); fs.rmSync('server.js', { force: true })\"",
     "lint": "tsc --noEmit"
-  }, 
+  },
   "dependencies": {
     "@google/genai": "^2.4.0",
     "@tailwindcss/vite": "^4.3.3",
@@ -27,7 +27,6 @@
     "react-router": "^7.1.5",
     "react-router-dom": "^7.1.5",
     "recharts": "^3.9.2",
-    "vite": "^6.2.3",
     "ws": "^8.21.1",
     "zustand": "^5.0.14"
   },
@@ -73,5 +72,6 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
+    "vite": "^6.2.3"
   }
 }
