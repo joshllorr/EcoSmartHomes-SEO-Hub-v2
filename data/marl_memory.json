@@ -1,0 +1,87 @@
+{
+  "policies": {
+    "heat-pumps": {
+      "agentId": "heat-pumps",
+      "ctrTrendWeight": 0.495,
+      "serpVolatilityWeight": 0.2722,
+      "backlinkGapWeight": 0.1485,
+      "pillarWeaknessWeight": 0.099,
+      "contentVelocityWeight": 0.05,
+      "learningRate": 0.05,
+      "decayFactor": 0.99,
+      "totalEvaluations": 1,
+      "lastUpdated": 1785350972276
+    },
+    "solar": {
+      "agentId": "solar",
+      "ctrTrendWeight": 0.2,
+      "serpVolatilityWeight": 0.15,
+      "backlinkGapWeight": 0.45,
+      "pillarWeaknessWeight": 0.1,
+      "contentVelocityWeight": 0.1,
+      "learningRate": 0.06,
+      "decayFactor": 0.99,
+      "totalEvaluations": 0,
+      "lastUpdated": 1785329880158
+    },
+    "insulation": {
+      "agentId": "insulation",
+      "ctrTrendWeight": 0.25,
+      "serpVolatilityWeight": 0.4,
+      "backlinkGapWeight": 0.15,
+      "pillarWeaknessWeight": 0.1,
+      "contentVelocityWeight": 0.1,
+      "learningRate": 0.04,
+      "decayFactor": 0.99,
+      "totalEvaluations": 0,
+      "lastUpdated": 1785329880158
+    },
+    "grants": {
+      "agentId": "grants",
+      "ctrTrendWeight": 0.4,
+      "serpVolatilityWeight": 0.2,
+      "backlinkGapWeight": 0.15,
+      "pillarWeaknessWeight": 0.15,
+      "contentVelocityWeight": 0.1,
+      "learningRate": 0.03,
+      "decayFactor": 0.99,
+      "totalEvaluations": 0,
+      "lastUpdated": 1785329880158
+    },
+    "default": {
+      "agentId": "default",
+      "ctrTrendWeight": 0.3,
+      "serpVolatilityWeight": 0.25,
+      "backlinkGapWeight": 0.2,
+      "pillarWeaknessWeight": 0.15,
+      "contentVelocityWeight": 0.1,
+      "learningRate": 0.05,
+      "decayFactor": 0.99,
+      "totalEvaluations": 0,
+      "lastUpdated": 1785329880158
+    }
+  },
+  "experiences": [
+    {
+      "id": "marl-1785350972276-g4ivn",
+      "agentId": "heat-pumps",
+      "siteId": "ecosmarthomes.ie",
+      "slug": "heat-pump-costs",
+      "action": "rewrite_article",
+      "reward": 1,
+      "beforeMetrics": {
+        "ctr": 0.032,
+        "serpPosition": 14,
+        "backlinks": 3,
+        "impressions": 1200
+      },
+      "afterMetrics": {
+        "ctr": 0.075,
+        "serpPosition": 4,
+        "backlinks": 5,
+        "impressions": 2400
+      },
+      "timestamp": 1785350972276
+    }
+  ]
+}

@@ -17,7 +17,8 @@ import {
   Lightbulb,
   BookOpen,
   Link2,
-  Map
+  Map,
+  Activity
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -35,6 +36,8 @@ export default function Sidebar({ activeTab, setActiveTab, site }: SidebarProps)
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", name: "Dashboard", icon: LayoutDashboard },
+    { id: "ranking_map", label: "Ranking Stability", name: "Ranking Stability", icon: Activity },
+    { id: "crawler", label: "Crawler Feed", name: "Crawler Feed", icon: Zap },
     { id: "content_ideas", label: "Discover Ideas", name: "Discover Ideas", icon: Lightbulb },
     { id: "link_builder", label: "Link Builder", name: "Link Builder", icon: Link2 },
     { id: "writer", label: "AI Writer", name: "AI Writer", icon: FileText },

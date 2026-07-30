@@ -1,0 +1,233 @@
+/* RankingStabilityMap.css */
+
+.ranking-stability-map {
+  padding: 1.5rem;
+  background: #050816;
+  border-radius: 1rem;
+  color: #e5e7eb;
+  animation: fadeInPanel 0.6s ease-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+
+.ranking-stability-map h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.subtitle {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.stability-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.stability-card {
+  position: relative;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: #111827;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transform: translateY(6px);
+  opacity: 0;
+  animation: cardIn 0.5s ease-out forwards;
+}
+
+.stability-card.green {
+  border: 1px solid #22c55e;
+}
+
+.stability-card.yellow {
+  border: 1px solid #eab308;
+}
+
+.stability-card.red {
+  border: 1px solid #ef4444;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.keyword {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.rank {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  font-family: monospace;
+  font-weight: 700;
+}
+
+.metrics-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.metric {
+  flex: 1;
+}
+
+.label {
+  display: block;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.value {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.vol-bar {
+  margin-top: 0.25rem;
+  width: 100%;
+  height: 4px;
+  background: #1f2937;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.vol-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #eab308, #ef4444);
+  transition: width 0.4s ease-out;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.status-pill {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.stability-card.green .status-pill {
+  background: #22c55e33;
+  color: #22c55e;
+}
+
+.stability-card.yellow .status-pill {
+  background: #eab30833;
+  color: #eab308;
+}
+
+.stability-card.red .status-pill {
+  background: #ef444433;
+  color: #ef4444;
+}
+
+.status-text {
+  font-size: 0.8rem;
+  color: #d1d5db;
+}
+
+.actions-row {
+  margin-top: 0.5rem;
+}
+
+.btn {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.btn.auto {
+  background: #1f2937;
+  color: #9ca3af;
+}
+
+.btn.audit {
+  background: #ef4444;
+  color: #f9fafb;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* Tooltip */
+
+.tooltip {
+  position: absolute;
+  inset: auto 0 -0.5rem auto;
+  transform: translateY(110%);
+  width: 100%;
+  max-width: 260px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: #020617;
+  border: 1px solid #1f2937;
+  font-size: 0.7rem;
+  color: #9ca3af;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  z-index: 20;
+}
+
+.tooltip-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #e5e7eb;
+}
+
+.tooltip-body p {
+  margin: 0.1rem 0;
+}
+
+/* Show tooltip on hover */
+
+.stability-card:hover .tooltip {
+  opacity: 1;
+  transform: translateY(100%);
+}
+
+/* Animations */
+
+@keyframes fadeInPanel {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

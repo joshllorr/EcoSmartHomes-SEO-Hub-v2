@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap reference
+Sitemap: https://ecosmarthomes.ie/sitemap.xml

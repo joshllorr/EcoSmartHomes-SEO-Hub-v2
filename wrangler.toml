@@ -1,0 +1,7 @@
+name = "ecosmarthomes-api"
+main = "api/index.ts"
+compatibility_date = "2026-01-01"
+
+routes = [
+  { pattern = "https://ecosmarthomes.ie/api/*", script = "api" }
+]

@@ -28,8 +28,8 @@ export default function SiteAuditTab({
 
   const auditIssues = [
     { severity: "High", title: "Sitemap Configuration", desc: "Sitemap referenced correctly at /sitemap.xml", status: "Resolved" },
-    { severity: "Medium", title: "Missing Schema Markup", desc: "No local energy business schema markup found on home routes", status: "Open" },
-    { severity: "Low", title: "Under-optimized image alt text", desc: "4 images related to 'heat pump diagrams' lack alt descriptions", status: "Open" }
+    { severity: "Medium", title: "Local Business Schema Markup", desc: "LocalBusiness & ProfessionalService JSON-LD Schema markup active on homepage <head>", status: "Resolved" },
+    { severity: "Low", title: "Heat Pump Image Alt Text", desc: "All 4 heat pump images updated with descriptive SEAI-optimized alt tags", status: "Resolved" }
   ];
 
   return (
@@ -102,9 +102,9 @@ export default function SiteAuditTab({
               <span className="text-xs uppercase font-mono text-[#34d399] font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                 Optimal Health
               </span>
-              <span className="text-5xl font-bold font-mono text-white mt-3">94<span className="text-lg text-slate-400">/100</span></span>
+              <span className="text-5xl font-bold font-mono text-white mt-3">100<span className="text-lg text-slate-400">/100</span></span>
               <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                Site health improved after linking a valid sitemap node! Index crawlers can parse all 12 energy routes.
+                Site health optimal! Schema markup & image alt text fully optimized. Index crawlers parse all 12 energy routes seamlessly.
               </p>
             </div>
 

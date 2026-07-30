@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
+/* stylelint-disable-next-line at-rule-no-unknown */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -47,8 +48,8 @@ body {
 /* Glassmorphism Cards */
 .glass-card {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   color: #f8fafc;
@@ -106,8 +107,8 @@ html.light .glass-container {
 html.light .glass-header {
   background: rgba(255, 255, 255, 0.55);
   border-color: rgba(15, 23, 42, 0.08) !important;
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 html.light .glass-sidebar {
@@ -117,8 +118,8 @@ html.light .glass-sidebar {
 
 html.light .glass-card {
   background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
   color: #0f172a;
@@ -221,4 +222,51 @@ html.light .promo-banner {
 html.light .promo-banner .text-white {
   color: #ffffff !important;
 }
+
+/* ── Hub Navigation (Phases 15 & 16) ── */
+.hub-container {
+  font-family: "Inter", system-ui, sans-serif;
+  background: #0b1020;
+  color: #f5f7ff;
+  min-height: 100vh;
+}
+
+.hub-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 24px;
+  background: #0d1427;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hub-nav button {
+  background: #141c33;
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.hub-nav button:hover {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.hub-nav button.active {
+  background: #3b82f6;
+  color: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+.hub-main {
+  padding: 24px;
+}
+
 

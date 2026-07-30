@@ -8,6 +8,7 @@ import AIVisibilityCard from "./AIVisibilityCard";
 import QuickActionsGrid from "./QuickActionsGrid";
 import ActivityFeed from "./ActivityFeed";
 import ErrorBoundary from "./ErrorBoundary";
+import RankingStabilityMap from "./RankingStabilityMap";
 import { DashboardState } from "../types";
 
 interface MainDashboardProps {
@@ -77,6 +78,12 @@ export default function MainDashboard({
               onConnectCMS={onConnectCMS} 
               isCMSConnected={isCMSConnected} 
             />
+          </ErrorBoundary>
+        </motion.div>
+
+        <motion.div variants={cardVariants}>
+          <ErrorBoundary sectionName="Ranking Stability Map">
+            <RankingStabilityMap />
           </ErrorBoundary>
         </motion.div>
 

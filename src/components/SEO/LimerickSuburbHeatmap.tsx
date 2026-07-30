@@ -92,7 +92,7 @@ export const LimerickSuburbHeatmap: React.FC<LimerickSuburbHeatmapProps> = ({
       .sort((a, b) => (b.value || 0) - (a.value || 0));
 
     const treemapLayout = d3
-      .treemap()
+      .treemap<any>()
       .size([width, height])
       .paddingInner(3)
       .paddingOuter(2)

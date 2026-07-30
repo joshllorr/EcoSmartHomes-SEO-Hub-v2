@@ -3,11 +3,95 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
+    <title>EcoSmartHomes SEO Hub</title>
+
+    <!-- Schema Block 1: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What SEAI Retrofit Grants are available in Ireland for 2026?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "SEAI provides grants for heat pumps (up to €6,500), solar PV (up to €2,100), cavity wall and attic insulation, and full One-Stop-Shop deep retrofits."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I upgrade my BER rating from G to A?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Upgrading a BER rating from G to A involves heat pump installation, high-grade wall and roof insulation, airtightness sealing, and solar energy integration."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Schema Block 3: LocalBusiness Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "EcoSmartHomes",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Limerick",
+        "addressCountry": "IE"
+      },
+      "url": "https://ecosmarthomes.ie"
+    }
+    </script>
+
+    <!-- Schema Block 2: ProfessionalService Business Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "EcoSmartHomes",
+      "url": "https://ecosmarthomes.ie",
+      "image": "https://ecosmarthomes.ie/logo.png",
+      "logo": "https://ecosmarthomes.ie/imgs/logo.svg",
+      "description": "Independent home energy retrofit consultancy in Ireland. Expert guidance on SEAI grants, heat pump readiness, retrofit planning, and long-term energy savings.",
+      "telephone": "+353-61-000000",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "12 Butterfield Avenue, Old Cork Rd",
+        "addressLocality": "Limerick",
+        "addressRegion": "Co. Limerick",
+        "postalCode": "V94",
+        "addressCountry": "IE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 52.661,
+        "longitude": -8.630
+      },
+      "openingHours": "Mo-Fr 09:00-17:00",
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ireland"
+      },
+      "sameAs": [
+        "https://www.facebook.com/ecosmarthomes",
+        "https://www.instagram.com/ecosmarthomes",
+        "https://www.linkedin.com/company/ecosmarthomes"
+      ],
+      "serviceType": [
+        "Home Energy Retrofit Advisory",
+        "Heat Pump Consultation",
+        "BER Assessment",
+        "NZEB Compliance Guidance",
+        "Insulation Upgrade Planning"
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
