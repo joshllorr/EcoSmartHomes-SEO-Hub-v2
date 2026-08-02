@@ -6,6 +6,32 @@ vi.mock('../services/harborSync', () => ({
   syncToHarbor: vi.fn(),
 }));
 
+describe('Security Headers', () => {
+  it('returns security headers on all responses', async () => {
+    const res = await request(app).get('/health');
+    expect(res.headers['x-content-type-options']).toBe('nosniff');
+    expect(res.headers['x-frame-options']).toBe('DENY');
+    expect(res.headers['referrer-policy']).toBe(
+      'strict-origin-when-cross-origin',
+    );
+  });
+
+  it('returns Content-Security-Policy header', async () => {
+    const res = await request(app).get('/health');
+    expect(res.headers['content-security-policy']).toBeDefined();
+  });
+
+  it('returns Strict-Transport-Security header', async () => {
+    const res = await request(app).get('/health');
+    expect(res.headers['strict-transport-security']).toBeDefined();
+  });
+
+  it('strips X-Powered-By header', async () => {
+    const res = await request(app).get('/health');
+    expect(res.headers['x-powered-by']).toBeUndefined();
+  });
+});
+
 describe('GET /health', () => {
   it('returns 200 with online status', async () => {
     const res = await request(app).get('/health');
@@ -21,6 +47,23 @@ describe('GET /health', () => {
     const res = await request(app).get('/health');
     expect(res.body).toHaveProperty('totalEventsSynced');
     expect(res.body).toHaveProperty('lastSyncAt');
+  });
+
+  it('includes dependencies status', async () => {
+    const res = await request(app).get('/health');
+    expect(res.body).toHaveProperty('dependencies');
+    expect(typeof res.body.dependencies.gemini).toBe('boolean');
+    expect(typeof res.body.dependencies.sentry).toBe('boolean');
+  });
+});
+
+describe('GET /ready', () => {
+  it('returns 200 with ready status', async () => {
+    const res = await request(app).get('/ready');
+    expect(res.status).toBe(200);
+    expect(res.body.ready).toBe(true);
+    expect(typeof res.body.uptime).toBe('number');
+    expect(typeof res.body.timestamp).toBe('number');
   });
 });
 
@@ -173,5 +216,17 @@ describe('POST /api/seo/serp-analysis', () => {
     expect(topResult).toHaveProperty('strengths');
     expect(topResult).toHaveProperty('weaknesses');
     expect(topResult).toHaveProperty('ranking_gaps');
+  });
+});
+
+describe('Rate Limiting', () => {
+  it('returns 429 after exceeding rate limit in production', async () => {
+    const requests = Array.from({ length: 105 }, () =>
+      request(app).get('/api/hub-state'),
+    );
+    const responses = await Promise.all(requests);
+    const limited = responses.find((r) => r.status === 429);
+    expect(limited).toBeDefined();
+    expect(limited?.body.ok).toBe(false);
   });
 });

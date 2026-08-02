@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import * as Sentry from '@sentry/node';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 import path from 'path';
 import fs from 'fs';
@@ -75,6 +77,70 @@ function broadcastToAll(data: any) {
 }
 
 app.use(express.json());
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Security Middleware
+// ─────────────────────────────────────────────────────────────────────────────
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        fontSrc: ["'self'", 'https:'],
+        connectSrc: ["'self'", 'https:'],
+        frameSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        frameAncestors: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: { policy: 'same-origin' },
+    crossOriginResourcePolicy: { policy: 'same-origin' },
+    originAgentCluster: true,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    strictTransportSecurity: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+    xContentTypeOptions: true,
+    xDnsPrefetchControl: true,
+    xFrameOptions: { action: 'deny' },
+    xPermittedCrossDomainPolicies: { permittedPolicies: 'none' },
+    xXssProtection: true,
+    hidePoweredBy: true,
+  }),
+);
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    ok: false,
+    error: 'Too many requests, please try again later.',
+  },
+  skip: (_req, _res) => process.env.NODE_ENV !== 'production',
+});
+
+app.use('/api/', apiLimiter);
+
+app.use((req, _res, next) => {
+  const start = Date.now();
+  _res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`[${req.method}] ${req.url} ${_res.statusCode} ${duration}ms`);
+  });
+  next();
+});
 
 import commandRouter from './src/server/commands';
 app.use('/api', commandRouter);
@@ -616,18 +682,34 @@ app.get('/api/hub-events', (req, res) => {
   });
 });
 
-// GET /health — lightweight ping so Harbor can detect Hub online/offline status
+// GET /health — enhanced health check with dependency status
 const SERVER_START_TIME = Date.now();
 app.get('/health', (_req, res) => {
-  res.status(200).json({
+  const uptime = Math.floor((Date.now() - SERVER_START_TIME) / 1000);
+  const healthPayload = {
     status: 'online',
     service: 'EcoSmartHomes Local Hub',
     version: 'Phase 16',
-    uptime: Math.floor((Date.now() - SERVER_START_TIME) / 1000),
+    uptime,
     totalEventsSynced: harborState.totalSynced,
     lastSyncAt: harborState.lastSyncAt,
     timestamp: Date.now(),
-  });
+    dependencies: {
+      gemini: Boolean(process.env.GEMINI_API_KEY),
+      sentry: Boolean(process.env.SENTRY_DSN),
+    },
+  };
+  res.status(200).json(healthPayload);
+});
+
+// GET /ready — readiness probe for container orchestration
+app.get('/ready', (_req, res) => {
+  const ready = {
+    ready: true,
+    uptime: Math.floor((Date.now() - SERVER_START_TIME) / 1000),
+    timestamp: Date.now(),
+  };
+  res.status(200).json(ready);
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
