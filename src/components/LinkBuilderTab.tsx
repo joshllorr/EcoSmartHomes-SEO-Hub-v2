@@ -633,7 +633,9 @@ export default function LinkBuilderTab({
                     </button>
                   </div>
                   <p className="text-slate-300 leading-relaxed font-sans italic">
-                    "{op.suggestedPitch}"
+                    {'"'}
+                    {op.suggestedPitch}
+                    {'"'}
                   </p>
                 </div>
               </div>

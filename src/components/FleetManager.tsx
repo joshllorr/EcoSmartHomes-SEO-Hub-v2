@@ -46,6 +46,7 @@ export default function FleetManager() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchFleetData();
     const interval = setInterval(fetchFleetData, 5000);
     return () => clearInterval(interval);

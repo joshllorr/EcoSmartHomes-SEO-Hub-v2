@@ -298,6 +298,7 @@ export const AgentSquadPanel: React.FC<{
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
     const interval = setInterval(fetchData, 8000);
     return () => clearInterval(interval);
@@ -697,7 +698,8 @@ export const AgentSquadPanel: React.FC<{
           {!negotiation?.activeCoalitions ||
           negotiation.activeCoalitions.length === 0 ? (
             <p className="text-xs text-slate-500 italic">
-              No active super-proposals. Click "Run Negotiation Cycle" above.
+              No active super-proposals. Click {'"'}Run Negotiation Cycle{'"'}{' '}
+              above.
             </p>
           ) : (
             <div className="space-y-2.5">

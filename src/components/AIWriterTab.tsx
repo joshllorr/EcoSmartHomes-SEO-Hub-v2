@@ -87,6 +87,7 @@ export default function AIWriterTab({
         aiSuggestion.toLowerCase().startsWith('rework:') ||
         aiSuggestion.toLowerCase().startsWith('transform:')
       ) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setWriterMode('rework');
         setOriginalContentInput(
           aiSuggestion.replace(/^(rework:|transform:)/i, '').trim(),
@@ -258,6 +259,7 @@ export default function AIWriterTab({
   // Sync active draft selection if activeDraftId is not set but drafts are available
   useEffect(() => {
     if (!activeDraftId && drafts.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveDraftId(drafts[0].id);
     }
   }, [drafts, activeDraftId]);
@@ -265,6 +267,7 @@ export default function AIWriterTab({
   // Load article into editor when activeDraft changes
   useEffect(() => {
     if (activeDraft) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocalTitle(activeDraft.title);
       setLocalContent(activeDraft.content);
       setLocalTone(activeDraft.tone || 'Professional');
@@ -366,8 +369,8 @@ export default function AIWriterTab({
         }
         if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
           const items = trimmed
-            .split(/\n[\-\*]\s+/)
-            .map((it) => `<li>${it.replace(/^[\-\*]\s+/, '')}</li>`)
+            .split(/\n[-*]\s+/)
+            .map((it) => `<li>${it.replace(/^[-*]\s+/, '')}</li>`)
             .join('');
           return `<ul>${items}</ul>`;
         }
@@ -465,7 +468,9 @@ export default function AIWriterTab({
           if (errData && errData.error) {
             serverError = errData.error;
           }
-        } catch (_) {}
+        } catch (_) {
+          // JSON parse failure is non-critical; serverError already set
+        }
         throw new Error(serverError);
       }
 
@@ -541,7 +546,9 @@ export default function AIWriterTab({
         try {
           const errData = await response.json();
           if (errData && errData.error) serverError = errData.error;
-        } catch (_) {}
+        } catch (_) {
+          // JSON parse failure is non-critical; serverError already set
+        }
         throw new Error(serverError);
       }
 
@@ -1630,8 +1637,8 @@ export default function AIWriterTab({
               </h4>
               <p className="text-xs text-slate-400 max-w-sm mt-1 leading-normal">
                 Set up your Title, Context and Keywords on the left panel, and
-                click "Draft with Gemini AI" to trigger a highly optimized SEO
-                blog document.
+                click {'"'}Draft with Gemini AI{'"'} to trigger a highly
+                optimized SEO blog document.
               </p>
             </div>
           )}
@@ -1815,7 +1822,9 @@ export default function AIWriterTab({
               <p className="text-xs text-slate-300 leading-relaxed">
                 Are you sure you want to delete{' '}
                 <strong className="text-white font-semibold">
-                  "{articleToDelete.title}"
+                  {'"'}
+                  {articleToDelete.title}
+                  {'"'}
                 </strong>
                 ?
               </p>

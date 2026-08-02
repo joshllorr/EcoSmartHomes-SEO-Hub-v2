@@ -96,6 +96,7 @@ export const UnifiedAnalytics: React.FC = () => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAnalytics();
     const interval = setInterval(fetchAnalytics, 2000);
     return () => clearInterval(interval);
@@ -548,8 +549,8 @@ export const UnifiedAnalytics: React.FC = () => {
                   fontStyle: 'italic',
                 }}
               >
-                No predictive decisions evaluated yet. Click "Run Predictive
-                Engine" to trigger evaluation.
+                No predictive decisions evaluated yet. Click {'"'}
+                Run Predictive Engine{'"'} to trigger evaluation.
               </span>
             )}
           </div>

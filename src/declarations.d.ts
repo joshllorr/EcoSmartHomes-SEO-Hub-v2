@@ -3,6 +3,16 @@ declare module '*.css' {
   export default content;
 }
 
+interface ImportMetaEnv {
+  readonly VITE_SENTRY_DSN: string;
+  readonly VITE_GEMINI_API_KEY: string;
+  readonly MODE: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 declare module '../server.ts' {
   import { Express } from 'express';
   const app: Express;

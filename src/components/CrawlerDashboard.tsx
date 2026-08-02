@@ -413,7 +413,9 @@ export const SerpMonitor: React.FC = () => (
         <h3 style={styles.boxHeading}>Target Keyword Volatility</h3>
         <div style={styles.serpRow}>
           <div>
-            <strong>"heat pump costs ireland"</strong>
+            <strong>
+              {'"'}heat pump costs ireland{'"'}
+            </strong>
             <div style={styles.subDetail}>
               Rank: #2 (Slope: -0.8 • Likely Rise 📈)
             </div>
@@ -422,7 +424,9 @@ export const SerpMonitor: React.FC = () => (
         </div>
         <div style={styles.serpRow}>
           <div>
-            <strong>"solar pv grants ireland"</strong>
+            <strong>
+              {'"'}solar pv grants ireland{'"'}
+            </strong>
             <div style={styles.subDetail}>
               Rank: #4 (Slope: +0.6 • Likely Drop 📉)
             </div>

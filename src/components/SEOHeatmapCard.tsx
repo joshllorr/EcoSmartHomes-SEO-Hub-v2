@@ -26,6 +26,46 @@ interface SEOHeatmapCardProps {
   data?: HeatmapDay[];
 }
 
+function CustomTooltip({ active, payload }: any) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-900/95 border border-white/15 p-3 rounded-xl shadow-xl text-left font-sans text-xs">
+        <p className="font-bold text-white mb-1.5 flex items-center gap-1.5">
+          <Calendar size={12} className="text-[#34d399]" />
+          <span>Day: {payload[0].payload.day}</span>
+        </p>
+        <div className="space-y-1 text-slate-300">
+          <p className="flex justify-between gap-4">
+            <span>Visibility Index:</span>
+            <span className="font-mono text-[#34d399] font-bold">
+              {payload[0].payload.visibility}%
+            </span>
+          </p>
+          <p className="flex justify-between gap-4">
+            <span>Click-Through Rate:</span>
+            <span className="font-mono text-sky-400 font-bold">
+              {payload[0].payload.ctr}%
+            </span>
+          </p>
+          <p className="flex justify-between gap-4">
+            <span>Top 10 Keywords:</span>
+            <span className="font-mono text-purple-400 font-bold">
+              {payload[0].payload.rankings}
+            </span>
+          </p>
+          <p className="flex justify-between gap-4 border-t border-white/5 pt-1 mt-1 text-[10px]">
+            <span>Scans Run:</span>
+            <span className="font-mono text-amber-400 font-bold">
+              {payload[0].payload.discovery_sessions}
+            </span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
 export default function SEOHeatmapCard({ data }: SEOHeatmapCardProps) {
   // Fallback default 7-day data if state does not have it yet
   const defaultHeatmap: HeatmapDay[] = [
@@ -127,47 +167,6 @@ export default function SEOHeatmapCard({ data }: SEOHeatmapCardProps) {
 
   // Highlight high performing discovery days (Wednesday and Friday)
   const isHighPerformer = (day: string) => day === 'Wed' || day === 'Fri';
-
-  // Recharts Custom Tooltip Styling
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-slate-900/95 border border-white/15 p-3 rounded-xl shadow-xl text-left font-sans text-xs">
-          <p className="font-bold text-white mb-1.5 flex items-center gap-1.5">
-            <Calendar size={12} className="text-[#34d399]" />
-            <span>Day: {payload[0].payload.day}</span>
-          </p>
-          <div className="space-y-1 text-slate-300">
-            <p className="flex justify-between gap-4">
-              <span>Visibility Index:</span>
-              <span className="font-mono text-[#34d399] font-bold">
-                {payload[0].payload.visibility}%
-              </span>
-            </p>
-            <p className="flex justify-between gap-4">
-              <span>Click-Through Rate:</span>
-              <span className="font-mono text-sky-400 font-bold">
-                {payload[0].payload.ctr}%
-              </span>
-            </p>
-            <p className="flex justify-between gap-4">
-              <span>Top 10 Keywords:</span>
-              <span className="font-mono text-purple-400 font-bold">
-                {payload[0].payload.rankings}
-              </span>
-            </p>
-            <p className="flex justify-between gap-4 border-t border-white/5 pt-1 mt-1 text-[10px]">
-              <span>Scans Run:</span>
-              <span className="font-mono text-amber-400 font-bold">
-                {payload[0].payload.discovery_sessions}
-              </span>
-            </p>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div

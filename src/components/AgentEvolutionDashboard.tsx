@@ -130,6 +130,7 @@ export const AgentEvolutionDashboard: React.FC<{
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
     const interval = setInterval(fetchData, 8000);
     return () => clearInterval(interval);

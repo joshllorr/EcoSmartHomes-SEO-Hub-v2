@@ -87,7 +87,7 @@ router.post('/command', async (req: Request, res: Response) => {
         );
         break;
 
-      case 'optimize_all':
+      case 'optimize_all': {
         const siteIds = (payload.siteIds as string[]) || [];
         const results = [];
         for (const siteId of siteIds) {
@@ -95,6 +95,7 @@ router.post('/command', async (req: Request, res: Response) => {
         }
         result = { optimizedSites: siteIds, results };
         break;
+      }
 
       default:
         return res.status(400).json({

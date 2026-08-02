@@ -42,6 +42,7 @@ export default function HubStatus() {
 
   // Check immediately on mount, then every 15 seconds
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     checkHubStatus();
     const interval = setInterval(checkHubStatus, 15000);
     return () => clearInterval(interval);

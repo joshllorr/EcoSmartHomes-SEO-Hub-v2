@@ -728,7 +728,9 @@ export default function EnergyEstimatorTab() {
                               key={j}
                               className="text-[10px] text-slate-400 leading-normal pl-1.5 border-l border-white/10 italic"
                             >
-                              "{snip}"
+                              {'"'}
+                              {snip}
+                              {'"'}
                             </p>
                           ))}
                       </div>
@@ -751,7 +753,7 @@ export default function EnergyEstimatorTab() {
               <Compass size={24} className="text-slate-500 animate-pulse" />
               <p className="text-xs">
                 Enter a contractor type or energy surveying query above and
-                click "Search & Ground" to locate facilities in Ireland.
+                click {'"'}Search & Ground{'"'} to locate facilities in Ireland.
               </p>
             </motion.div>
           )}

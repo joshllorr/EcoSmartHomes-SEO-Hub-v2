@@ -41,29 +41,16 @@ interface FieldStatus {
   reason: string;
 }
 
-export default function EntityCardPreview({
-  schemaJsonStr,
-  orgName,
-  targetUrl,
+function PropertyTooltip({
+  propName,
+  schemaType,
   description,
-  selectedAreas,
-  appliedNodes,
-}: EntityCardPreviewProps) {
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-  const [activeTab, setActiveTab] = useState<
-    'knowledge_panel' | 'ai_perception' | 'graph_nodes'
-  >('knowledge_panel');
-
-  // Helper for Schema.org property hover tooltips
-  const PropertyTooltip = ({
-    propName,
-    schemaType,
-    description,
-  }: {
-    propName: string;
-    schemaType?: string;
-    description: string;
-  }) => (
+}: {
+  propName: string;
+  schemaType?: string;
+  description: string;
+}) {
+  return (
     <div className="opacity-0 group-hover/prop:opacity-100 transition-all duration-200 pointer-events-none absolute z-30 bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-64 p-2.5 bg-slate-900/95 text-slate-200 text-[10px] font-mono leading-tight rounded-xl border border-emerald-500/40 shadow-2xl backdrop-blur-md space-y-1">
       <div className="flex items-center justify-between text-emerald-400 font-bold border-b border-white/10 pb-1">
         <span className="flex items-center gap-1">
@@ -81,30 +68,43 @@ export default function EntityCardPreview({
       </p>
     </div>
   );
+}
 
-  // Status Indicator Badge Component
-  const FieldStatusBadge = ({ status }: { status: FieldStatus }) => {
-    if (status.isValid) {
-      return (
-        <div
-          className="flex items-center gap-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/35 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 shadow-sm hover:bg-emerald-500/25 transition cursor-help"
-          title={status.reason}
-        >
-          <CheckCircle2 size={11} className="text-emerald-400" />
-          <span>{status.label}</span>
-        </div>
-      );
-    }
+function FieldStatusBadge({ status }: { status: FieldStatus }) {
+  if (status.isValid) {
     return (
       <div
-        className="flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 shadow-sm hover:bg-amber-500/30 transition cursor-help"
+        className="flex items-center gap-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/35 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 shadow-sm hover:bg-emerald-500/25 transition cursor-help"
         title={status.reason}
       >
-        <AlertCircle size={11} className="text-amber-400" />
+        <CheckCircle2 size={11} className="text-emerald-400" />
         <span>{status.label}</span>
       </div>
     );
-  };
+  }
+  return (
+    <div
+      className="flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 shadow-sm hover:bg-amber-500/30 transition cursor-help"
+      title={status.reason}
+    >
+      <AlertCircle size={11} className="text-amber-400" />
+      <span>{status.label}</span>
+    </div>
+  );
+}
+
+export default function EntityCardPreview({
+  schemaJsonStr,
+  orgName,
+  targetUrl,
+  description,
+  selectedAreas,
+  appliedNodes,
+}: EntityCardPreviewProps) {
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [activeTab, setActiveTab] = useState<
+    'knowledge_panel' | 'ai_perception' | 'graph_nodes'
+  >('knowledge_panel');
 
   // Attempt to parse JSON-LD string safely
   let parsedSchema: any = null;

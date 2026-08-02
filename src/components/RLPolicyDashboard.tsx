@@ -131,6 +131,7 @@ export const RLPolicyDashboard: React.FC = () => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchRLData();
     const interval = setInterval(fetchRLData, 10000);
     return () => clearInterval(interval);

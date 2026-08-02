@@ -122,7 +122,12 @@ export default function FleetManager() {
               Tone: <strong>{domain.tone}</strong>
             </div>
             <div style={{ fontSize: '13px', color: '#cbd5e1' }}>
-              CTA: <em style={{ color: '#f59e0b' }}>"{domain.cta}"</em>
+              CTA:{' '}
+              <em style={{ color: '#f59e0b' }}>
+                {'"'}
+                {domain.cta}
+                {'"'}
+              </em>
             </div>
           </div>
         ))}

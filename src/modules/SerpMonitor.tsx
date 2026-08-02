@@ -34,7 +34,9 @@ export default function SerpMonitor() {
           }}
         >
           <div>
-            <strong>"heat pump costs ireland"</strong>
+            <strong>
+              {'"'}heat pump costs ireland{'"'}
+            </strong>
             <div
               style={{ color: '#94a3b8', fontSize: '12px', marginTop: '4px' }}
             >

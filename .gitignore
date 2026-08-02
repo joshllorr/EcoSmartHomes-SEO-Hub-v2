@@ -8,3 +8,4 @@ coverage/
 !.env.example
 server.js
 *.tsbuildinfo
+.sentryclirc

@@ -49,7 +49,9 @@ export function useHubEvents(filterType?: string) {
             return [event, ...prev].slice(0, 100);
           });
         }
-      } catch (err) {}
+      } catch (err) {
+        // WebSocket message parsing is non-critical
+      }
     };
 
     return () => {

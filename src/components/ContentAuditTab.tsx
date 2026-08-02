@@ -45,6 +45,7 @@ export default function ContentAuditTab({
   useEffect(() => {
     if (drafts.length > 0) {
       if (!selectedDraftId || !drafts.some((d) => d.id === selectedDraftId)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedDraftId(drafts[0].id);
         setActiveDraft(drafts[0]);
       } else {
@@ -60,6 +61,7 @@ export default function ContentAuditTab({
 
   // Clean success/error notifications on draft change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSuccessMsg(null);
     setWarningMsg(null);
     setErrorMsg(null);
@@ -136,18 +138,13 @@ export default function ContentAuditTab({
           'heat pump installation',
         ];
 
-  let matchTotal = 0;
   const keywordMatches = targetKeywords.map((kw) => {
-    const regex = new RegExp(
-      kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),
-      'gi',
-    );
+    const regex = new RegExp(kw.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
     const count = (activeDraft.content.match(regex) || []).length;
-    matchTotal += count;
     const density = parseFloat(((count / wordCount) * 100).toFixed(2));
     return { keyword: kw, count, density };
   });
-
+  const matchTotal = keywordMatches.reduce((sum, m) => sum + m.count, 0);
   const overallDensity = parseFloat(
     ((matchTotal / wordCount) * 100).toFixed(2),
   );

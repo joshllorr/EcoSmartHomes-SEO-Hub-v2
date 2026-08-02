@@ -163,7 +163,7 @@ export default function QuickActionsGrid({
             Query Gemini directly to run an instant Google search audit for the
             target keyword{' '}
             <em className="text-[#34d399] font-mono not-italic font-bold">
-              "BER rating Ireland"
+              {'"'}BER rating Ireland{'"'}
             </em>
             .
           </p>
@@ -213,7 +213,9 @@ export default function QuickActionsGrid({
           {loading ? (
             <>
               <RefreshCw size={13} className="animate-spin text-white" />
-              <span>Auditing "BER rating Ireland"...</span>
+              <span>
+                Auditing {'"'}BER rating Ireland{'"'}...
+              </span>
             </>
           ) : (
             <>

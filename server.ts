@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 
+import * as Sentry from '@sentry/node';
+
 import path from 'path';
 import fs from 'fs';
 import http from 'http';
@@ -38,6 +40,12 @@ import {
 
 const app = express();
 const PORT = 3000;
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV || 'development',
+  release: 'ecosmarthomes-seo-hub@0.0.0',
+});
 
 // WebSocket Client Registry and Broadcast helper
 const connectedSockets = new Set<WebSocket>();
@@ -2744,7 +2752,9 @@ app.post('/api/cms/publish', async (req, res) => {
       let resData = {};
       try {
         resData = await fetchResponse.json();
-      } catch (_) {}
+      } catch (_) {
+        // JSON parse failure is non-critical; resData remains empty
+      }
 
       // Broadcast live websocket update
       broadcastToAll({
@@ -4519,6 +4529,8 @@ async function startServer() {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
+
+  app.use(Sentry.expressErrorHandler());
 
   const httpServer = http.createServer(app);
   const wss = new WebSocketServer({ server: httpServer });

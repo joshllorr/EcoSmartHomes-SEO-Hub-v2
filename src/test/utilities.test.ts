@@ -5,8 +5,8 @@ describe('getGeminiClient', () => {
   it('returns null when GEMINI_API_KEY is missing', () => {
     const originalKey = process.env.GEMINI_API_KEY;
     const originalViteKey = process.env.VITE_GEMINI_API_KEY;
-    delete process.env.GEMINI_API_KEY;
-    delete process.env.VITE_GEMINI_API_KEY;
+    delete (process.env as any).GEMINI_API_KEY;
+    delete (process.env as any).VITE_GEMINI_API_KEY;
 
     const client = getGeminiClient();
     expect(client).toBeNull();
@@ -24,7 +24,7 @@ describe('getGeminiClient', () => {
     expect(client).toBeNull();
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
-    else delete process.env.GEMINI_API_KEY;
+    else delete (process.env as any).GEMINI_API_KEY;
   });
 
   it('returns null when GEMINI_API_KEY is YOUR_ prefix', () => {
@@ -35,7 +35,7 @@ describe('getGeminiClient', () => {
     expect(client).toBeNull();
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
-    else delete process.env.GEMINI_API_KEY;
+    else delete (process.env as any).GEMINI_API_KEY;
   });
 
   it('returns null when GEMINI_API_KEY is empty string', () => {
@@ -46,7 +46,7 @@ describe('getGeminiClient', () => {
     expect(client).toBeNull();
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
-    else delete process.env.GEMINI_API_KEY;
+    else delete (process.env as any).GEMINI_API_KEY;
   });
 });
 
@@ -54,8 +54,8 @@ describe('callGeminiRESTApi', () => {
   it('returns null when GEMINI_API_KEY is missing', async () => {
     const originalKey = process.env.GEMINI_API_KEY;
     const originalViteKey = process.env.VITE_GEMINI_API_KEY;
-    delete process.env.GEMINI_API_KEY;
-    delete process.env.VITE_GEMINI_API_KEY;
+    delete (process.env as any).GEMINI_API_KEY;
+    delete (process.env as any).VITE_GEMINI_API_KEY;
 
     const result = await callGeminiRESTApi('test prompt');
     expect(result).toBeNull();
@@ -73,13 +73,13 @@ describe('callGeminiRESTApi', () => {
     expect(result).toBeNull();
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
-    else delete process.env.GEMINI_API_KEY;
+    else delete (process.env as any).GEMINI_API_KEY;
   });
 
   it('accepts custom model parameter', async () => {
     const originalKey = process.env.GEMINI_API_KEY;
-    delete process.env.GEMINI_API_KEY;
-    delete process.env.VITE_GEMINI_API_KEY;
+    delete (process.env as any).GEMINI_API_KEY;
+    delete (process.env as any).VITE_GEMINI_API_KEY;
 
     const result = await callGeminiRESTApi('test', 'gemini-1.5-pro');
     expect(result).toBeNull();
@@ -114,8 +114,8 @@ describe('callGeminiRESTApi', () => {
     expect(body.contents).toEqual([{ parts: [{ text: 'test prompt' }] }]);
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
-    else delete process.env.GEMINI_API_KEY;
-    delete global.fetch;
+    else delete (process.env as any).GEMINI_API_KEY;
+    delete (global as any).fetch;
   });
 
   it('sends jsonSchema in generationConfig when provided', async () => {
@@ -149,7 +149,7 @@ describe('callGeminiRESTApi', () => {
     });
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
-    else delete process.env.GEMINI_API_KEY;
-    delete global.fetch;
+    else delete (process.env as any).GEMINI_API_KEY;
+    delete (global as any).fetch;
   });
 });

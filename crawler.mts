@@ -1915,7 +1915,7 @@ function generateHtmlLandingPage(
       window.addEventListener("beforeunload", () => {
         try {
           const payload = JSON.stringify({
-            slug: window.location.pathname.replace("/content/", "").replace(".html", "").replace(/^\//, ""),
+            slug: window.location.pathname.replace("/content/", "").replace(".html", "").replace(/^[/]/, ""),
             dwellTime: Date.now() - start,
             scrollDepth: maxScroll
           });

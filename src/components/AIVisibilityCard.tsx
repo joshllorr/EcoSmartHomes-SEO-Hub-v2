@@ -129,9 +129,12 @@ export default function AIVisibilityCard({
               </span>
               <p className="text-[11px] text-slate-300 leading-normal">
                 Make sure your retrofitting headings are phrased as active
-                questions (e.g., <em>"What is a BER rating?"</em>) followed
-                immediately by a clear, one-sentence direct answer. AI engines
-                love compiling these.
+                questions (e.g.,{' '}
+                <em>
+                  {'"'}What is a BER rating?{'"'}
+                </em>
+                ) followed immediately by a clear, one-sentence direct answer.
+                AI engines love compiling these.
               </p>
             </div>
             <div className="space-y-1 border-t border-white/10 pt-2.5">
@@ -140,9 +143,18 @@ export default function AIVisibilityCard({
               </span>
               <p className="text-[11px] text-slate-300 leading-normal">
                 Avoid generic summaries. Use specific technical terms like{' '}
-                <em>"SEAI grant specifications"</em>,{' '}
-                <em>"One-Stop-Shop sequence"</em>, and <em>"U-values"</em> to
-                establish maximum subject-matter authority.
+                <em>
+                  {'"'}SEAI grant specifications{'"'}
+                </em>
+                ,{' '}
+                <em>
+                  {'"'}One-Stop-Shop sequence{'"'}
+                </em>
+                , and{' '}
+                <em>
+                  {'"'}U-values{'"'}
+                </em>{' '}
+                to establish maximum subject-matter authority.
               </p>
             </div>
             <div className="space-y-1 border-t border-white/10 pt-2.5">
