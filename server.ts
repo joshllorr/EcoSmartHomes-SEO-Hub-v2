@@ -721,7 +721,7 @@ app.get('/api/unified-analytics', async (_req, res) => {
 // Lazy-initialization helper for Gemini client
 
 let aiClient: GoogleGenAI | null = null;
-function getGeminiClient(): GoogleGenAI | null {
+export function getGeminiClient(): GoogleGenAI | null {
   const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
   console.log('Gemini key loaded:', apiKey ? '✅ yes' : '❌ no');
   if (
