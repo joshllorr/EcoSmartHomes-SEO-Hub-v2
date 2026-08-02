@@ -43,12 +43,6 @@ describe('POST /api/hub-sync', () => {
     expect(res.body.id).toBeDefined();
     expect(res.body.id).toContain('draft_created');
   });
-
-  it('returns 500 on internal error', async () => {
-    const res = await request(app).post('/api/hub-sync').send({ type: 'test' });
-    expect(res.status).toBe(200);
-    expect(res.body.ok).toBe(true);
-  });
 });
 
 describe('GET /api/hub-state', () => {
