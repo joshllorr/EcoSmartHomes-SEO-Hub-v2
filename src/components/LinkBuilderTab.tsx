@@ -1,30 +1,30 @@
-import { useState } from "react";
-import { useDashboardStore } from "../store/useDashboardStore";
-import { 
-  Link2, 
-  Sparkles, 
-  Search, 
-  Globe, 
-  Zap, 
-  ArrowRight, 
-  Check, 
-  Copy, 
-  Layers, 
-  ExternalLink, 
-  Trophy, 
-  AlertCircle, 
-  RefreshCw, 
-  Mail, 
-  Code2, 
-  BarChart3, 
-  FileText, 
-  CheckCircle2, 
-  Compass, 
-  ShieldCheck, 
+import { useState } from 'react';
+import { useDashboardStore } from '../store/useDashboardStore';
+import {
+  Link2,
+  Sparkles,
+  Search,
+  Globe,
+  Zap,
+  ArrowRight,
+  Check,
+  Copy,
+  Layers,
+  ExternalLink,
+  Trophy,
+  AlertCircle,
+  RefreshCw,
+  Mail,
+  Code2,
+  BarChart3,
+  FileText,
+  CheckCircle2,
+  Compass,
+  ShieldCheck,
   Building2,
   Bookmark,
-  Share2
-} from "lucide-react";
+  Share2,
+} from 'lucide-react';
 
 interface PillarPageIdea {
   id: string;
@@ -49,7 +49,7 @@ interface LinkOpportunity {
   contactPerson?: string;
   outreachAngle: string;
   suggestedPitch: string;
-  status: "Uncontacted" | "Pitch Sent" | "Connected";
+  status: 'Uncontacted' | 'Pitch Sent' | 'Connected';
 }
 
 interface LinkBaitAsset {
@@ -73,17 +73,21 @@ interface LinkBuilderTabProps {
 export default function LinkBuilderTab({
   site,
   onOpenInWriter,
-  onXPUnlock
+  onXPUnlock,
 }: LinkBuilderTabProps) {
-  const [activeSubTab, setActiveSubTab] = useState<"linker" | "pillar_pages" | "link_bait">("linker");
-  
+  const [activeSubTab, setActiveSubTab] = useState<
+    'linker' | 'pillar_pages' | 'link_bait'
+  >('linker');
+
   // Website URL state for Pillar Page / Outreach audit
-  const [pillarTopic, setPillarTopic] = useState("");
-  const [websiteUrl, setWebsiteUrl] = useState(`https://${site.replace(/^https?:\/\//i, '')}/`);
+  const [pillarTopic, setPillarTopic] = useState('');
+  const [websiteUrl, setWebsiteUrl] = useState(
+    `https://${site.replace(/^https?:\/\//i, '')}/`,
+  );
   const [previousSites] = useState<string[]>([
     site.replace(/^https?:\/\//i, ''),
-    "ecosmarthomes.ie",
-    "retrofit-limerick.ie"
+    'ecosmarthomes.ie',
+    'retrofit-limerick.ie',
   ]);
 
   // Loading & Notifications State
@@ -96,145 +100,186 @@ export default function LinkBuilderTab({
   // Link Opportunities State
   const [opportunities, setOpportunities] = useState<LinkOpportunity[]>([
     {
-      id: "link-op-1",
-      domain: "constructireland.ie",
+      id: 'link-op-1',
+      domain: 'constructireland.ie',
       domainAuthority: 58,
-      matchScore: "96%",
+      matchScore: '96%',
       targetPage: `https://${site}/ber-rating-upgrade-guide`,
-      relevanceType: "Irish Construction & Sustainable Building Portal",
-      contactPerson: "Editorial Team (info@constructireland.ie)",
-      outreachAngle: "Resource Page Link",
-      suggestedPitch: "Hi Editors, noticed your round-up of Irish retrofitting standards. We published an interactive 2026 SEAI grant breakdown and BER rating calculator for homeowners. Thought it would be a valuable addition to your contractor resource guide.",
-      status: "Uncontacted"
+      relevanceType: 'Irish Construction & Sustainable Building Portal',
+      contactPerson: 'Editorial Team (info@constructireland.ie)',
+      outreachAngle: 'Resource Page Link',
+      suggestedPitch:
+        'Hi Editors, noticed your round-up of Irish retrofitting standards. We published an interactive 2026 SEAI grant breakdown and BER rating calculator for homeowners. Thought it would be a valuable addition to your contractor resource guide.',
+      status: 'Uncontacted',
     },
     {
-      id: "link-op-2",
-      domain: "energyperformancedatabase.ie",
+      id: 'link-op-2',
+      domain: 'energyperformancedatabase.ie',
       domainAuthority: 64,
-      matchScore: "92%",
+      matchScore: '92%',
       targetPage: `https://${site}/heat-pump-cost-calculator`,
-      relevanceType: "BER & Energy Advisory Directory",
+      relevanceType: 'BER & Energy Advisory Directory',
       contactPerson: "Seán O'Connor (editor@energyperformancedatabase.ie)",
-      outreachAngle: "Guest Expert / Data Reference",
-      suggestedPitch: "Hi Seán, loved your recent article on heat pump COP ratings in Irish climates. We released a comprehensive 10-year running cost comparison model between gas boilers and air-to-water heat pumps. Would love to contribute dynamic data points or be referenced.",
-      status: "Uncontacted"
+      outreachAngle: 'Guest Expert / Data Reference',
+      suggestedPitch:
+        'Hi Seán, loved your recent article on heat pump COP ratings in Irish climates. We released a comprehensive 10-year running cost comparison model between gas boilers and air-to-water heat pumps. Would love to contribute dynamic data points or be referenced.',
+      status: 'Uncontacted',
     },
     {
-      id: "link-op-3",
-      domain: "selfbuild.ie",
+      id: 'link-op-3',
+      domain: 'selfbuild.ie',
       domainAuthority: 52,
-      matchScore: "89%",
+      matchScore: '89%',
       targetPage: `https://${site}/solar-pv-payback-estimator`,
-      relevanceType: "Self Build & Home Extension Magazine",
-      contactPerson: "Ruth Brennan (features@selfbuild.ie)",
-      outreachAngle: "Calculators & Tools Showcase",
-      suggestedPitch: "Hi Ruth, your readers often ask about battery storage ROI with solar PV installations in Ireland. We built an interactive payback calculator with live CEG feed-in rates. Would your editorial team consider linking it as an practical tool for home builders?",
-      status: "Uncontacted"
+      relevanceType: 'Self Build & Home Extension Magazine',
+      contactPerson: 'Ruth Brennan (features@selfbuild.ie)',
+      outreachAngle: 'Calculators & Tools Showcase',
+      suggestedPitch:
+        'Hi Ruth, your readers often ask about battery storage ROI with solar PV installations in Ireland. We built an interactive payback calculator with live CEG feed-in rates. Would your editorial team consider linking it as an practical tool for home builders?',
+      status: 'Uncontacted',
     },
     {
-      id: "link-op-4",
-      domain: "limerickleader.ie",
+      id: 'link-op-4',
+      domain: 'limerickleader.ie',
       domainAuthority: 61,
-      matchScore: "85%",
+      matchScore: '85%',
       targetPage: `https://${site}/limerick-v94-retrofit-grants`,
-      relevanceType: "Regional News & Mid-West Property Section",
-      contactPerson: "Property Desk (news@limerickleader.ie)",
-      outreachAngle: "Local V94 Eircode News & Community Impact",
-      suggestedPitch: "Hi Property Desk, we analyzed SEAI grant uptake across Limerick postcodes (Raheen, Castletroy, Dooradoyle). The data shows V94 homeowners cut energy bills by 42% after deep retrofits. Happy to provide localized infographics for a regional feature.",
-      status: "Uncontacted"
-    }
+      relevanceType: 'Regional News & Mid-West Property Section',
+      contactPerson: 'Property Desk (news@limerickleader.ie)',
+      outreachAngle: 'Local V94 Eircode News & Community Impact',
+      suggestedPitch:
+        'Hi Property Desk, we analyzed SEAI grant uptake across Limerick postcodes (Raheen, Castletroy, Dooradoyle). The data shows V94 homeowners cut energy bills by 42% after deep retrofits. Happy to provide localized infographics for a regional feature.',
+      status: 'Uncontacted',
+    },
   ]);
 
   // Pillar Page Ideas State
   const [pillars, setPillars] = useState<PillarPageIdea[]>([
     {
-      id: "pillar-init-1",
-      title: "The Ultimate 2026 Irish Home Retrofit & BER Rating Upgrade Bible",
-      summary: "A 5,000-word authoritative master guide detailing the exact sequence for upgrading home energy ratings from G to A2, SEAI grant claiming rules, heat pump integration, and airtightness standards.",
-      targetQuery: "complete home retrofit guide ireland",
-      estimatedVolume: "18.5K/mo",
+      id: 'pillar-init-1',
+      title: 'The Ultimate 2026 Irish Home Retrofit & BER Rating Upgrade Bible',
+      summary:
+        'A 5,000-word authoritative master guide detailing the exact sequence for upgrading home energy ratings from G to A2, SEAI grant claiming rules, heat pump integration, and airtightness standards.',
+      targetQuery: 'complete home retrofit guide ireland',
+      estimatedVolume: '18.5K/mo',
       authorityScore: 98,
-      difficulty: "MEDIUM",
+      difficulty: 'MEDIUM',
       difficultyScore: 48,
       subtopicClusters: [
-        "SEAI One-Stop-Shop vs Individual Contractor Grants",
-        "Heat Pump Installation & Radiator Sizing Checklist",
-        "External Wall Insulation (EWI) vs Cavity Pumping",
-        "Attic & Roof Insulation Airtightness Membranes"
+        'SEAI One-Stop-Shop vs Individual Contractor Grants',
+        'Heat Pump Installation & Radiator Sizing Checklist',
+        'External Wall Insulation (EWI) vs Cavity Pumping',
+        'Attic & Roof Insulation Airtightness Membranes',
       ],
-      linkBaitAngle: "Includes interactive BER letter improvement score calculator & grant payout sequence flowchart."
+      linkBaitAngle:
+        'Includes interactive BER letter improvement score calculator & grant payout sequence flowchart.',
     },
     {
-      id: "pillar-init-2",
-      title: "Heat Pump vs Gas Boiler Life-Cycle Cost & ROI Masterclass",
-      summary: "A comprehensive financial and technical breakdown comparing air-to-water heat pump operating costs against natural gas and kerosene boilers in Irish homes under 2026 carbon tax levels.",
-      targetQuery: "heat pump vs gas boiler cost ireland",
-      estimatedVolume: "12.2K/mo",
+      id: 'pillar-init-2',
+      title: 'Heat Pump vs Gas Boiler Life-Cycle Cost & ROI Masterclass',
+      summary:
+        'A comprehensive financial and technical breakdown comparing air-to-water heat pump operating costs against natural gas and kerosene boilers in Irish homes under 2026 carbon tax levels.',
+      targetQuery: 'heat pump vs gas boiler cost ireland',
+      estimatedVolume: '12.2K/mo',
       authorityScore: 94,
-      difficulty: "LOW",
+      difficulty: 'LOW',
       difficultyScore: 32,
       subtopicClusters: [
-        "Smart Meter Night-Rate Tariff Savings with Heat Pumps",
-        "SEAI Heat Pump Grant (€6,500) Application Rules",
-        "Coefficient of Performance (COP) in Irish Winter Temps",
-        "Underfloor Heating vs Low-Temperature Radiator Retrofits"
+        'Smart Meter Night-Rate Tariff Savings with Heat Pumps',
+        'SEAI Heat Pump Grant (€6,500) Application Rules',
+        'Coefficient of Performance (COP) in Irish Winter Temps',
+        'Underfloor Heating vs Low-Temperature Radiator Retrofits',
       ],
-      linkBaitAngle: "Includes dynamic 10-year running cost simulator and SEAI grant deduction estimator."
+      linkBaitAngle:
+        'Includes dynamic 10-year running cost simulator and SEAI grant deduction estimator.',
     },
     {
-      id: "pillar-init-3",
-      title: "Solar PV, Battery Storage & Grid Microgeneration Authority Hub",
-      summary: "Definitive guide to domestic Solar PV sizing, battery storage payback periods, and earning microgeneration feed-in tariffs (CEG) across Irish energy providers.",
-      targetQuery: "solar pv battery storage payback ireland",
-      estimatedVolume: "15.4K/mo",
+      id: 'pillar-init-3',
+      title: 'Solar PV, Battery Storage & Grid Microgeneration Authority Hub',
+      summary:
+        'Definitive guide to domestic Solar PV sizing, battery storage payback periods, and earning microgeneration feed-in tariffs (CEG) across Irish energy providers.',
+      targetQuery: 'solar pv battery storage payback ireland',
+      estimatedVolume: '15.4K/mo',
       authorityScore: 91,
-      difficulty: "MEDIUM",
+      difficulty: 'MEDIUM',
       difficultyScore: 44,
       subtopicClusters: [
-        "SEAI Solar PV Grant Sizing Caps (€2,100)",
-        "Export Tariff Rates: Electric Ireland vs Bord Gáis vs Energia",
-        "Inverter Sizing & Battery Storage Capacity Math",
-        "BER Rating Impact of 4kW Solar PV System"
+        'SEAI Solar PV Grant Sizing Caps (€2,100)',
+        'Export Tariff Rates: Electric Ireland vs Bord Gáis vs Energia',
+        'Inverter Sizing & Battery Storage Capacity Math',
+        'BER Rating Impact of 4kW Solar PV System',
       ],
-      linkBaitAngle: "Includes live feed-in tariff rate comparison matrix and annual KwH yield map."
-    }
+      linkBaitAngle:
+        'Includes live feed-in tariff rate comparison matrix and annual KwH yield map.',
+    },
   ]);
 
   // Link Bait Assets State
   const [baitAssets, setBaitAssets] = useState<LinkBaitAsset[]>([
     {
-      id: "bait-1",
-      title: "2026 Irish Home BER Letter Rating Upgrade Calculator",
-      type: "Interactive Calculator",
-      summary: "An embeddable JS widget that takes home age, current heating system, and insulation level to output projected BER grade (G to A2) and SEAI grant eligibility.",
-      whyItAttractsLinks: "Home improvement blogs, mortgage advisors (green mortgages), and estate agents link to this calculator to show clients upgrade potentials.",
-      targetBacklinkSources: ["Irish Property Portals", "Green Mortgage Brokers", "SEAI Registered Assessors"],
-      estimatedBacklinkPotential: "15–25 High-DA Backlinks / Mo",
+      id: 'bait-1',
+      title: '2026 Irish Home BER Letter Rating Upgrade Calculator',
+      type: 'Interactive Calculator',
+      summary:
+        'An embeddable JS widget that takes home age, current heating system, and insulation level to output projected BER grade (G to A2) and SEAI grant eligibility.',
+      whyItAttractsLinks:
+        'Home improvement blogs, mortgage advisors (green mortgages), and estate agents link to this calculator to show clients upgrade potentials.',
+      targetBacklinkSources: [
+        'Irish Property Portals',
+        'Green Mortgage Brokers',
+        'SEAI Registered Assessors',
+      ],
+      estimatedBacklinkPotential: '15–25 High-DA Backlinks / Mo',
       embedSnippet: `<iframe src="${websiteUrl}widgets/ber-calculator" width="100%" height="450" frameborder="0"></iframe>`,
-      keyFeatures: ["Instant SEAI grant calculation", "BER letter jump projection", "Downloadable PDF report for banks"]
+      keyFeatures: [
+        'Instant SEAI grant calculation',
+        'BER letter jump projection',
+        'Downloadable PDF report for banks',
+      ],
     },
     {
-      id: "bait-2",
-      title: "SEAI Grant Breakdown & Contractor Compliance Matrix (2026 Edition)",
-      type: "Reference Chart",
-      summary: "A clean, visual cheat-sheet matrix comparing all 12 SEAI grant categories, maximum payout caps, required insulation values (R-values), and post-works sign-off steps.",
-      whyItAttractsLinks: "Industry journalists, architects, and energy consultants reference this chart as an authoritative citation in articles.",
-      targetBacklinkSources: ["Architecture Blogs", "Construction Trade Publications", "Home Renovator Forums"],
-      estimatedBacklinkPotential: "20+ Editorial Citations",
+      id: 'bait-2',
+      title:
+        'SEAI Grant Breakdown & Contractor Compliance Matrix (2026 Edition)',
+      type: 'Reference Chart',
+      summary:
+        'A clean, visual cheat-sheet matrix comparing all 12 SEAI grant categories, maximum payout caps, required insulation values (R-values), and post-works sign-off steps.',
+      whyItAttractsLinks:
+        'Industry journalists, architects, and energy consultants reference this chart as an authoritative citation in articles.',
+      targetBacklinkSources: [
+        'Architecture Blogs',
+        'Construction Trade Publications',
+        'Home Renovator Forums',
+      ],
+      estimatedBacklinkPotential: '20+ Editorial Citations',
       embedSnippet: `<div class="seai-matrix-embed" data-domain="${site}" data-accent="#34d399"></div>`,
-      keyFeatures: ["Always updated with SEAI rules", "Printable high-res PDF infographic", "Embeddable interactive table"]
+      keyFeatures: [
+        'Always updated with SEAI rules',
+        'Printable high-res PDF infographic',
+        'Embeddable interactive table',
+      ],
     },
     {
-      id: "bait-3",
-      title: "Heat Pump vs Kerosene vs Gas Running Cost Simulator",
-      type: "Comparison Tool",
-      summary: "A dynamic comparison tool comparing monthly fuel costs under legislative carbon tax increases reaching €100/tonne by 2030.",
-      whyItAttractsLinks: "Financial columnists, sustainability influencers, and climate journalists link to this tool when reporting on energy price inflation.",
-      targetBacklinkSources: ["National News Outlets", "Personal Finance Blogs", "Environmental Policy Hubs"],
-      estimatedBacklinkPotential: "30+ High-Authority Links",
+      id: 'bait-3',
+      title: 'Heat Pump vs Kerosene vs Gas Running Cost Simulator',
+      type: 'Comparison Tool',
+      summary:
+        'A dynamic comparison tool comparing monthly fuel costs under legislative carbon tax increases reaching €100/tonne by 2030.',
+      whyItAttractsLinks:
+        'Financial columnists, sustainability influencers, and climate journalists link to this tool when reporting on energy price inflation.',
+      targetBacklinkSources: [
+        'National News Outlets',
+        'Personal Finance Blogs',
+        'Environmental Policy Hubs',
+      ],
+      estimatedBacklinkPotential: '30+ High-Authority Links',
       embedSnippet: `<iframe src="${websiteUrl}tools/heat-pump-simulator" width="100%" height="520" frameborder="0"></iframe>`,
-      keyFeatures: ["Carbon tax trajectory modeling", "Smart meter night-rate toggles", "Side-by-side fuel comparison"]
-    }
+      keyFeatures: [
+        'Carbon tax trajectory modeling',
+        'Smart meter night-rate toggles',
+        'Side-by-side fuel comparison',
+      ],
+    },
   ]);
 
   // Handlers for API calls
@@ -242,21 +287,27 @@ export default function LinkBuilderTab({
     setLoadingPillars(true);
     setWarningMsg(null);
     try {
-      const response = await fetch("/api/generatePillarIdeas", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: websiteUrl, pillarTopic, topic: pillarTopic })
+      const response = await fetch('/api/generatePillarIdeas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: websiteUrl,
+          pillarTopic,
+          topic: pillarTopic,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to compile pillar page ideas.");
+        throw new Error('Failed to compile pillar page ideas.');
       }
 
       const data = await response.json();
       const newPillars = data.pillars || data.ideas || [];
       if (newPillars.length > 0) {
         setPillars(newPillars);
-        useDashboardStore.getState().updateContentGraph({ pillars: newPillars });
+        useDashboardStore
+          .getState()
+          .updateContentGraph({ pillars: newPillars });
         if (data.warning) setWarningMsg(data.warning);
         if (onXPUnlock) onXPUnlock(35); // Reward +35 XP
       }
@@ -271,13 +322,14 @@ export default function LinkBuilderTab({
     setLoadingLinks(true);
     setWarningMsg(null);
     try {
-      const response = await fetch("/api/seo/link-opportunities", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: websiteUrl })
+      const response = await fetch('/api/seo/link-opportunities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: websiteUrl }),
       });
 
-      if (!response.ok) throw new Error("Failed to retrieve link opportunities.");
+      if (!response.ok)
+        throw new Error('Failed to retrieve link opportunities.');
 
       const data = await response.json();
       if (data.success && data.opportunities) {
@@ -292,17 +344,20 @@ export default function LinkBuilderTab({
     }
   };
 
-  const handleGenerateLinkBait = async (baitCategory = "Interactive Calculators") => {
+  const handleGenerateLinkBait = async (
+    baitCategory = 'Interactive Calculators',
+  ) => {
     setLoadingBait(true);
     setWarningMsg(null);
     try {
-      const response = await fetch("/api/seo/generate-link-bait", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: websiteUrl, baitType: baitCategory })
+      const response = await fetch('/api/seo/generate-link-bait', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: websiteUrl, baitType: baitCategory }),
       });
 
-      if (!response.ok) throw new Error("Failed to generate link bait concepts.");
+      if (!response.ok)
+        throw new Error('Failed to generate link bait concepts.');
 
       const data = await response.json();
       if (data.success && data.assets) {
@@ -324,13 +379,20 @@ export default function LinkBuilderTab({
   };
 
   const toggleOpportunityStatus = (id: string) => {
-    setOpportunities(prev => prev.map(op => {
-      if (op.id === id) {
-        const nextStatus = op.status === "Uncontacted" ? "Pitch Sent" : op.status === "Pitch Sent" ? "Connected" : "Uncontacted";
-        return { ...op, status: nextStatus };
-      }
-      return op;
-    }));
+    setOpportunities((prev) =>
+      prev.map((op) => {
+        if (op.id === id) {
+          const nextStatus =
+            op.status === 'Uncontacted'
+              ? 'Pitch Sent'
+              : op.status === 'Pitch Sent'
+                ? 'Connected'
+                : 'Uncontacted';
+          return { ...op, status: nextStatus };
+        }
+        return op;
+      }),
+    );
     if (onXPUnlock) onXPUnlock(15);
   };
 
@@ -344,7 +406,9 @@ export default function LinkBuilderTab({
             <span>Link Builder & Authority Hub</span>
           </h2>
           <p className="text-slate-400 text-xs mt-1 leading-relaxed max-w-2xl">
-            Find backlink opportunities for your content. Harbor scans relevant sites, matches them to your best pages, and hands you a warm outreach queue.
+            Find backlink opportunities for your content. Harbor scans relevant
+            sites, matches them to your best pages, and hands you a warm
+            outreach queue.
           </p>
         </div>
 
@@ -352,7 +416,7 @@ export default function LinkBuilderTab({
         <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl flex items-center gap-2.5 shrink-0 self-start md:self-auto">
           <Trophy size={14} className="text-[#34d399]" />
           <div className="text-xs">
-            <span className="font-bold text-slate-300">Link Outreach XP:</span>{" "}
+            <span className="font-bold text-slate-300">Link Outreach XP:</span>{' '}
             <span className="font-mono bg-[#34d399]/20 border border-[#34d399]/30 px-2 py-0.5 rounded font-semibold text-[#34d399]">
               +35 XP / Asset
             </span>
@@ -363,11 +427,11 @@ export default function LinkBuilderTab({
       {/* Navigation Sub-Tabs Bar */}
       <div className="flex items-center gap-2 border-b border-white/10 pb-3">
         <button
-          onClick={() => setActiveSubTab("linker")}
+          onClick={() => setActiveSubTab('linker')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
-            activeSubTab === "linker"
-              ? "bg-[#34d399] text-[#0f172a] shadow-lg shadow-[#34d399]/20"
-              : "text-slate-400 hover:text-white bg-white/5 hover:bg-white/10"
+            activeSubTab === 'linker'
+              ? 'bg-[#34d399] text-[#0f172a] shadow-lg shadow-[#34d399]/20'
+              : 'text-slate-400 hover:text-white bg-white/5 hover:bg-white/10'
           }`}
         >
           <Link2 size={14} />
@@ -375,11 +439,11 @@ export default function LinkBuilderTab({
         </button>
 
         <button
-          onClick={() => setActiveSubTab("pillar_pages")}
+          onClick={() => setActiveSubTab('pillar_pages')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
-            activeSubTab === "pillar_pages"
-              ? "bg-[#34d399] text-[#0f172a] shadow-lg shadow-[#34d399]/20"
-              : "text-slate-400 hover:text-white bg-white/5 hover:bg-white/10"
+            activeSubTab === 'pillar_pages'
+              ? 'bg-[#34d399] text-[#0f172a] shadow-lg shadow-[#34d399]/20'
+              : 'text-slate-400 hover:text-white bg-white/5 hover:bg-white/10'
           }`}
         >
           <Layers size={14} />
@@ -387,11 +451,11 @@ export default function LinkBuilderTab({
         </button>
 
         <button
-          onClick={() => setActiveSubTab("link_bait")}
+          onClick={() => setActiveSubTab('link_bait')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
-            activeSubTab === "link_bait"
-              ? "bg-[#34d399] text-[#0f172a] shadow-lg shadow-[#34d399]/20"
-              : "text-slate-400 hover:text-white bg-white/5 hover:bg-white/10"
+            activeSubTab === 'link_bait'
+              ? 'bg-[#34d399] text-[#0f172a] shadow-lg shadow-[#34d399]/20'
+              : 'text-slate-400 hover:text-white bg-white/5 hover:bg-white/10'
           }`}
         >
           <Zap size={14} />
@@ -408,7 +472,7 @@ export default function LinkBuilderTab({
       )}
 
       {/* ------------------ SUB-TAB 1: LINKER / OUTREACH QUEUE ------------------ */}
-      {activeSubTab === "linker" && (
+      {activeSubTab === 'linker' && (
         <div className="space-y-6">
           {/* Target Website Selector Bar */}
           <div className="glass-card p-5 space-y-4">
@@ -458,8 +522,8 @@ export default function LinkBuilderTab({
                       onClick={() => setWebsiteUrl(`https://${domain}/`)}
                       className={`text-[11px] font-mono px-2.5 py-1 rounded-lg border transition cursor-pointer ${
                         websiteUrl.includes(domain)
-                          ? "bg-[#34d399]/20 text-[#34d399] border-[#34d399]/40 font-semibold"
-                          : "bg-white/5 text-slate-400 border-white/10 hover:text-white hover:bg-white/10"
+                          ? 'bg-[#34d399]/20 text-[#34d399] border-[#34d399]/40 font-semibold'
+                          : 'bg-white/5 text-slate-400 border-white/10 hover:text-white hover:bg-white/10'
                       }`}
                     >
                       {domain}
@@ -494,7 +558,9 @@ export default function LinkBuilderTab({
                           Match {op.matchScore}
                         </span>
                       </div>
-                      <p className="text-slate-400 text-xs mt-0.5">{op.relevanceType}</p>
+                      <p className="text-slate-400 text-xs mt-0.5">
+                        {op.relevanceType}
+                      </p>
                     </div>
                   </div>
 
@@ -502,11 +568,11 @@ export default function LinkBuilderTab({
                     <button
                       onClick={() => toggleOpportunityStatus(op.id)}
                       className={`text-[11px] font-semibold px-3 py-1.5 rounded-xl border transition cursor-pointer flex items-center gap-1.5 ${
-                        op.status === "Connected"
-                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
-                          : op.status === "Pitch Sent"
-                          ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
-                          : "bg-white/5 text-slate-300 border-white/10 hover:bg-white/10"
+                        op.status === 'Connected'
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                          : op.status === 'Pitch Sent'
+                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                            : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
                       }`}
                     >
                       <CheckCircle2 size={12} />
@@ -536,7 +602,8 @@ export default function LinkBuilderTab({
                       Contact & Angle
                     </span>
                     <p className="text-slate-200 font-medium">
-                      {op.contactPerson} · <span className="text-slate-400">{op.outreachAngle}</span>
+                      {op.contactPerson} ·{' '}
+                      <span className="text-slate-400">{op.outreachAngle}</span>
                     </p>
                   </div>
                 </div>
@@ -576,7 +643,7 @@ export default function LinkBuilderTab({
       )}
 
       {/* ------------------ SUB-TAB 2: PILLAR PAGES ------------------ */}
-      {activeSubTab === "pillar_pages" && (
+      {activeSubTab === 'pillar_pages' && (
         <div className="space-y-6">
           {/* Form Box */}
           <div className="glass-card p-6 space-y-5">
@@ -632,7 +699,9 @@ export default function LinkBuilderTab({
 
             {/* Previous Sites Chip List */}
             <div className="flex items-center gap-2 pt-1 border-t border-white/5 text-xs">
-              <span className="text-slate-400 font-mono text-[10px] uppercase font-bold">Previous Sites:</span>
+              <span className="text-slate-400 font-mono text-[10px] uppercase font-bold">
+                Previous Sites:
+              </span>
               <div className="flex flex-wrap gap-1.5">
                 {previousSites.map((domain, i) => (
                   <button
@@ -709,7 +778,10 @@ export default function LinkBuilderTab({
                 {pillar.linkBaitAngle && (
                   <div className="bg-[#34d399]/10 border border-[#34d399]/20 p-3 rounded-xl text-xs text-[#34d399] flex items-center gap-2">
                     <Zap size={14} className="shrink-0 text-[#34d399]" />
-                    <span><strong>Natural Link Magnet Angle:</strong> {pillar.linkBaitAngle}</span>
+                    <span>
+                      <strong>Natural Link Magnet Angle:</strong>{' '}
+                      {pillar.linkBaitAngle}
+                    </span>
                   </div>
                 )}
               </div>
@@ -719,7 +791,7 @@ export default function LinkBuilderTab({
       )}
 
       {/* ------------------ SUB-TAB 3: LINK BAIT BUILDER ------------------ */}
-      {activeSubTab === "link_bait" && (
+      {activeSubTab === 'link_bait' && (
         <div className="space-y-6">
           {/* Educational Callout Banner */}
           <div className="bg-linear-to-r from-[#34d399]/15 via-emerald-500/10 to-teal-500/10 border border-[#34d399]/30 p-5 rounded-2xl space-y-2 text-left shadow-lg">
@@ -728,13 +800,20 @@ export default function LinkBuilderTab({
               <span>What is Link Bait?</span>
             </div>
             <p className="text-slate-200 text-xs leading-relaxed max-w-3xl">
-              Content designed to be so useful that other websites naturally link to it. Think reference charts, calculators, and comparison tools that solve real problems.
+              Content designed to be so useful that other websites naturally
+              link to it. Think reference charts, calculators, and comparison
+              tools that solve real problems.
             </p>
           </div>
 
           {/* Generator Controls */}
           <div className="flex flex-wrap gap-2">
-            {["Interactive Calculators", "Reference Charts", "Comparison Tools", "Infographics"].map((cat) => (
+            {[
+              'Interactive Calculators',
+              'Reference Charts',
+              'Comparison Tools',
+              'Infographics',
+            ].map((cat) => (
               <button
                 key={cat}
                 onClick={() => handleGenerateLinkBait(cat)}
@@ -807,7 +886,10 @@ export default function LinkBuilderTab({
                     </span>
                     <div className="flex flex-wrap gap-1.5 pt-1">
                       {asset.targetBacklinkSources.map((src, i) => (
-                        <span key={i} className="bg-white/5 border border-white/5 px-2 py-0.5 rounded text-[11px] text-slate-300">
+                        <span
+                          key={i}
+                          className="bg-white/5 border border-white/5 px-2 py-0.5 rounded text-[11px] text-slate-300"
+                        >
                           {src}
                         </span>
                       ))}

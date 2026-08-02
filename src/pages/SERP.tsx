@@ -1,6 +1,6 @@
-import React from "react";
-import { useDashboardStore } from "../store/useDashboardStore";
-import SERPViewer from "../components/SERP/SERPViewer";
+import React from 'react';
+import { useDashboardStore } from '../store/useDashboardStore';
+import SERPViewer from '../components/SERP/SERPViewer';
 
 export default function SERP() {
   const serp = useDashboardStore((s) => s.serp);

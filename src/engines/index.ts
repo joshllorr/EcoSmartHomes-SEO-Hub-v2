@@ -8,13 +8,16 @@
  * but talk to server.ts via HTTP, keeping a clean dependency graph.
  */
 
-const HUB_BASE = "http://localhost:3000";
+const HUB_BASE = 'http://localhost:3000';
 
-async function hubPost(path: string, body: Record<string, unknown>): Promise<unknown> {
+async function hubPost(
+  path: string,
+  body: Record<string, unknown>,
+): Promise<unknown> {
   const res = await fetch(`${HUB_BASE}${path}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
   });
   if (!res.ok) {
     const err = await res.text();
@@ -36,16 +39,18 @@ export interface DraftPayload {
   length?: string;
 }
 
-export async function runDraftGenerator(payload: DraftPayload): Promise<unknown> {
-  return hubPost("/api/seo/generate-article", {
-    siteId: payload.siteId ?? "ecosmarthomes.ie",
-    title: payload.title ?? slugToTitle(payload.slug ?? "New Article"),
-    topic: payload.topic ?? payload.slug ?? "",
-    pillar: payload.pillar ?? "BER Rating Ireland",
+export async function runDraftGenerator(
+  payload: DraftPayload,
+): Promise<unknown> {
+  return hubPost('/api/seo/generate-article', {
+    siteId: payload.siteId ?? 'ecosmarthomes.ie',
+    title: payload.title ?? slugToTitle(payload.slug ?? 'New Article'),
+    topic: payload.topic ?? payload.slug ?? '',
+    pillar: payload.pillar ?? 'BER Rating Ireland',
     keywords: payload.keywords ?? [],
-    tone: payload.tone ?? "Professional",
-    audience: payload.audience ?? "Irish homeowners",
-    length: payload.length ?? "medium"
+    tone: payload.tone ?? 'Professional',
+    audience: payload.audience ?? 'Irish homeowners',
+    length: payload.length ?? 'medium',
   });
 }
 
@@ -59,14 +64,18 @@ export interface RewritePayload {
   tone?: string;
 }
 
-export async function runRewriteEngine(payload: RewritePayload): Promise<unknown> {
-  return hubPost("/api/seo/rework-content", {
-    siteId: payload.siteId ?? "ecosmarthomes.ie",
-    originalContent: payload.originalContent ?? `Existing content for ${payload.slug ?? "article"} — rewrite triggered by Harbor command.`,
-    title: payload.title ?? slugToTitle(payload.slug ?? "Reworked Article"),
-    reworkGoal: payload.reworkGoal ?? "Fresh & Unique Rewrite",
-    tone: payload.tone ?? "Professional",
-    audience: "Irish homeowners"
+export async function runRewriteEngine(
+  payload: RewritePayload,
+): Promise<unknown> {
+  return hubPost('/api/seo/rework-content', {
+    siteId: payload.siteId ?? 'ecosmarthomes.ie',
+    originalContent:
+      payload.originalContent ??
+      `Existing content for ${payload.slug ?? 'article'} — rewrite triggered by Harbor command.`,
+    title: payload.title ?? slugToTitle(payload.slug ?? 'Reworked Article'),
+    reworkGoal: payload.reworkGoal ?? 'Fresh & Unique Rewrite',
+    tone: payload.tone ?? 'Professional',
+    audience: 'Irish homeowners',
   });
 }
 
@@ -77,10 +86,14 @@ export interface CompetitorDiffPayload {
   keyword?: string;
 }
 
-export async function runCompetitorDiff(payload: CompetitorDiffPayload): Promise<unknown> {
-  return hubPost("/api/seo/serp-analysis", {
-    keyword: payload.keyword ?? slugToKeyword(payload.slug ?? "heat pump costs ireland"),
-    site: payload.siteId ?? "ecosmarthomes.ie"
+export async function runCompetitorDiff(
+  payload: CompetitorDiffPayload,
+): Promise<unknown> {
+  return hubPost('/api/seo/serp-analysis', {
+    keyword:
+      payload.keyword ??
+      slugToKeyword(payload.slug ?? 'heat pump costs ireland'),
+    site: payload.siteId ?? 'ecosmarthomes.ie',
   });
 }
 
@@ -92,10 +105,13 @@ export interface ExpansionPayload {
   reason?: string;
 }
 
-export async function queueExpansion(payload: ExpansionPayload): Promise<unknown> {
-  return hubPost("/api/seo/discover-content-ideas", {
-    topic: payload.topic ?? slugToKeyword(payload.slug ?? "home retrofit ireland"),
-    site: payload.siteId ?? "ecosmarthomes.ie"
+export async function queueExpansion(
+  payload: ExpansionPayload,
+): Promise<unknown> {
+  return hubPost('/api/seo/discover-content-ideas', {
+    topic:
+      payload.topic ?? slugToKeyword(payload.slug ?? 'home retrofit ireland'),
+    site: payload.siteId ?? 'ecosmarthomes.ie',
   });
 }
 
@@ -107,12 +123,14 @@ export interface PublishPayload {
   title?: string;
 }
 
-export async function publishToGitHub(payload: PublishPayload): Promise<unknown> {
-  return hubPost("/api/seo/push-schema-cms", {
-    siteId: payload.siteId ?? "ecosmarthomes.ie",
-    slug: payload.slug ?? "untitled",
-    title: payload.title ?? slugToTitle(payload.slug ?? "Untitled Page"),
-    html: payload.html ?? ""
+export async function publishToGitHub(
+  payload: PublishPayload,
+): Promise<unknown> {
+  return hubPost('/api/seo/push-schema-cms', {
+    siteId: payload.siteId ?? 'ecosmarthomes.ie',
+    slug: payload.slug ?? 'untitled',
+    title: payload.title ?? slugToTitle(payload.slug ?? 'Untitled Page'),
+    html: payload.html ?? '',
   });
 }
 
@@ -124,11 +142,14 @@ export interface LinkBaitPayload {
   pillar?: string;
 }
 
-export async function runLinkBaitGenerator(payload: LinkBaitPayload): Promise<unknown> {
-  return hubPost("/api/seo/generate-link-bait", {
-    siteId: payload.siteId ?? "ecosmarthomes.ie",
-    topic: payload.topic ?? slugToKeyword(payload.slug ?? "home retrofit ireland"),
-    pillar: payload.pillar ?? "Heat Pump Retrofit Ireland"
+export async function runLinkBaitGenerator(
+  payload: LinkBaitPayload,
+): Promise<unknown> {
+  return hubPost('/api/seo/generate-link-bait', {
+    siteId: payload.siteId ?? 'ecosmarthomes.ie',
+    topic:
+      payload.topic ?? slugToKeyword(payload.slug ?? 'home retrofit ireland'),
+    pillar: payload.pillar ?? 'Heat Pump Retrofit Ireland',
   });
 }
 
@@ -140,12 +161,14 @@ export interface OptimizePipelinePayload {
   keywords?: string[];
 }
 
-export async function runOptimizationPipeline(payload: OptimizePipelinePayload): Promise<unknown> {
-  return hubPost("/api/seo/optimize-content", {
-    siteId: payload.siteId ?? "ecosmarthomes.ie",
-    content: payload.content ?? `Content for ${payload.slug ?? "article"}`,
-    slug: payload.slug ?? "article",
-    keywords: payload.keywords ?? []
+export async function runOptimizationPipeline(
+  payload: OptimizePipelinePayload,
+): Promise<unknown> {
+  return hubPost('/api/seo/optimize-content', {
+    siteId: payload.siteId ?? 'ecosmarthomes.ie',
+    content: payload.content ?? `Content for ${payload.slug ?? 'article'}`,
+    slug: payload.slug ?? 'article',
+    keywords: payload.keywords ?? [],
   });
 }
 
@@ -153,10 +176,10 @@ export async function runOptimizationPipeline(payload: OptimizePipelinePayload):
 function slugToTitle(slug: string): string {
   return slug
     .split(/[-_]/)
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 }
 
 function slugToKeyword(slug: string): string {
-  return slug.replace(/[-_]/g, " ");
+  return slug.replace(/[-_]/g, ' ');
 }

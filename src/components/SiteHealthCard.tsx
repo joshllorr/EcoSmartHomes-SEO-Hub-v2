@@ -1,9 +1,16 @@
-import { Globe, RefreshCw, AlertCircle, CheckCircle, ArrowRight, Settings } from "lucide-react";
-import { useState } from "react";
-import { useDashboardStore } from "../store/useDashboardStore";
+import {
+  Globe,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle,
+  ArrowRight,
+  Settings,
+} from 'lucide-react';
+import { useState } from 'react';
+import { useDashboardStore } from '../store/useDashboardStore';
 
 interface SiteHealthCardProps {
-  status: "failed" | "success" | "running";
+  status: 'failed' | 'success' | 'running';
   error: string | null;
   onRetryScan: (sitemapPath?: string) => void;
 }
@@ -11,11 +18,11 @@ interface SiteHealthCardProps {
 export default function SiteHealthCard({
   status,
   error,
-  onRetryScan
+  onRetryScan,
 }: SiteHealthCardProps) {
   const targetDomain = useDashboardStore((s) => s.targetDomain);
   const [loading, setLoading] = useState(false);
-  const [sitemapInput, setSitemapInput] = useState("");
+  const [sitemapInput, setSitemapInput] = useState('');
   const [showPathInput, setShowPathInput] = useState(false);
 
   const triggerScan = (path?: string) => {
@@ -26,45 +33,53 @@ export default function SiteHealthCard({
     }, 1500);
   };
 
-  const isFailed = status === "failed";
-  const isSuccess = status === "success";
+  const isFailed = status === 'failed';
+  const isSuccess = status === 'success';
 
   return (
-    <div 
+    <div
       className={`glass-card p-6 flex flex-col gap-5 transition-all ${
-        isFailed 
-          ? "border-rose-500/30" 
-          : isSuccess 
-            ? "border-emerald-500/30" 
-            : "border-white/10"
+        isFailed
+          ? 'border-rose-500/30'
+          : isSuccess
+            ? 'border-emerald-500/30'
+            : 'border-white/10'
       }`}
       id="site-health-card"
     >
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-xl shrink-0 ${
-            isFailed 
-              ? "bg-rose-500/15 text-rose-400" 
-              : isSuccess 
-                ? "bg-emerald-500/15 text-emerald-400" 
-                : "bg-white/10 text-slate-300"
-          }`}>
+          <div
+            className={`p-2 rounded-xl shrink-0 ${
+              isFailed
+                ? 'bg-rose-500/15 text-rose-400'
+                : isSuccess
+                  ? 'bg-emerald-500/15 text-emerald-400'
+                  : 'bg-white/10 text-slate-300'
+            }`}
+          >
             <Globe size={18} />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-xs uppercase font-mono text-slate-400 font-bold">Diagnostics</span>
-            <h3 className="text-sm font-semibold text-white">Site Health & Crawl Scan</h3>
+            <span className="text-xs uppercase font-mono text-slate-400 font-bold">
+              Diagnostics
+            </span>
+            <h3 className="text-sm font-semibold text-white">
+              Site Health & Crawl Scan
+            </h3>
           </div>
         </div>
 
         {/* Status Badge */}
-        <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-          isFailed 
-            ? "bg-rose-500/20 text-rose-300" 
-            : isSuccess 
-              ? "bg-emerald-500/20 text-emerald-300" 
-              : "bg-amber-500/20 text-amber-300"
-        }`}>
+        <span
+          className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+            isFailed
+              ? 'bg-rose-500/20 text-rose-300'
+              : isSuccess
+                ? 'bg-emerald-500/20 text-emerald-300'
+                : 'bg-amber-500/20 text-amber-300'
+          }`}
+        >
           {status}
         </span>
       </div>
@@ -73,12 +88,16 @@ export default function SiteHealthCard({
         <div className="bg-rose-950/20 rounded-xl p-4 border border-rose-500/20 flex gap-3 text-left">
           <AlertCircle size={16} className="text-rose-400 shrink-0 mt-0.5" />
           <div className="flex-1">
-            <div className="text-xs font-semibold text-rose-300">Sitemap Discovery Error</div>
+            <div className="text-xs font-semibold text-rose-300">
+              Sitemap Discovery Error
+            </div>
             <p className="text-[11px] text-rose-400 mt-1 leading-relaxed">
-              {error || `Could not find a sitemap in standard locations for https://${targetDomain}.`}
+              {error ||
+                `Could not find a sitemap in standard locations for https://${targetDomain}.`}
             </p>
             <p className="text-[10px] text-slate-400 mt-2 leading-normal">
-              Search engines and AI crawlers cannot index your content without a sitemap reference. Try pointing Harbor to a custom path.
+              Search engines and AI crawlers cannot index your content without a
+              sitemap reference. Try pointing Harbor to a custom path.
             </p>
           </div>
         </div>
@@ -86,16 +105,21 @@ export default function SiteHealthCard({
         <div className="bg-emerald-950/20 rounded-xl p-4 border border-emerald-500/20 flex gap-3 text-left">
           <CheckCircle size={16} className="text-emerald-400 shrink-0 mt-0.5" />
           <div className="flex-1">
-            <div className="text-xs font-semibold text-emerald-300">Crawl Success: Sitemap Found</div>
+            <div className="text-xs font-semibold text-emerald-300">
+              Crawl Success: Sitemap Found
+            </div>
             <p className="text-[11px] text-emerald-400 mt-1 leading-relaxed">
-              Your sitemap was correctly identified. All focus pages and active pillars are accessible for Google and AI Answer Indexers.
+              Your sitemap was correctly identified. All focus pages and active
+              pillars are accessible for Google and AI Answer Indexers.
             </p>
           </div>
         </div>
       ) : (
         <div className="flex items-center justify-center py-6 text-slate-400 gap-2">
           <RefreshCw size={16} className="animate-spin text-[#34d399]" />
-          <span className="text-xs font-medium">Analyzing URL sitemap nodes...</span>
+          <span className="text-xs font-medium">
+            Analyzing URL sitemap nodes...
+          </span>
         </div>
       )}
 
@@ -136,13 +160,13 @@ export default function SiteHealthCard({
           onClick={() => triggerScan(sitemapInput || undefined)}
           className={`w-full py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
             isFailed
-              ? "bg-rose-600 hover:bg-rose-700 text-white"
-              : "bg-white/10 hover:bg-white/15 text-white"
+              ? 'bg-rose-600 hover:bg-rose-700 text-white'
+              : 'bg-white/10 hover:bg-white/15 text-white'
           }`}
           id="retry-scan-button"
         >
           <RefreshCw size={12} />
-          <span>{isFailed ? "Retry Crawl Scan" : "Run Diagnostics Check"}</span>
+          <span>{isFailed ? 'Retry Crawl Scan' : 'Run Diagnostics Check'}</span>
         </button>
       )}
 

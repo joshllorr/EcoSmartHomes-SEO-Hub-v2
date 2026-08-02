@@ -1,15 +1,15 @@
-import { motion } from "motion/react";
-import WelcomeCard from "./WelcomeCard";
-import PillarPerformanceCard from "./PillarPerformanceCard";
-import SEOHeatmapCard from "./SEOHeatmapCard";
-import XPCard from "./XPCard";
-import SiteHealthCard from "./SiteHealthCard";
-import AIVisibilityCard from "./AIVisibilityCard";
-import QuickActionsGrid from "./QuickActionsGrid";
-import ActivityFeed from "./ActivityFeed";
-import ErrorBoundary from "./ErrorBoundary";
-import RankingStabilityMap from "./RankingStabilityMap";
-import { DashboardState } from "../types";
+import { motion } from 'motion/react';
+import WelcomeCard from './WelcomeCard';
+import PillarPerformanceCard from './PillarPerformanceCard';
+import SEOHeatmapCard from './SEOHeatmapCard';
+import XPCard from './XPCard';
+import SiteHealthCard from './SiteHealthCard';
+import AIVisibilityCard from './AIVisibilityCard';
+import QuickActionsGrid from './QuickActionsGrid';
+import ActivityFeed from './ActivityFeed';
+import ErrorBoundary from './ErrorBoundary';
+import RankingStabilityMap from './RankingStabilityMap';
+import { DashboardState } from '../types';
 
 interface MainDashboardProps {
   state: DashboardState;
@@ -32,10 +32,10 @@ export default function MainDashboard({
   onToggleTask,
   onRetryScan,
   onOptimizeAIVisibility,
-  onQuickAction
+  onQuickAction,
 }: MainDashboardProps) {
-  
-  const isCMSConnected = state.tasks.find(t => t.id === "connect_cms")?.completed || false;
+  const isCMSConnected =
+    state.tasks.find((t) => t.id === 'connect_cms')?.completed || false;
 
   // Animation configuration presets
   const containerVariants = {
@@ -44,9 +44,9 @@ export default function MainDashboard({
       opacity: 1,
       transition: {
         staggerChildren: 0.08,
-        delayChildren: 0.05
-      }
-    }
+        delayChildren: 0.05,
+      },
+    },
   } as const;
 
   const cardVariants = {
@@ -55,28 +55,31 @@ export default function MainDashboard({
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 90,
-        damping: 14
-      }
-    }
+        damping: 14,
+      },
+    },
   } as const;
 
   return (
-    <motion.div 
-      className="grid grid-cols-1 xl:grid-cols-12 gap-6" 
+    <motion.div
+      className="grid grid-cols-1 xl:grid-cols-12 gap-6"
       id="dashboard-grid"
       initial="hidden"
       animate="show"
       variants={containerVariants}
     >
       {/* Left panel: main metrics, pillars & action tools (8 cols on xl) */}
-      <motion.div className="xl:col-span-8 flex flex-col gap-6" variants={containerVariants}>
+      <motion.div
+        className="xl:col-span-8 flex flex-col gap-6"
+        variants={containerVariants}
+      >
         <motion.div variants={cardVariants}>
           <ErrorBoundary sectionName="Welcome Section">
-            <WelcomeCard 
-              onConnectCMS={onConnectCMS} 
-              isCMSConnected={isCMSConnected} 
+            <WelcomeCard
+              onConnectCMS={onConnectCMS}
+              isCMSConnected={isCMSConnected}
             />
           </ErrorBoundary>
         </motion.div>
@@ -89,7 +92,7 @@ export default function MainDashboard({
 
         <motion.div variants={cardVariants}>
           <ErrorBoundary sectionName="SEO Pillar performance Tracker">
-            <PillarPerformanceCard 
+            <PillarPerformanceCard
               pillar={state.pillar}
               aiSuggestion={state.ai_suggestion}
               onOpenInWriter={onOpenInWriter}
@@ -100,17 +103,18 @@ export default function MainDashboard({
 
         <motion.div variants={cardVariants}>
           <ErrorBoundary sectionName="SEO Heatmap & Trends">
-            <SEOHeatmapCard 
-              data={state.seo_heatmap}
-            />
+            <SEOHeatmapCard data={state.seo_heatmap} />
           </ErrorBoundary>
         </motion.div>
 
         {/* 2-Column subgrid for Site Diagnostics & AI Engine stats */}
-        <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-6" variants={containerVariants}>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={containerVariants}
+        >
           <motion.div variants={cardVariants}>
             <ErrorBoundary sectionName="Site Diagnostics Audit">
-              <SiteHealthCard 
+              <SiteHealthCard
                 status={state.site_health.status}
                 error={state.site_health.error}
                 onRetryScan={onRetryScan}
@@ -120,7 +124,7 @@ export default function MainDashboard({
 
           <motion.div variants={cardVariants}>
             <ErrorBoundary sectionName="AI Search Citation Hub">
-              <AIVisibilityCard 
+              <AIVisibilityCard
                 visits={state.ai_visibility.visits_last_30_days}
                 onOptimizeClick={onOptimizeAIVisibility}
               />
@@ -130,18 +134,19 @@ export default function MainDashboard({
 
         <motion.div variants={cardVariants}>
           <ErrorBoundary sectionName="Quick Growth Actions Grid">
-            <QuickActionsGrid 
-              onActionClick={onQuickAction}
-            />
+            <QuickActionsGrid onActionClick={onQuickAction} />
           </ErrorBoundary>
         </motion.div>
       </motion.div>
 
       {/* Right panel: Gamification standings, checklists & feed (4 cols on xl) */}
-      <motion.div className="xl:col-span-4 flex flex-col gap-6" variants={containerVariants}>
+      <motion.div
+        className="xl:col-span-4 flex flex-col gap-6"
+        variants={containerVariants}
+      >
         <motion.div variants={cardVariants}>
           <ErrorBoundary sectionName="Growth XP Progress Tracker">
-            <XPCard 
+            <XPCard
               xp={state.xp}
               tasks={state.tasks}
               weeklyChallenges={state.weekly_challenges}
@@ -152,9 +157,7 @@ export default function MainDashboard({
 
         <motion.div variants={cardVariants}>
           <ErrorBoundary sectionName="SEO Live Activity Feed">
-            <ActivityFeed 
-              activities={state.recent_activity}
-            />
+            <ActivityFeed activities={state.recent_activity} />
           </ErrorBoundary>
         </motion.div>
       </motion.div>

@@ -1,19 +1,25 @@
-import { Clock, Search, FileText, Globe, HelpCircle, ArrowRight } from "lucide-react";
-import { ActivityItem } from "../types";
+import {
+  Clock,
+  Search,
+  FileText,
+  Globe,
+  HelpCircle,
+  ArrowRight,
+} from 'lucide-react';
+import { ActivityItem } from '../types';
 
 interface ActivityFeedProps {
   activities: ActivityItem[];
 }
 
 export default function ActivityFeed({ activities }: ActivityFeedProps) {
-  
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "Research":
+      case 'Research':
         return <Search size={13} className="text-blue-400" />;
-      case "Draft":
+      case 'Draft':
         return <FileText size={13} className="text-[#34d399]" />;
-      case "Scout":
+      case 'Scout':
         return <Globe size={13} className="text-purple-400" />;
       default:
         return <Clock size={13} className="text-slate-400" />;
@@ -22,25 +28,29 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
 
   const getCategoryBadgeClass = (category: string) => {
     switch (category) {
-      case "Research":
-        return "bg-blue-500/10 text-blue-300 border-blue-500/20";
-      case "Draft":
-        return "bg-[#34d399]/10 text-[#34d399] border-[#34d399]/20";
-      case "Scout":
-        return "bg-purple-500/10 text-purple-300 border-purple-500/20";
+      case 'Research':
+        return 'bg-blue-500/10 text-blue-300 border-blue-500/20';
+      case 'Draft':
+        return 'bg-[#34d399]/10 text-[#34d399] border-[#34d399]/20';
+      case 'Scout':
+        return 'bg-purple-500/10 text-purple-300 border-purple-500/20';
       default:
-        return "bg-white/5 text-slate-300 border-white/10";
+        return 'bg-white/5 text-slate-300 border-white/10';
     }
   };
 
   return (
-    <div 
+    <div
       className="glass-card p-6 flex flex-col gap-4 text-left"
       id="activity-feed-card"
     >
       <div>
-        <span className="text-xs uppercase font-mono text-slate-400 font-bold">Audit Trail</span>
-        <h3 className="text-sm font-semibold text-white mt-0.5">Recent SEO Activity</h3>
+        <span className="text-xs uppercase font-mono text-slate-400 font-bold">
+          Audit Trail
+        </span>
+        <h3 className="text-sm font-semibold text-white mt-0.5">
+          Recent SEO Activity
+        </h3>
       </div>
 
       <div className="relative border-l-2 border-white/10 pl-4 space-y-5 py-1">
@@ -54,7 +64,9 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
             {/* Content Card */}
             <div className="flex flex-col gap-1.5 p-2 rounded-lg hover:bg-white/5 transition">
               <div className="flex items-center gap-2">
-                <span className={`text-[9px] uppercase font-mono px-2 py-0.5 rounded border font-semibold ${getCategoryBadgeClass(act.category)}`}>
+                <span
+                  className={`text-[9px] uppercase font-mono px-2 py-0.5 rounded border font-semibold ${getCategoryBadgeClass(act.category)}`}
+                >
                   {act.category}
                 </span>
                 <span className="text-[10px] text-slate-400 font-mono font-medium">

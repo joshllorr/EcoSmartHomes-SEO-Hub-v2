@@ -13,10 +13,10 @@ import {
   X,
   ExternalLink,
   CheckCheck,
-  MapPin
-} from "lucide-react";
-import { useState, useEffect, useRef } from "react";
-import { useDashboardStore } from "../store/useDashboardStore";
+  MapPin,
+} from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { useDashboardStore } from '../store/useDashboardStore';
 
 interface NotificationItem {
   id: string;
@@ -24,47 +24,48 @@ interface NotificationItem {
   description: string;
   time: string;
   unread: boolean;
-  type: "ai" | "xp" | "audit" | "system";
+  type: 'ai' | 'xp' | 'audit' | 'system';
   targetTab?: string;
 }
 
 const DEFAULT_NOTIFICATIONS: NotificationItem[] = [
   {
-    id: "notif-1",
-    title: "New LLM Citation Detected",
-    description: "ChatGPT-4o cited your 'BER Upgrade Guide' in a top response (+20 XP).",
-    time: "2m ago",
+    id: 'notif-1',
+    title: 'New LLM Citation Detected',
+    description:
+      "ChatGPT-4o cited your 'BER Upgrade Guide' in a top response (+20 XP).",
+    time: '2m ago',
     unread: true,
-    type: "ai",
-    targetTab: "ai-visibility"
+    type: 'ai',
+    targetTab: 'ai-visibility',
   },
   {
-    id: "notif-2",
-    title: "Core Web Vitals Pass",
-    description: "LCP performance on ecosmarthomes.ie scored 98/100 (+15 XP).",
-    time: "15m ago",
+    id: 'notif-2',
+    title: 'Core Web Vitals Pass',
+    description: 'LCP performance on ecosmarthomes.ie scored 98/100 (+15 XP).',
+    time: '15m ago',
     unread: true,
-    type: "audit",
-    targetTab: "site-audit"
+    type: 'audit',
+    targetTab: 'site-audit',
   },
   {
-    id: "notif-3",
-    title: "Daily Streak Maintained!",
-    description: "You unlocked the 7-Day SEO Streak bonus milestone (+30 XP).",
-    time: "1h ago",
+    id: 'notif-3',
+    title: 'Daily Streak Maintained!',
+    description: 'You unlocked the 7-Day SEO Streak bonus milestone (+30 XP).',
+    time: '1h ago',
     unread: true,
-    type: "xp",
-    targetTab: "dashboard"
+    type: 'xp',
+    targetTab: 'dashboard',
   },
   {
-    id: "notif-4",
-    title: "JSON-LD Schema Validated",
-    description: "Organization & WebSite microdata indexed without warnings.",
-    time: "4h ago",
+    id: 'notif-4',
+    title: 'JSON-LD Schema Validated',
+    description: 'Organization & WebSite microdata indexed without warnings.',
+    time: '4h ago',
     unread: false,
-    type: "system",
-    targetTab: "serp-analyzer"
-  }
+    type: 'system',
+    targetTab: 'serp-analyzer',
+  },
 ];
 
 interface HeaderProps {
@@ -73,7 +74,11 @@ interface HeaderProps {
   onNavigateToTab: (tab: string) => void;
 }
 
-export default function Header({ streak, level, onNavigateToTab }: HeaderProps) {
+export default function Header({
+  streak,
+  level,
+  onNavigateToTab,
+}: HeaderProps) {
   const targetDomain = useDashboardStore((s) => s.targetDomain);
   const setTargetDomain = useDashboardStore((s) => s.setTargetDomain);
 
@@ -83,7 +88,7 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
   // Live Notifications State
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => {
     try {
-      const saved = localStorage.getItem("ecosmart_live_notifications_v1");
+      const saved = localStorage.getItem('ecosmart_live_notifications_v1');
       return saved ? JSON.parse(saved) : DEFAULT_NOTIFICATIONS;
     } catch {
       return DEFAULT_NOTIFICATIONS;
@@ -95,21 +100,27 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
 
   useEffect(() => {
     try {
-      localStorage.setItem("ecosmart_live_notifications_v1", JSON.stringify(notifications));
+      localStorage.setItem(
+        'ecosmart_live_notifications_v1',
+        JSON.stringify(notifications),
+      );
     } catch (e) {
-      console.error("Failed to save notifications:", e);
+      console.error('Failed to save notifications:', e);
     }
   }, [notifications]);
 
   // Click outside listener for notifications popover
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+      if (
+        notifRef.current &&
+        !notifRef.current.contains(event.target as Node)
+      ) {
         setIsOpenNotifs(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const unreadCount = notifications.filter((n) => n.unread).length;
@@ -120,7 +131,7 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
 
   const markAsRead = (id: string) => {
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, unread: false } : n))
+      prev.map((n) => (n.id === id ? { ...n, unread: false } : n)),
     );
   };
 
@@ -145,31 +156,31 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
     const alerts: NotificationItem[] = [
       {
         id: `notif-${Date.now()}`,
-        title: "Perplexity Citation Updated",
+        title: 'Perplexity Citation Updated',
         description: `Perplexity AI indexed your new SEAI Heat Pump Grant Calculator on ${targetDomain}.`,
-        time: "Just now",
+        time: 'Just now',
         unread: true,
-        type: "ai",
-        targetTab: "ai-visibility"
+        type: 'ai',
+        targetTab: 'ai-visibility',
       },
       {
         id: `notif-${Date.now()}`,
-        title: "Sitemap Audit Complete",
+        title: 'Sitemap Audit Complete',
         description: `0 broken links detected across 24 crawled URLs on ${targetDomain}.`,
-        time: "Just now",
+        time: 'Just now',
         unread: true,
-        type: "audit",
-        targetTab: "site-audit"
+        type: 'audit',
+        targetTab: 'site-audit',
       },
       {
         id: `notif-${Date.now()}`,
-        title: "XP Bonus Awarded!",
-        description: "SEO Quick Checklist item completed (+15 XP).",
-        time: "Just now",
+        title: 'XP Bonus Awarded!',
+        description: 'SEO Quick Checklist item completed (+15 XP).',
+        time: 'Just now',
         unread: true,
-        type: "xp",
-        targetTab: "dashboard"
-      }
+        type: 'xp',
+        targetTab: 'dashboard',
+      },
     ];
 
     const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
@@ -187,37 +198,37 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
     setIsEditing(false);
   };
 
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    const saved = localStorage.getItem("ecosmart_seo_theme");
-    if (saved === "light" || saved === "dark") {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('ecosmart_seo_theme');
+    if (saved === 'light' || saved === 'dark') {
       return saved;
     }
-    return "dark";
+    return 'dark';
   });
 
   useEffect(() => {
     const root = window.document.documentElement;
-    if (theme === "light") {
-      root.classList.add("light");
-      root.classList.remove("dark");
+    if (theme === 'light') {
+      root.classList.add('light');
+      root.classList.remove('dark');
     } else {
-      root.classList.add("dark");
-      root.classList.remove("light");
+      root.classList.add('dark');
+      root.classList.remove('light');
     }
-    localStorage.setItem("ecosmart_seo_theme", theme);
+    localStorage.setItem('ecosmart_seo_theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  const renderNotifIcon = (type: NotificationItem["type"]) => {
+  const renderNotifIcon = (type: NotificationItem['type']) => {
     switch (type) {
-      case "ai":
+      case 'ai':
         return <Sparkles size={14} className="text-[#34d399]" />;
-      case "xp":
+      case 'xp':
         return <Zap size={14} className="text-amber-400" />;
-      case "audit":
+      case 'audit':
         return <ShieldCheck size={14} className="text-indigo-400" />;
       default:
         return <CheckCircle2 size={14} className="text-sky-400" />;
@@ -229,14 +240,16 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
       {/* Interactive Active SEO Target Input */}
       <div className="flex items-center gap-2.5 bg-emerald-500/10 px-3.5 py-2 rounded-xl border border-emerald-500/25 text-emerald-400 font-medium text-xs">
         <Globe size={15} className="text-emerald-400 shrink-0" />
-        <span className="shrink-0 font-semibold text-slate-300">Active SEO Target:</span>
+        <span className="shrink-0 font-semibold text-slate-300">
+          Active SEO Target:
+        </span>
         {isEditing ? (
           <div className="flex items-center gap-1.5">
             <input
               type="text"
               value={inputDomain}
               onChange={(e) => setInputDomain(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSaveDomain()}
+              onKeyDown={(e) => e.key === 'Enter' && handleSaveDomain()}
               placeholder="e.g. mywebsite.com"
               className="bg-black/50 text-emerald-300 font-mono text-xs font-bold px-2.5 py-1 rounded-lg border border-emerald-500/40 focus:border-emerald-400 focus:outline-hidden transition w-44 sm:w-60"
               autoFocus
@@ -280,13 +293,18 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
         <button
           onClick={toggleTheme}
           className="p-2 text-slate-400 hover:text-[#34d399] hover:bg-white/5 rounded-xl transition cursor-pointer flex items-center justify-center border border-transparent hover:border-white/10"
-          title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+          title={
+            theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'
+          }
           id="theme-toggle-btn"
         >
-          {theme === "light" ? (
+          {theme === 'light' ? (
             <Moon size={18} className="text-slate-500 fill-slate-500/20" />
           ) : (
-            <Sun size={18} className="text-amber-400 fill-amber-400/20 animate-[spin_10s_linear_infinite]" />
+            <Sun
+              size={18}
+              className="text-amber-400 fill-amber-400/20 animate-[spin_10s_linear_infinite]"
+            />
           )}
         </button>
 
@@ -296,8 +314,8 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
             onClick={() => setIsOpenNotifs(!isOpenNotifs)}
             className={`relative p-2 rounded-xl border transition cursor-pointer flex items-center justify-center ${
               isOpenNotifs
-                ? "bg-white/10 text-emerald-400 border-emerald-500/30"
-                : "text-slate-400 hover:text-slate-200 hover:bg-white/5 border-transparent"
+                ? 'bg-white/10 text-emerald-400 border-emerald-500/30'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/5 border-transparent'
             }`}
             title="Live Notifications"
             id="header-notifications"
@@ -323,7 +341,9 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
                   <div className="p-1 rounded-lg bg-emerald-500/10 text-emerald-400">
                     <Bell size={15} />
                   </div>
-                  <h4 className="font-bold text-white text-xs tracking-tight">Notifications</h4>
+                  <h4 className="font-bold text-white text-xs tracking-tight">
+                    Notifications
+                  </h4>
                   {unreadCount > 0 ? (
                     <span className="text-[10px] font-mono bg-rose-500/15 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded-full font-bold">
                       {unreadCount} new
@@ -363,7 +383,7 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
                       key={item.id}
                       onClick={() => handleNotificationClick(item)}
                       className={`p-3.5 transition cursor-pointer flex items-start gap-3 hover:bg-white/5 relative group ${
-                        item.unread ? "bg-emerald-950/20" : "opacity-80"
+                        item.unread ? 'bg-emerald-950/20' : 'opacity-80'
                       }`}
                     >
                       {/* Unread Indicator Bar */}
@@ -377,7 +397,9 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
 
                       <div className="flex-1 min-w-0 space-y-0.5">
                         <div className="flex items-center justify-between gap-2">
-                          <span className={`text-xs font-semibold ${item.unread ? "text-white" : "text-slate-300"}`}>
+                          <span
+                            className={`text-xs font-semibold ${item.unread ? 'text-white' : 'text-slate-300'}`}
+                          >
                             {item.title}
                           </span>
                           <span className="text-[9px] font-mono text-slate-500 shrink-0">
@@ -406,7 +428,9 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
                   ))
                 ) : (
                   <div className="p-6 text-center space-y-2">
-                    <p className="text-xs text-slate-400">No notifications available.</p>
+                    <p className="text-xs text-slate-400">
+                      No notifications available.
+                    </p>
                   </div>
                 )}
               </div>
@@ -444,11 +468,12 @@ export default function Header({ streak, level, onNavigateToTab }: HeaderProps) 
           </div>
           <div className="hidden lg:flex flex-col text-left">
             <span className="text-sm font-semibold text-slate-100">Joe</span>
-            <span className="text-[10px] text-slate-400 font-mono">joehr4838@gmail.com</span>
+            <span className="text-[10px] text-slate-400 font-mono">
+              joehr4838@gmail.com
+            </span>
           </div>
         </div>
       </div>
     </header>
   );
 }
-

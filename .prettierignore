@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+coverage/
+*.log
+.env*
+.env.example
+server.js
+metadata.json
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+*.min.js
+CHANGELOG*

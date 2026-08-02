@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig} from 'vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
   return {
@@ -20,17 +20,17 @@ export default defineConfig(() => {
       proxy: {
         '/api': {
           target: 'http://localhost:3000',
-          changeOrigin: true
+          changeOrigin: true,
         },
         '/health': {
           target: 'http://localhost:3000',
-          changeOrigin: true
+          changeOrigin: true,
         },
         '/ws': {
           target: 'ws://localhost:3000',
-          ws: true
-        }
-      }
+          ws: true,
+        },
+      },
     },
   };
 });

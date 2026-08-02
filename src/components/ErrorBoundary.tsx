@@ -1,5 +1,5 @@
-import React, { ErrorInfo, ReactNode } from "react";
-import { AlertTriangle, RefreshCw, ChevronRight } from "lucide-react";
+import React, { ErrorInfo, ReactNode } from 'react';
+import { AlertTriangle, RefreshCw, ChevronRight } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -23,7 +23,11 @@ export default class ErrorBoundary extends React.Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error(`[ErrorBoundary] Uncaught error in section "${this.props.sectionName || "Unknown"}":`, error, errorInfo);
+    console.error(
+      `[ErrorBoundary] Uncaught error in section "${this.props.sectionName || 'Unknown'}":`,
+      error,
+      errorInfo,
+    );
   }
 
   private handleReset = () => {
@@ -33,9 +37,9 @@ export default class ErrorBoundary extends React.Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div 
+        <div
           className="glass-card p-6 border-red-500/30 bg-red-950/10 text-left flex flex-col gap-4 relative overflow-hidden"
-          id={`error-boundary-${(this.props.sectionName || "generic").toLowerCase().replace(/\s+/g, "-")}`}
+          id={`error-boundary-${(this.props.sectionName || 'generic').toLowerCase().replace(/\s+/g, '-')}`}
         >
           {/* Accent light indicator */}
           <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-full blur-xl translate-x-8 -translate-y-8" />
@@ -59,7 +63,8 @@ export default class ErrorBoundary extends React.Component<Props, State> {
                 Something went wrong rendering this section
               </h4>
               <p className="text-xs text-slate-400 leading-relaxed max-w-md">
-                {this.state.error?.message || "An unexpected rendering fault occurred. Please reset this component section or verify your current dataset."}
+                {this.state.error?.message ||
+                  'An unexpected rendering fault occurred. Please reset this component section or verify your current dataset.'}
               </p>
             </div>
           </div>

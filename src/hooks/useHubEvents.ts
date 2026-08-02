@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export interface HubEvent {
   id: string;
@@ -15,15 +15,22 @@ export function useHubEvents(filterType?: string) {
 
   useEffect(() => {
     // Initial fetch
-    fetch(filterType ? `/api/hub-events?limit=30&type=${encodeURIComponent(filterType)}` : `/api/hub-events?limit=30`)
-      .then(res => res.json())
-      .then(data => setEvents(data.events || []))
+    fetch(
+      filterType
+        ? `/api/hub-events?limit=30&type=${encodeURIComponent(filterType)}`
+        : `/api/hub-events?limit=30`,
+    )
+      .then((res) => res.json())
+      .then((data) => setEvents(data.events || []))
       .catch(() => {});
 
     // WebSocket for real-time live events
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const defaultWsUrl = `${protocol}//${window.location.host}`;
-    const wsUrl = window.location.port === "3000" ? "ws://localhost:3000" : (defaultWsUrl || "ws://localhost:3000");
+    const wsUrl =
+      window.location.port === '3000'
+        ? 'ws://localhost:3000'
+        : defaultWsUrl || 'ws://localhost:3000';
 
     let ws: WebSocket;
     try {
@@ -37,8 +44,8 @@ export function useHubEvents(filterType?: string) {
         const event = JSON.parse(msg.data);
         if (event.type && event.message) {
           if (filterType && event.type !== filterType) return;
-          setEvents(prev => {
-            if (prev.some(e => e.id === event.id)) return prev;
+          setEvents((prev) => {
+            if (prev.some((e) => e.id === event.id)) return prev;
             return [event, ...prev].slice(0, 100);
           });
         }
@@ -46,7 +53,10 @@ export function useHubEvents(filterType?: string) {
     };
 
     return () => {
-      if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+      if (
+        ws.readyState === WebSocket.OPEN ||
+        ws.readyState === WebSocket.CONNECTING
+      ) {
         ws.close();
       }
     };

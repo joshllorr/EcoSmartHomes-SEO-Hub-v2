@@ -9,7 +9,7 @@
  * Every command is also broadcast over WebSocket and synced back to Harbor.
  */
 
-import express, { Request, Response } from "express";
+import express, { Request, Response } from 'express';
 import {
   runDraftGenerator,
   runRewriteEngine,
@@ -24,18 +24,18 @@ import {
   type ExpansionPayload,
   type PublishPayload,
   type LinkBaitPayload,
-  type OptimizePipelinePayload
-} from "../engines/index";
+  type OptimizePipelinePayload,
+} from '../engines/index';
 
 export type CommandAction =
-  | "generate_draft"
-  | "rewrite_article"
-  | "competitor_diff"
-  | "queue_expansion"
-  | "publish"
-  | "link_bait"
-  | "optimize_pipeline"
-  | "optimize_all";
+  | 'generate_draft'
+  | 'rewrite_article'
+  | 'competitor_diff'
+  | 'queue_expansion'
+  | 'publish'
+  | 'link_bait'
+  | 'optimize_pipeline'
+  | 'optimize_all';
 
 export interface CommandRequest {
   action: CommandAction;
@@ -44,11 +44,11 @@ export interface CommandRequest {
 
 const router = express.Router();
 
-router.post("/command", async (req: Request, res: Response) => {
+router.post('/command', async (req: Request, res: Response) => {
   const { action, payload = {} } = req.body as CommandRequest;
 
   if (!action) {
-    return res.status(400).json({ ok: false, error: "Missing action" });
+    return res.status(400).json({ ok: false, error: 'Missing action' });
   }
 
   console.log(`[command] Received from Harbor: ${action}`, payload);
@@ -57,35 +57,37 @@ router.post("/command", async (req: Request, res: Response) => {
     let result: unknown;
 
     switch (action) {
-      case "generate_draft":
+      case 'generate_draft':
         result = await runDraftGenerator(payload as DraftPayload);
         break;
 
-      case "rewrite_article":
+      case 'rewrite_article':
         result = await runRewriteEngine(payload as RewritePayload);
         break;
 
-      case "competitor_diff":
+      case 'competitor_diff':
         result = await runCompetitorDiff(payload as CompetitorDiffPayload);
         break;
 
-      case "queue_expansion":
+      case 'queue_expansion':
         result = await queueExpansion(payload as ExpansionPayload);
         break;
 
-      case "publish":
+      case 'publish':
         result = await publishToGitHub(payload as PublishPayload);
         break;
 
-      case "link_bait":
+      case 'link_bait':
         result = await runLinkBaitGenerator(payload as LinkBaitPayload);
         break;
 
-      case "optimize_pipeline":
-        result = await runOptimizationPipeline(payload as OptimizePipelinePayload);
+      case 'optimize_pipeline':
+        result = await runOptimizationPipeline(
+          payload as OptimizePipelinePayload,
+        );
         break;
 
-      case "optimize_all":
+      case 'optimize_all':
         const siteIds = (payload.siteIds as string[]) || [];
         const results = [];
         for (const siteId of siteIds) {
@@ -97,13 +99,12 @@ router.post("/command", async (req: Request, res: Response) => {
       default:
         return res.status(400).json({
           ok: false,
-          error: `Unknown command: "${action}". Valid actions: generate_draft, rewrite_article, competitor_diff, queue_expansion, publish, link_bait, optimize_pipeline`
+          error: `Unknown command: "${action}". Valid actions: generate_draft, rewrite_article, competitor_diff, queue_expansion, publish, link_bait, optimize_pipeline`,
         });
     }
 
     console.log(`[command] Completed: ${action}`);
     return res.json({ ok: true, action, result });
-
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`[command] Failed: ${action} —`, message);
