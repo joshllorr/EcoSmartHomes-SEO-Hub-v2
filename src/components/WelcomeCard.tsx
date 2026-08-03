@@ -1,16 +1,21 @@
-import { ArrowRight, Link, Check, Sparkles } from "lucide-react";
-import { useState } from "react";
-import { useDashboardStore } from "../store/useDashboardStore";
+import { ArrowRight, Link, Check, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { useDashboardStore } from '../store/useDashboardStore';
 
 interface WelcomeCardProps {
   onConnectCMS: () => void;
   isCMSConnected: boolean;
 }
 
-export default function WelcomeCard({ onConnectCMS, isCMSConnected }: WelcomeCardProps) {
+export default function WelcomeCard({
+  onConnectCMS,
+  isCMSConnected,
+}: WelcomeCardProps) {
   const targetDomain = useDashboardStore((s) => s.targetDomain);
   const [showCMSModal, setShowCMSModal] = useState(false);
-  const [selectedCMS, setSelectedCMS] = useState<"wordpress" | "webflow" | "custom" | null>(null);
+  const [selectedCMS, setSelectedCMS] = useState<
+    'wordpress' | 'webflow' | 'custom' | null
+  >(null);
   const [connecting, setConnecting] = useState(false);
 
   const handleConnect = () => {
@@ -24,21 +29,21 @@ export default function WelcomeCard({ onConnectCMS, isCMSConnected }: WelcomeCar
   };
 
   return (
-    <div 
-      className="glass-card p-6 relative overflow-hidden"
-      id="welcome-card"
-    >
+    <div className="glass-card p-6 relative overflow-hidden" id="welcome-card">
       {/* Decorative top green glow */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-[#34d399]/5 rounded-full blur-2xl"></div>
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
         <div>
           <h2 className="text-xl md:text-2xl font-display font-semibold text-white tracking-tight flex items-center gap-2">
-            Welcome back, Joe <span className="text-emerald-500 text-lg">👋</span>
+            Welcome back, Joe{' '}
+            <span className="text-emerald-500 text-lg">👋</span>
           </h2>
           <p className="text-slate-400 text-sm mt-1 max-w-xl">
-            You are managing SEO for <span className="font-semibold text-white">{targetDomain}</span>. 
-            Target energy-efficiency pillars to boost organic search rank and AI answers presence.
+            You are managing SEO for{' '}
+            <span className="font-semibold text-white">{targetDomain}</span>.
+            Target energy-efficiency pillars to boost organic search rank and AI
+            answers presence.
           </p>
         </div>
 
@@ -67,26 +72,29 @@ export default function WelcomeCard({ onConnectCMS, isCMSConnected }: WelcomeCar
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-300">
           <div className="glass-card max-w-md w-full p-6 shadow-xl animate-in fade-in duration-200">
             <div className="flex justify-between items-start mb-4">
-              <h3 className="font-display font-bold text-white text-lg">Connect CMS Integration</h3>
-              <button 
+              <h3 className="font-display font-bold text-white text-lg">
+                Connect CMS Integration
+              </h3>
+              <button
                 onClick={() => setShowCMSModal(false)}
                 className="text-slate-400 hover:text-white font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
-            
+
             <p className="text-xs text-slate-400 mb-4">
-              Synchronize AI-generated content directly with your publishing pipeline to save manual export time.
+              Synchronize AI-generated content directly with your publishing
+              pipeline to save manual export time.
             </p>
 
             <div className="space-y-3 mb-6">
               <button
-                onClick={() => setSelectedCMS("wordpress")}
+                onClick={() => setSelectedCMS('wordpress')}
                 className={`w-full p-3.5 rounded-xl border text-left flex items-center justify-between transition cursor-pointer ${
-                  selectedCMS === "wordpress"
-                    ? "border-[#34d399] bg-[#34d399]/10 text-white font-semibold"
-                    : "border-white/10 hover:border-white/20 bg-white/5 text-slate-300"
+                  selectedCMS === 'wordpress'
+                    ? 'border-[#34d399] bg-[#34d399]/10 text-white font-semibold'
+                    : 'border-white/10 hover:border-white/20 bg-white/5 text-slate-300'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -95,18 +103,22 @@ export default function WelcomeCard({ onConnectCMS, isCMSConnected }: WelcomeCar
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs">WordPress Integration</span>
-                    <span className="text-[10px] text-slate-400">Push drafts directly to post index</span>
+                    <span className="text-[10px] text-slate-400">
+                      Push drafts directly to post index
+                    </span>
                   </div>
                 </div>
-                {selectedCMS === "wordpress" && <div className="w-2.5 h-2.5 rounded-full bg-[#34d399]"></div>}
+                {selectedCMS === 'wordpress' && (
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#34d399]"></div>
+                )}
               </button>
 
               <button
-                onClick={() => setSelectedCMS("webflow")}
+                onClick={() => setSelectedCMS('webflow')}
                 className={`w-full p-3.5 rounded-xl border text-left flex items-center justify-between transition cursor-pointer ${
-                  selectedCMS === "webflow"
-                    ? "border-[#34d399] bg-[#34d399]/10 text-white font-semibold"
-                    : "border-white/10 hover:border-white/20 bg-white/5 text-slate-300"
+                  selectedCMS === 'webflow'
+                    ? 'border-[#34d399] bg-[#34d399]/10 text-white font-semibold'
+                    : 'border-white/10 hover:border-white/20 bg-white/5 text-slate-300'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -115,10 +127,14 @@ export default function WelcomeCard({ onConnectCMS, isCMSConnected }: WelcomeCar
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs">Webflow CMS API</span>
-                    <span className="text-[10px] text-slate-400">Sync with collection tables</span>
+                    <span className="text-[10px] text-slate-400">
+                      Sync with collection tables
+                    </span>
                   </div>
                 </div>
-                {selectedCMS === "webflow" && <div className="w-2.5 h-2.5 rounded-full bg-[#34d399]"></div>}
+                {selectedCMS === 'webflow' && (
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#34d399]"></div>
+                )}
               </button>
             </div>
 

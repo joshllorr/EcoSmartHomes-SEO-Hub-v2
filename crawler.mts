@@ -1,10 +1,10 @@
-import WebSocket, { WebSocketServer } from "ws";
-import axios from "axios";
-import * as cheerio from "cheerio";   // HTML parsing
-import crypto from "crypto";
-import schedule from "node-schedule";
-import fs from "fs";
-import path from "path";
+import WebSocket, { WebSocketServer } from 'ws';
+import axios from 'axios';
+import * as cheerio from 'cheerio'; // HTML parsing
+import crypto from 'crypto';
+import schedule from 'node-schedule';
+import fs from 'fs';
+import path from 'path';
 import {
   FullJsonLdSchema,
   FAQPageSchema,
@@ -14,38 +14,46 @@ import {
   RawJsonLdSchema,
   BaseJsonLdSchema,
   PageType,
-} from "./schemaTypes.js";
-import { publishPageToGitHub, injectInternalLinks } from "./publisher.js";
+} from './schemaTypes.js';
+import { publishPageToGitHub, injectInternalLinks } from './publisher.js';
 
 // -------------------------------
 // CONFIG & WEBSOCKET SERVER
 // -------------------------------
-const WS_URL = "ws://localhost:3000";
+const WS_URL = 'ws://localhost:3000';
 
 let wss: WebSocketServer | null = null;
 try {
   wss = new WebSocketServer({ port: 3000 });
-  wss.on("error", (err: any) => {
-    if (err.code === "EADDRINUSE") {
-      console.log("WebSocket server port 3000 is active via main server process.");
+  wss.on('error', (err: any) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(
+        'WebSocket server port 3000 is active via main server process.',
+      );
     } else {
-      console.error("WebSocket server error:", err);
+      console.error('WebSocket server error:', err);
     }
   });
-  console.log("Crawler WebSocket server running on ws://localhost:3000");
+  console.log('Crawler WebSocket server running on ws://localhost:3000');
 
-  wss.on("connection", (socket) => {
-    console.log("Dashboard connected to crawler");
+  wss.on('connection', (socket) => {
+    console.log('Dashboard connected to crawler');
   });
 } catch (err) {
-  console.log("Port 3000 handled by main server");
+  console.log('Port 3000 handled by main server');
 }
 
 setInterval(() => {
   if (wss && wss.clients) {
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ type: "heartbeat", status: "alive", timestamp: Date.now() }));
+        client.send(
+          JSON.stringify({
+            type: 'heartbeat',
+            status: 'alive',
+            timestamp: Date.now(),
+          }),
+        );
       }
     });
   }
@@ -54,8 +62,8 @@ setInterval(() => {
 const MAX_RETRIES = 3;
 const DOMAIN_DELAY = 2500; // 2.5s throttle per domain
 const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-  "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+  '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 
 let xp = 0;
 let visibility = 0;
@@ -80,37 +88,41 @@ export interface QueuedRewrite {
 
 export const rewriteQueue: QueuedRewrite[] = [];
 
-export function rewriteContent(articleDraft: string, seoBrief: any, outline: any = []) {
+export function rewriteContent(
+  articleDraft: string,
+  seoBrief: any,
+  outline: any = [],
+) {
   let improved = articleDraft;
 
   // Strengthen intro
   improved = improved.replace(
     /<p>(.*?)<\/p>/,
-    `<p><strong>${seoBrief?.topic || "Home Retrofitting"}</strong> is essential for Irish homeowners. ${seoBrief?.description || ""}</p>`
+    `<p><strong>${seoBrief?.topic || 'Home Retrofitting'}</strong> is essential for Irish homeowners. ${seoBrief?.description || ''}</p>`,
   );
 
   // Expand sections
   if (Array.isArray(outline)) {
     outline.forEach((sec: any) => {
-      const sectionName = typeof sec === "string" ? sec : sec?.section || "";
+      const sectionName = typeof sec === 'string' ? sec : sec?.section || '';
       if (!sectionName) return;
 
       const regex = new RegExp(`<h2>${sectionName}</h2>[\\s\\S]*?(?=<h2>|$)`);
       const match = improved.match(regex);
 
       if (match) {
-        const expanded = `${match[0]}\n<p>${seoBrief?.topic || "Energy retrofitting"} plays a key role in ${sectionName.toLowerCase()} for Irish homes.</p>`;
+        const expanded = `${match[0]}\n<p>${seoBrief?.topic || 'Energy retrofitting'} plays a key role in ${sectionName.toLowerCase()} for Irish homes.</p>`;
         improved = improved.replace(match[0], expanded);
       }
     });
   }
 
   // Add CTA if missing
-  if (!improved.includes("cta-section")) {
+  if (!improved.includes('cta-section')) {
     improved += `
       <section class="cta-section">
-        <h2>${seoBrief?.cta?.heading || "Upgrade Your Home Energy Efficiency"}</h2>
-        <p>${seoBrief?.cta?.body || "Contact EcoSmartHomes today for SEAI grant advice and retrofit planning."}</p>
+        <h2>${seoBrief?.cta?.heading || 'Upgrade Your Home Energy Efficiency'}</h2>
+        <p>${seoBrief?.cta?.body || 'Contact EcoSmartHomes today for SEAI grant advice and retrofit planning.'}</p>
       </section>
     `;
   }
@@ -120,11 +132,11 @@ export function rewriteContent(articleDraft: string, seoBrief: any, outline: any
 
 export function broadcastQueueUpdate() {
   const payload = JSON.stringify({
-    type: "queue_update",
+    type: 'queue_update',
     queueLength: publishingQueue.length,
     nextSlug: publishingQueue[0]?.slug || null,
-    message: `Queue update: ${publishingQueue.length} page(s) queued. Next: ${publishingQueue[0]?.slug || "none"}`,
-    timestamp: Date.now()
+    message: `Queue update: ${publishingQueue.length} page(s) queued. Next: ${publishingQueue[0]?.slug || 'none'}`,
+    timestamp: Date.now(),
   });
 
   if (wss && wss.clients) {
@@ -143,25 +155,25 @@ export async function fetchCompetitorContent(url: string) {
   try {
     const { data } = await axios.get(url, {
       timeout: 8000,
-      headers: { "User-Agent": USER_AGENT }
+      headers: { 'User-Agent': USER_AGENT },
     });
     const $ = cheerio.load(data);
 
     const headings: string[] = [];
-    $("h1, h2, h3").each((_, el) => {
+    $('h1, h2, h3').each((_, el) => {
       const txt = $(el).text().trim();
       if (txt) headings.push(txt);
     });
 
     const faqs: string[] = [];
-    $("details").each((_, el) => {
-      const txt = $(el).find("summary").text().trim();
+    $('details').each((_, el) => {
+      const txt = $(el).find('summary').text().trim();
       if (txt) faqs.push(txt);
     });
 
     return { url, headings, faqs };
   } catch (err) {
-    console.log("Competitor fetch failed:", url);
+    console.log('Competitor fetch failed:', url);
     return null;
   }
 }
@@ -171,7 +183,8 @@ export async function getTopCompetitors(keyword: string) {
     try {
       const serpApi = `https://api.serpstack.com/search?access_key=${process.env.SERPSTACK_KEY}&query=${encodeURIComponent(keyword)}`;
       const { data } = await axios.get(serpApi, { timeout: 8000 });
-      const urls: string[] = data?.organic_results?.slice(0, 10).map((r: any) => r.url) || [];
+      const urls: string[] =
+        data?.organic_results?.slice(0, 10).map((r: any) => r.url) || [];
       const competitors = [];
       for (const url of urls) {
         const content = await fetchCompetitorContent(url);
@@ -179,28 +192,40 @@ export async function getTopCompetitors(keyword: string) {
       }
       if (competitors.length > 0) return competitors;
     } catch (err) {
-      console.log("SerpStack fetch failed, using fallback competitor benchmarks");
+      console.log(
+        'SerpStack fetch failed, using fallback competitor benchmarks',
+      );
     }
   }
 
   // Robust fallback competitor benchmark data
   return [
     {
-      url: "https://www.seai.ie/grants/home-energy-grants/",
-      headings: [`${keyword} SEAI Grant Criteria`, `SEAI Grant Amounts for ${keyword}`, "BER Rating Requirement"],
-      faqs: ["How much SEAI grant can I get?", "Do I need a BER assessment before applying?"]
+      url: 'https://www.seai.ie/grants/home-energy-grants/',
+      headings: [
+        `${keyword} SEAI Grant Criteria`,
+        `SEAI Grant Amounts for ${keyword}`,
+        'BER Rating Requirement',
+      ],
+      faqs: [
+        'How much SEAI grant can I get?',
+        'Do I need a BER assessment before applying?',
+      ],
     },
     {
-      url: "https://www.electricireland.ie/retrofitting",
-      headings: [`Professional Installation for ${keyword}`, "Energy Savings & Efficiency"],
-      faqs: ["How long does installation take?", "What is payback time?"]
-    }
+      url: 'https://www.electricireland.ie/retrofitting',
+      headings: [
+        `Professional Installation for ${keyword}`,
+        'Energy Savings & Efficiency',
+      ],
+      faqs: ['How long does installation take?', 'What is payback time?'],
+    },
   ];
 }
 
 export function diffCompetitors(
   competitors: Array<{ url: string; headings: string[]; faqs: string[] }>,
-  yourOutline: any = []
+  yourOutline: any = [],
 ) {
   const competitorTopics = new Set<string>();
 
@@ -210,14 +235,20 @@ export function diffCompetitors(
   });
 
   const outlineStrings: string[] = Array.isArray(yourOutline)
-    ? yourOutline.map((sec: any) => (typeof sec === "string" ? sec.toLowerCase() : (sec?.section || "").toLowerCase()))
+    ? yourOutline.map((sec: any) =>
+        typeof sec === 'string'
+          ? sec.toLowerCase()
+          : (sec?.section || '').toLowerCase(),
+      )
     : [];
 
   const missing: string[] = [];
 
   competitorTopics.forEach((topic) => {
     const topicLower = topic.toLowerCase();
-    const exists = outlineStrings.some((section) => section.includes(topicLower) || topicLower.includes(section));
+    const exists = outlineStrings.some(
+      (section) => section.includes(topicLower) || topicLower.includes(section),
+    );
     if (!exists && topic.length > 5 && topic.length < 80) {
       missing.push(topic);
     }
@@ -252,8 +283,8 @@ export interface ClusterInfo {
 export const topicClusters: Record<string, ClusterInfo> = {};
 
 export function extractCoreTopic(seoBrief: any): string {
-  if (!seoBrief || !seoBrief.topic) return "home-energy";
-  return seoBrief.topic.toLowerCase().split(" ").slice(0, 2).join("-");
+  if (!seoBrief || !seoBrief.topic) return 'home-energy';
+  return seoBrief.topic.toLowerCase().split(' ').slice(0, 2).join('-');
 }
 
 export function updatePillar(core: string) {
@@ -262,7 +293,7 @@ export function updatePillar(core: string) {
   const pillarSlug = topicClusters[core].pillar!;
   const clusters = topicClusters[core].clusters;
 
-  const contentDir = path.resolve("./content");
+  const contentDir = path.resolve('./content');
   if (!fs.existsSync(contentDir)) {
     fs.mkdirSync(contentDir, { recursive: true });
   }
@@ -270,26 +301,31 @@ export function updatePillar(core: string) {
   const pillarPath = path.join(contentDir, `${pillarSlug}.html`);
   if (!fs.existsSync(pillarPath)) return;
 
-  let pillarHtml = fs.readFileSync(pillarPath, "utf-8");
+  let pillarHtml = fs.readFileSync(pillarPath, 'utf-8');
 
   const links = clusters
-    .map((c) => `<li><a href="/content/${c}.html">${c.replace(/-/g, " ")}</a></li>`)
-    .join("");
+    .map(
+      (c) =>
+        `<li><a href="/content/${c}.html">${c.replace(/-/g, ' ')}</a></li>`,
+    )
+    .join('');
 
   if (pillarHtml.includes('<section id="cluster-links">')) {
     pillarHtml = pillarHtml.replace(
       /<section id="cluster-links">[\s\S]*?<\/section>/,
-      `<section id="cluster-links"><h2>Cluster Articles</h2><ul>${links}</ul></section>`
+      `<section id="cluster-links"><h2>Cluster Articles</h2><ul>${links}</ul></section>`,
     );
   } else {
     pillarHtml = pillarHtml.replace(
-      "</body>",
-      `<section id="cluster-links"><h2>Cluster Articles</h2><ul>${links}</ul></section></body>`
+      '</body>',
+      `<section id="cluster-links"><h2>Cluster Articles</h2><ul>${links}</ul></section></body>`,
     );
   }
 
-  fs.writeFileSync(pillarPath, pillarHtml, "utf-8");
-  console.log(`Topic Cluster Builder: Updated pillar page '${pillarSlug}' with ${clusters.length} cluster link(s).`);
+  fs.writeFileSync(pillarPath, pillarHtml, 'utf-8');
+  console.log(
+    `Topic Cluster Builder: Updated pillar page '${pillarSlug}' with ${clusters.length} cluster link(s).`,
+  );
 }
 
 // -------------------------------
@@ -297,47 +333,56 @@ export function updatePillar(core: string) {
 // -------------------------------
 export const entityLibrary = {
   agencies: [
-    "SEAI (Sustainable Energy Authority of Ireland)",
-    "NSAI (National Standards Authority of Ireland)",
-    "CRU (Commission for Regulation of Utilities)"
+    'SEAI (Sustainable Energy Authority of Ireland)',
+    'NSAI (National Standards Authority of Ireland)',
+    'CRU (Commission for Regulation of Utilities)',
   ],
   standards: [
-    "BER (Building Energy Rating)",
-    "NZEB (Nearly Zero Energy Building)",
-    "Part L Building Regulations",
-    "Part F Ventilation Standards"
+    'BER (Building Energy Rating)',
+    'NZEB (Nearly Zero Energy Building)',
+    'Part L Building Regulations',
+    'Part F Ventilation Standards',
   ],
   heatPumpTypes: [
-    "Air-to-water heat pump",
-    "Ground-source heat pump",
-    "Hybrid heat pump"
+    'Air-to-water heat pump',
+    'Ground-source heat pump',
+    'Hybrid heat pump',
   ],
   grants: [
-    "SEAI Heat Pump System Grant",
-    "Better Energy Homes Scheme",
-    "Solar PV Grant"
+    'SEAI Heat Pump System Grant',
+    'Better Energy Homes Scheme',
+    'Solar PV Grant',
   ],
   metrics: [
-    "COP (Coefficient of Performance)",
-    "SCOP (Seasonal Coefficient of Performance)",
-    "U-value",
-    "kWh consumption"
+    'COP (Coefficient of Performance)',
+    'SCOP (Seasonal Coefficient of Performance)',
+    'U-value',
+    'kWh consumption',
   ],
   manufacturers: [
-    "Daikin",
-    "Mitsubishi Electric",
-    "Panasonic",
-    "Samsung Climate Solutions"
-  ]
+    'Daikin',
+    'Mitsubishi Electric',
+    'Panasonic',
+    'Samsung Climate Solutions',
+  ],
 };
 
-export function findRelevantEntities(articleDraft: string, seoBrief: any): string[] {
-  const text = (articleDraft + " " + (seoBrief?.topic || "") + " " + (seoBrief?.description || "")).toLowerCase();
+export function findRelevantEntities(
+  articleDraft: string,
+  seoBrief: any,
+): string[] {
+  const text = (
+    articleDraft +
+    ' ' +
+    (seoBrief?.topic || '') +
+    ' ' +
+    (seoBrief?.description || '')
+  ).toLowerCase();
   const matched: string[] = [];
 
   Object.values(entityLibrary).forEach((group) => {
     group.forEach((entity) => {
-      const keyword = entity.split(" ")[0].toLowerCase();
+      const keyword = entity.split(' ')[0].toLowerCase();
       if (text.includes(keyword) || text.includes(entity.toLowerCase())) {
         matched.push(entity);
       }
@@ -347,14 +392,17 @@ export function findRelevantEntities(articleDraft: string, seoBrief: any): strin
   return Array.from(new Set(matched)).slice(0, 10);
 }
 
-export function injectEntities(articleDraft: string, entities: string[]): string {
+export function injectEntities(
+  articleDraft: string,
+  entities: string[],
+): string {
   let enriched = articleDraft;
 
   enriched += `
     <section class="semantic-entities">
       <h2>Key Irish Retrofit Entities</h2>
       <ul>
-        ${entities.map((e) => `<li>${e}</li>`).join("")}
+        ${entities.map((e) => `<li>${e}</li>`).join('')}
       </ul>
     </section>
   `;
@@ -367,7 +415,7 @@ export function injectEntities(articleDraft: string, entities: string[]): string
 // -------------------------------
 export interface GraphNode {
   id: string;
-  type: "page" | "entity" | "cluster" | "pillar";
+  type: 'page' | 'entity' | 'cluster' | 'pillar';
   score?: number;
   label?: string;
   cluster?: string;
@@ -388,7 +436,7 @@ export interface AuthorityGraph {
 
 export const authorityGraph: AuthorityGraph = {
   nodes: {},
-  edges: []
+  edges: [],
 };
 
 export function findWeakNodes(): string[] {
@@ -430,30 +478,50 @@ export async function getSerpSnapshot(keyword: string): Promise<SerpResult[]> {
       const serpApi = `https://api.serpstack.com/search?access_key=${process.env.SERPSTACK_KEY}&query=${encodeURIComponent(keyword)}`;
       const { data } = await axios.get(serpApi, { timeout: 8000 });
       if (data?.organic_results) {
-        snapshot = data.organic_results.slice(0, 10).map((r: any, i: number) => ({
-          rank: i + 1,
-          url: r.url,
-          title: r.title || ""
-        }));
+        snapshot = data.organic_results
+          .slice(0, 10)
+          .map((r: any, i: number) => ({
+            rank: i + 1,
+            url: r.url,
+            title: r.title || '',
+          }));
       }
     } catch (err) {
-      console.log("SerpStack API fetch error in getSerpSnapshot, falling back to simulated benchmark");
+      console.log(
+        'SerpStack API fetch error in getSerpSnapshot, falling back to simulated benchmark',
+      );
     }
   }
 
   if (snapshot.length === 0) {
     snapshot = [
-      { rank: 1, url: "https://ecosmarthomes.ie", title: `EcoSmartHomes — ${keyword} Advisory Ireland` },
-      { rank: 2, url: "https://www.seai.ie/grants", title: `SEAI ${keyword} Home Energy Upgrades` },
-      { rank: 3, url: "https://www.electricireland.ie", title: `Electric Ireland ${keyword} Solutions` },
-      { rank: 4, url: "https://www.citizensinformation.ie", title: `Home Energy Retrofitting Grants` }
+      {
+        rank: 1,
+        url: 'https://ecosmarthomes.ie',
+        title: `EcoSmartHomes — ${keyword} Advisory Ireland`,
+      },
+      {
+        rank: 2,
+        url: 'https://www.seai.ie/grants',
+        title: `SEAI ${keyword} Home Energy Upgrades`,
+      },
+      {
+        rank: 3,
+        url: 'https://www.electricireland.ie',
+        title: `Electric Ireland ${keyword} Solutions`,
+      },
+      {
+        rank: 4,
+        url: 'https://www.citizensinformation.ie',
+        title: `Home Energy Retrofitting Grants`,
+      },
     ];
   }
 
   serpHistory[keyword] = serpHistory[keyword] || [];
   serpHistory[keyword].push({
     timestamp: Date.now(),
-    snapshot
+    snapshot,
   });
 
   if (serpHistory[keyword].length > 50) {
@@ -463,7 +531,7 @@ export async function getSerpSnapshot(keyword: string): Promise<SerpResult[]> {
   rankingHistory[keyword] = rankingHistory[keyword] || [];
   rankingHistory[keyword].push({
     timestamp: Date.now(),
-    snapshot
+    snapshot,
   });
 
   if (rankingHistory[keyword].length > 50) {
@@ -473,45 +541,54 @@ export async function getSerpSnapshot(keyword: string): Promise<SerpResult[]> {
   return snapshot;
 }
 
-export function analyseRankingTrend(keyword: string): Array<number | null> | null {
+export function analyseRankingTrend(
+  keyword: string,
+): Array<number | null> | null {
   const history = rankingHistory[keyword];
   if (!history || history.length < 4) return null;
 
   const lastFour = history.slice(-4).map((h) => h.snapshot);
 
   const trend = lastFour.map((snap) => {
-    const ourResult = snap.find((r) => r.url.includes("ecosmarthomes"));
+    const ourResult = snap.find((r) => r.url.includes('ecosmarthomes'));
     return ourResult ? ourResult.rank : null;
   });
 
   return trend;
 }
 
-export function predictMovement(trend: Array<number | null> | null): "likely_drop" | "likely_rise" | "stable" | null {
+export function predictMovement(
+  trend: Array<number | null> | null,
+): 'likely_drop' | 'likely_rise' | 'stable' | null {
   if (!trend || trend.some((t) => t === null)) return null;
 
   const [r1, _r2, _r3, r4] = trend as number[];
 
   const slope = (r4 - r1) / 3; // simple linear regression
 
-  if (slope > 0.5) return "likely_drop";
-  if (slope < -0.5) return "likely_rise";
+  if (slope > 0.5) return 'likely_drop';
+  if (slope < -0.5) return 'likely_rise';
 
-  return "stable";
+  return 'stable';
 }
 
 // -------------------------------
 // PHASE 13 — AUTONOMOUS CONTENT EXPANSION ENGINE
 // -------------------------------
-export function detectClusterContentGaps(coreTopic: string, competitors: Array<{ headings: string[] }>): string[] {
+export function detectClusterContentGaps(
+  coreTopic: string,
+  competitors: Array<{ headings: string[] }>,
+): string[] {
   const competitorTopics = new Set<string>();
-  competitors.forEach((c) => c.headings.forEach((h) => competitorTopics.add(h.toLowerCase())));
+  competitors.forEach((c) =>
+    c.headings.forEach((h) => competitorTopics.add(h.toLowerCase())),
+  );
 
   const existingPages = topicClusters[coreTopic]?.clusters || [];
-  const existingTopics = existingPages.map((p) => p.replace(/-/g, " "));
+  const existingTopics = existingPages.map((p) => p.replace(/-/g, ' '));
 
   const gaps = [...competitorTopics].filter(
-    (t) => !existingTopics.some((et) => et.includes(t))
+    (t) => !existingTopics.some((et) => et.includes(t)),
   );
 
   return gaps.slice(0, 5); // limit to 5 new pages
@@ -521,8 +598,8 @@ export function generateAutonomousSeoBrief(topic: string) {
   return {
     topic,
     description: `Comprehensive guide to ${topic} for Irish homeowners.`,
-    keywords: [topic, "retrofit", "Ireland", "EcoSmartHomes"],
-    primaryKeyword: topic
+    keywords: [topic, 'retrofit', 'Ireland', 'EcoSmartHomes'],
+    primaryKeyword: topic,
   };
 }
 
@@ -545,13 +622,15 @@ export function createAutonomousArticleDraft(seoBrief: any): string {
 // PHASE 14 — CROSS-DOMAIN KNOWLEDGE FUSION ENGINE
 // -------------------------------
 export const fusionSources: Record<string, string> = {
-  seai: "https://data.gov.ie/dataset/seai-energy-statistics",
-  cru: "https://www.cru.ie/publications/",
-  nsai: "https://standards.ie/",
-  ber: "https://ndber.seai.ie/"
+  seai: 'https://data.gov.ie/dataset/seai-energy-statistics',
+  cru: 'https://www.cru.ie/publications/',
+  nsai: 'https://standards.ie/',
+  ber: 'https://ndber.seai.ie/',
 };
 
-export async function fetchFusionData(sourceUrl: string): Promise<Array<{ title?: string; description?: string }>> {
+export async function fetchFusionData(
+  sourceUrl: string,
+): Promise<Array<{ title?: string; description?: string }>> {
   try {
     const { data } = await axios.get(sourceUrl, { timeout: 8000 });
     if (Array.isArray(data)) {
@@ -559,22 +638,27 @@ export async function fetchFusionData(sourceUrl: string): Promise<Array<{ title?
     }
     return [
       {
-        title: "Official SEAI Energy Data",
-        description: "Verified SEAI Irish retrofit grants, Part L U-value specifications, and BER rating benchmarks."
-      }
+        title: 'Official SEAI Energy Data',
+        description:
+          'Verified SEAI Irish retrofit grants, Part L U-value specifications, and BER rating benchmarks.',
+      },
     ];
   } catch (err) {
-    console.log("Fusion fetch info (fallback active):", sourceUrl);
+    console.log('Fusion fetch info (fallback active):', sourceUrl);
     return [
       {
-        title: "Official SEAI Energy Standards",
-        description: "Verified SEAI Irish retrofit grants, Part L U-value specifications, and BER rating benchmarks."
-      }
+        title: 'Official SEAI Energy Standards',
+        description:
+          'Verified SEAI Irish retrofit grants, Part L U-value specifications, and BER rating benchmarks.',
+      },
     ];
   }
 }
 
-export function fuseKnowledge(articleDraft: string, fusionData: Array<{ title?: string; description?: string }>): string {
+export function fuseKnowledge(
+  articleDraft: string,
+  fusionData: Array<{ title?: string; description?: string }>,
+): string {
   let enriched = articleDraft;
 
   fusionData.forEach((item) => {
@@ -599,11 +683,11 @@ export function buildKnowledgeCorpus(): Array<{ slug: string; text: string }> {
 
   // Add published pages
   for (const slug of Object.keys(authorityGraph.nodes)) {
-    if (authorityGraph.nodes[slug].type === "page") {
+    if (authorityGraph.nodes[slug].type === 'page') {
       try {
         const filePath = `./content/${slug}.html`;
         if (fs.existsSync(filePath)) {
-          const html = fs.readFileSync(filePath, "utf-8");
+          const html = fs.readFileSync(filePath, 'utf-8');
           corpus.push({ slug, text: html });
         }
       } catch (e) {
@@ -613,10 +697,10 @@ export function buildKnowledgeCorpus(): Array<{ slug: string; text: string }> {
   }
 
   // Add fused external data
-  corpus.push({ slug: "external-data", text: JSON.stringify(fusionSources) });
+  corpus.push({ slug: 'external-data', text: JSON.stringify(fusionSources) });
 
   // Add semantic entities
-  corpus.push({ slug: "entities", text: JSON.stringify(entityLibrary) });
+  corpus.push({ slug: 'entities', text: JSON.stringify(entityLibrary) });
 
   return corpus;
 }
@@ -624,18 +708,20 @@ export function buildKnowledgeCorpus(): Array<{ slug: string; text: string }> {
 export function detectQuestionIntent(question: string): string {
   const q = question.toLowerCase();
 
-  if (q.includes("grant")) return "grants";
-  if (q.includes("cost") || q.includes("price") || q.includes("payback")) return "costs";
-  if (q.includes("solar") || q.includes("pv")) return "solar";
-  if (q.includes("insulation") || q.includes("attic") || q.includes("wall")) return "insulation";
-  if (q.includes("heat pump") || q.includes("air-to-water")) return "heatPumps";
+  if (q.includes('grant')) return 'grants';
+  if (q.includes('cost') || q.includes('price') || q.includes('payback'))
+    return 'costs';
+  if (q.includes('solar') || q.includes('pv')) return 'solar';
+  if (q.includes('insulation') || q.includes('attic') || q.includes('wall'))
+    return 'insulation';
+  if (q.includes('heat pump') || q.includes('air-to-water')) return 'heatPumps';
 
-  return "general";
+  return 'general';
 }
 
 export function retrieveKnowledge(
   question: string,
-  corpus: Array<{ slug: string; text: string }>
+  corpus: Array<{ slug: string; text: string }>,
 ): Array<{ slug: string; text: string }> {
   const q = question.toLowerCase();
   const matches: Array<{ slug: string; text: string }> = [];
@@ -643,7 +729,9 @@ export function retrieveKnowledge(
   corpus.forEach((entry) => {
     if (
       entry.text.toLowerCase().includes(q) ||
-      q.split(" ").some((w) => w.length > 3 && entry.text.toLowerCase().includes(w))
+      q
+        .split(' ')
+        .some((w) => w.length > 3 && entry.text.toLowerCase().includes(w))
     ) {
       matches.push(entry);
     }
@@ -655,11 +743,11 @@ export function retrieveKnowledge(
 export function generateAnswer(
   question: string,
   sources: Array<{ slug: string; text: string }>,
-  intentProfile: IntentProfile
+  intentProfile: IntentProfile,
 ): string {
   let answer = `
     <h2>Answer: ${question}</h2>
-    <p>This response is tailored for Irish homeowners with a ${intentProfile?.tone || "helpful"} tone.</p>
+    <p>This response is tailored for Irish homeowners with a ${intentProfile?.tone || 'helpful'} tone.</p>
   `;
 
   sources.forEach((src) => {
@@ -673,7 +761,7 @@ export function generateAnswer(
 
   answer += `
     <section class="cta">
-      <h3>${intentProfile?.cta || "Contact EcoSmartHomes for expert retrofit advice"}</h3>
+      <h3>${intentProfile?.cta || 'Contact EcoSmartHomes for expert retrofit advice'}</h3>
       <p>Learn more about your options and next steps.</p>
     </section>
   `;
@@ -694,56 +782,68 @@ export interface DomainConfig {
 
 export const domainFleet: Record<string, DomainConfig> = {
   ecosmarthomes: {
-    name: "EcoSmartHomes",
-    repo: "github.com/joe/ecosmarthomes-site",
-    deployUrl: "https://ecosmarthomes.ie",
-    tone: "warm",
-    cta: "Book your free retrofit consultation"
+    name: 'EcoSmartHomes',
+    repo: 'github.com/joe/ecosmarthomes-site',
+    deployUrl: 'https://ecosmarthomes.ie',
+    tone: 'warm',
+    cta: 'Book your free retrofit consultation',
   },
   solarsmarthomes: {
-    name: "SolarSmartHomes",
-    repo: "github.com/joe/solarsmarthomes-site",
-    deployUrl: "https://solarsmarthomes.ie",
-    tone: "optimistic",
-    cta: "Calculate your solar savings"
+    name: 'SolarSmartHomes',
+    repo: 'github.com/joe/solarsmarthomes-site',
+    deployUrl: 'https://solarsmarthomes.ie',
+    tone: 'optimistic',
+    cta: 'Calculate your solar savings',
   },
   heatpumphub: {
-    name: "HeatPumpHub",
-    repo: "github.com/joe/heatpumphub-site",
-    deployUrl: "https://heatpumphub.ie",
-    tone: "expert",
-    cta: "Compare heat pump options"
+    name: 'HeatPumpHub',
+    repo: 'github.com/joe/heatpumphub-site',
+    deployUrl: 'https://heatpumphub.ie',
+    tone: 'expert',
+    cta: 'Compare heat pump options',
   },
   insulationadvisor: {
-    name: "InsulationAdvisor",
-    repo: "github.com/joe/insulationadvisor-site",
-    deployUrl: "https://insulationadvisor.ie",
-    tone: "technical",
-    cta: "Find the right insulation"
-  }
+    name: 'InsulationAdvisor',
+    repo: 'github.com/joe/insulationadvisor-site',
+    deployUrl: 'https://insulationadvisor.ie',
+    tone: 'technical',
+    cta: 'Find the right insulation',
+  },
 };
 
-export async function publishToFleet(slug: string, html: string): Promise<void> {
+export async function publishToFleet(
+  slug: string,
+  html: string,
+): Promise<void> {
   for (const domain of Object.values(domainFleet)) {
     await publishPageToGitHub(slug, html);
     console.log(`Published ${slug} to ${domain.name} (${domain.repo})`);
   }
 }
 
-export function personaliseForDomain(html: string, domain: DomainConfig): string {
+export function personaliseForDomain(
+  html: string,
+  domain: DomainConfig,
+): string {
   return html.replace(
-    "</body>",
+    '</body>',
     `
       <section class="domain-cta">
         <h2>${domain.cta}</h2>
         <p>This content is tailored for ${domain.name} visitors.</p>
       </section>
-    </body>`
+    </body>`,
   );
 }
 
-export function mergeKnowledgeGraphs(): { nodes: Record<string, any>; edges: any[] } {
-  const merged: { nodes: Record<string, any>; edges: any[] } = { nodes: {}, edges: [] };
+export function mergeKnowledgeGraphs(): {
+  nodes: Record<string, any>;
+  edges: any[];
+} {
+  const merged: { nodes: Record<string, any>; edges: any[] } = {
+    nodes: {},
+    edges: [],
+  };
 
   for (const _domain of Object.values(domainFleet)) {
     Object.assign(merged.nodes, authorityGraph.nodes);
@@ -753,19 +853,24 @@ export function mergeKnowledgeGraphs(): { nodes: Record<string, any>; edges: any
   return merged;
 }
 
-export function detectNetworkGaps(mergedGraph: { nodes: Record<string, any>; edges: any[] }): string[] {
+export function detectNetworkGaps(mergedGraph: {
+  nodes: Record<string, any>;
+  edges: any[];
+}): string[] {
   const nodeKeys = Object.keys(mergedGraph.nodes);
   const candidateGaps = [
-    "heat pump electricity tariff ireland",
-    "solar panel battery storage payback",
-    "attic insulation grant eligibility 2026"
+    'heat pump electricity tariff ireland',
+    'solar panel battery storage payback',
+    'attic insulation grant eligibility 2026',
   ];
-  return candidateGaps.filter((gap) => !nodeKeys.includes(gap.replace(/\s+/g, "-")));
+  return candidateGaps.filter(
+    (gap) => !nodeKeys.includes(gap.replace(/\s+/g, '-')),
+  );
 }
 
 export interface SerpChange {
   url: string;
-  type: "new_entry" | "rank_change";
+  type: 'new_entry' | 'rank_change';
   rank?: number;
   from?: number;
   to?: number;
@@ -783,13 +888,13 @@ export function detectVolatility(keyword: string): SerpChange[] | null {
   latest.forEach((result) => {
     const prev = previous.find((p) => p.url === result.url);
     if (!prev) {
-      changes.push({ url: result.url, type: "new_entry", rank: result.rank });
+      changes.push({ url: result.url, type: 'new_entry', rank: result.rank });
     } else if (prev.rank !== result.rank) {
       changes.push({
         url: result.url,
-        type: "rank_change",
+        type: 'rank_change',
         from: prev.rank,
-        to: result.rank
+        to: result.rank,
       });
     }
   });
@@ -810,79 +915,95 @@ export interface IntentProfile {
 
 export const intentProfiles: Record<string, IntentProfile> = {
   grants: {
-    tone: "supportive",
-    cta: "Check your eligibility for SEAI grants",
-    examples: ["SEAI Heat Pump Grant", "Better Energy Homes Scheme"],
-    entities: ["SEAI", "CRU", "BER"],
-    emphasis: ["cost reduction", "financial support"]
+    tone: 'supportive',
+    cta: 'Check your eligibility for SEAI grants',
+    examples: ['SEAI Heat Pump Grant', 'Better Energy Homes Scheme'],
+    entities: ['SEAI', 'CRU', 'BER'],
+    emphasis: ['cost reduction', 'financial support'],
   },
   costs: {
-    tone: "practical",
-    cta: "Calculate your estimated retrofit costs",
-    examples: ["€12,000 heat pump install", "€8,000 insulation package"],
-    entities: ["BER", "NZEB", "U-value"],
-    emphasis: ["price ranges", "payback period"]
+    tone: 'practical',
+    cta: 'Calculate your estimated retrofit costs',
+    examples: ['€12,000 heat pump install', '€8,000 insulation package'],
+    entities: ['BER', 'NZEB', 'U-value'],
+    emphasis: ['price ranges', 'payback period'],
   },
   solar: {
-    tone: "optimistic",
-    cta: "See how much solar could save you",
-    examples: ["3kW PV system", "Hybrid inverter"],
-    entities: ["Solar PV Grant", "kWh consumption"],
-    emphasis: ["energy independence", "bill reduction"]
+    tone: 'optimistic',
+    cta: 'See how much solar could save you',
+    examples: ['3kW PV system', 'Hybrid inverter'],
+    entities: ['Solar PV Grant', 'kWh consumption'],
+    emphasis: ['energy independence', 'bill reduction'],
   },
   insulation: {
-    tone: "technical",
-    cta: "Find the right insulation for your home",
-    examples: ["cavity wall insulation", "attic insulation"],
-    entities: ["U-value", "airtightness", "Part L"],
-    emphasis: ["heat loss", "building fabric"]
+    tone: 'technical',
+    cta: 'Find the right insulation for your home',
+    examples: ['cavity wall insulation', 'attic insulation'],
+    entities: ['U-value', 'airtightness', 'Part L'],
+    emphasis: ['heat loss', 'building fabric'],
   },
   heatPumps: {
-    tone: "expert",
-    cta: "Compare heat pump types for your home",
-    examples: ["air-to-water", "ground-source"],
-    entities: ["COP", "SCOP", "SEAI Heat Pump Grant"],
-    emphasis: ["efficiency", "running costs"]
-  }
+    tone: 'expert',
+    cta: 'Compare heat pump types for your home',
+    examples: ['air-to-water', 'ground-source'],
+    entities: ['COP', 'SCOP', 'SEAI Heat Pump Grant'],
+    emphasis: ['efficiency', 'running costs'],
+  },
 };
 
 export function detectIntent(seoBrief: any): string {
   const text = (
-    (seoBrief?.topic || "") +
-    " " +
-    (seoBrief?.description || "") +
-    " " +
-    (Array.isArray(seoBrief?.keywords) ? seoBrief.keywords.join(" ") : "")
+    (seoBrief?.topic || '') +
+    ' ' +
+    (seoBrief?.description || '') +
+    ' ' +
+    (Array.isArray(seoBrief?.keywords) ? seoBrief.keywords.join(' ') : '')
   ).toLowerCase();
 
-  if (text.includes("grant")) return "grants";
-  if (text.includes("cost") || text.includes("price") || text.includes("payback")) return "costs";
-  if (text.includes("solar") || text.includes("pv")) return "solar";
-  if (text.includes("insulation") || text.includes("attic") || text.includes("wall")) return "insulation";
-  if (text.includes("heat pump") || text.includes("air-to-water")) return "heatPumps";
+  if (text.includes('grant')) return 'grants';
+  if (
+    text.includes('cost') ||
+    text.includes('price') ||
+    text.includes('payback')
+  )
+    return 'costs';
+  if (text.includes('solar') || text.includes('pv')) return 'solar';
+  if (
+    text.includes('insulation') ||
+    text.includes('attic') ||
+    text.includes('wall')
+  )
+    return 'insulation';
+  if (text.includes('heat pump') || text.includes('air-to-water'))
+    return 'heatPumps';
 
-  return "general";
+  return 'general';
 }
 
-export function personaliseContent(articleDraft: string, intentProfile: IntentProfile): string {
+export function personaliseContent(
+  articleDraft: string,
+  intentProfile: IntentProfile,
+): string {
   if (!intentProfile) return articleDraft;
   let personalised = articleDraft;
 
   // Inject tone
-  if (personalised.includes("<h1>")) {
+  if (personalised.includes('<h1>')) {
     personalised = personalised.replace(
-      "<h1>",
-      `<p class="tone-intro">This guide is written in a ${intentProfile.tone} tone to help Irish homeowners make informed decisions.</p><h1>`
+      '<h1>',
+      `<p class="tone-intro">This guide is written in a ${intentProfile.tone} tone to help Irish homeowners make informed decisions.</p><h1>`,
     );
   } else {
-    personalised = `<p class="tone-intro">This guide is written in a ${intentProfile.tone} tone to help Irish homeowners make informed decisions.</p>` + personalised;
+    personalised =
+      `<p class="tone-intro">This guide is written in a ${intentProfile.tone} tone to help Irish homeowners make informed decisions.</p>` +
+      personalised;
   }
 
   // Add examples
   personalised += `
     <section class="intent-examples">
       <h2>Real Irish Examples</h2>
-      <ul>${intentProfile.examples.map((e) => `<li>${e}</li>`).join("")}</ul>
+      <ul>${intentProfile.examples.map((e) => `<li>${e}</li>`).join('')}</ul>
     </section>
   `;
 
@@ -898,7 +1019,7 @@ export function personaliseContent(articleDraft: string, intentProfile: IntentPr
   personalised += `
     <section class="intent-emphasis">
       <h2>Key Focus Areas</h2>
-      <ul>${intentProfile.emphasis.map((e) => `<li>${e}</li>`).join("")}</ul>
+      <ul>${intentProfile.emphasis.map((e) => `<li>${e}</li>`).join('')}</ul>
     </section>
   `;
 
@@ -916,7 +1037,9 @@ export interface TelemetryEvent {
 
 export const behaviouralTelemetry: Record<string, TelemetryEvent[]> = {};
 
-export function analyseBehaviour(slug: string): { avgDwell: number; avgScroll: number } | null {
+export function analyseBehaviour(
+  slug: string,
+): { avgDwell: number; avgScroll: number } | null {
   const data = behaviouralTelemetry[slug];
   if (!data || data.length < 5) return null;
 
@@ -927,7 +1050,7 @@ export function analyseBehaviour(slug: string): { avgDwell: number; avgScroll: n
 }
 
 // Your site’s known topics (expand as needed)
-let mySiteTopics: Record<string, number> = {};
+const mySiteTopics: Record<string, number> = {};
 
 // Track visited URLs + domain timestamps
 const visited = new Set<string>();
@@ -936,12 +1059,12 @@ const lastDomainHit: Record<string, number> = {};
 // -------------------------------
 // URL QUEUE (expandable)
 // -------------------------------
-let urlQueue = [
-  "https://www.lidl.ie",
-  "https://www.supervalu.ie",
-  "https://www.electricireland.ie",
-  "https://www.seai.ie",
-  "https://www.gov.ie/en/publication/home-energy-upgrades/",
+const urlQueue = [
+  'https://www.lidl.ie',
+  'https://www.supervalu.ie',
+  'https://www.electricireland.ie',
+  'https://www.seai.ie',
+  'https://www.gov.ie/en/publication/home-energy-upgrades/',
 ];
 
 // -------------------------------
@@ -968,7 +1091,7 @@ function markDomain(url: string) {
 }
 
 function hashContent(content: string) {
-  return crypto.createHash("sha256").update(content).digest("hex");
+  return crypto.createHash('sha256').update(content).digest('hex');
 }
 
 // -------------------------------
@@ -981,8 +1104,8 @@ async function fetchWithRetry(url: string, retries = MAX_RETRIES) {
   try {
     const res = await axios.get(url, {
       headers: {
-        "User-Agent": USER_AGENT,
-        Accept: "text/html,application/xhtml+xml",
+        'User-Agent': USER_AGENT,
+        Accept: 'text/html,application/xhtml+xml',
       },
       timeout: 15000,
     });
@@ -1004,7 +1127,9 @@ async function discoverSitemap(url: string) {
   const root = `${new URL(url).origin}/sitemap.xml`;
 
   try {
-    const res = await axios.get(root, { headers: { "User-Agent": USER_AGENT } });
+    const res = await axios.get(root, {
+      headers: { 'User-Agent': USER_AGENT },
+    });
     const xml = res.data;
 
     const urls = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]);
@@ -1020,19 +1145,19 @@ async function discoverSitemap(url: string) {
 function extractSEO(html: string, url: string) {
   const $ = cheerio.load(html);
 
-  const title = $("title").text() || "";
-  const description = $('meta[name="description"]').attr("content") || "";
-  const keywords = $('meta[name="keywords"]').attr("content") || "";
+  const title = $('title').text() || '';
+  const description = $('meta[name="description"]').attr('content') || '';
+  const keywords = $('meta[name="keywords"]').attr('content') || '';
 
-  const h1 = $("h1").first().text() || "";
-  const links = $("a")
-    .map((_, a) => $(a).attr("href"))
+  const h1 = $('h1').first().text() || '';
+  const links = $('a')
+    .map((_, a) => $(a).attr('href'))
     .get()
-    .filter((x) => x && x.startsWith("http"));
+    .filter((x) => x && x.startsWith('http'));
 
   const backlinks = links.filter((l) => domainOf(l) !== domainOf(url));
 
-  const wordCount = $("body").text().split(/\s+/).length;
+  const wordCount = $('body').text().split(/\s+/).length;
 
   const score = Math.min(100, Math.floor(wordCount / 20));
 
@@ -1053,18 +1178,29 @@ function extractSEO(html: string, url: string) {
 
 // Simple topic extraction from title, description, H1, keywords
 function extractTopics(seo: any) {
-  const text = [
-    seo.title,
-    seo.description,
-    seo.h1,
-    seo.keywords
-  ].join(" ").toLowerCase();
+  const text = [seo.title, seo.description, seo.h1, seo.keywords]
+    .join(' ')
+    .toLowerCase();
 
   const tokens = text.split(/\W+/).filter((t) => t.length > 3);
 
   const stopwords = new Set([
-    "this","that","with","from","your","have","home","energy","upgrade",
-    "grant","ireland","irish","service","about","information","website"
+    'this',
+    'that',
+    'with',
+    'from',
+    'your',
+    'have',
+    'home',
+    'energy',
+    'upgrade',
+    'grant',
+    'ireland',
+    'irish',
+    'service',
+    'about',
+    'information',
+    'website',
   ]);
 
   const filtered = tokens.filter((t) => !stopwords.has(t));
@@ -1076,7 +1212,10 @@ function extractTopics(seo: any) {
 }
 
 // Compare competitor topics vs your own site topics
-function detectContentGaps(competitorTopics: Record<string, number>, myTopics: Record<string, number>) {
+function detectContentGaps(
+  competitorTopics: Record<string, number>,
+  myTopics: Record<string, number>,
+) {
   const gaps: string[] = [];
 
   for (const topic in competitorTopics) {
@@ -1089,7 +1228,7 @@ function detectContentGaps(competitorTopics: Record<string, number>, myTopics: R
 }
 
 function updateMySiteTopics(seo: any, url: string) {
-  if (url.includes("ecosmarthomes.ie")) {
+  if (url.includes('ecosmarthomes.ie')) {
     const topics = extractTopics(seo);
     for (const t in topics) {
       mySiteTopics[t] = (mySiteTopics[t] || 0) + topics[t];
@@ -1104,8 +1243,8 @@ function updateMySiteTopics(seo: any, url: string) {
 function generateUrlSlug(topic: string) {
   return topic
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")   // replace non-alphanumerics with hyphens
-    .replace(/^-+|-+$/g, "");      // trim hyphens
+    .replace(/[^a-z0-9]+/g, '-') // replace non-alphanumerics with hyphens
+    .replace(/^-+|-+$/g, ''); // trim hyphens
 }
 
 function generateLandingPageUrls(gaps: string[]) {
@@ -1166,7 +1305,7 @@ function generateFaq(topic: string) {
 }
 
 function generateSchemaType(topic: string) {
-  return "FAQPage";
+  return 'FAQPage';
 }
 
 function generateSeoBrief(topic: string, url: string) {
@@ -1255,9 +1394,7 @@ function generateFullContentOutline(topic: string) {
     },
     {
       section: `8. Frequently Asked Questions`,
-      bullets: [
-        `Top 5 FAQs auto-generated from generateFaq(topic)`,
-      ],
+      bullets: [`Top 5 FAQs auto-generated from generateFaq(topic)`],
     },
     {
       section: `9. Recommended Internal Links`,
@@ -1283,7 +1420,11 @@ function generateFullContentOutline(topic: string) {
 // LANDING PAGE TEMPLATE GENERATOR
 // -------------------------------
 
-function generateLandingPageTemplate(topic: string, seoBrief: any, outline: any) {
+function generateLandingPageTemplate(
+  topic: string,
+  seoBrief: any,
+  outline: any,
+) {
   const cap = topic.charAt(0).toUpperCase() + topic.slice(1);
 
   return {
@@ -1308,18 +1449,18 @@ function generateLandingPageTemplate(topic: string, seoBrief: any, outline: any)
     },
 
     internalLinks: [
-      "/retrofit-guide",
-      "/ber-assessment",
-      "/heat-pump-installation",
-      "/solar-panels-ireland",
+      '/retrofit-guide',
+      '/ber-assessment',
+      '/heat-pump-installation',
+      '/solar-panels-ireland',
     ],
 
     cta: {
-      heading: "Ready to Improve Your Home’s Energy Performance?",
+      heading: 'Ready to Improve Your Home’s Energy Performance?',
       buttons: [
-        "Book Your Free Home Energy Assessment",
-        "Check Your SEAI Grant Eligibility",
-        "Talk to an EcoSmartHomes Advisor",
+        'Book Your Free Home Energy Assessment',
+        'Check Your SEAI Grant Eligibility',
+        'Talk to an EcoSmartHomes Advisor',
       ],
     },
   };
@@ -1334,12 +1475,12 @@ function generateInternalLinkingPlan(topic: string, suggestedUrl: string) {
 
   // Core pages on your site
   const corePages = [
-    "/retrofit-guide",
-    "/ber-assessment",
-    "/heat-pump-installation",
-    "/solar-panels-ireland",
-    "/grants",
-    "/contact",
+    '/retrofit-guide',
+    '/ber-assessment',
+    '/heat-pump-installation',
+    '/solar-panels-ireland',
+    '/grants',
+    '/contact',
   ];
 
   // Anchor text suggestions
@@ -1357,30 +1498,30 @@ function generateInternalLinkingPlan(topic: string, suggestedUrl: string) {
 
     primaryLinks: [
       {
-        from: "/retrofit-guide",
+        from: '/retrofit-guide',
         anchor: `${cap} and retrofit planning`,
-        placement: "mid-content",
+        placement: 'mid-content',
       },
       {
-        from: "/ber-assessment",
+        from: '/ber-assessment',
         anchor: `${cap} impact on BER rating`,
-        placement: "intro",
+        placement: 'intro',
       },
     ],
 
     secondaryLinks: corePages.map((page) => ({
       from: page,
       anchor: anchorTexts[Math.floor(Math.random() * anchorTexts.length)],
-      placement: "footer",
+      placement: 'footer',
     })),
 
     reverseLinks: [
       {
-        to: "/retrofit-guide",
+        to: '/retrofit-guide',
         anchor: `Retrofit guide`,
       },
       {
-        to: "/ber-assessment",
+        to: '/ber-assessment',
         anchor: `BER assessment`,
       },
     ],
@@ -1403,48 +1544,52 @@ function validateSchemaBlock(schema: any) {
 
   let obj: any = {};
   try {
-    if (typeof schema.json === "string") {
+    if (typeof schema.json === 'string') {
       obj = JSON.parse(schema.json);
-    } else if (schema["@type"]) {
+    } else if (schema['@type']) {
       obj = schema;
-    } else if (schema.json && typeof schema.json === "object") {
+    } else if (schema.json && typeof schema.json === 'object') {
       obj = schema.json;
     }
   } catch {
-    errors.push("Failed to parse JSON-LD string.");
+    errors.push('Failed to parse JSON-LD string.');
     return { isValid: false, errors, warnings };
   }
 
   // Basic JSON-LD structure check
-  if (!obj["@context"] || !obj["@type"]) {
-    errors.push("Missing @context or @type in JSON-LD schema.");
+  if (!obj['@context'] || !obj['@type']) {
+    errors.push('Missing @context or @type in JSON-LD schema.');
   }
 
   // FAQPage validation
-  if (obj["@type"] === "FAQPage") {
+  if (obj['@type'] === 'FAQPage') {
     if (!Array.isArray(obj.mainEntity) || obj.mainEntity.length === 0) {
-      errors.push("FAQPage schema must include mainEntity array with at least one question.");
+      errors.push(
+        'FAQPage schema must include mainEntity array with at least one question.',
+      );
     } else {
       obj.mainEntity.forEach((q: any, idx: number) => {
         if (!q.name) errors.push(`FAQPage question ${idx + 1} missing 'name'.`);
         if (!q.acceptedAnswer || !q.acceptedAnswer.text) {
-          errors.push(`FAQPage question ${idx + 1} missing acceptedAnswer.text.`);
+          errors.push(
+            `FAQPage question ${idx + 1} missing acceptedAnswer.text.`,
+          );
         }
       });
     }
   }
 
   // BreadcrumbList validation
-  if (obj["@type"] === "BreadcrumbList") {
+  if (obj['@type'] === 'BreadcrumbList') {
     if (!Array.isArray(obj.itemListElement)) {
-      errors.push("BreadcrumbList must include itemListElement array.");
+      errors.push('BreadcrumbList must include itemListElement array.');
     }
   }
 
   // Article validation
-  if (obj["@type"] === "Article") {
-    if (!obj.headline) warnings.push("Article schema missing headline.");
-    if (!obj.description) warnings.push("Article schema missing description.");
+  if (obj['@type'] === 'Article') {
+    if (!obj.headline) warnings.push('Article schema missing headline.');
+    if (!obj.description) warnings.push('Article schema missing description.');
   }
 
   return {
@@ -1456,65 +1601,71 @@ function validateSchemaBlock(schema: any) {
 
 function buildFaqSchema(faqList: string[]): FAQPageSchema {
   const questions = faqList.map((faq) => {
-    const [question, answer] = faq.includes("|")
-      ? faq.split("|")
-      : [faq, `Official EcoSmartHomes guide for Irish homeowners, including SEAI grant rules and costs.`];
+    const [question, answer] = faq.includes('|')
+      ? faq.split('|')
+      : [
+          faq,
+          `Official EcoSmartHomes guide for Irish homeowners, including SEAI grant rules and costs.`,
+        ];
     return { question: question.trim(), answer: answer.trim() };
   });
 
   const json = JSON.stringify(
     {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": questions.map((q) => ({
-        "@type": "Question",
-        "name": q.question,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": q.answer,
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: questions.map((q) => ({
+        '@type': 'Question',
+        name: q.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: q.answer,
         },
       })),
     },
     null,
-    2
+    2,
   );
 
   return {
-    type: "FAQPage",
+    type: 'FAQPage',
     json,
     meta: { questions },
     valid: true,
   };
 }
 
-function buildArticleSchema(topic: string, suggestedUrl: string): ArticleSchema {
+function buildArticleSchema(
+  topic: string,
+  suggestedUrl: string,
+): ArticleSchema {
   const headline = `${topic} — EcoSmartHomes Ireland`;
   const description = `Learn about ${topic} with expert guidance from EcoSmartHomes Ireland.`;
 
   const json = JSON.stringify(
     {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": headline,
-      "description": description,
-      "url": suggestedUrl,
-      "publisher": {
-        "@type": "Organization",
-        "name": "EcoSmartHomes Ireland",
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: headline,
+      description: description,
+      url: suggestedUrl,
+      publisher: {
+        '@type': 'Organization',
+        name: 'EcoSmartHomes Ireland',
       },
     },
     null,
-    2
+    2,
   );
 
   return {
-    type: "Article",
+    type: 'Article',
     json,
     meta: {
       headline,
       description,
       url: suggestedUrl,
-      publisher: "EcoSmartHomes Ireland",
+      publisher: 'EcoSmartHomes Ireland',
     },
     valid: true,
   };
@@ -1523,56 +1674,59 @@ function buildArticleSchema(topic: string, suggestedUrl: string): ArticleSchema 
 function buildServiceSchema(topic: string): ServiceSchema {
   const json = JSON.stringify(
     {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "serviceType": topic,
-      "provider": {
-        "@type": "LocalBusiness",
-        "name": "EcoSmartHomes Ireland",
-        "areaServed": "Ireland",
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      serviceType: topic,
+      provider: {
+        '@type': 'LocalBusiness',
+        name: 'EcoSmartHomes Ireland',
+        areaServed: 'Ireland',
       },
     },
     null,
-    2
+    2,
   );
 
   return {
-    type: "Service",
+    type: 'Service',
     json,
     meta: {
       serviceType: topic,
       provider: {
-        name: "EcoSmartHomes Ireland",
-        areaServed: "Ireland",
+        name: 'EcoSmartHomes Ireland',
+        areaServed: 'Ireland',
       },
     },
     valid: true,
   };
 }
 
-function buildBreadcrumbSchema(topic: string, suggestedUrl: string): BreadcrumbListSchema {
+function buildBreadcrumbSchema(
+  topic: string,
+  suggestedUrl: string,
+): BreadcrumbListSchema {
   const items = [
-    { name: "Home", url: "https://ecosmarthomes.ie", position: 1 },
+    { name: 'Home', url: 'https://ecosmarthomes.ie', position: 1 },
     { name: topic, url: suggestedUrl, position: 2 },
   ];
 
   const json = JSON.stringify(
     {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": items.map((item) => ({
-        "@type": "ListItem",
-        "position": item.position,
-        "name": item.name,
-        "item": item.url,
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: items.map((item) => ({
+        '@type': 'ListItem',
+        position: item.position,
+        name: item.name,
+        item: item.url,
       })),
     },
     null,
-    2
+    2,
   );
 
   return {
-    type: "BreadcrumbList",
+    type: 'BreadcrumbList',
     json,
     meta: { items },
     valid: true,
@@ -1580,10 +1734,10 @@ function buildBreadcrumbSchema(topic: string, suggestedUrl: string): BreadcrumbL
 }
 
 function buildRawJsonLdSchema(blocks: string[]): RawJsonLdSchema {
-  const json = blocks.join("\n");
+  const json = blocks.join('\n');
 
   return {
-    type: "RawJsonLd",
+    type: 'RawJsonLd',
     json,
     valid: true,
   };
@@ -1596,7 +1750,7 @@ function buildRawJsonLdSchema(blocks: string[]): RawJsonLdSchema {
 export function generateFullJsonLdSchema(
   topic: string,
   suggestedUrl: string,
-  faqList: string[]
+  faqList: string[],
 ): FullJsonLdSchema {
   const faq = buildFaqSchema(faqList);
   const article = buildArticleSchema(topic, suggestedUrl);
@@ -1631,28 +1785,28 @@ export function generateFullJsonLdSchema(
 
 export function selectSchemasForPageType(
   pageType: PageType,
-  builders: FullJsonLdSchema
+  builders: FullJsonLdSchema,
 ): Partial<FullJsonLdSchema> {
   switch (pageType) {
-    case "article":
+    case 'article':
       return {
         article: builders.article,
         faq: builders.faq,
         breadcrumbs: builders.breadcrumbs,
       };
 
-    case "service":
+    case 'service':
       return {
         service: builders.service,
         breadcrumbs: builders.breadcrumbs,
       };
 
-    case "faq":
+    case 'faq':
       return {
         faq: builders.faq,
       };
 
-    case "category":
+    case 'category':
       return {
         breadcrumbs: builders.breadcrumbs,
         raw: builders.raw,
@@ -1668,7 +1822,7 @@ function generateArticleDraft(
   topic: string,
   seoBrief: any,
   outline: any,
-  template: any
+  template: any,
 ): string {
   const cap = topic.charAt(0).toUpperCase() + topic.slice(1);
 
@@ -1707,13 +1861,25 @@ function generateHtmlLandingPage(
   seoBrief: any,
   outline: any,
   template: any,
-  schema: any
+  schema: any,
 ): string {
   const cap = topic.charAt(0).toUpperCase() + topic.slice(1);
 
-  const faqSchemaObj = schema?.faq ? (typeof schema.faq.json === 'string' ? JSON.parse(schema.faq.json) : schema.faq) : {};
-  const articleSchemaObj = schema?.article ? (typeof schema.article.json === 'string' ? JSON.parse(schema.article.json) : schema.article) : {};
-  const breadcrumbSchemaObj = schema?.breadcrumbs ? (typeof schema.breadcrumbs.json === 'string' ? JSON.parse(schema.breadcrumbs.json) : schema.breadcrumbs) : {};
+  const faqSchemaObj = schema?.faq
+    ? typeof schema.faq.json === 'string'
+      ? JSON.parse(schema.faq.json)
+      : schema.faq
+    : {};
+  const articleSchemaObj = schema?.article
+    ? typeof schema.article.json === 'string'
+      ? JSON.parse(schema.article.json)
+      : schema.article
+    : {};
+  const breadcrumbSchemaObj = schema?.breadcrumbs
+    ? typeof schema.breadcrumbs.json === 'string'
+      ? JSON.parse(schema.breadcrumbs.json)
+      : schema.breadcrumbs
+    : {};
 
   const html = `
 <!DOCTYPE html>
@@ -1749,7 +1915,7 @@ function generateHtmlLandingPage(
       window.addEventListener("beforeunload", () => {
         try {
           const payload = JSON.stringify({
-            slug: window.location.pathname.replace("/content/", "").replace(".html", "").replace(/^\//, ""),
+            slug: window.location.pathname.replace("/content/", "").replace(".html", "").replace(/^[/]/, ""),
             dwellTime: Date.now() - start,
             scrollDepth: maxScroll
           });
@@ -1783,12 +1949,12 @@ function generateHtmlLandingPage(
       <section>
         <h2>${section.section}</h2>
         <ul>
-          ${section.bullets.map((b: string) => `<li>${b}</li>`).join("")}
+          ${section.bullets.map((b: string) => `<li>${b}</li>`).join('')}
         </ul>
       </section>
-    `
+    `,
       )
-      .join("")}
+      .join('')}
 
     <section>
       <h2>Frequently Asked Questions</h2>
@@ -1799,15 +1965,15 @@ function generateHtmlLandingPage(
           <h3>${q}</h3>
           <p>Information about ${topic} for Irish homeowners.</p>
         </div>
-      `
+      `,
         )
-        .join("")}
+        .join('')}
     </section>
 
     <section class="cta">
       <h2>${template.cta.heading}</h2>
       <ul>
-        ${template.cta.buttons.map((btn: string) => `<li>${btn}</li>`).join("")}
+        ${template.cta.buttons.map((btn: string) => `<li>${btn}</li>`).join('')}
       </ul>
     </section>
 
@@ -1817,8 +1983,11 @@ function generateHtmlLandingPage(
     <nav>
       <ul>
         ${template.internalLinks
-          .map((link: string) => `<li><a href="${link}">${link.replace("/", "")}</a></li>`)
-          .join("")}
+          .map(
+            (link: string) =>
+              `<li><a href="${link}">${link.replace('/', '')}</a></li>`,
+          )
+          .join('')}
       </ul>
     </nav>
   </footer>
@@ -1834,39 +2003,43 @@ function generateHtmlLandingPage(
 // PAGE TYPE AUTO-CLASSIFIER
 // -------------------------------
 
-function classifyPageType(topic: string, outline: any, seoBrief: any): PageType {
+function classifyPageType(
+  topic: string,
+  outline: any,
+  seoBrief: any,
+): PageType {
   const t = topic.toLowerCase();
 
   // FAQ pages
-  if (seoBrief.faq.length >= 6 || t.includes("faq")) {
-    return "faq";
+  if (seoBrief.faq.length >= 6 || t.includes('faq')) {
+    return 'faq';
   }
 
   // Service pages (retrofit, heat pumps, BER, insulation, solar)
   const serviceKeywords = [
-    "retrofit",
-    "heat pump",
-    "insulation",
-    "airtightness",
-    "solar",
-    "ber",
-    "assessment",
-    "upgrade",
-    "installation",
-    "service"
+    'retrofit',
+    'heat pump',
+    'insulation',
+    'airtightness',
+    'solar',
+    'ber',
+    'assessment',
+    'upgrade',
+    'installation',
+    'service',
   ];
 
   if (serviceKeywords.some((k) => t.includes(k))) {
-    return "service";
+    return 'service';
   }
 
   // Category pages (broad topics)
-  if (outline.length <= 4 || t.includes("guide") === false) {
-    return "category";
+  if (outline.length <= 4 || t.includes('guide') === false) {
+    return 'category';
   }
 
   // Article pages (default)
-  return "article";
+  return 'article';
 }
 
 // -------------------------------
@@ -1877,7 +2050,7 @@ function scoreSerpCompetitiveness(
   topic: string,
   seoBrief: any,
   outline: any,
-  pageType: PageType
+  pageType: PageType,
 ) {
   const t = topic.toLowerCase();
 
@@ -1885,13 +2058,13 @@ function scoreSerpCompetitiveness(
 
   // Keyword competitiveness heuristics
   const highCompetitionKeywords = [
-    "heat pump",
-    "solar",
-    "ber",
-    "retrofit",
-    "insulation",
-    "grants",
-    "energy upgrade"
+    'heat pump',
+    'solar',
+    'ber',
+    'retrofit',
+    'insulation',
+    'grants',
+    'energy upgrade',
   ];
 
   if (highCompetitionKeywords.some((k) => t.includes(k))) {
@@ -1911,12 +2084,12 @@ function scoreSerpCompetitiveness(
   }
 
   // Page type difficulty
-  if (pageType === "service") score += 20; // service pages are competitive
-  if (pageType === "faq") score -= 10;     // FAQ pages are easier
-  if (pageType === "category") score += 15;
+  if (pageType === 'service') score += 20; // service pages are competitive
+  if (pageType === 'faq') score -= 10; // FAQ pages are easier
+  if (pageType === 'category') score += 15;
 
   // Keyword length (short keywords = harder)
-  if (topic.split(" ").length <= 2) {
+  if (topic.split(' ').length <= 2) {
     score += 10;
   }
 
@@ -1926,10 +2099,7 @@ function scoreSerpCompetitiveness(
   return {
     topic,
     difficulty: score,
-    level:
-      score >= 70 ? "Hard" :
-      score >= 40 ? "Moderate" :
-      "Easy"
+    level: score >= 70 ? 'Hard' : score >= 40 ? 'Moderate' : 'Easy',
   };
 }
 
@@ -1942,7 +2112,7 @@ function scoreContentQuality(
   seoBrief: any,
   outline: any,
   articleDraft: string,
-  schemaBundle: any
+  schemaBundle: any,
 ) {
   let score = 0;
 
@@ -1965,11 +2135,11 @@ function scoreContentQuality(
     schemaBundle?.faq,
     schemaBundle?.service,
     schemaBundle?.breadcrumbs,
-    schemaBundle?.article
+    schemaBundle?.article,
   ];
 
   schemaChecks.forEach((schema) => {
-    if (schema && (schema.json || schema["@type"] || schema.type)) score += 5;
+    if (schema && (schema.json || schema['@type'] || schema.type)) score += 5;
   });
 
   // CTA strength
@@ -1978,7 +2148,9 @@ function scoreContentQuality(
   // Keyword density (simple heuristic)
   const keyword = topic.toLowerCase();
   const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const keywordCount = (articleDraft.toLowerCase().match(new RegExp(escapedKeyword, "g")) || []).length;
+  const keywordCount = (
+    articleDraft.toLowerCase().match(new RegExp(escapedKeyword, 'g')) || []
+  ).length;
 
   if (keywordCount >= 8) score += 10;
   else if (keywordCount >= 4) score += 5;
@@ -1990,10 +2162,13 @@ function scoreContentQuality(
     topic,
     score,
     grade:
-      score >= 85 ? "A — Excellent" :
-      score >= 70 ? "B — Strong" :
-      score >= 55 ? "C — Needs Improvement" :
-      "D — Weak"
+      score >= 85
+        ? 'A — Excellent'
+        : score >= 70
+          ? 'B — Strong'
+          : score >= 55
+            ? 'C — Needs Improvement'
+            : 'D — Weak',
   };
 }
 
@@ -2014,13 +2189,17 @@ function serpScore(seo: any) {
 }
 
 function broadcastMessage(target: any, data: string) {
-  if (target && "clients" in target && target.clients) {
+  if (target && 'clients' in target && target.clients) {
     target.clients.forEach((client: any) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(data);
       }
     });
-  } else if (target && typeof target.send === "function" && target.readyState === WebSocket.OPEN) {
+  } else if (
+    target &&
+    typeof target.send === 'function' &&
+    target.readyState === WebSocket.OPEN
+  ) {
     target.send(data);
   }
 }
@@ -2050,9 +2229,9 @@ async function crawlUrl(ws: any, url: string) {
     broadcastMessage(
       ws,
       JSON.stringify({
-        type: "crawl_event",
+        type: 'crawl_event',
         url,
-        status: "indexed",
+        status: 'indexed',
         code: res.status,
         size: html.length,
         xp,
@@ -2063,45 +2242,54 @@ async function crawlUrl(ws: any, url: string) {
         contentGaps,
         proposedUrls,
         timestamp: Date.now(),
-      })
+      }),
     );
 
     console.log(`Indexed: ${url}`);
 
-    if (!url.includes("ecosmarthomes.ie")) {
+    if (!url.includes('ecosmarthomes.ie')) {
       const gaps = detectContentGaps(topics, mySiteTopics);
 
       if (gaps.length > 0) {
         const suggestedUrls = generateLandingPageUrls(gaps);
         const seoBriefs = gaps.map((topic, i) =>
-          generateSeoBrief(topic, suggestedUrls[i])
+          generateSeoBrief(topic, suggestedUrls[i]),
         );
         const contentOutlines = gaps.map((topic) =>
-          generateFullContentOutline(topic)
+          generateFullContentOutline(topic),
         );
         const pageTypes = gaps.map((topic, i) =>
-          classifyPageType(topic, contentOutlines[i], seoBriefs[i])
+          classifyPageType(topic, contentOutlines[i], seoBriefs[i]),
         );
         const serpScores = gaps.map((topic, i) =>
           scoreSerpCompetitiveness(
             topic,
             seoBriefs[i],
             contentOutlines[i],
-            pageTypes[i]
-          )
+            pageTypes[i],
+          ),
         );
         const landingPageTemplates = gaps.map((topic, i) =>
-          generateLandingPageTemplate(topic, seoBriefs[i], contentOutlines[i])
+          generateLandingPageTemplate(topic, seoBriefs[i], contentOutlines[i]),
         );
         const internalLinkingPlans = gaps.map((topic, i) =>
-          generateInternalLinkingPlan(topic, suggestedUrls[i])
+          generateInternalLinkingPlan(topic, suggestedUrls[i]),
         );
         const selectedSchemas = gaps.map((topic, i) => {
-          const allSchemas = generateFullJsonLdSchema(topic, suggestedUrls[i], seoBriefs[i].faq);
+          const allSchemas = generateFullJsonLdSchema(
+            topic,
+            suggestedUrls[i],
+            seoBriefs[i].faq,
+          );
           return selectSchemasForPageType(pageTypes[i], allSchemas);
         });
         const articleDrafts = gaps.map((topic, i) =>
-          generateArticleDraft(topic, seoBriefs[i], contentOutlines[i], landingPageTemplates[i])
+          generateArticleDraft(
+            topic,
+            seoBriefs[i],
+            contentOutlines[i],
+            landingPageTemplates[i],
+          ),
         );
         const contentQualityScores = gaps.map((topic, i) =>
           scoreContentQuality(
@@ -2109,22 +2297,24 @@ async function crawlUrl(ws: any, url: string) {
             seoBriefs[i],
             contentOutlines[i],
             articleDrafts[i],
-            selectedSchemas[i]
-          )
+            selectedSchemas[i],
+          ),
         );
 
         contentQualityScores.forEach((qScore, i) => {
           if (qScore.score < 70) {
-            const slug = suggestedUrls[i].replace("/", "");
+            const slug = suggestedUrls[i].replace('/', '');
             rewriteQueue.push({
               slug,
               articleDraft: articleDrafts[i],
               seoBrief: seoBriefs[i],
               outline: contentOutlines[i],
               schemaBundle: selectedSchemas[i],
-              createdAt: Date.now()
+              createdAt: Date.now(),
             });
-            console.log(`Content Gap Detector: Page '${slug}' scored ${qScore.score} (${qScore.grade}). Added to rewriteQueue.`);
+            console.log(
+              `Content Gap Detector: Page '${slug}' scored ${qScore.score} (${qScore.grade}). Added to rewriteQueue.`,
+            );
           }
         });
         const htmlTemplates = gaps.map((topic, i) =>
@@ -2133,8 +2323,8 @@ async function crawlUrl(ws: any, url: string) {
             seoBriefs[i],
             contentOutlines[i],
             landingPageTemplates[i],
-            selectedSchemas[i]
-          )
+            selectedSchemas[i],
+          ),
         );
 
         const schemaValidation = selectedSchemas.map((bundle: any) => {
@@ -2150,43 +2340,54 @@ async function crawlUrl(ws: any, url: string) {
         // SERP Competitor Diff Engine Patching
         for (let i = 0; i < gaps.length; i++) {
           const topic = gaps[i];
-          const primaryKeyword = (seoBriefs[i] as any)?.primaryKeyword || seoBriefs[i]?.topic || topic;
+          const primaryKeyword =
+            (seoBriefs[i] as any)?.primaryKeyword ||
+            seoBriefs[i]?.topic ||
+            topic;
           try {
             const competitors = await getTopCompetitors(primaryKeyword);
-            const missingTopics = diffCompetitors(competitors, contentOutlines[i]);
+            const missingTopics = diffCompetitors(
+              competitors,
+              contentOutlines[i],
+            );
 
             if (missingTopics.length > 0) {
-              const patchedDraft = patchContent(articleDrafts[i], missingTopics);
+              const patchedDraft = patchContent(
+                articleDrafts[i],
+                missingTopics,
+              );
 
               const newScore = scoreContentQuality(
                 topic,
                 seoBriefs[i],
                 contentOutlines[i],
                 patchedDraft,
-                selectedSchemas[i]
+                selectedSchemas[i],
               );
 
               if (newScore.score > contentQualityScores[i].score) {
-                const slug = suggestedUrls[i].replace("/", "");
+                const slug = suggestedUrls[i].replace('/', '');
                 articleDrafts[i] = patchedDraft;
                 htmlTemplates[i] = generateHtmlLandingPage(
                   topic,
                   seoBriefs[i],
                   contentOutlines[i],
                   landingPageTemplates[i],
-                  selectedSchemas[i]
+                  selectedSchemas[i],
                 );
                 contentQualityScores[i] = newScore;
 
-                console.log(`SERP Diff Patch: ${slug} improved to Grade ${newScore.grade} (${newScore.score}/100) with ${missingTopics.length} missing topics`);
+                console.log(
+                  `SERP Diff Patch: ${slug} improved to Grade ${newScore.grade} (${newScore.score}/100) with ${missingTopics.length} missing topics`,
+                );
 
                 // Broadcast WS event
                 const payload = JSON.stringify({
-                  type: "serp_diff",
+                  type: 'serp_diff',
                   slug,
                   missingTopics,
                   message: `SERP Diff: Added ${missingTopics.length} missing competitor topics to ${slug}.html`,
-                  timestamp: Date.now()
+                  timestamp: Date.now(),
                 });
 
                 if (wss && wss.clients) {
@@ -2216,30 +2417,32 @@ async function crawlUrl(ws: any, url: string) {
               seoBriefs[i],
               contentOutlines[i],
               enrichedDraft,
-              selectedSchemas[i]
+              selectedSchemas[i],
             );
 
             if (newScore.score > contentQualityScores[i].score) {
-              const slug = suggestedUrls[i].replace("/", "");
+              const slug = suggestedUrls[i].replace('/', '');
               articleDrafts[i] = enrichedDraft;
               htmlTemplates[i] = generateHtmlLandingPage(
                 topic,
                 seoBriefs[i],
                 contentOutlines[i],
                 landingPageTemplates[i],
-                selectedSchemas[i]
+                selectedSchemas[i],
               );
               contentQualityScores[i] = newScore;
 
-              console.log(`Semantic Enrichment: ${slug} improved to Grade ${newScore.grade} (${newScore.score}/100) with ${entities.length} entities`);
+              console.log(
+                `Semantic Enrichment: ${slug} improved to Grade ${newScore.grade} (${newScore.score}/100) with ${entities.length} entities`,
+              );
 
               // Step 5 — Dashboard Events
               const payload = JSON.stringify({
-                type: "semantic_enrichment",
+                type: 'semantic_enrichment',
                 slug,
                 entities,
-                message: `Semantic Enrichment: Added ${entities.slice(0, 3).join(", ")} to ${slug}.html`,
-                timestamp: Date.now()
+                message: `Semantic Enrichment: Added ${entities.slice(0, 3).join(', ')} to ${slug}.html`,
+                timestamp: Date.now(),
               });
 
               if (wss && wss.clients) {
@@ -2261,38 +2464,43 @@ async function crawlUrl(ws: any, url: string) {
           const profile = intentProfiles[intent];
 
           if (profile) {
-            const personalisedDraft = personaliseContent(articleDrafts[i], profile);
+            const personalisedDraft = personaliseContent(
+              articleDrafts[i],
+              profile,
+            );
 
             const newScore = scoreContentQuality(
               topic,
               seoBrief,
               contentOutlines[i],
               personalisedDraft,
-              selectedSchemas[i]
+              selectedSchemas[i],
             );
 
             if (newScore.score > contentQualityScores[i].score) {
-              const slug = suggestedUrls[i].replace("/", "");
+              const slug = suggestedUrls[i].replace('/', '');
               articleDrafts[i] = personalisedDraft;
               htmlTemplates[i] = generateHtmlLandingPage(
                 topic,
                 seoBrief,
                 contentOutlines[i],
                 landingPageTemplates[i],
-                selectedSchemas[i]
+                selectedSchemas[i],
               );
               contentQualityScores[i] = newScore;
 
-              console.log(`Adaptive Personalisation: ${slug} improved to Grade ${newScore.grade} (${newScore.score}/100) for '${intent}' intent`);
+              console.log(
+                `Adaptive Personalisation: ${slug} improved to Grade ${newScore.grade} (${newScore.score}/100) for '${intent}' intent`,
+              );
 
               // Step 5 — Dashboard Events
               const payload = JSON.stringify({
-                type: "adaptive_personalisation",
+                type: 'adaptive_personalisation',
                 slug,
                 intent,
                 profile,
                 message: `Adaptive Personalisation: ${slug}.html personalized for '${intent}' intent`,
-                timestamp: Date.now()
+                timestamp: Date.now(),
               });
 
               if (wss && wss.clients) {
@@ -2307,26 +2515,26 @@ async function crawlUrl(ws: any, url: string) {
         }
 
         const publishedPages = gaps.map((topic, i) => {
-          const slug = suggestedUrls[i].replace("/", "");
+          const slug = suggestedUrls[i].replace('/', '');
           const seoBrief = seoBriefs[i];
           const keywords = seoBrief?.keywords || [topic];
-          
+
           // Steps 2 & 3: Topic Cluster Registration & Pillar Page Auto-Generation
           const core = extractCoreTopic(seoBrief);
           if (!topicClusters[core]) {
             topicClusters[core] = {
               pillar: null,
-              clusters: []
+              clusters: [],
             };
           }
 
           // Authority Graph: Cluster Node
           authorityGraph.nodes[core] = {
             id: core,
-            type: "cluster",
+            type: 'cluster',
             score: 10,
             label: core,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           };
 
           if (!topicClusters[core].pillar) {
@@ -2350,13 +2558,15 @@ async function crawlUrl(ws: any, url: string) {
             // Authority Graph: Pillar Node
             authorityGraph.nodes[pillarSlug] = {
               id: pillarSlug,
-              type: "pillar",
+              type: 'pillar',
               score: 20,
               label: `${seoBrief?.topic || core} Guide`,
-              updatedAt: Date.now()
+              updatedAt: Date.now(),
             };
 
-            console.log(`Topic Cluster Builder: Created Pillar Page '${pillarSlug}' for core topic '${core}'`);
+            console.log(
+              `Topic Cluster Builder: Created Pillar Page '${pillarSlug}' for core topic '${core}'`,
+            );
           }
 
           // Step 4: Add Cluster Pages
@@ -2369,35 +2579,35 @@ async function crawlUrl(ws: any, url: string) {
           pageEntities.forEach((entity) => {
             authorityGraph.nodes[entity] = {
               id: entity,
-              type: "entity",
+              type: 'entity',
               score: 1,
               label: entity,
-              updatedAt: Date.now()
+              updatedAt: Date.now(),
             };
 
             // Edge: Page -> Entity
             authorityGraph.edges.push({
               from: slug,
               to: entity,
-              type: "mentions"
+              type: 'mentions',
             });
           });
 
           authorityGraph.nodes[slug] = {
             id: slug,
-            type: "page",
+            type: 'page',
             score: contentQualityScores[i]?.score || 75,
             cluster: core,
             entities: pageEntities,
             label: slug,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           };
 
           // Edge: Page -> Cluster
           authorityGraph.edges.push({
             from: slug,
             to: core,
-            type: "belongs_to"
+            type: 'belongs_to',
           });
 
           const pillarSlug = topicClusters[core].pillar;
@@ -2406,7 +2616,7 @@ async function crawlUrl(ws: any, url: string) {
             authorityGraph.edges.push({
               from: core,
               to: pillarSlug,
-              type: "pillar_of"
+              type: 'pillar_of',
             });
 
             // Edge: Pillar -> Cluster Pages
@@ -2414,7 +2624,7 @@ async function crawlUrl(ws: any, url: string) {
               authorityGraph.edges.push({
                 from: pillarSlug,
                 to: c,
-                type: "links_to"
+                type: 'links_to',
               });
             });
           }
@@ -2423,8 +2633,8 @@ async function crawlUrl(ws: any, url: string) {
           let finalHtml = htmlTemplates[i];
           if (pillarSlug && !finalHtml.includes(pillarSlug)) {
             finalHtml = finalHtml.replace(
-              "</body>",
-              `<p class="cluster-pillar-link">Learn more in our complete guide: <a href="/content/${pillarSlug}.html">${seoBrief?.topic || core} Guide</a></p></body>`
+              '</body>',
+              `<p class="cluster-pillar-link">Learn more in our complete guide: <a href="/content/${pillarSlug}.html">${seoBrief?.topic || core} Guide</a></p></body>`,
             );
           }
 
@@ -2432,7 +2642,7 @@ async function crawlUrl(ws: any, url: string) {
             slug,
             html: finalHtml,
             keywords,
-            createdAt: Date.now()
+            createdAt: Date.now(),
           });
 
           const pub = publishPageToGitHub(slug, finalHtml);
@@ -2443,12 +2653,12 @@ async function crawlUrl(ws: any, url: string) {
 
           // Step 7: Dashboard Events
           const payload = JSON.stringify({
-            type: "topic_cluster",
+            type: 'topic_cluster',
             core,
             pillar: topicClusters[core].pillar,
             clusters: topicClusters[core].clusters,
             message: `Pillar Updated: ${topicClusters[core].clusters.length} cluster page(s) linked to ${topicClusters[core].pillar}.html`,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           });
 
           if (wss && wss.clients) {
@@ -2467,7 +2677,7 @@ async function crawlUrl(ws: any, url: string) {
         broadcastMessage(
           ws,
           JSON.stringify({
-            type: "content_gap",
+            type: 'content_gap',
             url,
             gaps,
             suggestedUrls,
@@ -2485,10 +2695,10 @@ async function crawlUrl(ws: any, url: string) {
             htmlTemplates,
             publishedPages,
             timestamp: Date.now(),
-          })
+          }),
         );
 
-        console.log("HTML Landing Page Templates generated:", htmlTemplates);
+        console.log('HTML Landing Page Templates generated:', htmlTemplates);
       }
     }
 
@@ -2501,14 +2711,14 @@ async function crawlUrl(ws: any, url: string) {
     broadcastMessage(
       ws,
       JSON.stringify({
-        type: "crawl_event",
+        type: 'crawl_event',
         url,
-        status: "error",
+        status: 'error',
         code: err.response?.status || 500,
         xp,
         visibility,
         timestamp: Date.now(),
-      })
+      }),
     );
 
     console.log(`Error indexing: ${url}`);
@@ -2522,10 +2732,10 @@ function startHeartbeat(ws: WebSocket) {
   setInterval(() => {
     ws.send(
       JSON.stringify({
-        type: "heartbeat",
+        type: 'heartbeat',
         timestamp: Date.now(),
-        status: "alive",
-      })
+        status: 'alive',
+      }),
     );
   }, 2000);
 }
@@ -2545,7 +2755,7 @@ function startCrawler(ws: WebSocket) {
 // -------------------------------
 // CRAWL SCHEDULING & PERSISTENCE
 // -------------------------------
-const scheduleStateFile = "./schedule-state.json";
+const scheduleStateFile = './schedule-state.json';
 
 interface ScheduleState {
   daily: number;
@@ -2555,7 +2765,7 @@ interface ScheduleState {
 
 function loadScheduleState(): ScheduleState {
   try {
-    return JSON.parse(fs.readFileSync(scheduleStateFile, "utf8"));
+    return JSON.parse(fs.readFileSync(scheduleStateFile, 'utf8'));
   } catch {
     return { daily: 0, weekly: 0, monthly: 0 };
   }
@@ -2565,72 +2775,72 @@ function saveScheduleState(state: ScheduleState) {
   try {
     fs.writeFileSync(scheduleStateFile, JSON.stringify(state, null, 2));
   } catch (err) {
-    console.error("Failed to save schedule state:", err);
+    console.error('Failed to save schedule state:', err);
   }
 }
 
-let scheduleState = loadScheduleState();
+const scheduleState = loadScheduleState();
 
 // Daily crawl at 03:00
-schedule.scheduleJob("0 3 * * *", () => {
+schedule.scheduleJob('0 3 * * *', () => {
   const now = Date.now();
   if (now - scheduleState.daily < 20 * 60 * 60 * 1000) {
-    console.log("⏰ Daily crawl skipped (already executed recently)");
+    console.log('⏰ Daily crawl skipped (already executed recently)');
     return;
   }
   scheduleState.daily = now;
   saveScheduleState(scheduleState);
-  console.log("⏰ Daily crawl triggered (03:00)");
+  console.log('⏰ Daily crawl triggered (03:00)');
   urlQueue.push(
-    "https://www.seai.ie",
-    "https://www.electricireland.ie",
-    "https://www.supervalu.ie",
-    "https://www.lidl.ie"
+    'https://www.seai.ie',
+    'https://www.electricireland.ie',
+    'https://www.supervalu.ie',
+    'https://www.lidl.ie',
   );
 });
 
 // Weekly crawl every Monday at 04:00
-schedule.scheduleJob("0 4 * * 1", () => {
+schedule.scheduleJob('0 4 * * 1', () => {
   const now = Date.now();
   if (now - scheduleState.weekly < 6 * 24 * 60 * 60 * 1000) {
-    console.log("📅 Weekly crawl skipped (already executed recently)");
+    console.log('📅 Weekly crawl skipped (already executed recently)');
     return;
   }
   scheduleState.weekly = now;
   saveScheduleState(scheduleState);
-  console.log("📅 Weekly crawl triggered (Monday 04:00)");
+  console.log('📅 Weekly crawl triggered (Monday 04:00)');
   urlQueue.push(
-    "https://www.gov.ie/en/publication/home-energy-upgrades/",
-    "https://www.seai.ie/home-energy/",
-    "https://www.seai.ie/grants/"
+    'https://www.gov.ie/en/publication/home-energy-upgrades/',
+    'https://www.seai.ie/home-energy/',
+    'https://www.seai.ie/grants/',
   );
 });
 
 // Monthly audit on the 1st at 05:00
-schedule.scheduleJob("0 5 1 * *", () => {
+schedule.scheduleJob('0 5 1 * *', () => {
   const now = Date.now();
   if (now - scheduleState.monthly < 25 * 24 * 60 * 60 * 1000) {
-    console.log("🧾 Monthly audit skipped (already executed recently)");
+    console.log('🧾 Monthly audit skipped (already executed recently)');
     return;
   }
   scheduleState.monthly = now;
   saveScheduleState(scheduleState);
-  console.log("🧾 Monthly audit triggered (1st of month 05:00)");
+  console.log('🧾 Monthly audit triggered (1st of month 05:00)');
   urlQueue.push(
-    "https://www.seai.ie",
-    "https://www.gov.ie",
-    "https://www.electricireland.ie",
-    "https://www.bordgaisenergy.ie",
-    "https://www.sseairtricity.com"
+    'https://www.seai.ie',
+    'https://www.gov.ie',
+    'https://www.electricireland.ie',
+    'https://www.bordgaisenergy.ie',
+    'https://www.sseairtricity.com',
   );
 });
 
 // Scheduled Publishing Engine (Daily at 09:00)
-schedule.scheduleJob("0 9 * * *", async () => {
-  console.log("⏰ Scheduled Publishing: Running daily job…");
+schedule.scheduleJob('0 9 * * *', async () => {
+  console.log('⏰ Scheduled Publishing: Running daily job…');
 
   if (publishingQueue.length === 0) {
-    console.log("No queued pages to publish.");
+    console.log('No queued pages to publish.');
     return;
   }
 
@@ -2647,10 +2857,10 @@ schedule.scheduleJob("0 9 * * *", async () => {
 
   // Dashboard WebSocket Event
   const payload = JSON.stringify({
-    type: "scheduled_publish",
+    type: 'scheduled_publish',
     slug,
     message: `Scheduled Publish: ${slug}.html released`,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
   if (wss && wss.clients) {
@@ -2667,11 +2877,11 @@ schedule.scheduleJob("0 9 * * *", async () => {
 });
 
 // Scheduled Content Rewrite Engine (Daily at 09:30)
-schedule.scheduleJob("30 9 * * *", async () => {
-  console.log("🛠️ Scheduled Rewrite: Running daily job…");
+schedule.scheduleJob('30 9 * * *', async () => {
+  console.log('🛠️ Scheduled Rewrite: Running daily job…');
 
   if (rewriteQueue.length === 0) {
-    console.log("No pages to rewrite.");
+    console.log('No pages to rewrite.');
     return;
   }
 
@@ -2688,7 +2898,7 @@ schedule.scheduleJob("30 9 * * *", async () => {
     seoBrief || {},
     outline || [],
     improvedDraft,
-    schemaBundle || {}
+    schemaBundle || {},
   );
 
   // Publish only if improved to Grade A or B (>= 70)
@@ -2697,26 +2907,30 @@ schedule.scheduleJob("30 9 * * *", async () => {
       seoBrief?.topic || slug,
       seoBrief || {},
       outline || [],
-      "",
-      schemaBundle || {}
+      '',
+      schemaBundle || {},
     );
     await publishPageToGitHub(slug, fullHtml);
     injectInternalLinks(slug, seoBrief?.keywords || []);
 
-    console.log(`🛠️ Rewrite Success: ${slug} upgraded to Grade ${newScore.grade} (Score: ${newScore.score})`);
+    console.log(
+      `🛠️ Rewrite Success: ${slug} upgraded to Grade ${newScore.grade} (Score: ${newScore.score})`,
+    );
   } else {
-    console.log(`🛠️ Rewrite Incomplete: ${slug} still below threshold (${newScore.score}). Re-queuing for future iteration.`);
+    console.log(
+      `🛠️ Rewrite Incomplete: ${slug} still below threshold (${newScore.score}). Re-queuing for future iteration.`,
+    );
     rewriteQueue.push(next); // retry later
   }
 
   // Dashboard WebSocket event
   const payload = JSON.stringify({
-    type: "rewrite_event",
+    type: 'rewrite_event',
     slug,
     newGrade: newScore.grade,
     newScore: newScore.score,
     message: `Scheduled Rewrite: ${slug} updated to Grade ${newScore.grade} (${newScore.score}/100)`,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
   if (wss && wss.clients) {
@@ -2729,12 +2943,14 @@ schedule.scheduleJob("30 9 * * *", async () => {
 });
 
 // Authority Graph Engine Auto-Boost Job (Daily at 11:00)
-schedule.scheduleJob("0 11 * * *", async () => {
-  console.log("⚡ Authority Graph Engine: Running daily weak node auto-boost job…");
+schedule.scheduleJob('0 11 * * *', async () => {
+  console.log(
+    '⚡ Authority Graph Engine: Running daily weak node auto-boost job…',
+  );
   const weakNodes = findWeakNodes();
 
   if (weakNodes.length === 0) {
-    console.log("Authority Graph: No weak nodes detected.");
+    console.log('Authority Graph: No weak nodes detected.');
     return;
   }
 
@@ -2742,38 +2958,44 @@ schedule.scheduleJob("0 11 * * *", async () => {
     const node = authorityGraph.nodes[nodeKey];
     if (!node) continue;
 
-    if (node.type === "page") {
-      console.log(`Authority Graph: Boosting weak page node '${nodeKey}' via rewriteQueue.`);
+    if (node.type === 'page') {
+      console.log(
+        `Authority Graph: Boosting weak page node '${nodeKey}' via rewriteQueue.`,
+      );
       const exists = rewriteQueue.some((item) => item.slug === nodeKey);
       if (!exists) {
         rewriteQueue.push({
           slug: nodeKey,
-          articleDraft: `<section><h1>${nodeKey.replace(/-/g, " ")}</h1><p>Home energy retrofitting overview.</p></section>`,
-          seoBrief: { topic: nodeKey.replace(/-/g, " "), keywords: [nodeKey] },
-          outline: ["Overview", "SEAI Grants", "Installation"],
+          articleDraft: `<section><h1>${nodeKey.replace(/-/g, ' ')}</h1><p>Home energy retrofitting overview.</p></section>`,
+          seoBrief: { topic: nodeKey.replace(/-/g, ' '), keywords: [nodeKey] },
+          outline: ['Overview', 'SEAI Grants', 'Installation'],
           schemaBundle: {},
-          createdAt: Date.now()
+          createdAt: Date.now(),
         });
       }
     }
 
-    if (node.type === "entity") {
-      console.log(`Authority Graph: Boosting entity node '${nodeKey}' by distributing across page network.`);
+    if (node.type === 'entity') {
+      console.log(
+        `Authority Graph: Boosting entity node '${nodeKey}' by distributing across page network.`,
+      );
       node.score = (node.score || 0) + 10;
     }
 
-    if (node.type === "cluster") {
-      console.log(`Authority Graph: Boosting cluster node '${nodeKey}' with new sub-topics.`);
+    if (node.type === 'cluster') {
+      console.log(
+        `Authority Graph: Boosting cluster node '${nodeKey}' with new sub-topics.`,
+      );
       node.score = (node.score || 0) + 15;
     }
   }
 
   // Dashboard WebSocket event
   const payload = JSON.stringify({
-    type: "authority_graph_update",
+    type: 'authority_graph_update',
     weakNodes: findWeakNodes(),
     message: `Authority Graph: Auto-boosted ${weakNodes.length} weak node(s) across site`,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
   if (wss && wss.clients) {
@@ -2786,33 +3008,42 @@ schedule.scheduleJob("0 11 * * *", async () => {
 });
 
 // Real-Time SERP Volatility Monitor Automated Response Job (Every 30 mins)
-schedule.scheduleJob("*/30 * * * *", async () => {
-  const keyword = "heat pump costs ireland";
+schedule.scheduleJob('*/30 * * * *', async () => {
+  const keyword = 'heat pump costs ireland';
   const snapshot = await getSerpSnapshot(keyword);
 
   const volatility = detectVolatility(keyword);
   if (!volatility || volatility.length === 0) return;
 
-  console.log("⚡ SERP Volatility Detected:", volatility);
+  console.log('⚡ SERP Volatility Detected:', volatility);
 
   // Trigger automated fixes
   volatility.forEach((change) => {
-    if (change.type === "new_entry") {
-      console.log(`SERP Volatility: Competitor surge for '${keyword}'. Triggering competitor diff patch.`);
+    if (change.type === 'new_entry') {
+      console.log(
+        `SERP Volatility: Competitor surge for '${keyword}'. Triggering competitor diff patch.`,
+      );
     }
 
-    if (change.type === "rank_change" && change.to && change.from && change.to > change.from) {
-      console.log(`SERP Volatility: Rank drop for '${keyword}' (${change.from} -> ${change.to}). Boosting page quality and links.`);
-      const targetSlug = keyword.toLowerCase().split(" ").slice(0, 2).join("-");
+    if (
+      change.type === 'rank_change' &&
+      change.to &&
+      change.from &&
+      change.to > change.from
+    ) {
+      console.log(
+        `SERP Volatility: Rank drop for '${keyword}' (${change.from} -> ${change.to}). Boosting page quality and links.`,
+      );
+      const targetSlug = keyword.toLowerCase().split(' ').slice(0, 2).join('-');
       const exists = rewriteQueue.some((item) => item.slug === targetSlug);
       if (!exists) {
         rewriteQueue.push({
           slug: targetSlug,
           articleDraft: `<section><h1>${keyword}</h1><p>Comprehensive guide to ${keyword} in Ireland.</p></section>`,
           seoBrief: { topic: keyword, keywords: [keyword] },
-          outline: ["Costs Overview", "SEAI Grants", "Installation Options"],
+          outline: ['Costs Overview', 'SEAI Grants', 'Installation Options'],
           schemaBundle: {},
-          createdAt: Date.now()
+          createdAt: Date.now(),
         });
       }
     }
@@ -2820,11 +3051,11 @@ schedule.scheduleJob("*/30 * * * *", async () => {
 
   // Dashboard WebSocket event
   const payload = JSON.stringify({
-    type: "serp_volatility",
+    type: 'serp_volatility',
     keyword,
     volatility,
     message: `SERP Volatility: Detected ${volatility.length} ranking shift(s) for '${keyword}'`,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
   if (wss && wss.clients) {
@@ -2837,7 +3068,7 @@ schedule.scheduleJob("*/30 * * * *", async () => {
 });
 
 // Behaviour-Driven Content Fixes Job (Every 20 mins)
-schedule.scheduleJob("*/20 * * * *", async () => {
+schedule.scheduleJob('*/20 * * * *', async () => {
   for (const slug of Object.keys(behaviouralTelemetry)) {
     const behaviour = analyseBehaviour(slug);
     if (!behaviour) continue;
@@ -2846,29 +3077,31 @@ schedule.scheduleJob("*/20 * * * *", async () => {
 
     // Low engagement triggers fixes
     if (avgDwell < 15000 || avgScroll < 0.4) {
-      console.log(`⚡ Behavioural Fix Triggered for ${slug} (Dwell: ${Math.round(avgDwell / 1000)}s, Scroll: ${Math.round(avgScroll * 100)}%)`);
+      console.log(
+        `⚡ Behavioural Fix Triggered for ${slug} (Dwell: ${Math.round(avgDwell / 1000)}s, Scroll: ${Math.round(avgScroll * 100)}%)`,
+      );
 
       const exists = rewriteQueue.some((item) => item.slug === slug);
       if (!exists) {
         rewriteQueue.push({
           slug,
-          articleDraft: `<section><h1>${slug.replace(/-/g, " ")}</h1><p>Optimized energy efficiency retrofitting guide.</p></section>`,
-          seoBrief: { topic: slug.replace(/-/g, " "), keywords: [slug] },
-          outline: ["Overview", "SEAI Grants", "Installation"],
+          articleDraft: `<section><h1>${slug.replace(/-/g, ' ')}</h1><p>Optimized energy efficiency retrofitting guide.</p></section>`,
+          seoBrief: { topic: slug.replace(/-/g, ' '), keywords: [slug] },
+          outline: ['Overview', 'SEAI Grants', 'Installation'],
           schemaBundle: {},
-          createdAt: Date.now()
+          createdAt: Date.now(),
         });
       }
 
       // Dashboard event
       const payload = JSON.stringify({
-        type: "behavioural_telemetry",
+        type: 'behavioural_telemetry',
         slug,
         avgDwell,
         avgScroll,
-        action: "boost_triggered",
+        action: 'boost_triggered',
         message: `Behavioural Telemetry: Low engagement on ${slug}.html (Dwell: ${Math.round(avgDwell / 1000)}s, Scroll: ${Math.round(avgScroll * 100)}%). Triggered content boost.`,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
 
       if (wss && wss.clients) {
@@ -2883,8 +3116,8 @@ schedule.scheduleJob("*/20 * * * *", async () => {
 });
 
 // Predictive Ranking Engine Automated Pre-Emptive Fixes Job (Every 45 mins)
-schedule.scheduleJob("*/45 * * * *", async () => {
-  const keyword = "heat pump costs ireland";
+schedule.scheduleJob('*/45 * * * *', async () => {
+  const keyword = 'heat pump costs ireland';
 
   const trend = analyseRankingTrend(keyword);
   const prediction = predictMovement(trend);
@@ -2893,34 +3126,38 @@ schedule.scheduleJob("*/45 * * * *", async () => {
 
   console.log(`⚡ Predictive Ranking: ${prediction} detected for '${keyword}'`);
 
-  if (prediction === "likely_drop") {
-    console.log(`Predictive Ranking: Pre-emptively patching '${keyword}' before drop occurs.`);
-    const targetSlug = keyword.toLowerCase().split(" ").slice(0, 2).join("-");
+  if (prediction === 'likely_drop') {
+    console.log(
+      `Predictive Ranking: Pre-emptively patching '${keyword}' before drop occurs.`,
+    );
+    const targetSlug = keyword.toLowerCase().split(' ').slice(0, 2).join('-');
     const exists = rewriteQueue.some((item) => item.slug === targetSlug);
     if (!exists) {
       rewriteQueue.push({
         slug: targetSlug,
         articleDraft: `<section><h1>${keyword}</h1><p>Comprehensive guide to ${keyword} in Ireland.</p></section>`,
         seoBrief: { topic: keyword, keywords: [keyword] },
-        outline: ["Costs Overview", "SEAI Grants", "Installation Options"],
+        outline: ['Costs Overview', 'SEAI Grants', 'Installation Options'],
         schemaBundle: {},
-        createdAt: Date.now()
+        createdAt: Date.now(),
       });
     }
   }
 
-  if (prediction === "likely_rise") {
-    console.log(`Predictive Ranking: Strengthening topic cluster for '${keyword}' to amplify momentum.`);
+  if (prediction === 'likely_rise') {
+    console.log(
+      `Predictive Ranking: Strengthening topic cluster for '${keyword}' to amplify momentum.`,
+    );
   }
 
   // Dashboard event
   const payload = JSON.stringify({
-    type: "predictive_ranking",
+    type: 'predictive_ranking',
     keyword,
     trend,
     prediction,
     message: `Predictive Ranking: ${prediction} detected for '${keyword}'. Triggered pre-emptive action.`,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
   if (wss && wss.clients) {
@@ -2933,9 +3170,11 @@ schedule.scheduleJob("*/45 * * * *", async () => {
 });
 
 // Autonomous Content Expansion Engine Loop Job (Every 6 hours)
-schedule.scheduleJob("0 */6 * * *", async () => {
-  console.log("⚡ Autonomous Content Expansion: Running 6-hour cluster gap expansion scan…");
-  const core = "heat-pump"; // example cluster
+schedule.scheduleJob('0 */6 * * *', async () => {
+  console.log(
+    '⚡ Autonomous Content Expansion: Running 6-hour cluster gap expansion scan…',
+  );
+  const core = 'heat-pump'; // example cluster
   try {
     const competitors = await getTopCompetitors(core);
     const gaps = detectClusterContentGaps(core, competitors);
@@ -2943,21 +3182,23 @@ schedule.scheduleJob("0 */6 * * *", async () => {
     for (const gap of gaps) {
       const seoBrief = generateAutonomousSeoBrief(gap);
       const articleDraft = createAutonomousArticleDraft(seoBrief);
-      const slug = gap.replace(/\s+/g, "-");
+      const slug = gap.replace(/\s+/g, '-');
 
       await publishPageToGitHub(slug, articleDraft);
       injectInternalLinks(slug, seoBrief.keywords);
       updatePillar(core);
 
-      console.log(`Autonomous Expansion: Created & published ${slug}.html for cluster '${core}'`);
+      console.log(
+        `Autonomous Expansion: Created & published ${slug}.html for cluster '${core}'`,
+      );
     }
 
     const payload = JSON.stringify({
-      type: "autonomous_expansion",
+      type: 'autonomous_expansion',
       core,
       newPages: gaps,
       message: `Autonomous Expansion: Generated & published ${gaps.length} new cluster page(s) for '${core}'`,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     if (wss && wss.clients) {
@@ -2968,13 +3209,15 @@ schedule.scheduleJob("0 */6 * * *", async () => {
       });
     }
   } catch (err) {
-    console.error("Autonomous Content Expansion error:", err);
+    console.error('Autonomous Content Expansion error:', err);
   }
 });
 
 // Cross-Domain Knowledge Fusion Integration Job (Every 12 hours)
-schedule.scheduleJob("0 */12 * * *", async () => {
-  console.log("⚡ Cross-Domain Knowledge Fusion: Running 12-hour data fusion cycle…");
+schedule.scheduleJob('0 */12 * * *', async () => {
+  console.log(
+    '⚡ Cross-Domain Knowledge Fusion: Running 12-hour data fusion cycle…',
+  );
   const sources = Object.values(fusionSources);
   const fusionData: Array<{ title?: string; description?: string }> = [];
 
@@ -2984,11 +3227,11 @@ schedule.scheduleJob("0 */12 * * *", async () => {
   }
 
   for (const slug of Object.keys(authorityGraph.nodes)) {
-    if (authorityGraph.nodes[slug].type === "page") {
+    if (authorityGraph.nodes[slug].type === 'page') {
       try {
         const filePath = `./content/${slug}.html`;
         if (fs.existsSync(filePath)) {
-          const articleDraft = fs.readFileSync(filePath, "utf-8");
+          const articleDraft = fs.readFileSync(filePath, 'utf-8');
           const enrichedDraft = fuseKnowledge(articleDraft, fusionData);
 
           await publishPageToGitHub(slug, enrichedDraft);
@@ -3001,11 +3244,11 @@ schedule.scheduleJob("0 */12 * * *", async () => {
   }
 
   const payload = JSON.stringify({
-    type: "cross_domain_fusion",
+    type: 'cross_domain_fusion',
     sources: Object.keys(fusionSources),
     updatedPages: Object.keys(authorityGraph.nodes),
     message: `Cross-Domain Fusion: Enriched content graph with data from ${Object.keys(fusionSources).length} verified Irish energy endpoints`,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
   if (wss && wss.clients) {
@@ -3018,8 +3261,10 @@ schedule.scheduleJob("0 */12 * * *", async () => {
 });
 
 // Autonomous Multi-Site Expansion Job (Every 4 hours)
-schedule.scheduleJob("0 */4 * * *", async () => {
-  console.log("⚡ Multi-Site Expansion: Running 4-hour network gap expansion scan…");
+schedule.scheduleJob('0 */4 * * *', async () => {
+  console.log(
+    '⚡ Multi-Site Expansion: Running 4-hour network gap expansion scan…',
+  );
   try {
     const mergedGraph = mergeKnowledgeGraphs();
     const gaps = detectNetworkGaps(mergedGraph);
@@ -3027,22 +3272,24 @@ schedule.scheduleJob("0 */4 * * *", async () => {
     for (const gap of gaps) {
       const seoBrief = generateAutonomousSeoBrief(gap);
       const draft = createAutonomousArticleDraft(seoBrief);
-      const slug = gap.replace(/\s+/g, "-");
+      const slug = gap.replace(/\s+/g, '-');
 
       for (const domain of Object.values(domainFleet)) {
         const personalised = personaliseForDomain(draft, domain);
         await publishPageToGitHub(slug, personalised);
       }
 
-      console.log(`Network Expansion: Created & published ${gap} across all domains`);
+      console.log(
+        `Network Expansion: Created & published ${gap} across all domains`,
+      );
     }
 
     const payload = JSON.stringify({
-      type: "multi_site_expansion",
+      type: 'multi_site_expansion',
       gaps,
       domains: Object.keys(domainFleet),
       message: `Multi-Site Expansion: Created ${gaps.length} gap expansion(s) across all ${Object.keys(domainFleet).length} fleet domains`,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     if (wss && wss.clients) {
@@ -3053,20 +3300,20 @@ schedule.scheduleJob("0 */4 * * *", async () => {
       });
     }
   } catch (err) {
-    console.error("Multi-Site Expansion error:", err);
+    console.error('Multi-Site Expansion error:', err);
   }
 });
 
-console.log("Starting EcoSmartHomes Advanced SEO Crawler...");
+console.log('Starting EcoSmartHomes Advanced SEO Crawler...');
 if (wss) {
   startCrawler(wss as any);
 } else {
   const ws = new WebSocket(WS_URL);
-  ws.on("open", () => {
-    console.log("Crawler connected to backend WebSocket");
+  ws.on('open', () => {
+    console.log('Crawler connected to backend WebSocket');
     startCrawler(ws as any);
   });
-  ws.on("error", (err) => {
-    console.log("WebSocket connection info:", err.message || err);
+  ws.on('error', (err) => {
+    console.log('WebSocket connection info:', err.message || err);
   });
 }

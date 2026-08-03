@@ -1,10 +1,14 @@
-import { useDashboardStore } from "../../store/useDashboardStore";
+import { useDashboardStore } from '../../store/useDashboardStore';
 
 export default function BacklinkResults() {
   const backlinks = useDashboardStore((s) => s.backlinks);
 
   if (!backlinks.length) {
-    return <p className="text-slate-400 text-sm italic">No backlink opportunities yet.</p>;
+    return (
+      <p className="text-slate-400 text-sm italic">
+        No backlink opportunities yet.
+      </p>
+    );
   }
 
   return (
@@ -14,7 +18,10 @@ export default function BacklinkResults() {
       </h2>
       <div className="grid md:grid-cols-2 gap-6">
         {backlinks.map((b: any, i: number) => (
-          <div key={i} className="bg-white p-6 rounded-xl shadow-lg space-y-3 text-slate-800 border border-slate-200">
+          <div
+            key={i}
+            className="bg-white p-6 rounded-xl shadow-lg space-y-3 text-slate-800 border border-slate-200"
+          >
             <h3 className="text-xl font-semibold text-slate-900">{b.site}</h3>
             <p className="text-blue-600 font-mono text-sm break-all">{b.url}</p>
 

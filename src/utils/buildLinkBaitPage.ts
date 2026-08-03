@@ -5,16 +5,19 @@ export interface LinkBaitIdeaInput {
   desc?: string;
 }
 
-export async function buildLinkBaitPage(idea: LinkBaitIdeaInput, apiKey: string = ""): Promise<string> {
-  const title = idea?.title || "Irish Home Energy Retrofit Guide";
-  const area = idea?.area || "Limerick";
-  const type = idea?.type || "Infographic";
-  const desc = idea?.desc || "A comprehensive resource for Irish homeowners.";
+export async function buildLinkBaitPage(
+  idea: LinkBaitIdeaInput,
+  apiKey: string = '',
+): Promise<string> {
+  const title = idea?.title || 'Irish Home Energy Retrofit Guide';
+  const area = idea?.area || 'Limerick';
+  const type = idea?.type || 'Infographic';
+  const desc = idea?.desc || 'A comprehensive resource for Irish homeowners.';
 
   const body = {
     contents: [
       {
-        role: "user",
+        role: 'user',
         parts: [
           {
             text: `
@@ -28,18 +31,18 @@ description: ${desc}
 Return:
 1. JSON metadata
 2. Full HTML page
-`
-          }
-        ]
-      }
-    ]
+`,
+          },
+        ],
+      },
+    ],
   };
 
   try {
-    const res = await fetch("/api/seo/build-link-bait-page", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ idea, body })
+    const res = await fetch('/api/seo/build-link-bait-page', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idea, body }),
     });
 
     if (res.ok) {
@@ -49,14 +52,14 @@ Return:
       }
     }
 
-    if (apiKey && apiKey !== "YOUR_API_KEY") {
+    if (apiKey && apiKey !== 'YOUR_API_KEY') {
       const directRes = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        }
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        },
       );
 
       const data = await directRes.json();
@@ -65,7 +68,7 @@ Return:
       }
     }
   } catch (err) {
-    console.warn("buildLinkBaitPage error:", err);
+    console.warn('buildLinkBaitPage error:', err);
   }
 
   return `<!-- JSON METADATA

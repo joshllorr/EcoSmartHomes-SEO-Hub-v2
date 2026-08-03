@@ -1,13 +1,13 @@
-import { 
-  FileText, 
-  Sparkles, 
-  Globe, 
-  Layers, 
-  Send, 
-  Check, 
-  Copy, 
-  RefreshCw, 
-  ChevronRight, 
+import {
+  FileText,
+  Sparkles,
+  Globe,
+  Layers,
+  Send,
+  Check,
+  Copy,
+  RefreshCw,
+  ChevronRight,
   FileCheck,
   AlertCircle,
   AlertTriangle,
@@ -20,14 +20,14 @@ import {
   Zap,
   Server,
   Save,
-  Trash2
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import { ArticleDraft } from "../types";
-import { generateArticleWithGemini } from "../utils/generateWithGemini";
-import { generateInternalLinks } from "../utils/generateInternalLinks";
-import InternalLinks from "./Linker/InternalLinks";
-import { useDashboardStore } from "../store/useDashboardStore";
+  Trash2,
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArticleDraft } from '../types';
+import { generateArticleWithGemini } from '../utils/generateWithGemini';
+import { generateInternalLinks } from '../utils/generateInternalLinks';
+import InternalLinks from './Linker/InternalLinks';
+import { useDashboardStore } from '../store/useDashboardStore';
 
 interface AIWriterTabProps {
   onDraftSuccess: (article: ArticleDraft) => void;
@@ -52,7 +52,7 @@ export default function AIWriterTab({
   aiSuggestion,
   drafts = [],
   onUpdateDraft,
-  onDeleteDraft
+  onDeleteDraft,
 }: AIWriterTabProps) {
   const generateArticle = useDashboardStore((state) => state.generateArticle);
   const pillarPages = useDashboardStore((s) => s.pillarPages);
@@ -60,26 +60,38 @@ export default function AIWriterTab({
   const setInternalLinks = useDashboardStore((s) => s.setInternalLinks);
   const [isGeneratingLinks, setIsGeneratingLinks] = useState(false);
 
-  const [title, setTitle] = useState(aiSuggestion || "Raising BER from G to A: Step-by-Step Retrofit Sequence");
-  const [topic, setTopic] = useState("A practical guide to upgrading energy efficiency, thermal insulation, heat pump installations, and SEAI grant sequencing for Irish homes.");
-  const [pillar, setPillar] = useState("BER Rating Ireland");
-  const [keywordsInput, setKeywordsInput] = useState("BER Rating, SEAI grants, retrofitting, home insulation");
-  const [tone, setTone] = useState("Professional");
-  const [audience, setAudience] = useState("Irish homeowners");
-  const [length, setLength] = useState("medium");
-  
-  const [writerMode, setWriterMode] = useState<"new" | "rework">("new");
-  const [originalContentInput, setOriginalContentInput] = useState("");
-  const [reworkGoal, setReworkGoal] = useState("Fresh & Unique Rewrite");
+  const [title, setTitle] = useState(
+    aiSuggestion || 'Raising BER from G to A: Step-by-Step Retrofit Sequence',
+  );
+  const [topic, setTopic] = useState(
+    'A practical guide to upgrading energy efficiency, thermal insulation, heat pump installations, and SEAI grant sequencing for Irish homes.',
+  );
+  const [pillar, setPillar] = useState('BER Rating Ireland');
+  const [keywordsInput, setKeywordsInput] = useState(
+    'BER Rating, SEAI grants, retrofitting, home insulation',
+  );
+  const [tone, setTone] = useState('Professional');
+  const [audience, setAudience] = useState('Irish homeowners');
+  const [length, setLength] = useState('medium');
+
+  const [writerMode, setWriterMode] = useState<'new' | 'rework'>('new');
+  const [originalContentInput, setOriginalContentInput] = useState('');
+  const [reworkGoal, setReworkGoal] = useState('Fresh & Unique Rewrite');
 
   const [loading, setLoading] = useState(false);
 
   // Sync suggestion
   useEffect(() => {
     if (aiSuggestion) {
-      if (aiSuggestion.toLowerCase().startsWith("rework:") || aiSuggestion.toLowerCase().startsWith("transform:")) {
-        setWriterMode("rework");
-        setOriginalContentInput(aiSuggestion.replace(/^(rework:|transform:)/i, "").trim());
+      if (
+        aiSuggestion.toLowerCase().startsWith('rework:') ||
+        aiSuggestion.toLowerCase().startsWith('transform:')
+      ) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setWriterMode('rework');
+        setOriginalContentInput(
+          aiSuggestion.replace(/^(rework:|transform:)/i, '').trim(),
+        );
       } else {
         setTitle(aiSuggestion);
       }
@@ -90,9 +102,9 @@ export default function AIWriterTab({
   const [activeDraftId, setActiveDraftId] = useState<string | null>(() => {
     return drafts.length > 0 ? drafts[0].id : null;
   });
-  const [localTitle, setLocalTitle] = useState("");
-  const [localContent, setLocalContent] = useState("");
-  const [localTone, setLocalTone] = useState("Professional");
+  const [localTitle, setLocalTitle] = useState('');
+  const [localContent, setLocalContent] = useState('');
+  const [localTone, setLocalTone] = useState('Professional');
   const [isSaving, setIsSaving] = useState(false);
 
   const [sources, setSources] = useState<{ title: string; uri: string }[]>([]);
@@ -101,11 +113,15 @@ export default function AIWriterTab({
   const [publishedSuccess, setPublishedSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [warningMsg, setWarningMsg] = useState<string | null>(null);
-  
+
   // Explicit Save & Delete states
   const [saveNotification, setSaveNotification] = useState<string | null>(null);
-  const [deleteNotification, setDeleteNotification] = useState<string | null>(null);
-  const [articleToDelete, setArticleToDelete] = useState<ArticleDraft | null>(null);
+  const [deleteNotification, setDeleteNotification] = useState<string | null>(
+    null,
+  );
+  const [articleToDelete, setArticleToDelete] = useState<ArticleDraft | null>(
+    null,
+  );
 
   // Explicit Save Article handler
   const handleExplicitSave = () => {
@@ -118,7 +134,7 @@ export default function AIWriterTab({
       content: localContent,
       tone: localTone,
       wordCount: updatedWordCount,
-      date: new Date().toLocaleDateString("en-GB")
+      date: new Date().toLocaleDateString('en-GB'),
     };
     onUpdateDraft(updated);
     setTimeout(() => {
@@ -131,18 +147,20 @@ export default function AIWriterTab({
   const handleGenerateInternalLinks = async () => {
     setIsGeneratingLinks(true);
     try {
-      const targetPillar = pillarPages[0] || { title: "BER Rating Ireland" };
+      const targetPillar = pillarPages[0] || { title: 'BER Rating Ireland' };
       const writerDraft = { title: localTitle, content: localContent };
 
       const links = await generateInternalLinks({
         pillarPage: targetPillar,
         linkBaitIdeas,
-        articleDraft: writerDraft
+        articleDraft: writerDraft,
       });
 
-      setInternalLinks(Array.isArray(links) ? links : (links as any).links || []);
+      setInternalLinks(
+        Array.isArray(links) ? links : (links as any).links || [],
+      );
     } catch (e) {
-      console.error("Internal link error:", e);
+      console.error('Internal link error:', e);
     } finally {
       setIsGeneratingLinks(false);
     }
@@ -175,44 +193,61 @@ export default function AIWriterTab({
 
   // Live CMS Publishing Webhook configuration
   const [showCmsModal, setShowCmsModal] = useState(false);
-  const [cmsType, setCmsType] = useState<"wordpress" | "webhook" | "webflow" | "ghost" | "shopify">("wordpress");
+  const [cmsType, setCmsType] = useState<
+    'wordpress' | 'webhook' | 'webflow' | 'ghost' | 'shopify'
+  >('wordpress');
   const [webhookUrl, setWebhookUrl] = useState(() => {
-    return localStorage.getItem("ecosmart_cms_webhook_url") || "";
+    return localStorage.getItem('ecosmart_cms_webhook_url') || '';
   });
   const [apiKey, setApiKey] = useState(() => {
-    return localStorage.getItem("ecosmart_cms_api_key") || "";
+    return localStorage.getItem('ecosmart_cms_api_key') || '';
   });
   const [testingConnection, setTestingConnection] = useState(false);
-  const [testResult, setTestResult] = useState<{ success: boolean; msg: string } | null>(null);
+  const [testResult, setTestResult] = useState<{
+    success: boolean;
+    msg: string;
+  } | null>(null);
   const [publishResult, setPublishResult] = useState<{
-    mode: "local" | "webhook";
+    mode: 'local' | 'webhook';
     message: string;
     targetUrl?: string;
     error?: string;
   } | null>(null);
 
   const saveCmsConfig = () => {
-    localStorage.setItem("ecosmart_cms_webhook_url", webhookUrl);
-    localStorage.setItem("ecosmart_cms_api_key", apiKey);
+    localStorage.setItem('ecosmart_cms_webhook_url', webhookUrl);
+    localStorage.setItem('ecosmart_cms_api_key', apiKey);
     setShowCmsModal(false);
   };
 
   const handleTestConnection = async () => {
     if (!webhookUrl) {
-      setTestResult({ success: false, msg: "Please enter a valid Webhook or API Endpoint URL." });
+      setTestResult({
+        success: false,
+        msg: 'Please enter a valid Webhook or API Endpoint URL.',
+      });
       return;
     }
     setTestingConnection(true);
     setTestResult(null);
     try {
-      const res = await fetch(webhookUrl, { method: "HEAD" }).catch(() => null);
-      if (res && (res.status < 500)) {
-        setTestResult({ success: true, msg: `Endpoint reachable (${res.status} HTTP Status)! CMS Connection ready.` });
+      const res = await fetch(webhookUrl, { method: 'HEAD' }).catch(() => null);
+      if (res && res.status < 500) {
+        setTestResult({
+          success: true,
+          msg: `Endpoint reachable (${res.status} HTTP Status)! CMS Connection ready.`,
+        });
       } else {
-        setTestResult({ success: true, msg: "Endpoint address formatted correctly. Ready to accept live payloads." });
+        setTestResult({
+          success: true,
+          msg: 'Endpoint address formatted correctly. Ready to accept live payloads.',
+        });
       }
     } catch (_) {
-      setTestResult({ success: true, msg: "Endpoint URL validated. Server ready to dispatch POST payloads." });
+      setTestResult({
+        success: true,
+        msg: 'Endpoint URL validated. Server ready to dispatch POST payloads.',
+      });
     } finally {
       setTestingConnection(false);
     }
@@ -224,6 +259,7 @@ export default function AIWriterTab({
   // Sync active draft selection if activeDraftId is not set but drafts are available
   useEffect(() => {
     if (!activeDraftId && drafts.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveDraftId(drafts[0].id);
     }
   }, [drafts, activeDraftId]);
@@ -231,14 +267,15 @@ export default function AIWriterTab({
   // Load article into editor when activeDraft changes
   useEffect(() => {
     if (activeDraft) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocalTitle(activeDraft.title);
       setLocalContent(activeDraft.content);
-      setLocalTone(activeDraft.tone || "Professional");
-      setPublishedSuccess(activeDraft.status === "Published");
+      setLocalTone(activeDraft.tone || 'Professional');
+      setPublishedSuccess(activeDraft.status === 'Published');
     } else {
-      setLocalTitle("");
-      setLocalContent("");
-      setLocalTone("Professional");
+      setLocalTitle('');
+      setLocalContent('');
+      setLocalTone('Professional');
       setPublishedSuccess(false);
     }
   }, [activeDraftId]);
@@ -249,18 +286,19 @@ export default function AIWriterTab({
 
     const interval = setInterval(() => {
       const currentDraft = drafts.find((d) => d.id === activeDraftId);
-      if (currentDraft && (
-        localTitle !== currentDraft.title ||
-        localContent !== currentDraft.content ||
-        localTone !== (currentDraft.tone || "Professional")
-      )) {
+      if (
+        currentDraft &&
+        (localTitle !== currentDraft.title ||
+          localContent !== currentDraft.content ||
+          localTone !== (currentDraft.tone || 'Professional'))
+      ) {
         setIsSaving(true);
         onUpdateDraft({
           ...currentDraft,
           title: localTitle,
           content: localContent,
           tone: localTone,
-          wordCount: localContent.split(/\s+/).filter(Boolean).length
+          wordCount: localContent.split(/\s+/).filter(Boolean).length,
         });
         setTimeout(() => {
           setIsSaving(false);
@@ -269,25 +307,37 @@ export default function AIWriterTab({
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [activeDraftId, localTitle, localContent, localTone, drafts, onUpdateDraft]);
+  }, [
+    activeDraftId,
+    localTitle,
+    localContent,
+    localTone,
+    drafts,
+    onUpdateDraft,
+  ]);
 
   // Suggested keywords list for selection
   const suggestedKeywords = [
-    "BER Rating Ireland", "Home Retrofit sequence", "SEAI grants Dublin", "U-values insulation", "Heat pump efficiency"
+    'BER Rating Ireland',
+    'Home Retrofit sequence',
+    'SEAI grants Dublin',
+    'U-values insulation',
+    'Heat pump efficiency',
   ];
 
   const handleKeywordTagClick = (tag: string) => {
     if (!keywordsInput.includes(tag)) {
-      setKeywordsInput(prev => prev ? `${prev}, ${tag}` : tag);
+      setKeywordsInput((prev) => (prev ? `${prev}, ${tag}` : tag));
     }
   };
 
-  const handleDownload = (format: "txt" | "md") => {
+  const handleDownload = (format: 'txt' | 'md') => {
     if (!activeDraft) return;
-    const element = document.createElement("a");
-    const file = new Blob([localContent], { type: "text/plain;charset=utf-8" });
+    const element = document.createElement('a');
+    const file = new Blob([localContent], { type: 'text/plain;charset=utf-8' });
     element.href = URL.createObjectURL(file);
-    const slugName = localTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "untitled-draft";
+    const slugName =
+      localTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'untitled-draft';
     element.download = `${slugName}.${format}`;
     document.body.appendChild(element);
     element.click();
@@ -296,35 +346,44 @@ export default function AIWriterTab({
 
   const handlePrintPDF = () => {
     if (!activeDraft) return;
-    const printWindow = window.open("", "_blank");
+    const printWindow = window.open('', '_blank');
     if (!printWindow) return;
-    
-    // Split metadata block if available
-    const contentParts = localContent.split("\n\n");
-    const metaBlock = contentParts[0];
-    const bodyContent = contentParts.slice(1).join("\n\n");
 
-    const formattedHTML = bodyContent.split("\n\n").map(para => {
-      const trimmed = para.trim();
-      if (trimmed.startsWith("# ")) {
-        return `<h1>${trimmed.replace("# ", "")}</h1>`;
-      }
-      if (trimmed.startsWith("## ")) {
-        return `<h2>${trimmed.replace("## ", "")}</h2>`;
-      }
-      if (trimmed.startsWith("### ")) {
-        return `<h3>${trimmed.replace("### ", "")}</h3>`;
-      }
-      if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
-        const items = trimmed.split(/\n[\-\*]\s+/).map(it => `<li>${it.replace(/^[\-\*]\s+/, "")}</li>`).join("");
-        return `<ul>${items}</ul>`;
-      }
-      if (trimmed.match(/^\d+\.\s+/)) {
-        const items = trimmed.split(/\n\d+\.\s+/).map(it => `<li>${it.replace(/^\d+\.\s+/, "")}</li>`).join("");
-        return `<ol>${items}</ol>`;
-      }
-      return `<p>${trimmed}</p>`;
-    }).join("");
+    // Split metadata block if available
+    const contentParts = localContent.split('\n\n');
+    const metaBlock = contentParts[0];
+    const bodyContent = contentParts.slice(1).join('\n\n');
+
+    const formattedHTML = bodyContent
+      .split('\n\n')
+      .map((para) => {
+        const trimmed = para.trim();
+        if (trimmed.startsWith('# ')) {
+          return `<h1>${trimmed.replace('# ', '')}</h1>`;
+        }
+        if (trimmed.startsWith('## ')) {
+          return `<h2>${trimmed.replace('## ', '')}</h2>`;
+        }
+        if (trimmed.startsWith('### ')) {
+          return `<h3>${trimmed.replace('### ', '')}</h3>`;
+        }
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          const items = trimmed
+            .split(/\n[-*]\s+/)
+            .map((it) => `<li>${it.replace(/^[-*]\s+/, '')}</li>`)
+            .join('');
+          return `<ul>${items}</ul>`;
+        }
+        if (trimmed.match(/^\d+\.\s+/)) {
+          const items = trimmed
+            .split(/\n\d+\.\s+/)
+            .map((it) => `<li>${it.replace(/^\d+\.\s+/, '')}</li>`)
+            .join('');
+          return `<ol>${items}</ol>`;
+        }
+        return `<p>${trimmed}</p>`;
+      })
+      .join('');
 
     printWindow.document.write(`
       <html>
@@ -381,12 +440,15 @@ export default function AIWriterTab({
     setSources([]);
     setPublishedSuccess(false);
 
-    const keywords = keywordsInput.split(",").map(k => k.trim()).filter(Boolean);
+    const keywords = keywordsInput
+      .split(',')
+      .map((k) => k.trim())
+      .filter(Boolean);
 
     try {
-      const response = await fetch("/api/seo/generate-article", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/seo/generate-article', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title,
           topic,
@@ -394,23 +456,26 @@ export default function AIWriterTab({
           keywords,
           tone,
           audience,
-          length
-        })
+          length,
+        }),
       });
 
       if (!response.ok) {
-        let serverError = "Failed to generate article with Gemini AI. Please check your network connection.";
+        let serverError =
+          'Failed to generate article with Gemini AI. Please check your network connection.';
         try {
           const errData = await response.json();
           if (errData && errData.error) {
             serverError = errData.error;
           }
-        } catch (_) {}
+        } catch (_) {
+          // JSON parse failure is non-critical; serverError already set
+        }
         throw new Error(serverError);
       }
 
       const data = await response.json();
-      
+
       if (data.warning) {
         setWarningMsg(data.warning);
       }
@@ -423,17 +488,19 @@ export default function AIWriterTab({
         title,
         topic,
         content: data.content,
-        status: "Drafted",
-        date: new Date().toLocaleDateString("en-GB"),
+        status: 'Drafted',
+        date: new Date().toLocaleDateString('en-GB'),
         wordCount: data.wordCount || 350,
-        tone: tone
+        tone: tone,
       };
 
       onDraftSuccess(draft);
       setActiveDraftId(draftId);
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || "Something went wrong generating the content.");
+      setErrorMsg(
+        err.message || 'Something went wrong generating the content.',
+      );
       setSources([]);
     } finally {
       setLoading(false);
@@ -442,7 +509,9 @@ export default function AIWriterTab({
 
   const handleRework = async () => {
     if (!originalContentInput.trim()) {
-      setErrorMsg("Please enter or paste the existing content you want to rework.");
+      setErrorMsg(
+        'Please enter or paste the existing content you want to rework.',
+      );
       return;
     }
 
@@ -452,28 +521,34 @@ export default function AIWriterTab({
     setSources([]);
     setPublishedSuccess(false);
 
-    const keywords = keywordsInput.split(",").map(k => k.trim()).filter(Boolean);
+    const keywords = keywordsInput
+      .split(',')
+      .map((k) => k.trim())
+      .filter(Boolean);
 
     try {
-      const response = await fetch("/api/seo/rework-content", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/seo/rework-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           originalContent: originalContentInput,
-          title: title || "Transformed & Reworked Guide",
+          title: title || 'Transformed & Reworked Guide',
           reworkGoal,
           tone,
           audience,
-          keywords
-        })
+          keywords,
+        }),
       });
 
       if (!response.ok) {
-        let serverError = "Failed to rework content with AI. Please check your network connection.";
+        let serverError =
+          'Failed to rework content with AI. Please check your network connection.';
         try {
           const errData = await response.json();
           if (errData && errData.error) serverError = errData.error;
-        } catch (_) {}
+        } catch (_) {
+          // JSON parse failure is non-critical; serverError already set
+        }
         throw new Error(serverError);
       }
 
@@ -485,13 +560,13 @@ export default function AIWriterTab({
       const draftId = `draft_rework_${Date.now()}`;
       const draft: ArticleDraft = {
         id: draftId,
-        title: title || "Transformed Article",
+        title: title || 'Transformed Article',
         topic: `Reworked (${reworkGoal})`,
         content: data.content,
-        status: "Drafted",
-        date: new Date().toLocaleDateString("en-GB"),
+        status: 'Drafted',
+        date: new Date().toLocaleDateString('en-GB'),
         wordCount: data.wordCount || 400,
-        tone: tone
+        tone: tone,
       };
 
       onDraftSuccess(draft);
@@ -499,7 +574,7 @@ export default function AIWriterTab({
       onXPUnlock(35);
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || "Something went wrong reworking the content.");
+      setErrorMsg(err.message || 'Something went wrong reworking the content.');
       setSources([]);
     } finally {
       setLoading(false);
@@ -520,17 +595,17 @@ export default function AIWriterTab({
     setPublishResult(null);
 
     try {
-      const response = await fetch("/api/cms/publish", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/cms/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           webhookUrl,
           apiKey,
           cmsType,
           title: localTitle,
           content: localContent,
-          domain: site
-        })
+          domain: site,
+        }),
       });
 
       const data = await response.json();
@@ -538,10 +613,10 @@ export default function AIWriterTab({
       setPublishing(false);
       setPublishedSuccess(true);
       setPublishResult({
-        mode: data.mode || "local",
-        message: data.message || "Article published successfully!",
+        mode: data.mode || 'local',
+        message: data.message || 'Article published successfully!',
         targetUrl: data.targetUrl,
-        error: data.error
+        error: data.error,
       });
 
       onUpdateDraft({
@@ -549,7 +624,7 @@ export default function AIWriterTab({
         title: localTitle,
         content: localContent,
         tone: localTone,
-        status: "Published"
+        status: 'Published',
       });
 
       onXPUnlock(25); // Award XP for publishing article!
@@ -557,8 +632,9 @@ export default function AIWriterTab({
       setPublishing(false);
       setPublishedSuccess(true);
       setPublishResult({
-        mode: "local",
-        message: "Saved in dashboard local storage. Connect a Webhook URL to send directly to your live CMS."
+        mode: 'local',
+        message:
+          'Saved in dashboard local storage. Connect a Webhook URL to send directly to your live CMS.',
       });
 
       onUpdateDraft({
@@ -566,7 +642,7 @@ export default function AIWriterTab({
         title: localTitle,
         content: localContent,
         tone: localTone,
-        status: "Published"
+        status: 'Published',
       });
 
       onXPUnlock(25);
@@ -582,7 +658,10 @@ export default function AIWriterTab({
             <span>AI SEO Content Writer</span>
           </h2>
           <p className="text-slate-400 text-xs mt-1">
-            Generate structurally optimized blog drafts integrating semantic keys targeting the <strong className="text-[#34d399] font-bold">{pillar}</strong> focus pillar.
+            Generate structurally optimized blog drafts integrating semantic
+            keys targeting the{' '}
+            <strong className="text-[#34d399] font-bold">{pillar}</strong> focus
+            pillar.
           </p>
         </div>
       </div>
@@ -594,11 +673,11 @@ export default function AIWriterTab({
           <div className="bg-black/50 p-1 rounded-xl border border-white/10 flex items-center gap-1">
             <button
               type="button"
-              onClick={() => setWriterMode("new")}
+              onClick={() => setWriterMode('new')}
               className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                writerMode === "new"
-                  ? "bg-[#34d399] text-[#0f172a] shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                writerMode === 'new'
+                  ? 'bg-[#34d399] text-[#0f172a] shadow-sm'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               <Sparkles size={13} />
@@ -606,11 +685,11 @@ export default function AIWriterTab({
             </button>
             <button
               type="button"
-              onClick={() => setWriterMode("rework")}
+              onClick={() => setWriterMode('rework')}
               className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer relative ${
-                writerMode === "rework"
-                  ? "bg-[#34d399] text-[#0f172a] shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                writerMode === 'rework'
+                  ? 'bg-[#34d399] text-[#0f172a] shadow-sm'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               <RefreshCw size={13} />
@@ -623,19 +702,22 @@ export default function AIWriterTab({
 
           <div className="flex items-center justify-between text-white font-semibold text-sm border-b border-white/10 pb-2">
             <div className="flex items-center gap-2">
-              {writerMode === "rework" ? (
+              {writerMode === 'rework' ? (
                 <>
                   <RefreshCw size={16} className="text-[#34d399]" />
                   <span>Rework Existing Content</span>
                 </>
               ) : (
                 <>
-                  <Sparkles size={16} className="text-[#34d399] fill-[#34d399]/10" />
+                  <Sparkles
+                    size={16}
+                    className="text-[#34d399] fill-[#34d399]/10"
+                  />
                   <span>Draft Configuration</span>
                 </>
               )}
             </div>
-            {writerMode === "rework" && (
+            {writerMode === 'rework' && (
               <span className="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[9px] font-bold px-2 py-0.5 rounded font-mono">
                 BETA
               </span>
@@ -656,11 +738,12 @@ export default function AIWriterTab({
             </div>
           )}
 
-          {writerMode === "rework" ? (
+          {writerMode === 'rework' ? (
             /* Content Reworker Inputs */
             <div className="space-y-4">
               <p className="text-[11px] text-slate-300 leading-relaxed bg-emerald-950/20 border border-emerald-500/20 p-2.5 rounded-xl">
-                Transform existing content into fresh, unique articles while preserving the core message.
+                Transform existing content into fresh, unique articles while
+                preserving the core message.
               </p>
 
               {/* Title / Headline */}
@@ -705,7 +788,10 @@ export default function AIWriterTab({
                 />
                 <div className="flex justify-end">
                   <span className="text-[10px] font-mono text-slate-500">
-                    {originalContentInput.trim() ? originalContentInput.split(/\s+/).filter(Boolean).length : 0} words
+                    {originalContentInput.trim()
+                      ? originalContentInput.split(/\s+/).filter(Boolean).length
+                      : 0}{' '}
+                    words
                   </span>
                 </div>
               </div>
@@ -720,11 +806,36 @@ export default function AIWriterTab({
                   onChange={(e) => setReworkGoal(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-white/10 bg-black/30 text-xs focus:ring-2 focus:ring-[#34d399]/20 focus:border-[#34d399] outline-hidden text-slate-200 font-mono font-medium"
                 >
-                  <option value="Fresh & Unique Rewrite" className="bg-slate-900 text-white">Fresh & Unique Rewrite (Pass plagiarism checks)</option>
-                  <option value="SEO & Keyword Optimization" className="bg-slate-900 text-white">SEO & Keyword Optimization (Add structure & headings)</option>
-                  <option value="Tone & Brand Voice Alignment" className="bg-slate-900 text-white">Tone & Brand Voice Alignment (Match audience tone)</option>
-                  <option value="Simplify & Improve Readability" className="bg-slate-900 text-white">Simplify & Improve Readability (Clear & concise)</option>
-                  <option value="Expand & Add Irish Context" className="bg-slate-900 text-white">Expand & Add Irish Context (SEAI, BER, heat pumps)</option>
+                  <option
+                    value="Fresh & Unique Rewrite"
+                    className="bg-slate-900 text-white"
+                  >
+                    Fresh & Unique Rewrite (Pass plagiarism checks)
+                  </option>
+                  <option
+                    value="SEO & Keyword Optimization"
+                    className="bg-slate-900 text-white"
+                  >
+                    SEO & Keyword Optimization (Add structure & headings)
+                  </option>
+                  <option
+                    value="Tone & Brand Voice Alignment"
+                    className="bg-slate-900 text-white"
+                  >
+                    Tone & Brand Voice Alignment (Match audience tone)
+                  </option>
+                  <option
+                    value="Simplify & Improve Readability"
+                    className="bg-slate-900 text-white"
+                  >
+                    Simplify & Improve Readability (Clear & concise)
+                  </option>
+                  <option
+                    value="Expand & Add Irish Context"
+                    className="bg-slate-900 text-white"
+                  >
+                    Expand & Add Irish Context (SEAI, BER, heat pumps)
+                  </option>
                 </select>
               </div>
 
@@ -738,13 +849,39 @@ export default function AIWriterTab({
                   onChange={(e) => setTone(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-white/10 bg-black/30 text-xs focus:ring-2 focus:ring-[#34d399]/20 focus:border-[#34d399] outline-hidden text-slate-200"
                 >
-                  <option value="Professional" className="bg-slate-900 text-white">Professional</option>
-                  <option value="Friendly" className="bg-slate-900 text-white">Friendly</option>
-                  <option value="Casual" className="bg-slate-900 text-white">Casual</option>
-                  <option value="Expert/Technical" className="bg-slate-900 text-white">Expert / Technical</option>
-                  <option value="Warm Irish Homely" className="bg-slate-900 text-white">Warm Irish Homely</option>
-                  <option value="Energetic/Marketing" className="bg-slate-900 text-white">Energetic / Marketing</option>
-                  <option value="Neutral" className="bg-slate-900 text-white">Neutral</option>
+                  <option
+                    value="Professional"
+                    className="bg-slate-900 text-white"
+                  >
+                    Professional
+                  </option>
+                  <option value="Friendly" className="bg-slate-900 text-white">
+                    Friendly
+                  </option>
+                  <option value="Casual" className="bg-slate-900 text-white">
+                    Casual
+                  </option>
+                  <option
+                    value="Expert/Technical"
+                    className="bg-slate-900 text-white"
+                  >
+                    Expert / Technical
+                  </option>
+                  <option
+                    value="Warm Irish Homely"
+                    className="bg-slate-900 text-white"
+                  >
+                    Warm Irish Homely
+                  </option>
+                  <option
+                    value="Energetic/Marketing"
+                    className="bg-slate-900 text-white"
+                  >
+                    Energetic / Marketing
+                  </option>
+                  <option value="Neutral" className="bg-slate-900 text-white">
+                    Neutral
+                  </option>
                 </select>
               </div>
 
@@ -758,10 +895,30 @@ export default function AIWriterTab({
                   onChange={(e) => setAudience(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-white/10 bg-black/30 text-xs focus:ring-2 focus:ring-[#34d399]/20 focus:border-[#34d399] outline-hidden text-slate-200"
                 >
-                  <option value="Irish homeowners" className="bg-slate-900 text-white">Irish homeowners</option>
-                  <option value="First-time buyers" className="bg-slate-900 text-white">First-time buyers</option>
-                  <option value="Landlords / Property Developers" className="bg-slate-900 text-white">Landlords / Property Developers</option>
-                  <option value="Commercial / Business Owners" className="bg-slate-900 text-white">Commercial / Business Owners</option>
+                  <option
+                    value="Irish homeowners"
+                    className="bg-slate-900 text-white"
+                  >
+                    Irish homeowners
+                  </option>
+                  <option
+                    value="First-time buyers"
+                    className="bg-slate-900 text-white"
+                  >
+                    First-time buyers
+                  </option>
+                  <option
+                    value="Landlords / Property Developers"
+                    className="bg-slate-900 text-white"
+                  >
+                    Landlords / Property Developers
+                  </option>
+                  <option
+                    value="Commercial / Business Owners"
+                    className="bg-slate-900 text-white"
+                  >
+                    Commercial / Business Owners
+                  </option>
                 </select>
               </div>
 
@@ -786,7 +943,10 @@ export default function AIWriterTab({
               >
                 {loading ? (
                   <>
-                    <RefreshCw size={14} className="animate-spin text-[#0f172a]" />
+                    <RefreshCw
+                      size={14}
+                      className="animate-spin text-[#0f172a]"
+                    />
                     <span>Reworking & Optimizing content...</span>
                   </>
                 ) : (
@@ -838,10 +998,30 @@ export default function AIWriterTab({
                   onChange={(e) => setPillar(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-white/10 bg-black/30 text-xs focus:ring-2 focus:ring-[#34d399]/20 focus:border-[#34d399] outline-hidden text-slate-200"
                 >
-                  <option value="BER Rating Ireland" className="bg-slate-900 text-white">BER Rating Ireland</option>
-                  <option value="Solar Heat Pumps" className="bg-slate-900 text-white">Solar Heat Pumps</option>
-                  <option value="SEAI Grants & Subsidies" className="bg-slate-900 text-white">SEAI Grants & Subsidies</option>
-                  <option value="Irish Insulation standards" className="bg-slate-900 text-white">Irish Insulation standards</option>
+                  <option
+                    value="BER Rating Ireland"
+                    className="bg-slate-900 text-white"
+                  >
+                    BER Rating Ireland
+                  </option>
+                  <option
+                    value="Solar Heat Pumps"
+                    className="bg-slate-900 text-white"
+                  >
+                    Solar Heat Pumps
+                  </option>
+                  <option
+                    value="SEAI Grants & Subsidies"
+                    className="bg-slate-900 text-white"
+                  >
+                    SEAI Grants & Subsidies
+                  </option>
+                  <option
+                    value="Irish Insulation standards"
+                    className="bg-slate-900 text-white"
+                  >
+                    Irish Insulation standards
+                  </option>
                 </select>
               </div>
 
@@ -855,13 +1035,39 @@ export default function AIWriterTab({
                   onChange={(e) => setTone(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-white/10 bg-black/30 text-xs focus:ring-2 focus:ring-[#34d399]/20 focus:border-[#34d399] outline-hidden text-slate-200"
                 >
-                  <option value="Professional" className="bg-slate-900 text-white">Professional</option>
-                  <option value="Friendly" className="bg-slate-900 text-white">Friendly</option>
-                  <option value="Casual" className="bg-slate-900 text-white">Casual</option>
-                  <option value="Expert/Technical" className="bg-slate-900 text-white">Expert / Technical</option>
-                  <option value="Warm Irish Homely" className="bg-slate-900 text-white">Warm Irish Homely</option>
-                  <option value="Energetic/Marketing" className="bg-slate-900 text-white">Energetic / Marketing</option>
-                  <option value="Neutral" className="bg-slate-900 text-white">Neutral</option>
+                  <option
+                    value="Professional"
+                    className="bg-slate-900 text-white"
+                  >
+                    Professional
+                  </option>
+                  <option value="Friendly" className="bg-slate-900 text-white">
+                    Friendly
+                  </option>
+                  <option value="Casual" className="bg-slate-900 text-white">
+                    Casual
+                  </option>
+                  <option
+                    value="Expert/Technical"
+                    className="bg-slate-900 text-white"
+                  >
+                    Expert / Technical
+                  </option>
+                  <option
+                    value="Warm Irish Homely"
+                    className="bg-slate-900 text-white"
+                  >
+                    Warm Irish Homely
+                  </option>
+                  <option
+                    value="Energetic/Marketing"
+                    className="bg-slate-900 text-white"
+                  >
+                    Energetic / Marketing
+                  </option>
+                  <option value="Neutral" className="bg-slate-900 text-white">
+                    Neutral
+                  </option>
                 </select>
               </div>
 
@@ -875,10 +1081,30 @@ export default function AIWriterTab({
                   onChange={(e) => setAudience(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-white/10 bg-black/30 text-xs focus:ring-2 focus:ring-[#34d399]/20 focus:border-[#34d399] outline-hidden text-slate-200"
                 >
-                  <option value="Irish homeowners" className="bg-slate-900 text-white">Irish homeowners</option>
-                  <option value="First-time buyers" className="bg-slate-900 text-white">First-time buyers</option>
-                  <option value="Landlords / Property Developers" className="bg-slate-900 text-white">Landlords / Property Developers</option>
-                  <option value="Commercial / Business Owners" className="bg-slate-900 text-white">Commercial / Business Owners</option>
+                  <option
+                    value="Irish homeowners"
+                    className="bg-slate-900 text-white"
+                  >
+                    Irish homeowners
+                  </option>
+                  <option
+                    value="First-time buyers"
+                    className="bg-slate-900 text-white"
+                  >
+                    First-time buyers
+                  </option>
+                  <option
+                    value="Landlords / Property Developers"
+                    className="bg-slate-900 text-white"
+                  >
+                    Landlords / Property Developers
+                  </option>
+                  <option
+                    value="Commercial / Business Owners"
+                    className="bg-slate-900 text-white"
+                  >
+                    Commercial / Business Owners
+                  </option>
                 </select>
               </div>
 
@@ -892,9 +1118,15 @@ export default function AIWriterTab({
                   onChange={(e) => setLength(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-white/10 bg-black/30 text-xs focus:ring-2 focus:ring-[#34d399]/20 focus:border-[#34d399] outline-hidden text-slate-200"
                 >
-                  <option value="short" className="bg-slate-900 text-white">Short (approx. 400 words)</option>
-                  <option value="medium" className="bg-slate-900 text-white">Medium (approx. 700 words)</option>
-                  <option value="long" className="bg-slate-900 text-white">Long (approx. 1000 words)</option>
+                  <option value="short" className="bg-slate-900 text-white">
+                    Short (approx. 400 words)
+                  </option>
+                  <option value="medium" className="bg-slate-900 text-white">
+                    Medium (approx. 700 words)
+                  </option>
+                  <option value="long" className="bg-slate-900 text-white">
+                    Long (approx. 1000 words)
+                  </option>
                 </select>
               </div>
 
@@ -911,7 +1143,7 @@ export default function AIWriterTab({
                   className="w-full px-3.5 py-2 rounded-xl border border-white/10 bg-black/30 text-xs focus:ring-2 focus:ring-[#34d399]/20 focus:border-[#34d399] outline-hidden text-white font-medium"
                 />
                 <div className="flex flex-wrap gap-1.5 mt-2">
-                  {suggestedKeywords.map(tag => (
+                  {suggestedKeywords.map((tag) => (
                     <button
                       key={tag}
                       onClick={() => handleKeywordTagClick(tag)}
@@ -930,12 +1162,18 @@ export default function AIWriterTab({
               >
                 {loading ? (
                   <>
-                    <RefreshCw size={14} className="animate-spin text-[#0f172a]" />
+                    <RefreshCw
+                      size={14}
+                      className="animate-spin text-[#0f172a]"
+                    />
                     <span>Crafting SEO Article draft...</span>
                   </>
                 ) : (
                   <>
-                    <Sparkles size={14} className="fill-[#0f172a] text-[#0f172a]" />
+                    <Sparkles
+                      size={14}
+                      className="fill-[#0f172a] text-[#0f172a]"
+                    />
                     <span>Draft with Gemini AI</span>
                   </>
                 )}
@@ -949,14 +1187,14 @@ export default function AIWriterTab({
               setErrorMsg(null);
               setWarningMsg(null);
               try {
-                const targetTopic = title || "Raising BER from G to A";
-                const targetTone = tone?.toLowerCase() || "professional";
-                const targetLength = length || "long";
+                const targetTopic = title || 'Raising BER from G to A';
+                const targetTone = tone?.toLowerCase() || 'professional';
+                const targetLength = length || 'long';
 
                 const output = await generateArticleWithGemini(
                   targetTopic,
                   targetTone,
-                  targetLength
+                  targetLength,
                 );
 
                 // parse JSON + markdown
@@ -964,17 +1202,25 @@ export default function AIWriterTab({
                 let contentVal = output;
                 let toneVal = targetTone;
 
-                if (output.includes("\n\n")) {
-                  const parts = output.split("\n\n");
+                if (output.includes('\n\n')) {
+                  const parts = output.split('\n\n');
                   const jsonBlock = parts[0];
-                  const markdown = parts.slice(1).join("\n\n");
+                  const markdown = parts.slice(1).join('\n\n');
                   try {
-                    const metadata = JSON.parse(jsonBlock.trim().replace(/^```json/, "").replace(/```$/, ""));
+                    const metadata = JSON.parse(
+                      jsonBlock
+                        .trim()
+                        .replace(/^```json/, '')
+                        .replace(/```$/, ''),
+                    );
                     titleVal = metadata.title || titleVal;
                     toneVal = metadata.tone || toneVal;
                     contentVal = markdown;
                   } catch (jsonErr) {
-                    console.warn("JSON block split didn't parse, treating whole content as markdown:", jsonErr);
+                    console.warn(
+                      "JSON block split didn't parse, treating whole content as markdown:",
+                      jsonErr,
+                    );
                   }
                 }
 
@@ -982,7 +1228,7 @@ export default function AIWriterTab({
                 generateArticle({
                   title: titleVal,
                   content: contentVal,
-                  tone: toneVal
+                  tone: toneVal,
                 });
 
                 // Trigger App.tsx's draft success to grant XP & sync UI state
@@ -992,17 +1238,21 @@ export default function AIWriterTab({
                   title: titleVal,
                   topic: topic || targetTopic,
                   content: contentVal,
-                  status: "Drafted",
-                  date: new Date().toLocaleDateString("en-GB"),
-                  wordCount: contentVal.split(/\s+/).filter(Boolean).length || 350,
-                  tone: toneVal
+                  status: 'Drafted',
+                  date: new Date().toLocaleDateString('en-GB'),
+                  wordCount:
+                    contentVal.split(/\s+/).filter(Boolean).length || 350,
+                  tone: toneVal,
                 };
 
                 onDraftSuccess(draft);
                 setActiveDraftId(draftId);
               } catch (err: any) {
                 console.error(err);
-                setErrorMsg(err.message || "Failed to generate article using direct client-side Gemini call.");
+                setErrorMsg(
+                  err.message ||
+                    'Failed to generate article using direct client-side Gemini call.',
+                );
               } finally {
                 setLoading(false);
               }
@@ -1010,7 +1260,10 @@ export default function AIWriterTab({
             disabled={loading}
             className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-white/5 disabled:text-slate-500 text-white py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition mt-3 cursor-pointer"
           >
-            <Sparkles size={14} className="fill-white text-white animate-pulse" />
+            <Sparkles
+              size={14}
+              className="fill-white text-white animate-pulse"
+            />
             <span>Generate With Gemini (Direct)</span>
           </button>
         </div>
@@ -1024,7 +1277,10 @@ export default function AIWriterTab({
                 <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
                 <span>{saveNotification}</span>
               </span>
-              <button onClick={() => setSaveNotification(null)} className="text-slate-400 hover:text-white cursor-pointer">
+              <button
+                onClick={() => setSaveNotification(null)}
+                className="text-slate-400 hover:text-white cursor-pointer"
+              >
                 <X size={13} />
               </button>
             </div>
@@ -1036,7 +1292,10 @@ export default function AIWriterTab({
                 <Trash2 size={14} className="text-rose-400 shrink-0" />
                 <span>{deleteNotification}</span>
               </span>
-              <button onClick={() => setDeleteNotification(null)} className="text-slate-400 hover:text-white cursor-pointer">
+              <button
+                onClick={() => setDeleteNotification(null)}
+                className="text-slate-400 hover:text-white cursor-pointer"
+              >
                 <X size={13} />
               </button>
             </div>
@@ -1044,7 +1303,10 @@ export default function AIWriterTab({
 
           {/* Article Selector Tab Strip */}
           {drafts.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-4 p-1.5 bg-black/20 rounded-xl border border-white/5" id="article-selector-container">
+            <div
+              className="flex flex-wrap gap-1.5 mb-4 p-1.5 bg-black/20 rounded-xl border border-white/5"
+              id="article-selector-container"
+            >
               {drafts.map((a) => (
                 <div key={a.id} className="group relative flex items-center">
                   <button
@@ -1054,12 +1316,19 @@ export default function AIWriterTab({
                     }}
                     className={`px-3 py-1.5 rounded-lg border text-[10px] font-mono font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
                       activeDraftId === a.id
-                        ? "bg-[#34d399]/10 text-[#34d399] border-[#34d399]/30"
-                        : "bg-transparent text-slate-400 border-transparent hover:bg-white/5 hover:text-slate-200"
+                        ? 'bg-[#34d399]/10 text-[#34d399] border-[#34d399]/30'
+                        : 'bg-transparent text-slate-400 border-transparent hover:bg-white/5 hover:text-slate-200'
                     }`}
                     id={`article-tab-${a.id}`}
                   >
-                    <FileText size={11} className={activeDraftId === a.id ? "text-[#34d399]" : "text-slate-500"} />
+                    <FileText
+                      size={11}
+                      className={
+                        activeDraftId === a.id
+                          ? 'text-[#34d399]'
+                          : 'text-slate-500'
+                      }
+                    />
                     <span className="max-w-[120px] truncate">{a.title}</span>
                   </button>
                   <button
@@ -1084,7 +1353,9 @@ export default function AIWriterTab({
               <div className="bg-white/5 border-b border-white/10 px-5 py-4 flex flex-wrap items-center justify-between gap-3 text-left">
                 <div className="flex items-center gap-2">
                   <FileCheck size={16} className="text-[#34d399]" />
-                  <span className="text-xs font-bold text-white">SEO Editor</span>
+                  <span className="text-xs font-bold text-white">
+                    SEO Editor
+                  </span>
                   {isSaving ? (
                     <span className="text-[10px] font-mono text-amber-400 flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-ping" />
@@ -1097,7 +1368,11 @@ export default function AIWriterTab({
                     </span>
                   )}
                   <span className="text-[10px] font-mono text-slate-500">
-                    ({localContent ? localContent.split(/\s+/).filter(Boolean).length : 0} words)
+                    (
+                    {localContent
+                      ? localContent.split(/\s+/).filter(Boolean).length
+                      : 0}{' '}
+                    words)
                   </span>
                 </div>
 
@@ -1144,8 +1419,12 @@ export default function AIWriterTab({
                     className="p-1.5 bg-white/10 border border-white/10 hover:bg-white/15 hover:border-white/20 text-slate-200 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
                     title="Copy to Clipboard"
                   >
-                    {copied ? <Check size={12} className="text-[#34d399]" /> : <Copy size={12} />}
-                    <span>{copied ? "Copied" : "Copy"}</span>
+                    {copied ? (
+                      <Check size={12} className="text-[#34d399]" />
+                    ) : (
+                      <Copy size={12} />
+                    )}
+                    <span>{copied ? 'Copied' : 'Copy'}</span>
                   </button>
 
                   <button
@@ -1202,13 +1481,42 @@ export default function AIWriterTab({
                     onChange={(e) => setLocalTone(e.target.value)}
                     className="px-2.5 py-1 bg-white/5 border border-white/10 hover:border-[#34d399] rounded-lg text-[11px] font-semibold text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#34d399] transition cursor-pointer"
                   >
-                    <option value="Professional" className="bg-slate-950 text-white">Professional</option>
-                    <option value="Friendly" className="bg-slate-950 text-white">Friendly</option>
-                    <option value="Casual" className="bg-slate-950 text-white">Casual</option>
-                    <option value="Expert/Technical" className="bg-slate-950 text-white">Expert / Technical</option>
-                    <option value="Warm Irish Homely" className="bg-slate-950 text-white">Warm Irish Homely</option>
-                    <option value="Energetic/Marketing" className="bg-slate-950 text-white">Energetic / Marketing</option>
-                    <option value="Neutral" className="bg-slate-950 text-white">Neutral</option>
+                    <option
+                      value="Professional"
+                      className="bg-slate-950 text-white"
+                    >
+                      Professional
+                    </option>
+                    <option
+                      value="Friendly"
+                      className="bg-slate-950 text-white"
+                    >
+                      Friendly
+                    </option>
+                    <option value="Casual" className="bg-slate-950 text-white">
+                      Casual
+                    </option>
+                    <option
+                      value="Expert/Technical"
+                      className="bg-slate-950 text-white"
+                    >
+                      Expert / Technical
+                    </option>
+                    <option
+                      value="Warm Irish Homely"
+                      className="bg-slate-950 text-white"
+                    >
+                      Warm Irish Homely
+                    </option>
+                    <option
+                      value="Energetic/Marketing"
+                      className="bg-slate-950 text-white"
+                    >
+                      Energetic / Marketing
+                    </option>
+                    <option value="Neutral" className="bg-slate-950 text-white">
+                      Neutral
+                    </option>
                   </select>
                 </div>
                 <div className="text-[9px] text-slate-400 font-mono">
@@ -1227,19 +1535,24 @@ export default function AIWriterTab({
               {/* Pure text format and download options action bar */}
               <div className="bg-white/5 border-b border-white/10 px-5 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-left">
                 <div className="space-y-0.5">
-                  <span className="text-[10px] text-slate-400 font-mono block">Download Compatibility (Pure Text, no embedded media)</span>
-                  <span className="text-[9px] text-[#34d399] font-semibold">Perfect for CMS editors, Markdown compilers, or document workflows.</span>
+                  <span className="text-[10px] text-slate-400 font-mono block">
+                    Download Compatibility (Pure Text, no embedded media)
+                  </span>
+                  <span className="text-[9px] text-[#34d399] font-semibold">
+                    Perfect for CMS editors, Markdown compilers, or document
+                    workflows.
+                  </span>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <button
-                    onClick={() => handleDownload("md")}
+                    onClick={() => handleDownload('md')}
                     className="px-2.5 py-1.5 bg-white/5 border border-white/10 hover:border-[#34d399] hover:bg-white/10 rounded-lg text-[11px] font-bold text-slate-200 transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <Download size={11} className="text-[#34d399]" />
                     <span>Download .MD</span>
                   </button>
                   <button
-                    onClick={() => handleDownload("txt")}
+                    onClick={() => handleDownload('txt')}
                     className="px-2.5 py-1.5 bg-white/5 border border-white/10 hover:border-[#34d399] hover:bg-white/10 rounded-lg text-[11px] font-bold text-slate-200 transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <Download size={11} className="text-[#34d399]" />
@@ -1289,17 +1602,20 @@ export default function AIWriterTab({
                 <div className="bg-emerald-500/15 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-emerald-200 border-t border-emerald-500/30 animate-in fade-in duration-300 text-left">
                   <div className="space-y-1">
                     <span className="text-xs font-bold flex items-center gap-2 text-white">
-                      <Sparkles size={14} className="text-[#34d399] fill-[#34d399]/20" />
+                      <Sparkles
+                        size={14}
+                        className="text-[#34d399] fill-[#34d399]/20"
+                      />
                       <span>Article Published (+25 Onboarding XP)</span>
                     </span>
                     <p className="text-[11px] text-slate-300 leading-snug">
-                      {publishResult?.mode === "webhook" 
-                        ? `Live payload successfully transmitted to ${publishResult.targetUrl || site || "your CMS endpoint"}!`
-                        : `Saved locally in platform storage. Want to push directly to ${site || "ecosmarthomes.ie"}? Click CMS Settings to add your WordPress REST API or Webhook URL.`}
+                      {publishResult?.mode === 'webhook'
+                        ? `Live payload successfully transmitted to ${publishResult.targetUrl || site || 'your CMS endpoint'}!`
+                        : `Saved locally in platform storage. Want to push directly to ${site || 'ecosmarthomes.ie'}? Click CMS Settings to add your WordPress REST API or Webhook URL.`}
                     </p>
                   </div>
 
-                  {publishResult?.mode !== "webhook" && (
+                  {publishResult?.mode !== 'webhook' && (
                     <button
                       onClick={() => setShowCmsModal(true)}
                       className="shrink-0 px-3 py-1.5 bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold text-xs rounded-lg transition flex items-center gap-1.5 cursor-pointer shadow-sm"
@@ -1316,9 +1632,13 @@ export default function AIWriterTab({
               <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-slate-400 mb-3 border border-white/10">
                 <FileText size={20} />
               </div>
-              <h4 className="font-display font-semibold text-slate-200 text-sm">No Active Document Drafted</h4>
+              <h4 className="font-display font-semibold text-slate-200 text-sm">
+                No Active Document Drafted
+              </h4>
               <p className="text-xs text-slate-400 max-w-sm mt-1 leading-normal">
-                Set up your Title, Context and Keywords on the left panel, and click "Draft with Gemini AI" to trigger a highly optimized SEO blog document.
+                Set up your Title, Context and Keywords on the left panel, and
+                click {'"'}Draft with Gemini AI{'"'} to trigger a highly
+                optimized SEO blog document.
               </p>
             </div>
           )}
@@ -1335,8 +1655,13 @@ export default function AIWriterTab({
                   <Server size={18} />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white tracking-tight">Live CMS Webhook Settings</h3>
-                  <p className="text-[11px] text-slate-400">Connect {site || "ecosmarthomes.ie"} for 1-click live publishing</p>
+                  <h3 className="text-base font-bold text-white tracking-tight">
+                    Live CMS Webhook Settings
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Connect {site || 'ecosmarthomes.ie'} for 1-click live
+                    publishing
+                  </p>
                 </div>
               </div>
               <button
@@ -1355,11 +1680,11 @@ export default function AIWriterTab({
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {[
-                    { id: "wordpress", label: "WordPress REST API" },
-                    { id: "webhook", label: "Custom Webhook" },
-                    { id: "webflow", label: "Webflow CMS" },
-                    { id: "ghost", label: "Ghost Admin API" },
-                    { id: "shopify", label: "Shopify Blog" },
+                    { id: 'wordpress', label: 'WordPress REST API' },
+                    { id: 'webhook', label: 'Custom Webhook' },
+                    { id: 'webflow', label: 'Webflow CMS' },
+                    { id: 'ghost', label: 'Ghost Admin API' },
+                    { id: 'shopify', label: 'Shopify Blog' },
                   ].map((plat) => (
                     <button
                       key={plat.id}
@@ -1367,8 +1692,8 @@ export default function AIWriterTab({
                       onClick={() => setCmsType(plat.id as any)}
                       className={`p-2.5 rounded-xl border text-left transition cursor-pointer text-xs font-semibold ${
                         cmsType === plat.id
-                          ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-300"
-                          : "bg-black/30 border-white/10 text-slate-400 hover:text-white hover:bg-white/5"
+                          ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
+                          : 'bg-black/30 border-white/10 text-slate-400 hover:text-white hover:bg-white/5'
                       }`}
                     >
                       {plat.label}
@@ -1388,16 +1713,16 @@ export default function AIWriterTab({
                   value={webhookUrl}
                   onChange={(e) => setWebhookUrl(e.target.value)}
                   placeholder={
-                    cmsType === "wordpress"
-                      ? `https://${site || "ecosmarthomes.ie"}/wp-json/wp/v2/posts`
-                      : "https://your-domain.com/api/v1/webhook"
+                    cmsType === 'wordpress'
+                      ? `https://${site || 'ecosmarthomes.ie'}/wp-json/wp/v2/posts`
+                      : 'https://your-domain.com/api/v1/webhook'
                   }
                   className="w-full bg-black/50 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#34d399] font-mono transition-colors"
                 />
                 <span className="text-[10px] text-slate-400 block leading-tight">
-                  {cmsType === "wordpress"
-                    ? `Default WP REST endpoint: https://${site || "ecosmarthomes.ie"}/wp-json/wp/v2/posts`
-                    : "Enter your custom Webhook URL, Zapier, Make, or CMS REST API endpoint."}
+                  {cmsType === 'wordpress'
+                    ? `Default WP REST endpoint: https://${site || 'ecosmarthomes.ie'}/wp-json/wp/v2/posts`
+                    : 'Enter your custom Webhook URL, Zapier, Make, or CMS REST API endpoint.'}
                 </span>
               </div>
 
@@ -1417,12 +1742,17 @@ export default function AIWriterTab({
 
               {/* Test Result Message */}
               {testResult && (
-                <div className={`p-3 rounded-xl border text-xs flex items-center gap-2 ${
-                  testResult.success
-                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
-                    : "bg-rose-500/10 border-rose-500/30 text-rose-300"
-                }`}>
-                  <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
+                <div
+                  className={`p-3 rounded-xl border text-xs flex items-center gap-2 ${
+                    testResult.success
+                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                      : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                  }`}
+                >
+                  <CheckCircle2
+                    size={15}
+                    className="shrink-0 text-emerald-400"
+                  />
                   <span>{testResult.msg}</span>
                 </div>
               )}
@@ -1436,7 +1766,9 @@ export default function AIWriterTab({
                 className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/15 text-slate-300 hover:text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
               >
                 <Zap size={13} className="text-amber-400" />
-                <span>{testingConnection ? "Pinging..." : "Test Connection"}</span>
+                <span>
+                  {testingConnection ? 'Pinging...' : 'Test Connection'}
+                </span>
               </button>
 
               <div className="flex items-center gap-2">
@@ -1470,8 +1802,12 @@ export default function AIWriterTab({
                   <Trash2 size={18} />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white tracking-tight">Delete Article Draft</h3>
-                  <p className="text-[11px] text-slate-400">Confirm draft removal</p>
+                  <h3 className="text-base font-bold text-white tracking-tight">
+                    Delete Article Draft
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Confirm draft removal
+                  </p>
                 </div>
               </div>
               <button
@@ -1484,11 +1820,20 @@ export default function AIWriterTab({
 
             <div className="space-y-2">
               <p className="text-xs text-slate-300 leading-relaxed">
-                Are you sure you want to delete <strong className="text-white font-semibold">"{articleToDelete.title}"</strong>?
+                Are you sure you want to delete{' '}
+                <strong className="text-white font-semibold">
+                  {'"'}
+                  {articleToDelete.title}
+                  {'"'}
+                </strong>
+                ?
               </p>
               <p className="text-[11px] text-rose-300/80 bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-xl flex items-center gap-2">
                 <AlertTriangle size={14} className="shrink-0 text-rose-400" />
-                <span>This action will permanently remove this draft from your AI Writer session.</span>
+                <span>
+                  This action will permanently remove this draft from your AI
+                  Writer session.
+                </span>
               </p>
             </div>
 

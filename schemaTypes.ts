@@ -1,11 +1,7 @@
-export type PageType = "article" | "service" | "faq" | "category";
+export type PageType = 'article' | 'service' | 'faq' | 'category';
 
 export type SchemaType =
-  | "FAQPage"
-  | "Article"
-  | "Service"
-  | "BreadcrumbList"
-  | "RawJsonLd";
+  'FAQPage' | 'Article' | 'Service' | 'BreadcrumbList' | 'RawJsonLd';
 
 export interface BaseJsonLdSchema {
   /** The schema.org type represented by this block */
@@ -19,7 +15,7 @@ export interface BaseJsonLdSchema {
 }
 
 export interface FAQPageSchema extends BaseJsonLdSchema {
-  type: "FAQPage";
+  type: 'FAQPage';
   meta?: {
     questions: Array<{
       question: string;
@@ -29,7 +25,7 @@ export interface FAQPageSchema extends BaseJsonLdSchema {
 }
 
 export interface ArticleSchema extends BaseJsonLdSchema {
-  type: "Article";
+  type: 'Article';
   meta?: {
     headline: string;
     description: string;
@@ -43,7 +39,7 @@ export interface ArticleSchema extends BaseJsonLdSchema {
 }
 
 export interface ServiceSchema extends BaseJsonLdSchema {
-  type: "Service";
+  type: 'Service';
   meta?: {
     serviceType: string;
     provider: {
@@ -55,7 +51,7 @@ export interface ServiceSchema extends BaseJsonLdSchema {
 }
 
 export interface BreadcrumbListSchema extends BaseJsonLdSchema {
-  type: "BreadcrumbList";
+  type: 'BreadcrumbList';
   meta?: {
     items: Array<{
       name: string;
@@ -66,7 +62,7 @@ export interface BreadcrumbListSchema extends BaseJsonLdSchema {
 }
 
 export interface RawJsonLdSchema extends BaseJsonLdSchema {
-  type: "RawJsonLd";
+  type: 'RawJsonLd';
   meta?: undefined;
 }
 

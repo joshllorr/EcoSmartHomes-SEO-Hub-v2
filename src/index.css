@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* stylelint-disable-next-line at-rule-no-unknown */
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 }
 
 /* Custom Scrollbars */
@@ -40,7 +40,9 @@ body {
 
 /* Base layout with beautiful background gradients */
 .glass-container {
-  background: radial-gradient(circle at 0% 0%, #064e3b 0%, #0f172a 40%), radial-gradient(circle at 100% 100%, #1e1b4b 0%, #0f172a 40%);
+  background:
+    radial-gradient(circle at 0% 0%, #064e3b 0%, #0f172a 40%),
+    radial-gradient(circle at 100% 100%, #1e1b4b 0%, #0f172a 40%);
   background-color: #0f172a;
   color: #f8fafc;
 }
@@ -84,8 +86,15 @@ body {
 
 /* Animations and minor UI enhancements */
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(0.98); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
 }
 
 .pulse-soft {
@@ -99,7 +108,9 @@ html.light body {
 }
 
 html.light .glass-container {
-  background: radial-gradient(circle at 0% 0%, #d1fae5 0%, #f1f5f9 40%), radial-gradient(circle at 100% 100%, #e0e7ff 0%, #f1f5f9 40%);
+  background:
+    radial-gradient(circle at 0% 0%, #d1fae5 0%, #f1f5f9 40%),
+    radial-gradient(circle at 100% 100%, #e0e7ff 0%, #f1f5f9 40%);
   background-color: #f1f5f9;
   color: #1e293b;
 }
@@ -225,7 +236,7 @@ html.light .promo-banner .text-white {
 
 /* ── Hub Navigation (Phases 15 & 16) ── */
 .hub-container {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   background: #0b1020;
   color: #f5f7ff;
   min-height: 100vh;
@@ -249,7 +260,10 @@ html.light .promo-banner .text-white {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .hub-nav button:hover {
@@ -268,5 +282,3 @@ html.light .promo-banner .text-white {
 .hub-main {
   padding: 24px;
 }
-
-
