@@ -1,25 +1,11 @@
-<<<<<<< HEAD
-import { motion } from "motion/react";
-import WelcomeCard from "./WelcomeCard";
-import PillarPerformanceCard from "./PillarPerformanceCard";
-import SEOHeatmapCard from "./SEOHeatmapCard";
-import IrishCountyHeatmap from "./IrishCountyHeatmap";
-import BERVoiceAdvisor from "./BERVoiceAdvisor";
-import EmbeddableGrantCalculator from "./EmbeddableGrantCalculator";
-import SERPWeatherRadar from "./SERPWeatherRadar";
-import XPCard from "./XPCard";
-import SiteHealthCard from "./SiteHealthCard";
-import AIVisibilityCard from "./AIVisibilityCard";
-import QuickActionsGrid from "./QuickActionsGrid";
-import ActivityFeed from "./ActivityFeed";
-import ErrorBoundary from "./ErrorBoundary";
-import RankingStabilityMap from "./RankingStabilityMap";
-import { DashboardState } from "../types";
-=======
 import { motion } from 'motion/react';
 import WelcomeCard from './WelcomeCard';
 import PillarPerformanceCard from './PillarPerformanceCard';
 import SEOHeatmapCard from './SEOHeatmapCard';
+import IrishCountyHeatmap from './IrishCountyHeatmap';
+import BERVoiceAdvisor from './BERVoiceAdvisor';
+import EmbeddableGrantCalculator from './EmbeddableGrantCalculator';
+import SERPWeatherRadar from './SERPWeatherRadar';
 import XPCard from './XPCard';
 import SiteHealthCard from './SiteHealthCard';
 import AIVisibilityCard from './AIVisibilityCard';
@@ -28,7 +14,6 @@ import ActivityFeed from './ActivityFeed';
 import ErrorBoundary from './ErrorBoundary';
 import RankingStabilityMap from './RankingStabilityMap';
 import { DashboardState } from '../types';
->>>>>>> origin/main
 
 interface MainDashboardProps {
   state: DashboardState;

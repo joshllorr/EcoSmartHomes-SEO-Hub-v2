@@ -1,77 +1,3 @@
-<<<<<<< HEAD
-import React, { useState } from "react";
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
-import MainDashboard from "./components/MainDashboard";
-import { CrawlerDashboard } from "./components/CrawlerDashboard";
-import AIWriterTab from "./components/AIWriterTab";
-import ContentIdeasTab from "./components/ContentIdeasTab";
-import LinkBuilderTab from "./components/LinkBuilderTab";
-import ContentLibraryTab from "./components/ContentLibraryTab";
-import ContentAuditTab from "./components/ContentAuditTab";
-import ContentMap from "./pages/ContentMap";
-import KeywordResearchTab from "./components/KeywordResearchTab";
-import SERPAnalyzerTab from "./components/SERPAnalyzerTab";
-import SiteAuditTab from "./components/SiteAuditTab";
-import EnergyEstimatorTab from "./components/EnergyEstimatorTab";
-import AIVisibilityCard from "./components/AIVisibilityCard";
-import RankingStabilityMap from "./components/RankingStabilityMap";
-import Overview from "./dashboard/Overview";
-import Backlinks from "./dashboard/Backlinks";
-import Competitors from "./dashboard/Competitors";
-import Heatmap from "./dashboard/Heatmap";
-import MARL from "./dashboard/MARL";
-import Autonomy from "./dashboard/Autonomy";
-import Fusion from "./dashboard/Fusion";
-import Growth from "./dashboard/Growth";
-import Strategy from "./dashboard/Strategy";
-import Simulation from "./dashboard/Simulation";
-import Negotiation from "./dashboard/Negotiation";
-import Budget from "./dashboard/Budget";
-import Watchdog from "./dashboard/Watchdog";
-import Landing from "./dashboard/Landing";
-import Ecosystem from "./dashboard/Ecosystem";
-import Evolution from "./dashboard/Evolution";
-import Content from "./dashboard/Content";
-import Conflict from "./dashboard/Conflict";
-import GrantIntelligence from "./dashboard/GrantIntelligence";
-import GrantPdfAnalytics from "./dashboard/GrantPdfAnalytics";
-import AdvisorDashboard from "./dashboard/AdvisorDashboard";
-import HomeownerAnalytics from "./dashboard/HomeownerAnalytics";
-import RetrofitAnalytics from "./dashboard/RetrofitAnalytics";
-import ContractorDashboard from "./dashboard/ContractorDashboard";
-import RetrofitPdfAnalytics from "./dashboard/RetrofitPdfAnalytics";
-import GrantSubmissionsDashboard from "./dashboard/GrantSubmissionsDashboard";
-import PostInstallDashboard from "./dashboard/PostInstallDashboard";
-import JourneyDashboard from "./dashboard/JourneyDashboard";
-import ContractorQualityDashboard from "./dashboard/ContractorQualityDashboard";
-import ContractorScoreInsightsDashboard from "./dashboard/ContractorScoreInsightsDashboard";
-import HomeUpgradeInsightsDashboard from "./dashboard/HomeUpgradeInsightsDashboard";
-import NationalInsightsDashboard from "./dashboard/NationalInsightsDashboard";
-import RetrofitForecastDashboard from "./dashboard/RetrofitForecastDashboard";
-import AdvisorSessionsDashboard from "./dashboard/AdvisorSessionsDashboard";
-import SentimentIntelligenceDashboard from "./dashboard/SentimentIntelligenceDashboard";
-import CoachIntelligenceDashboard from "./dashboard/CoachIntelligenceDashboard";
-import OrchestratorConsole from "./dashboard/OrchestratorConsole";
-import HomeownerGrantFlow from "./pages/HomeownerGrantFlow";
-import HomeownerPortal from "./portal/HomeownerPortal";
-import { INITIAL_DASHBOARD_DATA } from "./data";
-import { ArticleDraft, DashboardState } from "./types";
-import { useDashboardStore } from "./store/useDashboardStore";
-
-export default function App() {
-  if (typeof window !== "undefined" && window.location.pathname.startsWith("/grants")) {
-    return <HomeownerGrantFlow />;
-  }
-
-  if (typeof window !== "undefined" && window.location.pathname.startsWith("/portal")) {
-    return <HomeownerPortal />;
-  }
-
-  const [activeTab, setActiveTab] = useState<string>("dashboard");
-  const [dashboardState, setDashboardState] = useState<DashboardState>(INITIAL_DASHBOARD_DATA);
-  const [writerSuggestion, setWriterSuggestion] = useState<string>("Raising BER rating from G to A: Step-by-Step Retrofit Sequence");
-=======
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -89,11 +15,57 @@ import SiteAuditTab from './components/SiteAuditTab';
 import EnergyEstimatorTab from './components/EnergyEstimatorTab';
 import AIVisibilityCard from './components/AIVisibilityCard';
 import RankingStabilityMap from './components/RankingStabilityMap';
+import Overview from './dashboard/Overview';
+import Backlinks from './dashboard/Backlinks';
+import Competitors from './dashboard/Competitors';
+import Heatmap from './dashboard/Heatmap';
+import MARL from './dashboard/MARL';
+import Autonomy from './dashboard/Autonomy';
+import Fusion from './dashboard/Fusion';
+import Growth from './dashboard/Growth';
+import Strategy from './dashboard/Strategy';
+import Simulation from './dashboard/Simulation';
+import Negotiation from './dashboard/Negotiation';
+import Budget from './dashboard/Budget';
+import Watchdog from './dashboard/Watchdog';
+import Landing from './dashboard/Landing';
+import Ecosystem from './dashboard/Ecosystem';
+import Evolution from './dashboard/Evolution';
+import Content from './dashboard/Content';
+import Conflict from './dashboard/Conflict';
+import GrantIntelligence from './dashboard/GrantIntelligence';
+import GrantPdfAnalytics from './dashboard/GrantPdfAnalytics';
+import AdvisorDashboard from './dashboard/AdvisorDashboard';
+import HomeownerAnalytics from './dashboard/HomeownerAnalytics';
+import RetrofitAnalytics from './dashboard/RetrofitAnalytics';
+import ContractorDashboard from './dashboard/ContractorDashboard';
+import RetrofitPdfAnalytics from './dashboard/RetrofitPdfAnalytics';
+import GrantSubmissionsDashboard from './dashboard/GrantSubmissionsDashboard';
+import PostInstallDashboard from './dashboard/PostInstallDashboard';
+import JourneyDashboard from './dashboard/JourneyDashboard';
+import ContractorQualityDashboard from './dashboard/ContractorQualityDashboard';
+import ContractorScoreInsightsDashboard from './dashboard/ContractorScoreInsightsDashboard';
+import HomeUpgradeInsightsDashboard from './dashboard/HomeUpgradeInsightsDashboard';
+import NationalInsightsDashboard from './dashboard/NationalInsightsDashboard';
+import RetrofitForecastDashboard from './dashboard/RetrofitForecastDashboard';
+import AdvisorSessionsDashboard from './dashboard/AdvisorSessionsDashboard';
+import SentimentIntelligenceDashboard from './dashboard/SentimentIntelligenceDashboard';
+import CoachIntelligenceDashboard from './dashboard/CoachIntelligenceDashboard';
+import OrchestratorConsole from './dashboard/OrchestratorConsole';
+import HomeownerGrantFlow from './pages/HomeownerGrantFlow';
+import HomeownerPortal from './portal/HomeownerPortal';
 import { INITIAL_DASHBOARD_DATA } from './data';
 import { ArticleDraft, DashboardState } from './types';
 import { useDashboardStore } from './store/useDashboardStore';
 
 export default function App() {
+  const isGrantRoute =
+    typeof window !== 'undefined' &&
+    window.location.pathname.startsWith('/grants');
+  const isPortalRoute =
+    typeof window !== 'undefined' &&
+    window.location.pathname.startsWith('/portal');
+
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [dashboardState, setDashboardState] = useState<DashboardState>(
     INITIAL_DASHBOARD_DATA,
@@ -101,7 +73,7 @@ export default function App() {
   const [writerSuggestion, setWriterSuggestion] = useState<string>(
     'Raising BER rating from G to A: Step-by-Step Retrofit Sequence',
   );
->>>>>>> origin/main
+
   const [currentSerp, setCurrentSerp] = useState<any | null>(null);
   const [discoveryCount, setDiscoveryCount] = useState<number>(1);
   const [isSiteScanned, setIsSiteScanned] = useState<boolean>(false);
@@ -159,6 +131,14 @@ export default function App() {
     }));
   };
 
+  if (isGrantRoute) {
+    return <HomeownerGrantFlow />;
+  }
+
+  if (isPortalRoute) {
+    return <HomeownerPortal />;
+  }
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -176,152 +156,148 @@ export default function App() {
           />
         );
 
-<<<<<<< HEAD
-      case "p7_overview":
+      case 'p7_overview':
         return <Overview />;
 
-      case "p7_backlinks":
+      case 'p7_backlinks':
         return <Backlinks />;
 
-      case "p7_competitors":
+      case 'p7_competitors':
         return <Competitors />;
 
-      case "p7_heatmap":
+      case 'p7_heatmap':
         return <Heatmap />;
 
-      case "p7_marl":
+      case 'p7_marl':
         return <MARL />;
 
-      case "p9_autonomy":
+      case 'p9_autonomy':
         return <Autonomy />;
 
-      case "p11_fusion":
+      case 'p11_fusion':
         return <Fusion />;
 
-      case "p12_growth":
+      case 'p12_growth':
         return <Growth />;
 
-      case "p13_strategy":
+      case 'p13_strategy':
         return <Strategy />;
 
-      case "p14_simulation":
+      case 'p14_simulation':
         return <Simulation />;
 
-      case "p15_negotiation":
+      case 'p15_negotiation':
         return <Negotiation />;
 
-      case "p16_budget":
+      case 'p16_budget':
         return <Budget />;
 
-      case "p17_watchdog":
+      case 'p17_watchdog':
         return <Watchdog />;
 
-      case "p18_landing":
+      case 'p18_landing':
         return <Landing />;
 
-      case "p19_ecosystem":
+      case 'p19_ecosystem':
         return <Ecosystem />;
 
-      case "p20_evolution":
+      case 'p20_evolution':
         return <Evolution />;
 
-      case "p21_content":
+      case 'p21_content':
         return <Content />;
 
-      case "p22_conflict":
+      case 'p22_conflict':
         return <Conflict />;
 
-      case "p23_grants":
+      case 'p23_grants':
         return <GrantIntelligence view="funnel" />;
 
-      case "p23_grants_logs":
+      case 'p23_grants_logs':
         return <GrantIntelligence view="logs" />;
 
-      case "p23_grants_insights":
+      case 'p23_grants_insights':
         return <GrantIntelligence view="insights" />;
 
-      case "p24_pdf":
+      case 'p24_pdf':
         return <GrantPdfAnalytics />;
 
-      case "p25_advisor":
+      case 'p25_advisor':
         return <AdvisorDashboard view="overview" />;
 
-      case "p25_advisor_bookings":
+      case 'p25_advisor_bookings':
         return <AdvisorDashboard view="bookings" />;
 
-      case "p25_advisor_calendar":
+      case 'p25_advisor_calendar':
         return <AdvisorDashboard view="calendar" />;
 
-      case "p26_homeowners":
-      case "p26_homeowners_logs":
-      case "p26_homeowners_insights":
+      case 'p26_homeowners':
+      case 'p26_homeowners_logs':
+      case 'p26_homeowners_insights':
         return <HomeownerAnalytics />;
 
-      case "p27_retrofit":
-      case "p27_retrofit_plans":
-      case "p27_retrofit_insights":
+      case 'p27_retrofit':
+      case 'p27_retrofit_plans':
+      case 'p27_retrofit_insights':
         return <RetrofitAnalytics />;
 
-      case "p28_contractors":
+      case 'p28_contractors':
         return <ContractorDashboard view="contractors" />;
 
-      case "p28_jobs":
+      case 'p28_jobs':
         return <ContractorDashboard view="jobs" />;
 
-      case "p28_jobs_calendar":
+      case 'p28_jobs_calendar':
         return <ContractorDashboard view="calendar" />;
 
-      case "p29_pdf":
+      case 'p29_pdf':
         return <RetrofitPdfAnalytics />;
 
-      case "p30_submissions":
-      case "p30_submissions_logs":
-      case "p30_submissions_insights":
+      case 'p30_submissions':
+      case 'p30_submissions_logs':
+      case 'p30_submissions_insights':
         return <GrantSubmissionsDashboard />;
 
-      case "p31_postinstall":
+      case 'p31_postinstall':
         return <PostInstallDashboard initialSubView="overview" />;
-      case "p31_ber":
+      case 'p31_ber':
         return <PostInstallDashboard initialSubView="ber" />;
-      case "p31_seai":
+      case 'p31_seai':
         return <PostInstallDashboard initialSubView="seai" />;
-      case "p31_payments":
+      case 'p31_payments':
         return <PostInstallDashboard initialSubView="payments" />;
 
-      case "p32_journey":
+      case 'p32_journey':
         return <JourneyDashboard />;
 
-      case "p33_contractor_scores":
+      case 'p33_contractor_scores':
         return <ContractorQualityDashboard />;
 
-      case "p33_contractor_insights":
+      case 'p33_contractor_insights':
         return <ContractorScoreInsightsDashboard />;
 
-      case "p34_upgrades":
+      case 'p34_upgrades':
         return <HomeUpgradeInsightsDashboard />;
 
-      case "p35_national":
+      case 'p35_national':
         return <NationalInsightsDashboard />;
 
-      case "p36_forecasting":
+      case 'p36_forecasting':
         return <RetrofitForecastDashboard />;
 
-      case "p37_advisor":
+      case 'p37_advisor':
         return <AdvisorSessionsDashboard />;
 
-      case "p38_sentiment":
+      case 'p38_sentiment':
         return <SentimentIntelligenceDashboard />;
 
-      case "p39_coach":
+      case 'p39_coach':
         return <CoachIntelligenceDashboard />;
 
-      case "p40_orchestrator":
+      case 'p40_orchestrator':
         return <OrchestratorConsole />;
 
-      case "ranking_map":
-=======
       case 'ranking_map':
->>>>>>> origin/main
         return <RankingStabilityMap />;
 
       case 'crawler':

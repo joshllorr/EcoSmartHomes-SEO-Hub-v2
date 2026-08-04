@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-import { Sparkles, BarChart2, Eye, Compass, HelpCircle, ExternalLink } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useDashboardStore } from "../store/useDashboardStore";
-=======
 import {
   Sparkles,
   BarChart2,
@@ -11,9 +6,8 @@ import {
   HelpCircle,
   ExternalLink,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDashboardStore } from '../store/useDashboardStore';
->>>>>>> origin/main
 
 interface AIVisibilityCardProps {
   visits: number;
@@ -28,15 +22,29 @@ export default function AIVisibilityCard({
   const [showGuide, setShowGuide] = useState(false);
   const [totalReferrals, setTotalReferrals] = useState<number>(visits || 148);
   const [sources, setSources] = useState([
-    { name: "ChatGPT (SearchGPT)", visits: 62, percent: "42%", color: "bg-teal-500" },
-    { name: "Perplexity AI", visits: 44, percent: "30%", color: "bg-sky-500" },
-    { name: "Gemini", visits: 28, percent: "19%", color: "bg-indigo-500" },
-    { name: "Claude (Answer Engine)", visits: 14, percent: "9%", color: "bg-orange-500" }
+    {
+      name: 'ChatGPT (SearchGPT)',
+      visits: 62,
+      percent: '42%',
+      color: 'bg-teal-500',
+    },
+    {
+      name: 'Perplexity AI',
+      visits: 44,
+      percent: '30%',
+      color: 'bg-sky-500',
+    },
+    { name: 'Gemini', visits: 28, percent: '19%', color: 'bg-indigo-500' },
+    {
+      name: 'Claude (Answer Engine)',
+      visits: 14,
+      percent: '9%',
+      color: 'bg-orange-500',
+    },
   ]);
 
-<<<<<<< HEAD
   useEffect(() => {
-    fetch("/api/analytics/ai-referrals")
+    fetch('/api/analytics/ai-referrals')
       .then((res) => res.json())
       .then((data) => {
         if (data.ok && data.sources) {
@@ -44,26 +52,13 @@ export default function AIVisibilityCard({
           if (data.totalVisits) setTotalReferrals(data.totalVisits);
         }
       })
-      .catch((err) => console.warn("AIVisibilityCard: Using fallback referral analytics", err));
+      .catch((err) =>
+        console.warn(
+          'AIVisibilityCard: Using fallback referral analytics',
+          err,
+        ),
+      );
   }, []);
-=======
-  const sources = [
-    {
-      name: 'ChatGPT (SearchGPT)',
-      visits: 0,
-      percent: '0%',
-      color: 'bg-teal-500',
-    },
-    { name: 'Perplexity AI', visits: 0, percent: '0%', color: 'bg-sky-500' },
-    { name: 'Gemini', visits: 0, percent: '0%', color: 'bg-indigo-500' },
-    {
-      name: 'Claude (Answer Engine)',
-      visits: 0,
-      percent: '0%',
-      color: 'bg-orange-500',
-    },
-  ];
->>>>>>> origin/main
 
   return (
     <div
@@ -92,17 +87,12 @@ export default function AIVisibilityCard({
       </div>
 
       <div className="flex items-baseline gap-2">
-<<<<<<< HEAD
-        <span className="text-3xl font-bold text-white font-mono">{totalReferrals}</span>
-        <span className="text-xs text-slate-400 font-medium">total referral sessions</span>
-=======
         <span className="text-3xl font-bold text-white font-mono">
-          {visits}
+          {totalReferrals}
         </span>
         <span className="text-xs text-slate-400 font-medium">
           total referral sessions
         </span>
->>>>>>> origin/main
       </div>
 
       {/* AI visibility bar chart representation */}

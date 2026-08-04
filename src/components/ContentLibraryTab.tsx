@@ -262,53 +262,42 @@ export default function ContentLibraryTab({
 
   const handlePublishNow = async (item: LibraryItem) => {
     setPublishingId(item.id);
-<<<<<<< HEAD
     try {
-      const slug = item.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      const res = await fetch("/api/cms/publish", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const slug = item.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      const res = await fetch('/api/cms/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           siteId: site,
           slug,
           title: item.title,
-          content: item.content || `# ${item.title}\n\nArticle content for ${item.topic}`,
-          platform: "wordpress"
-        })
+          content:
+            item.content ||
+            `# ${item.title}\n\nArticle content for ${item.topic}`,
+          platform: 'wordpress',
+        }),
       });
       const data = await res.json();
-      setItems(prev => prev.map(i => {
-        if (i.id === item.id) {
-          return {
-            ...i,
-            status: "Published",
-            liveUrl: data.result?.url || `https://${site}/articles/${slug}`
-          };
-        }
-        return i;
-      }));
+      setItems((prev) =>
+        prev.map((i) => {
+          if (i.id === item.id) {
+            return {
+              ...i,
+              status: 'Published',
+              liveUrl: data.result?.url || `https://${site}/articles/${slug}`,
+            };
+          }
+          return i;
+        }),
+      );
     } catch (err) {
-      console.error("CMS Publishing error:", err);
+      console.error('CMS Publishing error:', err);
     } finally {
       setPublishingId(null);
     }
-=======
-    // Simulate direct CMS publish
-    await new Promise((r) => setTimeout(r, 1200));
-    setItems((prev) =>
-      prev.map((i) => {
-        if (i.id === item.id) {
-          return {
-            ...i,
-            status: 'Published',
-            liveUrl: `https://${site}/articles/${i.title.toLowerCase().replace(/[^a-z0-0]+/g, '-')}`,
-          };
-        }
-        return i;
-      }),
-    );
-    setPublishingId(null);
->>>>>>> origin/main
   };
 
   const handleCopyToClipboard = (text: string, id: string) => {
