@@ -1,7 +1,51 @@
 name = "ecosmarthomes-api"
 main = "api/index.ts"
-compatibility_date = "2026-01-01"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
 
 routes = [
-  { pattern = "https://ecosmarthomes.ie/api/*", script = "api" }
+  { pattern = "ecosmarthomes.ie/*", zone_name = "ecosmarthomes.ie" },
+  { pattern = "www.ecosmarthomes.ie/*", zone_name = "ecosmarthomes.ie" }
 ]
+
+kv_namespaces = [
+  { binding = "BACKLINKS", id = "fc90547580e54e4492e65666af9ea2ee" },
+  { binding = "COMPETITORS", id = "cb8d2db9529840fc86fc7647a2bed7fa" },
+  { binding = "HEATMAP", id = "87a3a64195af4db5953856547f29b3e5" },
+  { binding = "MARL_STATE", id = "4ac64b01308f45d798dc3e0f2edaf911" },
+  { binding = "AI_REFERRALS", id = "834d32b368064d139c657cbd28e12933" },
+  { binding = "AUTONOMY_LOG", id = "865f49036f5243de8ee21b218f1ccb54" },
+  { binding = "STRATEGY", id = "c76fb7bc18014dbb80e2e2edb4f6f3cb" },
+  { binding = "SIMULATION_STATE", id = "d9aa50e8fe7e48a6a18c54de86414050" },
+  { binding = "GRANTS_STATE", id = "9ff82d4513c142d993a41f0a4c94591e" },
+  { binding = "ADVISOR_BOOKINGS", id = "f5d63bde82c74c9f8c8edc6aadb94e13" },
+  { binding = "HOMEOWNERS", id = "1c3b14715d5148549fa1b903a5aee89f" },
+  { binding = "RETROFIT_PLANS", id = "1970f2eedf8047c9a3950edac4e8b432" },
+  { binding = "CONTRACTORS", id = "528ad107f7cb4e91ac9c64284d9d2be3" },
+  { binding = "JOBS", id = "4bc774f2eda34203b80a2058f7c976ee" },
+  { binding = "COMPLIANCE", id = "3bd4f654d1124f159c5dae76be0591be" },
+  { binding = "GRANT_SUBMISSIONS", id = "7f880e3ccf0a44a1aae12e0cb36ee188" },
+  { binding = "POST_INSTALL", id = "abfe33ea83a94a67be28148bb6c77315" },
+  { binding = "JOURNEY_TIMELINE", id = "2b1a93463dd34c9bb3a06cbad0443548" },
+  { binding = "CONTRACTOR_SCORES", id = "57d035f4085d4307ae788e7824e677b0" },
+  { binding = "HOME_UPGRADE_RECOMMENDATIONS", id = "5a00bbf882fd4356b8ec8ec9bc8c1f24" },
+  { binding = "NATIONAL_INSIGHTS", id = "3a77f130727e45f4a1f754b51351a22b" },
+  { binding = "RETROFIT_FORECASTS", id = "bdae44df08b342239cc9c5cfc5e74efd" },
+  { binding = "RETROFIT_ADVISOR_SESSIONS", id = "840245e66c2e41a28e7df716e143ddd0" },
+  { binding = "HOMEOWNER_SENTIMENT", id = "51c2e20c23714aa090d8eb4e39ed6853" },
+  { binding = "RETROFIT_COACH_MESSAGES", id = "6e66b430fc2349a4ae0393148a1f2272" },
+  { binding = "ORCHESTRATOR_STATE", id = "c693b7bca64a4204916c68552faed8f6" }
+]
+
+[triggers]
+crons = ["*/30 * * * *"]
+
+[vars]
+GOOGLE_ADS_CLIENT_ID = ""
+GOOGLE_ADS_CLIENT_SECRET = ""
+GOOGLE_ADS_REFRESH_TOKEN = ""
+GOOGLE_ADS_DEVELOPER_TOKEN = ""
+GOOGLE_ADS_CUSTOMER_ID = ""
+
+[assets]
+directory = "./dist"

@@ -2,6 +2,10 @@ import { motion } from "motion/react";
 import WelcomeCard from "./WelcomeCard";
 import PillarPerformanceCard from "./PillarPerformanceCard";
 import SEOHeatmapCard from "./SEOHeatmapCard";
+import IrishCountyHeatmap from "./IrishCountyHeatmap";
+import BERVoiceAdvisor from "./BERVoiceAdvisor";
+import EmbeddableGrantCalculator from "./EmbeddableGrantCalculator";
+import SERPWeatherRadar from "./SERPWeatherRadar";
 import XPCard from "./XPCard";
 import SiteHealthCard from "./SiteHealthCard";
 import AIVisibilityCard from "./AIVisibilityCard";
@@ -103,6 +107,30 @@ export default function MainDashboard({
             <SEOHeatmapCard 
               data={state.seo_heatmap}
             />
+          </ErrorBoundary>
+        </motion.div>
+
+        <motion.div variants={cardVariants}>
+          <ErrorBoundary sectionName="Multi-County Irish SERP Heatmap">
+            <IrishCountyHeatmap />
+          </ErrorBoundary>
+        </motion.div>
+
+        <motion.div variants={cardVariants}>
+          <ErrorBoundary sectionName="BER Voice Advisor">
+            <BERVoiceAdvisor />
+          </ErrorBoundary>
+        </motion.div>
+
+        <motion.div variants={cardVariants}>
+          <ErrorBoundary sectionName="Embeddable SEAI Grant Calculator">
+            <EmbeddableGrantCalculator />
+          </ErrorBoundary>
+        </motion.div>
+
+        <motion.div variants={cardVariants}>
+          <ErrorBoundary sectionName="Google IE SERP Weather Radar">
+            <SERPWeatherRadar />
           </ErrorBoundary>
         </motion.div>
 
