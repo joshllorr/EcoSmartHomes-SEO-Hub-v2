@@ -1,5 +1,13 @@
-import { Award, CheckSquare, Square, Zap, Flame, CheckCircle, TrendingUp } from "lucide-react";
-import { TaskItem, WeeklyChallenge, UserXP } from "../types";
+import {
+  Award,
+  CheckSquare,
+  Square,
+  Zap,
+  Flame,
+  CheckCircle,
+  TrendingUp,
+} from 'lucide-react';
+import { TaskItem, WeeklyChallenge, UserXP } from '../types';
 
 interface XPCardProps {
   xp: UserXP;
@@ -12,13 +20,15 @@ export default function XPCard({
   xp,
   tasks,
   weeklyChallenges,
-  onToggleTask
+  onToggleTask,
 }: XPCardProps) {
-  
-  const xpPercentage = Math.min(100, Math.floor((xp.current / xp.target) * 100));
+  const xpPercentage = Math.min(
+    100,
+    Math.floor((xp.current / xp.target) * 100),
+  );
 
   return (
-    <div 
+    <div
       className="glass-card p-6 flex flex-col gap-6"
       id="xp-gamification-card"
     >
@@ -29,8 +39,12 @@ export default function XPCard({
             {xp.level}
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-xs uppercase font-mono text-slate-400 font-bold">Current Standing</span>
-            <span className="text-sm font-semibold text-white">SEO Level Rank</span>
+            <span className="text-xs uppercase font-mono text-slate-400 font-bold">
+              Current Standing
+            </span>
+            <span className="text-sm font-semibold text-white">
+              SEO Level Rank
+            </span>
           </div>
         </div>
 
@@ -48,13 +62,15 @@ export default function XPCard({
       {/* Progress Bar */}
       <div className="flex flex-col text-left">
         <div className="flex justify-between items-center text-xs mb-1.5">
-          <span className="font-semibold text-slate-300">Onboarding Progress XP</span>
+          <span className="font-semibold text-slate-300">
+            Onboarding Progress XP
+          </span>
           <span className="font-mono text-slate-400 font-medium">
             {xp.current} / {xp.target} XP ({xpPercentage}%)
           </span>
         </div>
         <div className="w-full bg-white/10 h-3 rounded-full overflow-hidden border border-white/10 p-[1px]">
-          <div 
+          <div
             className="bg-gradient-to-r from-[#34d399] to-emerald-500 h-full rounded-full transition-all duration-500 shadow-sm"
             style={{ width: `${xpPercentage}%` }}
           ></div>
@@ -73,9 +89,9 @@ export default function XPCard({
               key={task.id}
               onClick={() => onToggleTask(task.id)}
               className={`w-full p-2.5 rounded-lg border text-left flex items-center justify-between gap-3 transition cursor-pointer ${
-                task.completed 
-                  ? "bg-white/5 border-white/5 text-slate-500 line-through" 
-                  : "bg-white/10 border-white/10 hover:border-white/25 text-slate-200 hover:bg-white/15"
+                task.completed
+                  ? 'bg-white/5 border-white/5 text-slate-500 line-through'
+                  : 'bg-white/10 border-white/10 hover:border-white/25 text-slate-200 hover:bg-white/15'
               }`}
             >
               <div className="flex items-center gap-2.5">
@@ -104,9 +120,14 @@ export default function XPCard({
         </h4>
         <div className="space-y-3">
           {weeklyChallenges.map((challenge) => (
-            <div key={challenge.id} className="bg-white/5 p-3 rounded-xl border border-white/10">
+            <div
+              key={challenge.id}
+              className="bg-white/5 p-3 rounded-xl border border-white/10"
+            >
               <div className="flex justify-between items-center text-xs mb-1.5">
-                <span className={`font-semibold ${challenge.completed ? "text-[#34d399] font-bold" : "text-slate-300"}`}>
+                <span
+                  className={`font-semibold ${challenge.completed ? 'text-[#34d399] font-bold' : 'text-slate-300'}`}
+                >
                   {challenge.title}
                 </span>
                 <span className="font-mono text-slate-400 font-medium text-[10px]">
@@ -114,11 +135,13 @@ export default function XPCard({
                 </span>
               </div>
               <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                <div 
+                <div
                   className={`h-full rounded-full transition-all duration-500 ${
-                    challenge.completed ? "bg-[#34d399]" : "bg-emerald-500"
+                    challenge.completed ? 'bg-[#34d399]' : 'bg-emerald-500'
                   }`}
-                  style={{ width: `${Math.min(100, (challenge.current / challenge.target) * 100)}%` }}
+                  style={{
+                    width: `${Math.min(100, (challenge.current / challenge.target) * 100)}%`,
+                  }}
                 ></div>
               </div>
             </div>

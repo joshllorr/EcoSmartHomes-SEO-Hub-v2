@@ -1,8 +1,11 @@
-import { Zap, Globe, Sparkles, Download, CheckCircle2 } from "lucide-react";
+import { Zap, Globe, Sparkles, Download, CheckCircle2 } from 'lucide-react';
 
 export default function LinkerFooter() {
   return (
-    <div className="space-y-6 pt-4 border-t border-white/10 text-left" id="linker-footer-container">
+    <div
+      className="space-y-6 pt-4 border-t border-white/10 text-left"
+      id="linker-footer-container"
+    >
       {/* How Link Bait Works Block */}
       <div className="glass-card p-6 md:p-8 rounded-2xl border border-white/10 bg-[#0f172a]/40 shadow-xl space-y-6">
         <div className="flex items-center gap-2">
@@ -18,11 +21,14 @@ export default function LinkerFooter() {
           <li className="bg-black/30 p-4 rounded-xl border border-white/5 space-y-2 flex flex-col justify-between">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2 text-[#34d399] font-bold font-mono text-sm">
-                <span className="w-6 h-6 rounded-full bg-[#34d399]/20 flex items-center justify-center text-xs">1</span>
+                <span className="w-6 h-6 rounded-full bg-[#34d399]/20 flex items-center justify-center text-xs">
+                  1
+                </span>
                 <span>Enter Your Site</span>
               </div>
               <p className="text-slate-300 leading-relaxed pl-8">
-                We analyze your niche, BER patterns, and target audience in Ireland.
+                We analyze your niche, BER patterns, and target audience in
+                Ireland.
               </p>
             </div>
             <div className="pl-8 text-[10px] font-mono text-slate-500 flex items-center gap-1">
@@ -34,11 +40,14 @@ export default function LinkerFooter() {
           <li className="bg-black/30 p-4 rounded-xl border border-white/5 space-y-2 flex flex-col justify-between">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2 text-[#34d399] font-bold font-mono text-sm">
-                <span className="w-6 h-6 rounded-full bg-[#34d399]/20 flex items-center justify-center text-xs">2</span>
+                <span className="w-6 h-6 rounded-full bg-[#34d399]/20 flex items-center justify-center text-xs">
+                  2
+                </span>
                 <span>Choose an Idea</span>
               </div>
               <p className="text-slate-300 leading-relaxed pl-8">
-                AI-generated link bait concepts tailored to your industry & local search intent.
+                AI-generated link bait concepts tailored to your industry &
+                local search intent.
               </p>
             </div>
             <div className="pl-8 text-[10px] font-mono text-slate-500 flex items-center gap-1">
@@ -50,11 +59,14 @@ export default function LinkerFooter() {
           <li className="bg-black/30 p-4 rounded-xl border border-white/5 space-y-2 flex flex-col justify-between">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2 text-[#34d399] font-bold font-mono text-sm">
-                <span className="w-6 h-6 rounded-full bg-[#34d399]/20 flex items-center justify-center text-xs">3</span>
+                <span className="w-6 h-6 rounded-full bg-[#34d399]/20 flex items-center justify-center text-xs">
+                  3
+                </span>
                 <span>Download & Publish</span>
               </div>
               <p className="text-slate-300 leading-relaxed pl-8">
-                Get ready-to-use content & embeddable widgets that attract backlinks naturally.
+                Get ready-to-use content & embeddable widgets that attract
+                backlinks naturally.
               </p>
             </div>
             <div className="pl-8 text-[10px] font-mono text-slate-500 flex items-center gap-1">
@@ -69,9 +81,13 @@ export default function LinkerFooter() {
       <div className="bg-linear-to-r from-[#34d399]/15 via-emerald-500/10 to-teal-500/10 border border-[#34d399]/30 p-5 rounded-xl flex items-start gap-3">
         <span className="text-xl select-none">⚡</span>
         <div className="space-y-1 text-xs">
-          <span className="font-bold text-[#34d399] block font-display">What is Link Bait?</span>
+          <span className="font-bold text-[#34d399] block font-display">
+            What is Link Bait?
+          </span>
           <p className="text-slate-200 leading-relaxed">
-            Content designed to be so useful that other websites naturally link to it. Think reference charts, calculators, and comparison tools that solve real problems.
+            Content designed to be so useful that other websites naturally link
+            to it. Think reference charts, calculators, and comparison tools
+            that solve real problems.
           </p>
         </div>
       </div>

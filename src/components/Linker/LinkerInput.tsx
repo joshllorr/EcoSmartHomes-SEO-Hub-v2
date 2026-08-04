@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Globe, RefreshCw, Sparkles, RotateCcw, Search } from "lucide-react";
-import { LinkerTabType } from "./LinkerTabs";
-import { generateLinkBaitIdeas } from "../../utils/generateLinkBaitIdeas";
-import { runBacklinkScanner } from "../../utils/runBacklinkScanner";
-import { useDashboardStore } from "../../store/useDashboardStore";
+import { useState } from 'react';
+import { Globe, RefreshCw, Sparkles, RotateCcw, Search } from 'lucide-react';
+import { LinkerTabType } from './LinkerTabs';
+import { generateLinkBaitIdeas } from '../../utils/generateLinkBaitIdeas';
+import { runBacklinkScanner } from '../../utils/runBacklinkScanner';
+import { useDashboardStore } from '../../store/useDashboardStore';
 
 interface LinkerInputProps {
   websiteUrl?: string;
@@ -22,18 +22,19 @@ export default function LinkerInput({
   onUrlChange,
   pillarTopic: propPillarTopic,
   onPillarTopicChange,
-  previousSites = ["ecosmarthomes.ie", "retrofit-limerick.ie"],
-  activeTab = "linker",
+  previousSites = ['ecosmarthomes.ie', 'retrofit-limerick.ie'],
+  activeTab = 'linker',
   loading = false,
   onSubmit,
-  onReset
+  onReset,
 }: LinkerInputProps) {
-  const [internalPillarTopic, setInternalPillarTopic] = useState("");
-  const [internalUrl, setInternalUrl] = useState("https://ecosmarthomes.ie");
+  const [internalPillarTopic, setInternalPillarTopic] = useState('');
+  const [internalUrl, setInternalUrl] = useState('https://ecosmarthomes.ie');
   const [isScanning, setIsScanning] = useState(false);
   const [isBacklinkScanning, setIsBacklinkScanning] = useState(false);
 
-  const pillarTopic = propPillarTopic !== undefined ? propPillarTopic : internalPillarTopic;
+  const pillarTopic =
+    propPillarTopic !== undefined ? propPillarTopic : internalPillarTopic;
 
   const handlePillarTopicChange = (val: string) => {
     setInternalPillarTopic(val);
@@ -52,9 +53,9 @@ export default function LinkerInput({
   };
 
   const handleReset = () => {
-    setInternalUrl("https://ecosmarthomes.ie");
+    setInternalUrl('https://ecosmarthomes.ie');
     if (onReset) onReset();
-    else if (onUrlChange) onUrlChange("https://ecosmarthomes.ie");
+    else if (onUrlChange) onUrlChange('https://ecosmarthomes.ie');
   };
 
   const handleScanNewIdeas = async () => {
@@ -63,7 +64,7 @@ export default function LinkerInput({
       const ideas = await generateLinkBaitIdeas(currentUrl, pillarTopic);
       setLinkBaitIdeas(ideas);
     } catch (e) {
-      console.error("Scan ideas error:", e);
+      console.error('Scan ideas error:', e);
     } finally {
       setIsScanning(false);
     }
@@ -75,23 +76,29 @@ export default function LinkerInput({
       const results = await runBacklinkScanner(linkBaitIdeas);
       setBacklinks(results);
     } catch (e) {
-      console.error("Scan backlinks error:", e);
+      console.error('Scan backlinks error:', e);
     } finally {
       setIsBacklinkScanning(false);
     }
   };
 
-  const buttonLabel = activeTab === "pillar_pages" 
-    ? "Generate Pillar Page Ideas" 
-    : activeTab === "link_bait" 
-    ? "Generate Link Bait Ideas" 
-    : "Find Link Opportunities";
+  const buttonLabel =
+    activeTab === 'pillar_pages'
+      ? 'Generate Pillar Page Ideas'
+      : activeTab === 'link_bait'
+        ? 'Generate Link Bait Ideas'
+        : 'Find Link Opportunities';
 
   return (
-    <div className="glass-card p-6 space-y-4 rounded-xl border border-white/10 bg-[#0f172a]/40 shadow-xl text-left" id="linker-input-card">
+    <div
+      className="glass-card p-6 space-y-4 rounded-xl border border-white/10 bg-[#0f172a]/40 shadow-xl text-left"
+      id="linker-input-card"
+    >
       {/* Pillar Topic Input */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1 text-slate-200">Pillar Topic</label>
+        <label className="block text-sm font-medium mb-1 text-slate-200">
+          Pillar Topic
+        </label>
         <input
           type="text"
           placeholder="Enter your pillar topic (e.g. Raising BER from G to A)"
@@ -105,7 +112,7 @@ export default function LinkerInput({
         <Globe size={14} className="text-[#34d399]" />
         <span>Website URL</span>
       </label>
-      
+
       <input
         type="text"
         value={currentUrl}
@@ -184,7 +191,9 @@ export default function LinkerInput({
 
       {previousSites.length > 0 && (
         <div className="flex items-center gap-2 pt-2 border-t border-white/5 text-xs">
-          <span className="text-slate-400 font-mono text-[10px] uppercase font-bold">Previous Sites:</span>
+          <span className="text-slate-400 font-mono text-[10px] uppercase font-bold">
+            Previous Sites:
+          </span>
           <div className="flex flex-wrap gap-1.5">
             {previousSites.map((domain, i) => (
               <button
@@ -192,8 +201,8 @@ export default function LinkerInput({
                 onClick={() => handleUrlChange(`https://${domain}`)}
                 className={`text-[11px] font-mono px-2.5 py-0.5 rounded-md transition cursor-pointer border ${
                   currentUrl.includes(domain)
-                    ? "bg-[#34d399]/20 text-[#34d399] border-[#34d399]/40 font-semibold"
-                    : "bg-white/5 hover:bg-white/10 text-slate-300 border-white/5"
+                    ? 'bg-[#34d399]/20 text-[#34d399] border-[#34d399]/40 font-semibold'
+                    : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/5'
                 }`}
               >
                 {domain}

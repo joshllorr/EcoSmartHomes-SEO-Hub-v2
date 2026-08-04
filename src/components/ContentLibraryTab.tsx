@@ -1,35 +1,35 @@
-import { useState, useMemo } from "react";
-import { 
-  BookOpen, 
-  Search, 
-  Filter, 
-  ChevronRight, 
-  CheckCircle2, 
-  Link, 
-  Trash2, 
-  Edit3, 
-  ExternalLink, 
-  Copy, 
-  Check, 
-  X, 
-  Send, 
-  Download, 
-  FileText, 
-  Sparkles, 
-  Zap, 
-  Layers, 
-  Clock, 
-  Eye, 
+import { useState, useMemo } from 'react';
+import {
+  BookOpen,
+  Search,
+  Filter,
+  ChevronRight,
+  CheckCircle2,
+  Link,
+  Trash2,
+  Edit3,
+  ExternalLink,
+  Copy,
+  Check,
+  X,
+  Send,
+  Download,
+  FileText,
+  Sparkles,
+  Zap,
+  Layers,
+  Clock,
+  Eye,
   Globe,
   Share2,
-  Plus
-} from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-import { ArticleDraft } from "../types";
+  Plus,
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ArticleDraft } from '../types';
 
-export interface LibraryItem extends Omit<ArticleDraft, "status"> {
-  categoryType?: "Article" | "Landing Page" | "Link Bait" | "Idea";
-  status: "Drafted" | "Published" | "Ready to Publish" | "In Progress";
+export interface LibraryItem extends Omit<ArticleDraft, 'status'> {
+  categoryType?: 'Article' | 'Landing Page' | 'Link Bait' | 'Idea';
+  status: 'Drafted' | 'Published' | 'Ready to Publish' | 'In Progress';
   liveUrl?: string;
   subtitle?: string;
 }
@@ -43,115 +43,138 @@ interface ContentLibraryTabProps {
 
 const INITIAL_LIBRARY_ITEMS: LibraryItem[] = [
   {
-    id: "lib-1",
-    title: "Air-to-Water vs Ireland's humidity: performance realities you should know",
-    topic: "Heat Pumps & Humidity",
-    content: "# Air-to-Water vs Ireland's Humidity\n\nIreland's high ambient humidity levels present unique operational challenges for air-to-water heat pump systems, particularly during frost cycles in mid-winter...",
-    status: "Drafted",
-    date: "Jul 18, 2026",
+    id: 'lib-1',
+    title:
+      "Air-to-Water vs Ireland's humidity: performance realities you should know",
+    topic: 'Heat Pumps & Humidity',
+    content:
+      "# Air-to-Water vs Ireland's Humidity\n\nIreland's high ambient humidity levels present unique operational challenges for air-to-water heat pump systems, particularly during frost cycles in mid-winter...",
+    status: 'Drafted',
+    date: 'Jul 18, 2026',
     wordCount: 840,
-    categoryType: "Idea",
-    subtitle: "Air-to-Water vs Ir...",
-    metaTitle: "Air-to-Water Heat Pumps in Damp Irish Climates | EcoSmart Guide",
-    metaDescription: "An in-depth guide explaining how relative humidity impacts heat pump COP and defrost cycles in Irish homes."
+    categoryType: 'Idea',
+    subtitle: 'Air-to-Water vs Ir...',
+    metaTitle:
+      'Air-to-Water Heat Pumps in Damp Irish Climates | EcoSmart Guide',
+    metaDescription:
+      'An in-depth guide explaining how relative humidity impacts heat pump COP and defrost cycles in Irish homes.',
   },
   {
-    id: "lib-2",
-    title: "Leakiness, Airtightness & Building Health",
-    topic: "Airtightness & Ventilation",
-    content: "# Leakiness, Airtightness & Building Health\n\nWhen retrofitting a traditional Irish home, achieving airtightness without adequate mechanical ventilation (MVHR) can lead to indoor air quality decay and condensation risk...",
-    status: "Drafted",
-    date: "Jul 18, 2026",
+    id: 'lib-2',
+    title: 'Leakiness, Airtightness & Building Health',
+    topic: 'Airtightness & Ventilation',
+    content:
+      '# Leakiness, Airtightness & Building Health\n\nWhen retrofitting a traditional Irish home, achieving airtightness without adequate mechanical ventilation (MVHR) can lead to indoor air quality decay and condensation risk...',
+    status: 'Drafted',
+    date: 'Jul 18, 2026',
     wordCount: 620,
-    categoryType: "Idea",
-    subtitle: "Leakiness, Airtigh...",
-    metaTitle: "Airtightness Testing & Moisture Mitigation | EcoSmart",
-    metaDescription: "Learn how air leakiness impacts energy efficiency and why controlled ventilation is vital."
+    categoryType: 'Idea',
+    subtitle: 'Leakiness, Airtigh...',
+    metaTitle: 'Airtightness Testing & Moisture Mitigation | EcoSmart',
+    metaDescription:
+      'Learn how air leakiness impacts energy efficiency and why controlled ventilation is vital.',
   },
   {
-    id: "lib-3",
-    title: "The technical reason your heat pump cycles too frequently",
-    topic: "Heat Pump Diagnostics",
-    content: "# Why Heat Pumps Short Cycle in Cold Weather\n\nShort cycling occurs when the heat pump turns on and off rapidly due to improper buffer tank sizing, mismatched compressor output, or restricted flow rates...",
-    status: "Drafted",
-    date: "Jul 18, 2026",
+    id: 'lib-3',
+    title: 'The technical reason your heat pump cycles too frequently',
+    topic: 'Heat Pump Diagnostics',
+    content:
+      '# Why Heat Pumps Short Cycle in Cold Weather\n\nShort cycling occurs when the heat pump turns on and off rapidly due to improper buffer tank sizing, mismatched compressor output, or restricted flow rates...',
+    status: 'Drafted',
+    date: 'Jul 18, 2026',
     wordCount: 910,
-    categoryType: "Idea",
-    subtitle: "The technical reas...",
-    metaTitle: "Heat Pump Short Cycling Solutions & Flow Rates | EcoSmart",
-    metaDescription: "Diagnose short cycling causes and fix efficiency loss in residential heat pump setups."
+    categoryType: 'Idea',
+    subtitle: 'The technical reas...',
+    metaTitle: 'Heat Pump Short Cycling Solutions & Flow Rates | EcoSmart',
+    metaDescription:
+      'Diagnose short cycling causes and fix efficiency loss in residential heat pump setups.',
   },
   {
-    id: "lib-4",
-    title: "The 2026 SEAI Grant Eligibility & Value Assessment",
-    topic: "SEAI Retrofit Grants",
-    content: "# The 2026 SEAI Grant Eligibility & Value Assessment Tool\n\nEverything you need to know about claiming up to €12,500 in heat pump grants, €2,000 for attic insulation, and additional solar PV support under the 2026 SEAI scheme...",
-    status: "Ready to Publish",
-    date: "18/07/2026",
+    id: 'lib-4',
+    title: 'The 2026 SEAI Grant Eligibility & Value Assessment',
+    topic: 'SEAI Retrofit Grants',
+    content:
+      '# The 2026 SEAI Grant Eligibility & Value Assessment Tool\n\nEverything you need to know about claiming up to €12,500 in heat pump grants, €2,000 for attic insulation, and additional solar PV support under the 2026 SEAI scheme...',
+    status: 'Ready to Publish',
+    date: '18/07/2026',
     wordCount: 1246,
-    categoryType: "Landing Page",
-    subtitle: "The 2026 SEAI Grant Eligibility & Value Assessment · quiz",
-    metaTitle: "2026 SEAI Grant Eligibility Quiz & Calculator | EcoSmart Homes",
-    metaDescription: "Calculate exact grant values available for your home retrofitting project in Ireland."
+    categoryType: 'Landing Page',
+    subtitle: 'The 2026 SEAI Grant Eligibility & Value Assessment · quiz',
+    metaTitle: '2026 SEAI Grant Eligibility Quiz & Calculator | EcoSmart Homes',
+    metaDescription:
+      'Calculate exact grant values available for your home retrofitting project in Ireland.',
   },
   {
-    id: "lib-5",
-    title: "The New 8-Category BER Scale: 2026 Official Conversion Guide",
-    topic: "BER Rating Systems",
-    content: "# The New 8-Category BER Scale: 2026 Official Conversion Guide\n\nDetailed breakdown of the revised BER scale categories A1 to G, kWh/m²/yr primary energy thresholds, and compliance requirements for Irish landlords...",
-    status: "Ready to Publish",
-    date: "18/07/2026",
+    id: 'lib-5',
+    title: 'The New 8-Category BER Scale: 2026 Official Conversion Guide',
+    topic: 'BER Rating Systems',
+    content:
+      '# The New 8-Category BER Scale: 2026 Official Conversion Guide\n\nDetailed breakdown of the revised BER scale categories A1 to G, kWh/m²/yr primary energy thresholds, and compliance requirements for Irish landlords...',
+    status: 'Ready to Publish',
+    date: '18/07/2026',
     wordCount: 800,
-    categoryType: "Article",
-    subtitle: "The New 8-Category BER Scale: 2026 Official Conversion Guide · chart",
-    metaTitle: "BER Scale Conversion Guide 2026 | EcoSmart Ireland",
-    metaDescription: "Official guide to BER energy rating conversions and compliance targets."
-  }
+    categoryType: 'Article',
+    subtitle:
+      'The New 8-Category BER Scale: 2026 Official Conversion Guide · chart',
+    metaTitle: 'BER Scale Conversion Guide 2026 | EcoSmart Ireland',
+    metaDescription:
+      'Official guide to BER energy rating conversions and compliance targets.',
+  },
 ];
 
-export default function ContentLibraryTab({ 
-  drafts = [], 
-  onOpenInWriter, 
+export default function ContentLibraryTab({
+  drafts = [],
+  onOpenInWriter,
   onUpdateDrafts,
-  site 
+  site,
 }: ContentLibraryTabProps) {
   // Merge prop drafts with default initial items
   const [items, setItems] = useState<LibraryItem[]>(() => {
     if (drafts && drafts.length > 0) {
       const formattedPropDrafts: LibraryItem[] = drafts.map((d, idx) => ({
         ...d,
-        categoryType: "Article",
-        status: d.status === "Published" ? "Published" : "Ready to Publish",
-        subtitle: `${d.title.substring(0, 25)}...`
+        categoryType: 'Article',
+        status: d.status === 'Published' ? 'Published' : 'Ready to Publish',
+        subtitle: `${d.title.substring(0, 25)}...`,
       }));
       // Merge unique by title
-      const existingTitles = new Set(formattedPropDrafts.map(f => f.title.toLowerCase()));
-      const filteredInitial = INITIAL_LIBRARY_ITEMS.filter(i => !existingTitles.has(i.title.toLowerCase()));
+      const existingTitles = new Set(
+        formattedPropDrafts.map((f) => f.title.toLowerCase()),
+      );
+      const filteredInitial = INITIAL_LIBRARY_ITEMS.filter(
+        (i) => !existingTitles.has(i.title.toLowerCase()),
+      );
       return [...formattedPropDrafts, ...filteredInitial];
     }
     return INITIAL_LIBRARY_ITEMS;
   });
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("All");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('All');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showNoticeBanner, setShowNoticeBanner] = useState(true);
-  
+
   // Modals state
   const [editingItem, setEditingItem] = useState<LibraryItem | null>(null);
   const [linkModalItem, setLinkModalItem] = useState<LibraryItem | null>(null);
-  const [liveUrlInput, setLiveUrlInput] = useState("");
+  const [liveUrlInput, setLiveUrlInput] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [publishingId, setPublishingId] = useState<string | null>(null);
 
   // Computed Statistics
   const stats = useMemo(() => {
     const total = items.length;
-    const readyToPublish = items.filter(i => i.status === "Ready to Publish").length;
-    const draftsCount = items.filter(i => i.status === "Drafted").length;
-    const inProgress = items.filter(i => i.status === "In Progress").length;
-    const linkBaits = items.filter(i => i.categoryType === "Link Bait").length;
-    const landingPages = items.filter(i => i.categoryType === "Landing Page").length;
+    const readyToPublish = items.filter(
+      (i) => i.status === 'Ready to Publish',
+    ).length;
+    const draftsCount = items.filter((i) => i.status === 'Drafted').length;
+    const inProgress = items.filter((i) => i.status === 'In Progress').length;
+    const linkBaits = items.filter(
+      (i) => i.categoryType === 'Link Bait',
+    ).length;
+    const landingPages = items.filter(
+      (i) => i.categoryType === 'Landing Page',
+    ).length;
     const totalWords = items.reduce((acc, i) => acc + (i.wordCount || 0), 0);
 
     return {
@@ -161,79 +184,85 @@ export default function ContentLibraryTab({
       inProgress,
       linkBaits,
       landingPages,
-      totalWords
+      totalWords,
     };
   }, [items]);
 
   // Filtered List
   const filteredItems = useMemo(() => {
-    return items.filter(item => {
-      const queryMatch = !searchQuery.trim() || 
+    return items.filter((item) => {
+      const queryMatch =
+        !searchQuery.trim() ||
         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.topic.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.subtitle && item.subtitle.toLowerCase().includes(searchQuery.toLowerCase()));
+        (item.subtitle &&
+          item.subtitle.toLowerCase().includes(searchQuery.toLowerCase()));
 
       let filterMatch = true;
-      if (selectedCategoryFilter === "Ready to Publish") {
-        filterMatch = item.status === "Ready to Publish";
-      } else if (selectedCategoryFilter === "Drafts") {
-        filterMatch = item.status === "Drafted";
-      } else if (selectedCategoryFilter === "Landing Pages") {
-        filterMatch = item.categoryType === "Landing Page";
-      } else if (selectedCategoryFilter === "Published") {
-        filterMatch = item.status === "Published" || !!item.liveUrl;
+      if (selectedCategoryFilter === 'Ready to Publish') {
+        filterMatch = item.status === 'Ready to Publish';
+      } else if (selectedCategoryFilter === 'Drafts') {
+        filterMatch = item.status === 'Drafted';
+      } else if (selectedCategoryFilter === 'Landing Pages') {
+        filterMatch = item.categoryType === 'Landing Page';
+      } else if (selectedCategoryFilter === 'Published') {
+        filterMatch = item.status === 'Published' || !!item.liveUrl;
       }
 
       return queryMatch && filterMatch;
     });
   }, [items, searchQuery, selectedCategoryFilter]);
 
-  const allSelected = filteredItems.length > 0 && selectedIds.length === filteredItems.length;
+  const allSelected =
+    filteredItems.length > 0 && selectedIds.length === filteredItems.length;
 
   const handleToggleSelectAll = () => {
     if (allSelected) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(filteredItems.map(i => i.id));
+      setSelectedIds(filteredItems.map((i) => i.id));
     }
   };
 
   const handleToggleSelectItem = (id: string) => {
     if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter(i => i !== id));
+      setSelectedIds(selectedIds.filter((i) => i !== id));
     } else {
       setSelectedIds([...selectedIds, id]);
     }
   };
 
   const handleDeleteItem = (id: string) => {
-    setItems(prev => prev.filter(i => i.id !== id));
-    setSelectedIds(prev => prev.filter(i => i !== id));
+    setItems((prev) => prev.filter((i) => i.id !== id));
+    setSelectedIds((prev) => prev.filter((i) => i !== id));
   };
 
   const handleDeleteSelected = () => {
-    setItems(prev => prev.filter(i => !selectedIds.includes(i.id)));
+    setItems((prev) => prev.filter((i) => !selectedIds.includes(i.id)));
     setSelectedIds([]);
   };
 
   const handleSaveLiveUrl = () => {
     if (!linkModalItem) return;
-    setItems(prev => prev.map(item => {
-      if (item.id === linkModalItem.id) {
-        return {
-          ...item,
-          liveUrl: liveUrlInput || `https://${site}/articles/${item.id}`,
-          status: "Published"
-        };
-      }
-      return item;
-    }));
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.id === linkModalItem.id) {
+          return {
+            ...item,
+            liveUrl: liveUrlInput || `https://${site}/articles/${item.id}`,
+            status: 'Published',
+          };
+        }
+        return item;
+      }),
+    );
     setLinkModalItem(null);
-    setLiveUrlInput("");
+    setLiveUrlInput('');
   };
 
   const handlePublishNow = async (item: LibraryItem) => {
     setPublishingId(item.id);
+<<<<<<< HEAD
     try {
       const slug = item.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       const res = await fetch("/api/cms/publish", {
@@ -263,6 +292,23 @@ export default function ContentLibraryTab({
     } finally {
       setPublishingId(null);
     }
+=======
+    // Simulate direct CMS publish
+    await new Promise((r) => setTimeout(r, 1200));
+    setItems((prev) =>
+      prev.map((i) => {
+        if (i.id === item.id) {
+          return {
+            ...i,
+            status: 'Published',
+            liveUrl: `https://${site}/articles/${i.title.toLowerCase().replace(/[^a-z0-0]+/g, '-')}`,
+          };
+        }
+        return i;
+      }),
+    );
+    setPublishingId(null);
+>>>>>>> origin/main
   };
 
   const handleCopyToClipboard = (text: string, id: string) => {
@@ -273,7 +319,6 @@ export default function ContentLibraryTab({
 
   return (
     <div className="space-y-6 text-left" id="content-library-tab">
-      
       {/* Top Main Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>
@@ -282,13 +327,16 @@ export default function ContentLibraryTab({
               <BookOpen size={11} className="text-[#34d399]" />
               <span>Library</span>
             </span>
-            <span className="text-xs font-mono text-slate-400">{items.length} Total Saved Items</span>
+            <span className="text-xs font-mono text-slate-400">
+              {items.length} Total Saved Items
+            </span>
           </div>
           <h2 className="text-xl md:text-2xl font-display font-bold text-white tracking-tight">
             Content Library
           </h2>
           <p className="text-slate-400 text-xs mt-1">
-            Manage, export, and publish your generated content for <strong className="text-slate-200 font-mono">{site}</strong>.
+            Manage, export, and publish your generated content for{' '}
+            <strong className="text-slate-200 font-mono">{site}</strong>.
           </p>
         </div>
 
@@ -306,7 +354,9 @@ export default function ContentLibraryTab({
           <ChevronRight size={14} className="text-slate-500" />
           <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/20 text-[#34d399] border border-emerald-500/30 rounded-lg text-xs font-bold font-mono">
             <span>Step 3</span>
-            <span className="text-[10px] uppercase text-emerald-300">Publish</span>
+            <span className="text-[10px] uppercase text-emerald-300">
+              Publish
+            </span>
           </div>
           <span className="ml-2 font-mono text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded">
             9/9
@@ -317,7 +367,10 @@ export default function ContentLibraryTab({
       {/* Top Search & Filter Bar */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-slate-900/90 border border-white/10 p-3 rounded-2xl">
         <div className="relative flex-1">
-          <Search size={15} className="absolute left-3.5 top-3 text-slate-400" />
+          <Search
+            size={15}
+            className="absolute left-3.5 top-3 text-slate-400"
+          />
           <input
             type="text"
             value={searchQuery}
@@ -346,12 +399,19 @@ export default function ContentLibraryTab({
                 className="bg-black/60 text-emerald-300 border border-emerald-500/40 rounded-xl px-3 py-2 text-xs font-mono font-bold appearance-none pr-8 cursor-pointer focus:outline-none"
               >
                 <option value="All">All ({items.length})</option>
-                <option value="Ready to Publish">Ready to Publish ({stats.readyToPublish})</option>
+                <option value="Ready to Publish">
+                  Ready to Publish ({stats.readyToPublish})
+                </option>
                 <option value="Drafts">Drafts ({stats.draftsCount})</option>
-                <option value="Landing Pages">Landing Pages ({stats.landingPages})</option>
+                <option value="Landing Pages">
+                  Landing Pages ({stats.landingPages})
+                </option>
                 <option value="Published">Published</option>
               </select>
-              <Filter size={12} className="absolute right-2.5 top-3 text-emerald-400 pointer-events-none" />
+              <Filter
+                size={12}
+                className="absolute right-2.5 top-3 text-emerald-400 pointer-events-none"
+              />
             </div>
 
             {selectedIds.length > 0 && (
@@ -454,7 +514,12 @@ export default function ContentLibraryTab({
             <div className="flex items-center gap-2.5">
               <Link size={15} className="text-sky-400 shrink-0" />
               <span>
-                <strong>Published articles elsewhere?</strong> Click the <code className="bg-sky-900/60 px-1.5 py-0.5 rounded text-sky-300 font-mono">🔗</code> icon on any completed article to link its live URL and track SEO performance in Results.
+                <strong>Published articles elsewhere?</strong> Click the{' '}
+                <code className="bg-sky-900/60 px-1.5 py-0.5 rounded text-sky-300 font-mono">
+                  🔗
+                </code>{' '}
+                icon on any completed article to link its live URL and track SEO
+                performance in Results.
               </span>
             </div>
             <button
@@ -472,11 +537,13 @@ export default function ContentLibraryTab({
         {filteredItems.length === 0 ? (
           <div className="p-10 text-center space-y-3">
             <BookOpen size={32} className="mx-auto text-slate-600" />
-            <p className="text-sm font-mono text-slate-400">No content items match your criteria.</p>
+            <p className="text-sm font-mono text-slate-400">
+              No content items match your criteria.
+            </p>
             <button
               onClick={() => {
-                setSearchQuery("");
-                setSelectedCategoryFilter("All");
+                setSearchQuery('');
+                setSelectedCategoryFilter('All');
               }}
               className="text-xs font-mono font-bold text-[#34d399] hover:underline cursor-pointer"
             >
@@ -486,14 +553,14 @@ export default function ContentLibraryTab({
         ) : (
           filteredItems.map((item) => {
             const isSelected = selectedIds.includes(item.id);
-            const isPublished = item.status === "Published" || !!item.liveUrl;
-            const isReady = item.status === "Ready to Publish";
+            const isPublished = item.status === 'Published' || !!item.liveUrl;
+            const isReady = item.status === 'Ready to Publish';
 
             return (
               <div
                 key={item.id}
                 className={`p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 transition hover:bg-white/[0.02] ${
-                  isSelected ? "bg-emerald-950/20" : ""
+                  isSelected ? 'bg-emerald-950/20' : ''
                 }`}
               >
                 {/* Left checkbox & title & sublabel */}
@@ -506,16 +573,18 @@ export default function ContentLibraryTab({
                   />
 
                   {/* Status Indicator Dot */}
-                  <span className={`w-2 h-2 rounded-full shrink-0 mt-2 md:mt-0 ${
-                    isPublished
-                      ? "bg-emerald-400 shadow-[0_0_8px_#34d399]"
-                      : isReady
-                      ? "bg-emerald-400"
-                      : "bg-sky-400"
-                  }`} />
+                  <span
+                    className={`w-2 h-2 rounded-full shrink-0 mt-2 md:mt-0 ${
+                      isPublished
+                        ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]'
+                        : isReady
+                          ? 'bg-emerald-400'
+                          : 'bg-sky-400'
+                    }`}
+                  />
 
                   <div className="space-y-0.5 min-w-0 flex-1">
-                    <h4 
+                    <h4
                       onClick={() => setEditingItem(item)}
                       className="font-display font-semibold text-white text-sm hover:text-[#34d399] transition cursor-pointer truncate"
                     >
@@ -534,9 +603,9 @@ export default function ContentLibraryTab({
                         </span>
                       )}
                       {item.liveUrl && (
-                        <a 
-                          href={item.liveUrl} 
-                          target="_blank" 
+                        <a
+                          href={item.liveUrl}
+                          target="_blank"
                           rel="noreferrer"
                           className="text-[#34d399] hover:underline flex items-center gap-1 text-[10px]"
                         >
@@ -555,19 +624,22 @@ export default function ContentLibraryTab({
                   </span>
 
                   {/* Status badge */}
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                    isPublished
-                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                      : isReady
-                      ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
-                      : "bg-sky-500/15 text-sky-300 border border-sky-500/30"
-                  }`}>
-                    {item.categoryType === "Idea" ? "Idea" : item.status}
+                  <span
+                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      isPublished
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                        : isReady
+                          ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                          : 'bg-sky-500/15 text-sky-300 border border-sky-500/30'
+                    }`}
+                  >
+                    {item.categoryType === 'Idea' ? 'Idea' : item.status}
                   </span>
 
                   {/* Action buttons */}
                   <div className="flex items-center gap-2">
-                    {item.status === "Drafted" || item.categoryType === "Idea" ? (
+                    {item.status === 'Drafted' ||
+                    item.categoryType === 'Idea' ? (
                       <button
                         onClick={() => {
                           const prompt = `Title: ${item.title}\nTopic: ${item.topic}\nDraft Content:\n${item.content}`;
@@ -589,7 +661,7 @@ export default function ContentLibraryTab({
                         ) : (
                           <>
                             <Send size={13} />
-                            <span>{isPublished ? "Republish" : "Publish"}</span>
+                            <span>{isPublished ? 'Republish' : 'Publish'}</span>
                           </>
                         )}
                       </button>
@@ -599,7 +671,7 @@ export default function ContentLibraryTab({
                     <button
                       onClick={() => {
                         setLinkModalItem(item);
-                        setLiveUrlInput(item.liveUrl || "");
+                        setLiveUrlInput(item.liveUrl || '');
                       }}
                       className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-sky-300 transition cursor-pointer"
                       title="Link live published URL"
@@ -652,9 +724,11 @@ export default function ContentLibraryTab({
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="px-2.5 py-0.5 rounded font-mono font-bold uppercase text-[10px] bg-emerald-500/20 text-[#34d399] border border-emerald-500/30">
-                    {editingItem.categoryType || "Article"}
+                    {editingItem.categoryType || 'Article'}
                   </span>
-                  <span className="text-xs font-mono text-slate-400">{editingItem.wordCount} Words</span>
+                  <span className="text-xs font-mono text-slate-400">
+                    {editingItem.wordCount} Words
+                  </span>
                 </div>
                 <h3 className="text-xl font-display font-bold text-white">
                   {editingItem.title}
@@ -664,12 +738,20 @@ export default function ContentLibraryTab({
               {/* Meta details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-black/40 p-3.5 rounded-xl border border-white/5 font-mono text-xs">
                 <div>
-                  <span className="text-[10px] text-slate-400 block">SEO Meta Title</span>
-                  <p className="text-slate-200 mt-0.5 font-sans">{editingItem.metaTitle || editingItem.title}</p>
+                  <span className="text-[10px] text-slate-400 block">
+                    SEO Meta Title
+                  </span>
+                  <p className="text-slate-200 mt-0.5 font-sans">
+                    {editingItem.metaTitle || editingItem.title}
+                  </p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 block">SEO Meta Description</span>
-                  <p className="text-slate-200 mt-0.5 font-sans">{editingItem.metaDescription || "No description set"}</p>
+                  <span className="text-[10px] text-slate-400 block">
+                    SEO Meta Description
+                  </span>
+                  <p className="text-slate-200 mt-0.5 font-sans">
+                    {editingItem.metaDescription || 'No description set'}
+                  </p>
                 </div>
               </div>
 
@@ -678,11 +760,19 @@ export default function ContentLibraryTab({
                 <div className="flex items-center justify-between text-xs font-mono text-slate-400">
                   <span>Generated Markdown Content</span>
                   <button
-                    onClick={() => handleCopyToClipboard(editingItem.content, editingItem.id)}
+                    onClick={() =>
+                      handleCopyToClipboard(editingItem.content, editingItem.id)
+                    }
                     className="text-[#34d399] hover:underline flex items-center gap-1 cursor-pointer"
                   >
-                    {copiedId === editingItem.id ? <Check size={12} /> : <Copy size={12} />}
-                    <span>{copiedId === editingItem.id ? "Copied" : "Copy All"}</span>
+                    {copiedId === editingItem.id ? (
+                      <Check size={12} />
+                    ) : (
+                      <Copy size={12} />
+                    )}
+                    <span>
+                      {copiedId === editingItem.id ? 'Copied' : 'Copy All'}
+                    </span>
                   </button>
                 </div>
                 <div className="bg-black/60 border border-white/10 rounded-xl p-4 font-mono text-xs text-slate-300 max-h-60 overflow-y-auto whitespace-pre-wrap leading-relaxed">
@@ -753,7 +843,8 @@ export default function ContentLibraryTab({
                   Link Live Article URL
                 </h3>
                 <p className="text-xs text-slate-400">
-                  Enter the URL where <strong>{linkModalItem.title}</strong> is published to track rankings and search traffic.
+                  Enter the URL where <strong>{linkModalItem.title}</strong> is
+                  published to track rankings and search traffic.
                 </p>
               </div>
 

@@ -1,5 +1,13 @@
-import { Award, FileText, ArrowRight, BookOpen, ExternalLink, Sparkles, AlertCircle } from "lucide-react";
-import { PillarData } from "../types";
+import {
+  Award,
+  FileText,
+  ArrowRight,
+  BookOpen,
+  ExternalLink,
+  Sparkles,
+  AlertCircle,
+} from 'lucide-react';
+import { PillarData } from '../types';
 
 interface PillarPerformanceCardProps {
   pillar: PillarData;
@@ -12,23 +20,26 @@ export default function PillarPerformanceCard({
   pillar,
   aiSuggestion,
   onOpenInWriter,
-  onAddSupportPage
+  onAddSupportPage,
 }: PillarPerformanceCardProps) {
-  
   // Custom styling for tier
   const getTierColorClass = (tier: string) => {
-    switch(tier.toLowerCase()) {
-      case "platinum": return "bg-black/40 text-[#34d399] border-[#34d399]/30";
-      case "gold": return "bg-amber-500/10 text-amber-400 border-amber-500/20";
-      case "silver": return "bg-white/10 text-slate-200 border-white/10";
-      default: return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+    switch (tier.toLowerCase()) {
+      case 'platinum':
+        return 'bg-black/40 text-[#34d399] border-[#34d399]/30';
+      case 'gold':
+        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+      case 'silver':
+        return 'bg-white/10 text-slate-200 border-white/10';
+      default:
+        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
     }
   };
 
   const readinessPercent = pillar.readiness_score;
 
   return (
-    <div 
+    <div
       className="glass-card p-6 flex flex-col gap-6"
       id="pillar-performance-card"
     >
@@ -39,7 +50,9 @@ export default function PillarPerformanceCard({
             <span className="text-xs uppercase tracking-widest font-mono text-slate-400 font-bold">
               Focus SEO Pillar
             </span>
-            <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border font-bold ${getTierColorClass(pillar.tier)}`}>
+            <span
+              className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border font-bold ${getTierColorClass(pillar.tier)}`}
+            >
               {pillar.tier} Tier
             </span>
           </div>
@@ -51,17 +64,24 @@ export default function PillarPerformanceCard({
         {/* Circular or pill readiness meter */}
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <div className="text-sm font-semibold text-white">Readiness Score</div>
+            <div className="text-sm font-semibold text-white">
+              Readiness Score
+            </div>
             <div className="text-xs text-slate-400">Tier benchmark: 50+</div>
           </div>
           <div className="relative flex items-center justify-center">
             {/* SVG circle meter */}
             <svg className="w-14 h-14 transform -rotate-90">
-              <circle cx="28" cy="28" r="24" className="stroke-white/10 fill-none stroke-[4]" />
-              <circle 
-                cx="28" 
-                cy="28" 
-                r="24" 
+              <circle
+                cx="28"
+                cy="28"
+                r="24"
+                className="stroke-white/10 fill-none stroke-[4]"
+              />
+              <circle
+                cx="28"
+                cy="28"
+                r="24"
                 className="stroke-[#34d399] fill-none stroke-[4] transition-all duration-1000"
                 strokeDasharray="150"
                 strokeDashoffset={150 - (150 * readinessPercent) / 100}
@@ -77,7 +97,9 @@ export default function PillarPerformanceCard({
       {/* Grid Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-black/20 p-4 rounded-xl border border-white/5">
         <div className="flex flex-col text-left">
-          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Articles Live</span>
+          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
+            Articles Live
+          </span>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-2xl font-semibold text-white">
               {pillar.articles_live}
@@ -87,33 +109,48 @@ export default function PillarPerformanceCard({
             </span>
           </div>
           <div className="w-full bg-white/10 h-1.5 rounded-full mt-2 overflow-hidden">
-            <div 
-              className="bg-[#34d399] h-full rounded-full transition-all duration-500" 
-              style={{ width: `${Math.min(100, Math.max(20, (pillar.articles_live + 1) * 20))}%` }}
+            <div
+              className="bg-[#34d399] h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${Math.min(100, Math.max(20, (pillar.articles_live + 1) * 20))}%`,
+              }}
             ></div>
           </div>
         </div>
 
         <div className="flex flex-col text-left">
-          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Acquired Backlinks</span>
+          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
+            Acquired Backlinks
+          </span>
           <span className="text-2xl font-semibold text-white mt-1">
-            {pillar.backlinks} <span className="text-sm font-normal text-slate-400">/ {pillar.backlinks_required}</span>
+            {pillar.backlinks}{' '}
+            <span className="text-sm font-normal text-slate-400">
+              / {pillar.backlinks_required}
+            </span>
           </span>
           <div className="w-full bg-white/10 h-1.5 rounded-full mt-2 overflow-hidden">
-            <div 
-              className="bg-sky-500 h-full rounded-full transition-all duration-500" 
-              style={{ width: `${(pillar.backlinks / pillar.backlinks_required) * 100}%` }}
+            <div
+              className="bg-sky-500 h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${(pillar.backlinks / pillar.backlinks_required) * 100}%`,
+              }}
             ></div>
           </div>
         </div>
 
         <div className="flex flex-col text-left">
-          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Linkable Bait Assets</span>
+          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
+            Linkable Bait Assets
+          </span>
           <span className="text-lg font-semibold text-white mt-1 truncate">
-            {pillar.bait_assets.live} <span className="text-xs text-slate-400 font-normal">live</span> · {pillar.bait_assets.remaining} <span className="text-xs text-slate-400 font-normal">left</span>
+            {pillar.bait_assets.live}{' '}
+            <span className="text-xs text-slate-400 font-normal">live</span> ·{' '}
+            {pillar.bait_assets.remaining}{' '}
+            <span className="text-xs text-slate-400 font-normal">left</span>
           </span>
           <p className="text-[10px] text-slate-400 mt-2 leading-tight">
-            High-value calculator widgets or survey resources that attract free incoming links.
+            High-value calculator widgets or survey resources that attract free
+            incoming links.
           </p>
         </div>
       </div>
@@ -125,7 +162,9 @@ export default function PillarPerformanceCard({
             <Sparkles size={16} className="text-[#34d399] fill-[#34d399]/10" />
           </div>
           <div>
-            <div className="text-xs font-semibold text-[#34d399]">Harbor AI Priority Content Suggestion</div>
+            <div className="text-xs font-semibold text-[#34d399]">
+              Harbor AI Priority Content Suggestion
+            </div>
             <p className="text-slate-300 text-xs mt-1 font-medium italic">
               “{aiSuggestion}”
             </p>
@@ -153,7 +192,7 @@ export default function PillarPerformanceCard({
           <span>Add Support Pages</span>
         </button>
         <button
-          onClick={() => onOpenInWriter("")}
+          onClick={() => onOpenInWriter('')}
           className="px-4 py-2 text-[#34d399] hover:bg-[#34d399]/10 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer"
           id="open-custom-writer"
         >

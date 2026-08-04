@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from 'react';
 
-type HubOnlineStatus = "checking" | "online" | "offline";
+type HubOnlineStatus = 'checking' | 'online' | 'offline';
 
 interface HealthPayload {
   status: string;
@@ -21,49 +21,62 @@ function formatUptime(seconds: number): string {
 }
 
 export default function HubStatus() {
-  const [status, setStatus] = useState<HubOnlineStatus>("checking");
+  const [status, setStatus] = useState<HubOnlineStatus>('checking');
   const [health, setHealth] = useState<HealthPayload | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
   const checkHubStatus = useCallback(async () => {
     try {
-      const res = await fetch("/health", { cache: "no-store" });
+      const res = await fetch('/health', { cache: 'no-store' });
       if (res.ok) {
         const data: HealthPayload = await res.json();
         setHealth(data);
-        setStatus("online");
+        setStatus('online');
       } else {
-        setStatus("offline");
+        setStatus('offline');
       }
     } catch {
-      setStatus("offline");
+      setStatus('offline');
     }
   }, []);
 
   // Check immediately on mount, then every 15 seconds
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     checkHubStatus();
     const interval = setInterval(checkHubStatus, 15000);
     return () => clearInterval(interval);
   }, [checkHubStatus]);
 
   const dotColor =
-    status === "online"   ? "#10b981" :
-    status === "offline"  ? "#ef4444" :
-                            "#f59e0b";
+    status === 'online'
+      ? '#10b981'
+      : status === 'offline'
+        ? '#ef4444'
+        : '#f59e0b';
 
   const labelColor =
-    status === "online"   ? "#10b981" :
-    status === "offline"  ? "#ef4444" :
-                            "#f59e0b";
+    status === 'online'
+      ? '#10b981'
+      : status === 'offline'
+        ? '#ef4444'
+        : '#f59e0b';
 
   const label =
-    status === "online"   ? "Hub Online" :
-    status === "offline"  ? "Hub Offline" :
-                            "Checking…";
+    status === 'online'
+      ? 'Hub Online'
+      : status === 'offline'
+        ? 'Hub Offline'
+        : 'Checking…';
 
   return (
-    <div style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
+    <div
+      style={{
+        position: 'relative',
+        display: 'inline-flex',
+        alignItems: 'center',
+      }}
+    >
       {/* Pill button */}
       <button
         id="hubStatusPill"
@@ -72,83 +85,116 @@ export default function HubStatus() {
         onClick={checkHubStatus}
         title="Click to re-check Hub status"
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-          background: "rgba(0,0,0,0.25)",
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          background: 'rgba(0,0,0,0.25)',
           border: `1px solid ${dotColor}44`,
-          borderRadius: "20px",
-          padding: "5px 12px",
-          cursor: "pointer",
+          borderRadius: '20px',
+          padding: '5px 12px',
+          cursor: 'pointer',
           color: labelColor,
-          fontSize: "12px",
+          fontSize: '12px',
           fontWeight: 700,
-          whiteSpace: "nowrap",
-          transition: "all 0.2s ease"
+          whiteSpace: 'nowrap',
+          transition: 'all 0.2s ease',
         }}
       >
         {/* Animated pulse dot */}
-        <span style={{
-          width: "8px",
-          height: "8px",
-          borderRadius: "50%",
-          background: dotColor,
-          boxShadow: status === "online" ? `0 0 8px ${dotColor}` : "none",
-          display: "inline-block",
-          flexShrink: 0,
-          animation: status === "online" ? "hubPulse 2s ease-in-out infinite" : "none"
-        }} />
+        <span
+          style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: dotColor,
+            boxShadow: status === 'online' ? `0 0 8px ${dotColor}` : 'none',
+            display: 'inline-block',
+            flexShrink: 0,
+            animation:
+              status === 'online' ? 'hubPulse 2s ease-in-out infinite' : 'none',
+          }}
+        />
         {label}
       </button>
 
       {/* Tooltip — detailed health info */}
-      {showTooltip && health && status === "online" && (
-        <div style={{
-          position: "absolute",
-          top: "calc(100% + 10px)",
-          left: "50%",
-          transform: "translateX(-50%)",
-          background: "#0d1427",
-          border: "1px solid rgba(16,185,129,0.3)",
-          borderRadius: "8px",
-          padding: "12px 16px",
-          minWidth: "220px",
-          zIndex: 999,
-          boxShadow: "0 8px 24px rgba(0,0,0,0.5)"
-        }}>
-          <div style={{ fontSize: "11px", fontWeight: 700, color: "#10b981", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+      {showTooltip && health && status === 'online' && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 'calc(100% + 10px)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#0d1427',
+            border: '1px solid rgba(16,185,129,0.3)',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            minWidth: '220px',
+            zIndex: 999,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '11px',
+              fontWeight: 700,
+              color: '#10b981',
+              marginBottom: '8px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+            }}
+          >
             ● Hub Health
           </div>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
+          <table
+            style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+              fontSize: '12px',
+            }}
+          >
             <tbody>
               {[
-                ["Service", health.service],
-                ["Version", health.version],
-                ["Uptime", formatUptime(health.uptime)],
-                ["Events Synced", health.totalEventsSynced.toString()],
-                ["Last Sync", health.lastSyncAt
-                  ? new Date(health.lastSyncAt).toLocaleTimeString()
-                  : "—"]
+                ['Service', health.service],
+                ['Version', health.version],
+                ['Uptime', formatUptime(health.uptime)],
+                ['Events Synced', health.totalEventsSynced.toString()],
+                [
+                  'Last Sync',
+                  health.lastSyncAt
+                    ? new Date(health.lastSyncAt).toLocaleTimeString()
+                    : '—',
+                ],
               ].map(([k, v]) => (
                 <tr key={k}>
-                  <td style={{ color: "#64748b", paddingBottom: "4px", paddingRight: "12px" }}>{k}</td>
-                  <td style={{ color: "#f1f5f9", fontWeight: 600 }}>{v}</td>
+                  <td
+                    style={{
+                      color: '#64748b',
+                      paddingBottom: '4px',
+                      paddingRight: '12px',
+                    }}
+                  >
+                    {k}
+                  </td>
+                  <td style={{ color: '#f1f5f9', fontWeight: 600 }}>{v}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           {/* Tooltip arrow */}
-          <div style={{
-            position: "absolute",
-            top: "-5px",
-            left: "50%",
-            transform: "translateX(-50%) rotate(45deg)",
-            width: "10px",
-            height: "10px",
-            background: "#0d1427",
-            borderLeft: "1px solid rgba(16,185,129,0.3)",
-            borderTop: "1px solid rgba(16,185,129,0.3)"
-          }} />
+          <div
+            style={{
+              position: 'absolute',
+              top: '-5px',
+              left: '50%',
+              transform: 'translateX(-50%) rotate(45deg)',
+              width: '10px',
+              height: '10px',
+              background: '#0d1427',
+              borderLeft: '1px solid rgba(16,185,129,0.3)',
+              borderTop: '1px solid rgba(16,185,129,0.3)',
+            }}
+          />
         </div>
       )}
 

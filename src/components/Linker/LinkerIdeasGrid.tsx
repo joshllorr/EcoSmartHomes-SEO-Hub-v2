@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { 
-  CheckCircle2, 
-  ExternalLink, 
-  Mail, 
-  Copy, 
-  Check, 
-  FileText, 
-  Zap, 
-  Code2, 
-  Sparkles, 
-  MapPin 
-} from "lucide-react";
-import { LinkerTabType } from "./LinkerTabs";
-import { useDashboardStore } from "../../store/useDashboardStore";
-import { buildLinkBaitPage } from "../../utils/buildLinkBaitPage";
+import { useState } from 'react';
+import {
+  CheckCircle2,
+  ExternalLink,
+  Mail,
+  Copy,
+  Check,
+  FileText,
+  Zap,
+  Code2,
+  Sparkles,
+  MapPin,
+} from 'lucide-react';
+import { LinkerTabType } from './LinkerTabs';
+import { useDashboardStore } from '../../store/useDashboardStore';
+import { buildLinkBaitPage } from '../../utils/buildLinkBaitPage';
 
 export interface LinkBaitIdeaItem {
   icon: string;
@@ -48,7 +48,7 @@ export interface LinkOpportunityItem {
   contactPerson?: string;
   outreachAngle: string;
   suggestedPitch: string;
-  status: "Uncontacted" | "Pitch Sent" | "Connected";
+  status: 'Uncontacted' | 'Pitch Sent' | 'Connected';
 }
 
 export interface LinkBaitAssetItem {
@@ -76,90 +76,98 @@ interface LinkerIdeasGridProps {
 
 export const DEFAULT_LINK_BAIT_IDEAS: LinkBaitIdeaItem[] = [
   {
-    icon: "🎨",
-    title: "The 2026 Report: How BER Ratings Impact Irish Property Values",
-    desc: "A visual data representation showing the correlation between energy ratings and sale prices in the 2026 Irish property market.",
-    area: "Limerick",
-    type: "Infographic",
-    value: "Attracts citations from Irish property portals, green mortgage advisors, and housing market journalists."
+    icon: '🎨',
+    title: 'The 2026 Report: How BER Ratings Impact Irish Property Values',
+    desc: 'A visual data representation showing the correlation between energy ratings and sale prices in the 2026 Irish property market.',
+    area: 'Limerick',
+    type: 'Infographic',
+    value:
+      'Attracts citations from Irish property portals, green mortgage advisors, and housing market journalists.',
   },
   {
-    icon: "❓",
-    title: "Heat Pump Readiness Assessment: Will You Qualify for the 2026 Grant?",
-    desc: "A quiz evaluating if a home meets the Heat Loss Indicator requirement and is heat pump ready.",
-    area: "Dooradoyle",
-    type: "Quiz",
-    value: "High social share rate among homeowners evaluating heat pump retrofits."
+    icon: '❓',
+    title:
+      'Heat Pump Readiness Assessment: Will You Qualify for the 2026 Grant?',
+    desc: 'A quiz evaluating if a home meets the Heat Loss Indicator requirement and is heat pump ready.',
+    area: 'Dooradoyle',
+    type: 'Quiz',
+    value:
+      'High social share rate among homeowners evaluating heat pump retrofits.',
   },
   {
-    icon: "⚖️",
-    title: "Comparison Guide: One-Stop-Shop vs Individual Grant Measures",
-    desc: "A side-by-side breakdown of Ireland’s two main retrofit pathways.",
-    area: "Castletroy",
-    type: "Comparison",
-    value: "Consistently referenced by trade publications and contractor directories."
+    icon: '⚖️',
+    title: 'Comparison Guide: One-Stop-Shop vs Individual Grant Measures',
+    desc: 'A side-by-side breakdown of Ireland’s two main retrofit pathways.',
+    area: 'Castletroy',
+    type: 'Comparison',
+    value:
+      'Consistently referenced by trade publications and contractor directories.',
   },
   {
-    icon: "🧮",
-    title: "2026 SEAI Grant & Retrofit Investment Calculator",
-    desc: "An interactive tool estimating retrofit costs, grants, and savings.",
-    area: "Raheen",
-    type: "Calculator",
-    value: "Embeddable widget linked by financial columnists and local mortgage brokers."
+    icon: '🧮',
+    title: '2026 SEAI Grant & Retrofit Investment Calculator',
+    desc: 'An interactive tool estimating retrofit costs, grants, and savings.',
+    area: 'Raheen',
+    type: 'Calculator',
+    value:
+      'Embeddable widget linked by financial columnists and local mortgage brokers.',
   },
   {
-    icon: "📖",
-    title: "The 2026 Irish Homeowner’s Retrofit Glossary",
-    desc: "A dictionary explaining retrofit jargon in plain English.",
-    area: "Corbally",
-    type: "Glossary",
-    value: "Ranks naturally for definition terms and earns contextual Wikipedia-style links."
+    icon: '📖',
+    title: 'The 2026 Irish Homeowner’s Retrofit Glossary',
+    desc: 'A dictionary explaining retrofit jargon in plain English.',
+    area: 'Corbally',
+    type: 'Glossary',
+    value:
+      'Ranks naturally for definition terms and earns contextual Wikipedia-style links.',
   },
   {
-    icon: "📊",
-    title: "SEAI Grant Limits & U-Value Requirements (2026)",
-    desc: "A reference chart listing all 2026 SEAI grants and required U-values.",
-    area: "Adare",
-    type: "Reference Chart",
-    value: "Essential cheat-sheet bookmarked and linked by architects & energy auditors."
+    icon: '📊',
+    title: 'SEAI Grant Limits & U-Value Requirements (2026)',
+    desc: 'A reference chart listing all 2026 SEAI grants and required U-values.',
+    area: 'Adare',
+    type: 'Reference Chart',
+    value:
+      'Essential cheat-sheet bookmarked and linked by architects & energy auditors.',
   },
   {
-    icon: "📍",
-    title: "Independent Home Energy Retrofit Advisory: Dublin",
-    desc: "A location page targeting Dublin homeowners and local housing archetypes.",
-    area: "Dublin",
-    type: "Location Page",
-    location: "Dublin",
-    value: "Local authority citations and regional business index backlinks."
+    icon: '📍',
+    title: 'Independent Home Energy Retrofit Advisory: Dublin',
+    desc: 'A location page targeting Dublin homeowners and local housing archetypes.',
+    area: 'Dublin',
+    type: 'Location Page',
+    location: 'Dublin',
+    value: 'Local authority citations and regional business index backlinks.',
   },
   {
-    icon: "📍",
-    title: "Retrofit Roadmaps & Energy Consulting: Cork",
-    desc: "A location page tailored to Cork’s climate and housing stock.",
-    area: "Cork",
-    type: "Location Page",
-    location: "Cork",
-    value: "Regional directory citations and local eco-initiative links."
-  }
+    icon: '📍',
+    title: 'Retrofit Roadmaps & Energy Consulting: Cork',
+    desc: 'A location page tailored to Cork’s climate and housing stock.',
+    area: 'Cork',
+    type: 'Location Page',
+    location: 'Cork',
+    value: 'Regional directory citations and local eco-initiative links.',
+  },
 ];
 
 export default function LinkerIdeasGrid({
-  activeTab = "linker",
+  activeTab = 'linker',
   fallbackIdeas = DEFAULT_LINK_BAIT_IDEAS,
   ideas: propIdeas,
   pillars = [],
   opportunities = [],
   baitAssets = [],
   onOpenInWriter,
-  onStatusToggle
+  onStatusToggle,
 }: LinkerIdeasGridProps) {
   const storeIdeas = useDashboardStore((s) => s.linkBaitIdeas);
 
-  const displayIdeas = (storeIdeas && storeIdeas.length > 0)
-    ? storeIdeas
-    : (propIdeas && propIdeas.length > 0)
-    ? propIdeas
-    : fallbackIdeas;
+  const displayIdeas =
+    storeIdeas && storeIdeas.length > 0
+      ? storeIdeas
+      : propIdeas && propIdeas.length > 0
+        ? propIdeas
+        : fallbackIdeas;
 
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [buildingTitle, setBuildingTitle] = useState<string | null>(null);
@@ -174,12 +182,12 @@ export default function LinkerIdeasGrid({
     setBuildingTitle(idea.title);
     try {
       const output = await buildLinkBaitPage(idea);
-      console.log("Generated Link Bait Page Output:", output);
+      console.log('Generated Link Bait Page Output:', output);
       if (onOpenInWriter) {
         onOpenInWriter(idea.title);
       }
     } catch (err) {
-      console.error("Build page error:", err);
+      console.error('Build page error:', err);
       if (onOpenInWriter) {
         onOpenInWriter(idea.title);
       }
@@ -241,15 +249,28 @@ export default function LinkerIdeasGrid({
                 <span className="text-[10px] font-mono font-bold bg-white/5 text-[#34d399] border border-white/10 px-2.5 py-1 rounded-md uppercase">
                   {idea.type}
                 </span>
-              ) : <div />}
-              
+              ) : (
+                <div />
+              )}
+
               <button
                 onClick={() => handleBuildPage(idea)}
                 disabled={buildingTitle === idea.title}
                 className="bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-md"
               >
-                <Sparkles size={13} className={buildingTitle === idea.title ? "animate-spin text-purple-400" : "text-[#34d399]"} />
-                <span>{buildingTitle === idea.title ? "Building Page..." : "Build This Page"}</span>
+                <Sparkles
+                  size={13}
+                  className={
+                    buildingTitle === idea.title
+                      ? 'animate-spin text-purple-400'
+                      : 'text-[#34d399]'
+                  }
+                />
+                <span>
+                  {buildingTitle === idea.title
+                    ? 'Building Page...'
+                    : 'Build This Page'}
+                </span>
               </button>
             </div>
           </div>

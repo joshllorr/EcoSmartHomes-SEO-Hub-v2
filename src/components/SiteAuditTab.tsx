@@ -1,5 +1,14 @@
-import { Globe, RefreshCw, CheckCircle2, AlertTriangle, FileText, ArrowRight, Server, Search } from "lucide-react";
-import { useState } from "react";
+import {
+  Globe,
+  RefreshCw,
+  CheckCircle2,
+  AlertTriangle,
+  FileText,
+  ArrowRight,
+  Server,
+  Search,
+} from 'lucide-react';
+import { useState } from 'react';
 
 interface SiteAuditTabProps {
   onScanSuccess: () => void;
@@ -10,10 +19,10 @@ interface SiteAuditTabProps {
 export default function SiteAuditTab({
   onScanSuccess,
   site,
-  isScanned
+  isScanned,
 }: SiteAuditTabProps) {
   const [urlInput, setUrlInput] = useState(`https://${site}`);
-  const [sitemapPath, setSitemapPath] = useState("/sitemap.xml");
+  const [sitemapPath, setSitemapPath] = useState('/sitemap.xml');
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(isScanned);
 
@@ -27,9 +36,24 @@ export default function SiteAuditTab({
   };
 
   const auditIssues = [
-    { severity: "High", title: "Sitemap Configuration", desc: "Sitemap referenced correctly at /sitemap.xml", status: "Resolved" },
-    { severity: "Medium", title: "Local Business Schema Markup", desc: "LocalBusiness & ProfessionalService JSON-LD Schema markup active on homepage <head>", status: "Resolved" },
-    { severity: "Low", title: "Heat Pump Image Alt Text", desc: "All 4 heat pump images updated with descriptive SEAI-optimized alt tags", status: "Resolved" }
+    {
+      severity: 'High',
+      title: 'Sitemap Configuration',
+      desc: 'Sitemap referenced correctly at /sitemap.xml',
+      status: 'Resolved',
+    },
+    {
+      severity: 'Medium',
+      title: 'Local Business Schema Markup',
+      desc: 'LocalBusiness & ProfessionalService JSON-LD Schema markup active on homepage <head>',
+      status: 'Resolved',
+    },
+    {
+      severity: 'Low',
+      title: 'Heat Pump Image Alt Text',
+      desc: 'All 4 heat pump images updated with descriptive SEAI-optimized alt tags',
+      status: 'Resolved',
+    },
   ];
 
   return (
@@ -40,7 +64,8 @@ export default function SiteAuditTab({
           <span>Site Health & Sitemap Crawler</span>
         </h2>
         <p className="text-slate-400 text-xs mt-1">
-          Perform high-precision diagnostics audits on URLs to confirm index accessibility for search indexing.
+          Perform high-precision diagnostics audits on URLs to confirm index
+          accessibility for search indexing.
         </p>
       </div>
 
@@ -80,7 +105,10 @@ export default function SiteAuditTab({
             >
               {loading ? (
                 <>
-                  <RefreshCw size={13} className="animate-spin text-[#0f172a]" />
+                  <RefreshCw
+                    size={13}
+                    className="animate-spin text-[#0f172a]"
+                  />
                   <span>Crawling URL...</span>
                 </>
               ) : (
@@ -102,25 +130,36 @@ export default function SiteAuditTab({
               <span className="text-xs uppercase font-mono text-[#34d399] font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                 Optimal Health
               </span>
-              <span className="text-5xl font-bold font-mono text-white mt-3">100<span className="text-lg text-slate-400">/100</span></span>
+              <span className="text-5xl font-bold font-mono text-white mt-3">
+                100<span className="text-lg text-slate-400">/100</span>
+              </span>
               <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                Site health optimal! Schema markup & image alt text fully optimized. Index crawlers parse all 12 energy routes seamlessly.
+                Site health optimal! Schema markup & image alt text fully
+                optimized. Index crawlers parse all 12 energy routes seamlessly.
               </p>
             </div>
 
             <div className="glass-card p-5 space-y-3.5">
-              <h4 className="font-semibold text-white text-xs">Technical Indicators</h4>
+              <h4 className="font-semibold text-white text-xs">
+                Technical Indicators
+              </h4>
               <div className="flex justify-between items-center text-xs">
                 <span className="text-slate-400">HTTPS Status</span>
-                <span className="text-[#34d399] font-bold font-mono">Secure (200)</span>
+                <span className="text-[#34d399] font-bold font-mono">
+                  Secure (200)
+                </span>
               </div>
               <div className="flex justify-between items-center text-xs border-t border-white/10 pt-2">
                 <span className="text-slate-400">Robot.txt</span>
-                <span className="text-[#34d399] font-bold font-mono">Valid</span>
+                <span className="text-[#34d399] font-bold font-mono">
+                  Valid
+                </span>
               </div>
               <div className="flex justify-between items-center text-xs border-t border-white/10 pt-2">
                 <span className="text-slate-400">Page Load Index</span>
-                <span className="text-[#34d399] font-bold font-mono">0.4s (Excellent)</span>
+                <span className="text-[#34d399] font-bold font-mono">
+                  0.4s (Excellent)
+                </span>
               </div>
             </div>
           </div>
@@ -128,7 +167,9 @@ export default function SiteAuditTab({
           {/* Issue List */}
           <div className="lg:col-span-8 glass-card p-5 space-y-4">
             <div className="flex justify-between items-center border-b border-white/10 pb-2">
-              <h4 className="font-semibold text-white text-sm">Diagnostic Audit Log</h4>
+              <h4 className="font-semibold text-white text-sm">
+                Diagnostic Audit Log
+              </h4>
               <span className="text-[10px] bg-white/10 text-slate-300 border border-white/5 px-2 py-0.5 rounded">
                 3 crawl records found
               </span>
@@ -136,28 +177,39 @@ export default function SiteAuditTab({
 
             <div className="space-y-3">
               {auditIssues.map((issue, idx) => (
-                <div key={idx} className="p-3.5 rounded-xl border border-white/10 flex items-start gap-3.5 justify-between bg-white/5 hover:bg-white/10 transition">
+                <div
+                  key={idx}
+                  className="p-3.5 rounded-xl border border-white/10 flex items-start gap-3.5 justify-between bg-white/5 hover:bg-white/10 transition"
+                >
                   <div className="flex gap-2.5 items-start text-left">
-                    <span className={`text-[9px] font-bold font-mono uppercase px-1.5 py-0.5 rounded mt-0.5 shrink-0 ${
-                      issue.severity === "High"
-                        ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
-                        : issue.severity === "Medium"
-                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                          : "bg-blue-500/20 text-blue-300 border border-blue-500/30"
-                    }`}>
+                    <span
+                      className={`text-[9px] font-bold font-mono uppercase px-1.5 py-0.5 rounded mt-0.5 shrink-0 ${
+                        issue.severity === 'High'
+                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                          : issue.severity === 'Medium'
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                      }`}
+                    >
                       {issue.severity}
                     </span>
                     <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-white">{issue.title}</span>
-                      <span className="text-[11px] text-slate-400 mt-0.5">{issue.desc}</span>
+                      <span className="text-xs font-semibold text-white">
+                        {issue.title}
+                      </span>
+                      <span className="text-[11px] text-slate-400 mt-0.5">
+                        {issue.desc}
+                      </span>
                     </div>
                   </div>
 
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                    issue.status === "Resolved"
-                      ? "bg-emerald-500/20 text-[#34d399] border border-emerald-500/30"
-                      : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                  }`}>
+                  <span
+                    className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                      issue.status === 'Resolved'
+                        ? 'bg-emerald-500/20 text-[#34d399] border border-emerald-500/30'
+                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    }`}
+                  >
                     {issue.status}
                   </span>
                 </div>
@@ -170,9 +222,13 @@ export default function SiteAuditTab({
           <div className="w-12 h-12 rounded-full bg-white/5 text-slate-400 flex items-center justify-center mb-3 border border-white/10">
             <Search size={18} />
           </div>
-          <h4 className="font-display font-semibold text-slate-200 text-sm">Ready for Technical Audit</h4>
+          <h4 className="font-display font-semibold text-slate-200 text-sm">
+            Ready for Technical Audit
+          </h4>
           <p className="text-xs text-slate-400 max-w-sm mt-1 leading-normal">
-            Execute the crawl diagnostics to search ecosmarthomes.ie for critical tags and site index sitemaps. Point to a valid .xml file to resolve indexation fails.
+            Execute the crawl diagnostics to search ecosmarthomes.ie for
+            critical tags and site index sitemaps. Point to a valid .xml file to
+            resolve indexation fails.
           </p>
         </div>
       )}

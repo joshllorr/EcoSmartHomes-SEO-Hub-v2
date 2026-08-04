@@ -1,7 +1,7 @@
 export interface PillarData {
   name: string;
   readiness_score: number;
-  tier: "bronze" | "silver" | "gold" | "platinum";
+  tier: 'bronze' | 'silver' | 'gold' | 'platinum';
   articles_live: number;
   articles_total: number;
   backlinks: number;
@@ -38,7 +38,7 @@ export interface WeeklyChallenge {
 export interface ActivityItem {
   id: string;
   title: string;
-  category: "Research" | "Draft" | "Scout" | "Site Health" | "CMS";
+  category: 'Research' | 'Draft' | 'Scout' | 'Site Health' | 'CMS';
   date: string;
 }
 
@@ -47,7 +47,7 @@ export interface ArticleDraft {
   title: string;
   topic: string;
   content: string;
-  status: "Drafted" | "Published";
+  status: 'Drafted' | 'Published';
   date: string;
   wordCount: number;
   metaTitle?: string;
@@ -65,7 +65,7 @@ export interface DashboardState {
   weekly_challenges: WeeklyChallenge[];
   recent_activity: ActivityItem[];
   site_health: {
-    status: "failed" | "success" | "running";
+    status: 'failed' | 'success' | 'running';
     error: string | null;
     last_scanned: string | null;
   };
@@ -95,4 +95,3 @@ export interface SchemaTemplate {
   appliedSchemaNodes: any[];
   isBuiltIn?: boolean;
 }
-

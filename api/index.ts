@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 /**
  * Cloudflare Worker API Entrypoint — Phase 22 Autonomous Multi-Agent Conflict Resolution
  * Detects agent vote divergence vs evolved action biases and gently resolves conflicts by adjusting action weights and recording resolution cycles.
  */
+=======
+import app from '../server';
+>>>>>>> origin/main
 
 import { aiPlanner } from "../logic/retrofit/aiPlanner";
 import { generateRetrofitPdfHtml } from "../logic/pdf/retrofitPdf";

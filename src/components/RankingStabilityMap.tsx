@@ -1,6 +1,6 @@
 // RankingStabilityMap.tsx
-import React, { useState } from "react";
-import "./RankingStabilityMap.css";
+import React, { useState } from 'react';
+import './RankingStabilityMap.css';
 
 type StabilityItem = {
   keyword: string;
@@ -11,59 +11,64 @@ type StabilityItem = {
 
 const data: StabilityItem[] = [
   {
-    keyword: "heat pump costs ireland",
+    keyword: 'heat pump costs ireland',
     rank: 2,
     slope: -0.8,
-    volatility: 0.22
+    volatility: 0.22,
   },
   {
-    keyword: "solar pv grants ireland",
+    keyword: 'solar pv grants ireland',
     rank: 4,
     slope: 0.6,
-    volatility: 0.58
+    volatility: 0.58,
   },
   {
-    keyword: "seai grants limerick",
+    keyword: 'seai grants limerick',
     rank: 7,
     slope: 0.2,
-    volatility: 0.41
+    volatility: 0.41,
   },
   {
-    keyword: "attic insulation cost dublin",
+    keyword: 'attic insulation cost dublin',
     rank: 3,
     slope: -0.5,
-    volatility: 0.18
+    volatility: 0.18,
   },
   {
-    keyword: "ber rating upgrade steps",
+    keyword: 'ber rating upgrade steps',
     rank: 9,
     slope: 0.7,
-    volatility: 0.74
-  }
+    volatility: 0.74,
+  },
 ];
 
-function getColor(slope: number, volatility: number): "green" | "yellow" | "red" {
-  if (slope < 0 && volatility < 0.3) return "green";
-  if (slope > 0.5 && volatility > 0.5) return "red";
-  return "yellow";
+function getColor(
+  slope: number,
+  volatility: number,
+): 'green' | 'yellow' | 'red' {
+  if (slope < 0 && volatility < 0.3) return 'green';
+  if (slope > 0.5 && volatility > 0.5) return 'red';
+  return 'yellow';
 }
 
 function getMessage(slope: number, volatility: number): string {
   const color = getColor(slope, volatility);
-  if (color === "green") {
-    return "Upward trend. Automation strengthening active.";
+  if (color === 'green') {
+    return 'Upward trend. Automation strengthening active.';
   }
-  if (color === "red") {
-    return "Predicted drop. Manual SERP audit recommended.";
+  if (color === 'red') {
+    return 'Predicted drop. Manual SERP audit recommended.';
   }
-  return "Mild decline / SERP shifts. Monitor next cycle.";
+  return 'Mild decline / SERP shifts. Monitor next cycle.';
 }
 
 export const RankingStabilityMap: React.FC = () => {
   const [notice, setNotice] = useState<string | null>(null);
 
   const handleAuditClick = (keyword: string) => {
-    setNotice(`SERP Analyzer initiated for "${keyword}". Refreshing SERP competitor diff...`);
+    setNotice(
+      `SERP Analyzer initiated for "${keyword}". Refreshing SERP competitor diff...`,
+    );
     setTimeout(() => setNotice(null), 4000);
   };
 
@@ -84,14 +89,10 @@ export const RankingStabilityMap: React.FC = () => {
         {data.map((item) => {
           const color = getColor(item.slope, item.volatility);
           const message = getMessage(item.slope, item.volatility);
-          const slopeArrow =
-            item.slope < 0 ? "↑" : item.slope > 0 ? "↓" : "→";
+          const slopeArrow = item.slope < 0 ? '↑' : item.slope > 0 ? '↓' : '→';
 
           return (
-            <div
-              key={item.keyword}
-              className={`stability-card ${color}`}
-            >
+            <div key={item.keyword} className={`stability-card ${color}`}>
               <div className="card-header">
                 <span className="keyword">{item.keyword}</span>
                 <span className="rank">#{item.rank}</span>
@@ -106,9 +107,7 @@ export const RankingStabilityMap: React.FC = () => {
                 </div>
                 <div className="metric">
                   <span className="label">Volatility</span>
-                  <span className="value">
-                    {item.volatility.toFixed(2)}
-                  </span>
+                  <span className="value">{item.volatility.toFixed(2)}</span>
                   <div className="vol-bar">
                     <div
                       className="vol-fill"
@@ -124,15 +123,15 @@ export const RankingStabilityMap: React.FC = () => {
               </div>
 
               <div className="actions-row">
-                {color === "red" && (
-                  <button 
+                {color === 'red' && (
+                  <button
                     onClick={() => handleAuditClick(item.keyword)}
                     className="btn audit"
                   >
                     Audit Now (SERP Analyzer)
                   </button>
                 )}
-                {color !== "red" && (
+                {color !== 'red' && (
                   <button className="btn auto" disabled>
                     Automation Active
                   </button>
@@ -143,13 +142,16 @@ export const RankingStabilityMap: React.FC = () => {
                 <div className="tooltip-title">Decision Logic</div>
                 <div className="tooltip-body">
                   <p>
-                    <strong>Green:</strong> slope &lt; 0 and volatility &lt; 0.3 → let automation strengthen.
+                    <strong>Green:</strong> slope &lt; 0 and volatility &lt; 0.3
+                    → let automation strengthen.
                   </p>
                   <p>
-                    <strong>Yellow:</strong> mild decline or SERP shifts → monitor next cycle.
+                    <strong>Yellow:</strong> mild decline or SERP shifts →
+                    monitor next cycle.
                   </p>
                   <p>
-                    <strong>Red:</strong> slope &gt; 0.5 and volatility &gt; 0.5 → trigger manual SERP audit.
+                    <strong>Red:</strong> slope &gt; 0.5 and volatility &gt; 0.5
+                    → trigger manual SERP audit.
                   </p>
                 </div>
               </div>

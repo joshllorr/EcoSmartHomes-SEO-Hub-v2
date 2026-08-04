@@ -1,6 +1,19 @@
+<<<<<<< HEAD
 import { Sparkles, BarChart2, Eye, Compass, HelpCircle, ExternalLink } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useDashboardStore } from "../store/useDashboardStore";
+=======
+import {
+  Sparkles,
+  BarChart2,
+  Eye,
+  Compass,
+  HelpCircle,
+  ExternalLink,
+} from 'lucide-react';
+import { useState } from 'react';
+import { useDashboardStore } from '../store/useDashboardStore';
+>>>>>>> origin/main
 
 interface AIVisibilityCardProps {
   visits: number;
@@ -9,7 +22,7 @@ interface AIVisibilityCardProps {
 
 export default function AIVisibilityCard({
   visits,
-  onOptimizeClick
+  onOptimizeClick,
 }: AIVisibilityCardProps) {
   const targetDomain = useDashboardStore((s) => s.targetDomain);
   const [showGuide, setShowGuide] = useState(false);
@@ -21,6 +34,7 @@ export default function AIVisibilityCard({
     { name: "Claude (Answer Engine)", visits: 14, percent: "9%", color: "bg-orange-500" }
   ]);
 
+<<<<<<< HEAD
   useEffect(() => {
     fetch("/api/analytics/ai-referrals")
       .then((res) => res.json())
@@ -32,9 +46,27 @@ export default function AIVisibilityCard({
       })
       .catch((err) => console.warn("AIVisibilityCard: Using fallback referral analytics", err));
   }, []);
+=======
+  const sources = [
+    {
+      name: 'ChatGPT (SearchGPT)',
+      visits: 0,
+      percent: '0%',
+      color: 'bg-teal-500',
+    },
+    { name: 'Perplexity AI', visits: 0, percent: '0%', color: 'bg-sky-500' },
+    { name: 'Gemini', visits: 0, percent: '0%', color: 'bg-indigo-500' },
+    {
+      name: 'Claude (Answer Engine)',
+      visits: 0,
+      percent: '0%',
+      color: 'bg-orange-500',
+    },
+  ];
+>>>>>>> origin/main
 
   return (
-    <div 
+    <div
       className="glass-card p-6 flex flex-col gap-5 text-left"
       id="ai-visibility-card"
     >
@@ -44,8 +76,12 @@ export default function AIVisibilityCard({
             <Sparkles size={18} className="fill-purple-300/10" />
           </div>
           <div>
-            <span className="text-xs uppercase font-mono text-slate-400 font-bold">Generative Search</span>
-            <h3 className="text-sm font-semibold text-white">AI Engine Answer Referrals</h3>
+            <span className="text-xs uppercase font-mono text-slate-400 font-bold">
+              Generative Search
+            </span>
+            <h3 className="text-sm font-semibold text-white">
+              AI Engine Answer Referrals
+            </h3>
           </div>
         </div>
 
@@ -56,8 +92,17 @@ export default function AIVisibilityCard({
       </div>
 
       <div className="flex items-baseline gap-2">
+<<<<<<< HEAD
         <span className="text-3xl font-bold text-white font-mono">{totalReferrals}</span>
         <span className="text-xs text-slate-400 font-medium">total referral sessions</span>
+=======
+        <span className="text-3xl font-bold text-white font-mono">
+          {visits}
+        </span>
+        <span className="text-xs text-slate-400 font-medium">
+          total referral sessions
+        </span>
+>>>>>>> origin/main
       </div>
 
       {/* AI visibility bar chart representation */}
@@ -70,10 +115,15 @@ export default function AIVisibilityCard({
             <div key={src.name} className="space-y-1">
               <div className="flex justify-between items-center text-xs text-slate-300">
                 <span className="font-medium">{src.name}</span>
-                <span className="font-mono font-bold text-white">{src.visits}</span>
+                <span className="font-mono font-bold text-white">
+                  {src.visits}
+                </span>
               </div>
               <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                <div className={`${src.color} h-full rounded-full transition-all duration-1000`} style={{ width: src.percent }}></div>
+                <div
+                  className={`${src.color} h-full rounded-full transition-all duration-1000`}
+                  style={{ width: src.percent }}
+                ></div>
               </div>
             </div>
           ))}
@@ -82,7 +132,10 @@ export default function AIVisibilityCard({
 
       {/* Actionable recommendation */}
       <p className="text-xs text-slate-400 leading-relaxed">
-        AI Answer models index websites based on structural semantic density and conversational content. Currently, <span className="font-semibold text-slate-300">{targetDomain}</span> is not visible in LLM indices.
+        AI Answer models index websites based on structural semantic density and
+        conversational content. Currently,{' '}
+        <span className="font-semibold text-slate-300">{targetDomain}</span> is
+        not visible in LLM indices.
       </p>
 
       {/* Toggle interactive optimization guide */}
@@ -93,7 +146,11 @@ export default function AIVisibilityCard({
           id="toggle-ai-optimization-guide"
         >
           <Compass size={13} />
-          <span>{showGuide ? "Hide Optimization Recommendations" : "Show AI Optimization Tips"}</span>
+          <span>
+            {showGuide
+              ? 'Hide Optimization Recommendations'
+              : 'Show AI Optimization Tips'}
+          </span>
         </button>
 
         {showGuide && (
@@ -103,7 +160,13 @@ export default function AIVisibilityCard({
                 1. Structural Q&A Layout
               </span>
               <p className="text-[11px] text-slate-300 leading-normal">
-                Make sure your retrofitting headings are phrased as active questions (e.g., <em>"What is a BER rating?"</em>) followed immediately by a clear, one-sentence direct answer. AI engines love compiling these.
+                Make sure your retrofitting headings are phrased as active
+                questions (e.g.,{' '}
+                <em>
+                  {'"'}What is a BER rating?{'"'}
+                </em>
+                ) followed immediately by a clear, one-sentence direct answer.
+                AI engines love compiling these.
               </p>
             </div>
             <div className="space-y-1 border-t border-white/10 pt-2.5">
@@ -111,7 +174,19 @@ export default function AIVisibilityCard({
                 2. Semantic Keyword Density
               </span>
               <p className="text-[11px] text-slate-300 leading-normal">
-                Avoid generic summaries. Use specific technical terms like <em>"SEAI grant specifications"</em>, <em>"One-Stop-Shop sequence"</em>, and <em>"U-values"</em> to establish maximum subject-matter authority.
+                Avoid generic summaries. Use specific technical terms like{' '}
+                <em>
+                  {'"'}SEAI grant specifications{'"'}
+                </em>
+                ,{' '}
+                <em>
+                  {'"'}One-Stop-Shop sequence{'"'}
+                </em>
+                , and{' '}
+                <em>
+                  {'"'}U-values{'"'}
+                </em>{' '}
+                to establish maximum subject-matter authority.
               </p>
             </div>
             <div className="space-y-1 border-t border-white/10 pt-2.5">
@@ -119,7 +194,9 @@ export default function AIVisibilityCard({
                 3. Entity & Schema Markup
               </span>
               <p className="text-[11px] text-slate-300 leading-normal">
-                Include structured microdata matching Irish building standards. This gives machine-readable schemas that Perplexity or SearchGPT rely on to fetch live facts.
+                Include structured microdata matching Irish building standards.
+                This gives machine-readable schemas that Perplexity or SearchGPT
+                rely on to fetch live facts.
               </p>
             </div>
           </div>
