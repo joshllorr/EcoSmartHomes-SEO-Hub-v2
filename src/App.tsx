@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import MainDashboard from './components/MainDashboard';
@@ -59,12 +59,29 @@ import { ArticleDraft, DashboardState } from './types';
 import { useDashboardStore } from './store/useDashboardStore';
 
 export default function App() {
+  const routeToTab: Record<string, string> = {
+    '/dashboard': 'dashboard',
+    '/grant-planner': 'p23_grants',
+    '/contractor-engine': 'p28_contractors',
+    '/advisor': 'p25_advisor',
+    '/coach': 'p39_coach',
+    '/marl': 'p7_marl',
+    '/forecasting': 'p36_forecasting',
+    '/national-insights': 'p35_national',
+    '/journey': 'p32_journey',
+    '/post-install': 'p31_postinstall',
+    '/harbor-sync': 'dashboard',
+    '/live': 'dashboard',
+  };
+
   const isGrantRoute =
     typeof window !== 'undefined' &&
-    window.location.pathname.startsWith('/grants');
+    (window.location.pathname.startsWith('/grants') ||
+      window.location.hash === '#/grant-planner');
   const isPortalRoute =
     typeof window !== 'undefined' &&
-    window.location.pathname.startsWith('/portal');
+    (window.location.pathname.startsWith('/portal') ||
+      window.location.hash === '#/portal');
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [dashboardState, setDashboardState] = useState<DashboardState>(
@@ -130,6 +147,26 @@ export default function App() {
       ),
     }));
   };
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const syncActiveTabFromHash = () => {
+      const hashPath = window.location.hash.startsWith('#/')
+        ? window.location.hash.slice(1)
+        : window.location.pathname;
+      const matchedTab = routeToTab[hashPath];
+      if (matchedTab) {
+        setActiveTab(matchedTab);
+      }
+    };
+
+    syncActiveTabFromHash();
+    window.addEventListener('hashchange', syncActiveTabFromHash);
+
+    return () =>
+      window.removeEventListener('hashchange', syncActiveTabFromHash);
+  }, []);
 
   if (isGrantRoute) {
     return <HomeownerGrantFlow />;
