@@ -1334,11 +1334,9 @@ async function handleCompetitorDiff(
   request: Request,
 ): Promise<Response> {
   try {
-    const body = (await request
-      .json()
-      .catch(() => ({
-        competitors: ['retrofitireland.ie', 'greenhomehub.ie'],
-      }))) as any;
+    const body = (await request.json().catch(() => ({
+      competitors: ['retrofitireland.ie', 'greenhomehub.ie'],
+    }))) as any;
     const competitors = body.competitors || [
       'retrofitireland.ie',
       'greenhomehub.ie',
@@ -1721,7 +1719,7 @@ async function getGrantRecord(
   return raw ? JSON.parse(raw) : null;
 }
 
-export default {
+const worker = {
   async fetch(request: Request, env: Env, _ctx: any): Promise<Response> {
     const url = new URL(request.url);
 
@@ -5311,3 +5309,13 @@ export default {
     }
   },
 };
+
+export default function handler(req: any, res: any) {
+  if (req && res && typeof res.status === 'function') {
+    return app(req, res);
+  }
+  return worker;
+}
+
+(handler as any).fetch = worker.fetch;
+(handler as any).scheduled = worker.scheduled;
