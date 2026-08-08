@@ -57,6 +57,7 @@ export default function Sidebar({
       id: 'dashboard',
       label: 'Dashboard',
       name: 'Dashboard',
+      path: '/dashboard',
       icon: LayoutDashboard,
     },
     {
@@ -87,6 +88,7 @@ export default function Sidebar({
       id: 'p7_marl',
       label: 'MARL Safety Loop',
       name: 'MARL Safety Loop',
+      path: '/marl',
       icon: Sparkles,
     },
     {
@@ -183,6 +185,7 @@ export default function Sidebar({
       id: 'p25_advisor',
       label: 'Advisor Scheduler',
       name: 'Advisor Scheduler',
+      path: '/advisor',
       icon: Calendar,
     },
     {
@@ -201,6 +204,7 @@ export default function Sidebar({
       id: 'p28_contractors',
       label: 'Contractor Coordination',
       name: 'Contractor Coordination',
+      path: '/contractor-engine',
       icon: Wrench,
     },
     {
@@ -219,12 +223,14 @@ export default function Sidebar({
       id: 'p31_postinstall',
       label: 'Post-Install BER & Payment',
       name: 'Post-Install BER & Payment',
+      path: '/post-install',
       icon: Award,
     },
     {
       id: 'p32_journey',
       label: 'Master Journey Timeline',
       name: 'Master Journey Timeline',
+      path: '/journey',
       icon: Compass,
     },
     {
@@ -249,12 +255,14 @@ export default function Sidebar({
       id: 'p35_national',
       label: 'National Market Insights',
       name: 'National Market Insights',
+      path: '/national-insights',
       icon: Globe,
     },
     {
       id: 'p36_forecasting',
       label: 'Predictive Forecasting',
       name: 'Predictive Forecasting',
+      path: '/forecasting',
       icon: TrendingUp,
     },
     {
@@ -273,6 +281,7 @@ export default function Sidebar({
       id: 'p39_coach',
       label: 'Proactive Coaching',
       name: 'Proactive Coaching',
+      path: '/coach',
       icon: Sparkles,
     },
     {

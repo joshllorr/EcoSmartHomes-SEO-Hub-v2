@@ -4847,7 +4847,7 @@ async function startServer() {
     });
   }
 
-  app.use(Sentry.expressErrorHandler());
+  app.use(Sentry.expressErrorHandler() as any);
 
   const httpServer = http.createServer(app);
   const wss = new WebSocketServer({ server: httpServer });
