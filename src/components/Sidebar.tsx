@@ -395,8 +395,8 @@ export default function Sidebar({
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.path
-            ? location.pathname === item.path
-            : activeTab === item.id && location.pathname === '/';
+            ? location.pathname === item.path || activeTab === item.id
+            : activeTab === item.id;
           return (
             <button
               key={item.id}
@@ -407,8 +407,8 @@ export default function Sidebar({
                   if (location.pathname !== '/') {
                     navigate('/');
                   }
-                  setActiveTab(item.id);
                 }
+                setActiveTab(item.id);
               }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition group cursor-pointer ${
                 isActive

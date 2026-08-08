@@ -61,17 +61,35 @@ import { useDashboardStore } from './store/useDashboardStore';
 export default function App() {
   const routeToTab: Record<string, string> = {
     '/dashboard': 'dashboard',
+    '#/dashboard': 'dashboard',
+    '/intelligence-console': 'dashboard',
+    '#/intelligence-console': 'dashboard',
+    '/backlink-ai-engine': 'dashboard',
+    '#/backlink-ai-engine': 'dashboard',
     '/grant-planner': 'p23_grants',
+    '#/grant-planner': 'p23_grants',
     '/contractor-engine': 'p28_contractors',
+    '#/contractor-engine': 'p28_contractors',
     '/advisor': 'p25_advisor',
+    '#/advisor': 'p25_advisor',
     '/coach': 'p39_coach',
+    '#/coach': 'p39_coach',
     '/marl': 'p7_marl',
+    '#/marl': 'p7_marl',
     '/forecasting': 'p36_forecasting',
+    '#/forecasting': 'p36_forecasting',
     '/national-insights': 'p35_national',
+    '#/national-insights': 'p35_national',
     '/journey': 'p32_journey',
+    '#/journey': 'p32_journey',
     '/post-install': 'p31_postinstall',
+    '#/post-install': 'p31_postinstall',
     '/harbor-sync': 'dashboard',
+    '#/harbor-sync': 'dashboard',
     '/live': 'dashboard',
+    '#/live': 'dashboard',
+    '/': 'dashboard',
+    '': 'dashboard',
   };
 
   const isGrantRoute =
@@ -156,16 +174,17 @@ export default function App() {
         ? window.location.hash.slice(1)
         : window.location.pathname;
       const matchedTab = routeToTab[hashPath];
-      if (matchedTab) {
-        setActiveTab(matchedTab);
-      }
+      setActiveTab(matchedTab ?? 'dashboard');
     };
 
     syncActiveTabFromHash();
     window.addEventListener('hashchange', syncActiveTabFromHash);
+    window.addEventListener('popstate', syncActiveTabFromHash);
 
-    return () =>
+    return () => {
       window.removeEventListener('hashchange', syncActiveTabFromHash);
+      window.removeEventListener('popstate', syncActiveTabFromHash);
+    };
   }, []);
 
   if (isGrantRoute) {
