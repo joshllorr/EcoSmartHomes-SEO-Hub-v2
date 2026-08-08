@@ -1,13 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-dotenv.config();
+import path from 'path';
+
+const envPath = path.resolve(process.cwd(), '.env');
+dotenv.config({ path: envPath, override: true });
+console.log(`Loaded environment from: ${envPath}`);
 
 import * as Sentry from '@sentry/node';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 
-import path from 'path';
 import fs from 'fs';
 import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
@@ -87,7 +90,8 @@ function broadcastToAll(data: any) {
 }
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Security Middleware
@@ -130,7 +134,7 @@ app.use(
   }),
 );
 
-const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX || '100', 10);
+const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX || '1000', 10);
 const RATE_LIMIT_WINDOW_MS = parseInt(
   process.env.RATE_LIMIT_WINDOW_MS || '900000',
   10,
@@ -1004,28 +1008,45 @@ app.get('/api/unified-analytics', async (_req, res) => {
 
 let aiClient: GoogleGenAI | null = null;
 export function getGeminiClient(): GoogleGenAI | null {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-  console.log('Gemini key loaded:', apiKey ? '✅ yes' : '❌ no');
+  const tokenOrKey =
+    process.env.GEMINI_ACCESS_TOKEN ||
+    process.env.GEMINI_API_KEY ||
+    process.env.VITE_GEMINI_API_KEY;
+
   if (
-    !apiKey ||
-    apiKey.trim() === '' ||
-    apiKey === 'MY_GEMINI_API_KEY' ||
-    apiKey === 'undefined' ||
-    apiKey === 'null' ||
-    apiKey === 'placeholder' ||
-    apiKey.startsWith('YOUR_')
+    !tokenOrKey ||
+    tokenOrKey.trim() === '' ||
+    tokenOrKey === 'MY_GEMINI_API_KEY' ||
+    tokenOrKey === 'undefined' ||
+    tokenOrKey === 'null' ||
+    tokenOrKey === 'placeholder' ||
+    tokenOrKey.startsWith('YOUR_')
   ) {
     return null;
   }
   if (!aiClient) {
-    aiClient = new GoogleGenAI({
-      apiKey: apiKey,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build',
-        },
-      },
-    });
+    const isOAuth = tokenOrKey.startsWith('ya29.');
+    aiClient = new GoogleGenAI(
+      isOAuth
+        ? {
+            apiKey: tokenOrKey,
+            httpOptions: {
+              headers: {
+                Authorization: `Bearer ${tokenOrKey}`,
+                'User-Agent': 'aistudio-build',
+              },
+            },
+          }
+        : {
+            apiKey: tokenOrKey,
+            httpOptions: {
+              headers: {
+                'User-Agent': 'aistudio-build',
+              },
+            },
+          },
+    );
+    console.log('Gemini REST API: Authenticated successfully');
   }
   return aiClient;
 }
@@ -1039,7 +1060,10 @@ export async function callGeminiRESTApi(
   model: string = 'gemini-2.5-flash',
   jsonSchema?: any,
 ): Promise<string | null> {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+  const apiKey =
+    process.env.GEMINI_ACCESS_TOKEN ||
+    process.env.GEMINI_API_KEY ||
+    process.env.VITE_GEMINI_API_KEY;
   if (
     !apiKey ||
     apiKey.trim() === '' ||
@@ -2440,10 +2464,9 @@ function generateFallbackArticle(params: {
 
 // 2. API: Generate SEO Blog Article Draft
 app.post('/api/seo/generate-article', async (req, res) => {
-  const { title, topic, pillar, keywords, tone, audience, length } = req.body;
-  if (!title) {
-    return res.status(400).json({ error: 'Article title is required' });
-  }
+  const { title, topic, pillar, keywords, tone, audience, length } =
+    req.body || {};
+  const articleTitle = title || topic || 'BER Rating Ireland Guide';
 
   const selectedTone = tone || 'Professional';
   const selectedAudience = audience || 'Irish homeowners';
@@ -2451,7 +2474,7 @@ app.post('/api/seo/generate-article', async (req, res) => {
 
   // Pre-generate custom fallback content in case of errors or offline mode
   const fallbackResult = generateFallbackArticle({
-    title,
+    title: articleTitle,
     topic: topic || '',
     pillar: pillar || 'BER Rating Ireland',
     keywords: keywords || [],
@@ -2464,20 +2487,20 @@ app.post('/api/seo/generate-article', async (req, res) => {
   if (!ai) {
     broadcastToAll({
       type: 'article_generated',
-      title: title,
+      title: articleTitle,
       wordCount: fallbackResult.wordCount,
       xpGains: 30,
-      message: `Draft: “${title}” successfully written`,
+      message: `Draft: “${articleTitle}” successfully written`,
     });
     syncToHarbor({
       type: 'draft_created',
-      slug: title
+      slug: articleTitle
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, ''),
-      title,
+      title: articleTitle,
       wordCount: fallbackResult.wordCount,
-      message: `Draft created: "${title}" (offline mode)`,
+      message: `Draft created: "${articleTitle}" (offline mode)`,
     });
     return res.json({
       success: true,
@@ -2490,7 +2513,7 @@ app.post('/api/seo/generate-article', async (req, res) => {
   }
 
   try {
-    const slug = title
+    const slug = articleTitle
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)+/g, '');
