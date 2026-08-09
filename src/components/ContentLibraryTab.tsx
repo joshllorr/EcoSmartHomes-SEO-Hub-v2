@@ -91,16 +91,18 @@ const INITIAL_LIBRARY_ITEMS: LibraryItem[] = [
   },
   {
     id: 'lib-4',
-    title: 'The 2026 SEAI Grant Eligibility & Value Assessment',
-    topic: 'SEAI Retrofit Grants',
+    title: 'The 2026 SEAI Home Energy Upgrade Grants & BER Scale Guide',
+    topic: 'SEAI Retrofit Grants 2026',
     content:
-      '# The 2026 SEAI Grant Eligibility & Value Assessment Tool\n\nEverything you need to know about claiming up to €12,500 in heat pump grants, €2,000 for attic insulation, and additional solar PV support under the 2026 SEAI scheme...',
+      '# The 2026 SEAI Home Energy Upgrade Grants & BER Scale Guide\n\nEverything you need to know about claiming up to €12,500 in heat pump grants, €8,000 for external insulation, €4,000 for windows, and up to €50,000 for One Stop Shop deep retrofits under the €558M Budget 2026 SEAI scheme...',
     status: 'Ready to Publish',
     date: '18/07/2026',
-    wordCount: 1246,
+    wordCount: 1450,
     categoryType: 'Landing Page',
-    subtitle: 'The 2026 SEAI Grant Eligibility & Value Assessment · quiz',
-    metaTitle: '2026 SEAI Grant Eligibility Quiz & Calculator | EcoSmart Homes',
+    subtitle:
+      'The 2026 SEAI Home Energy Upgrade Grants & Value Assessment · master guide',
+    metaTitle:
+      'SEAI Home Energy Upgrade Grants 2026 | Heat Pumps €12,500 & BER (A0–G)',
     metaDescription:
       'Calculate exact grant values available for your home retrofitting project in Ireland.',
   },

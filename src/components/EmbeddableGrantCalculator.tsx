@@ -14,17 +14,24 @@ export default function EmbeddableGrantCalculator() {
   >('semi');
   const [hasHeatPump, setHasHeatPump] = useState(true);
   const [hasSolar, setHasSolar] = useState(true);
-  const [hasInsulation, setHasInsulation] = useState(false);
+  const [hasInsulation, setHasInsulation] = useState(true);
+  const [hasWindows, setHasWindows] = useState(false);
+  const [isOssDeepRetrofit, setIsOssDeepRetrofit] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Grant values based on SEAI March 28 2026 scheme update
-  const heatPumpGrant = hasHeatPump ? 8000 : 0;
-  const solarGrant = hasSolar ? 2800 : 0;
+  // Grant values based on Budget 2026 SEAI scheme (€558M allocation)
+  const heatPumpGrant = hasHeatPump ? 12500 : 0;
+  const solarGrant = hasSolar ? 1800 : 0;
   const insulationGrant = hasInsulation ? 2000 : 0;
-  const totalGrant = heatPumpGrant + solarGrant + insulationGrant;
-  const estimatedSavingsAnnual = Math.round(totalGrant * 0.22);
+  const windowsGrant = hasWindows ? 4000 : 0;
+  const rawGrantSum =
+    heatPumpGrant + solarGrant + insulationGrant + windowsGrant;
+  const totalGrant = isOssDeepRetrofit
+    ? Math.min(50000, Math.round(rawGrantSum * 1.5))
+    : rawGrantSum;
+  const estimatedSavingsAnnual = Math.round(totalGrant * 0.18);
 
-  const embedCode = `<iframe src="https://ecosmarthomes.ie/widgets/grant-calculator" width="100%" height="450" frameborder="0" title="EcoSmartHomes SEAI Grant Calculator"></iframe>\n<p><a href="https://ecosmarthomes.ie/solar-pv-grants-ireland">Powered by EcoSmartHomes SEAI Grant Calculator</a></p>`;
+  const embedCode = `<iframe src="https://ecosmarthomes.ie/widgets/grant-calculator" width="100%" height="450" frameborder="0" title="EcoSmartHomes SEAI Grant Calculator 2026"></iframe>\n<p><a href="https://ecosmarthomes.ie/seai-home-energy-upgrade-grants-2026">Powered by EcoSmartHomes SEAI 2026 Grant Calculator</a></p>`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode);
@@ -41,10 +48,10 @@ export default function EmbeddableGrantCalculator() {
           </div>
           <div>
             <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">
-              Viral Backlink Engine · SEAI 2026 Updated
+              Viral Backlink Engine · Budget 2026 SEAI Scheme (€558M)
             </span>
             <h3 className="text-sm font-bold text-white">
-              Embeddable SEAI Grant Calculator (March 2026)
+              Embeddable SEAI 2026 Grant Calculator (New BER A0–G)
             </h3>
           </div>
         </div>
@@ -57,7 +64,7 @@ export default function EmbeddableGrantCalculator() {
         {/* Interactive Controls */}
         <div className="p-4 rounded-xl bg-slate-950/60 border border-white/10 flex flex-col gap-3">
           <label className="text-xs font-bold text-slate-300 block">
-            Select Retrofit Upgrades (Effective March 28, 2026):
+            Select 2026 Home Energy Upgrades:
           </label>
 
           <label className="flex items-center gap-2 text-xs text-slate-200 cursor-pointer">
@@ -67,7 +74,7 @@ export default function EmbeddableGrantCalculator() {
               onChange={(e) => setHasHeatPump(e.target.checked)}
               className="rounded accent-emerald-500"
             />
-            <span>Air-to-Water Heat Pump (€8,000 SEAI Grant)</span>
+            <span>Heat Pump System (up to €12,500 SEAI Grant)</span>
           </label>
 
           <label className="flex items-center gap-2 text-xs text-slate-200 cursor-pointer">
@@ -77,7 +84,7 @@ export default function EmbeddableGrantCalculator() {
               onChange={(e) => setHasSolar(e.target.checked)}
               className="rounded accent-emerald-500"
             />
-            <span>Solar PV Panels (€2,800 SEAI Grant)</span>
+            <span>Solar PV Panels (€1,800 SEAI Grant)</span>
           </label>
 
           <label className="flex items-center gap-2 text-xs text-slate-200 cursor-pointer">
@@ -87,12 +94,32 @@ export default function EmbeddableGrantCalculator() {
               onChange={(e) => setHasInsulation(e.target.checked)}
               className="rounded accent-emerald-500"
             />
-            <span>Attic & Wall Insulation (€2,000 SEAI Grant)</span>
+            <span>Attic (€2,000) & External Wall (€8,000) Insulation</span>
+          </label>
+
+          <label className="flex items-center gap-2 text-xs text-slate-200 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={hasWindows}
+              onChange={(e) => setHasWindows(e.target.checked)}
+              className="rounded accent-emerald-500"
+            />
+            <span>Standalone Windows Upgrade (up to €4,000)</span>
+          </label>
+
+          <label className="flex items-center gap-2 text-xs text-amber-300 font-medium cursor-pointer pt-1 border-t border-white/10">
+            <input
+              type="checkbox"
+              checked={isOssDeepRetrofit}
+              onChange={(e) => setIsOssDeepRetrofit(e.target.checked)}
+              className="rounded accent-amber-500"
+            />
+            <span>One Stop Shop (OSS) Deep Retrofit (up to €50,000 cap)</span>
           </label>
 
           <div className="pt-2 border-t border-white/10 flex justify-between items-center">
             <span className="text-xs text-slate-400 font-medium">
-              Estimated Grant Funding:
+              Estimated 2026 Grant Support:
             </span>
             <span className="text-xl font-bold font-mono text-emerald-400">
               €{totalGrant.toLocaleString()}

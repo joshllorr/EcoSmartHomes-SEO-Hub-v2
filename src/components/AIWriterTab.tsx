@@ -62,14 +62,14 @@ export default function AIWriterTab({
 
   const [title, setTitle] = useState(
     aiSuggestion ||
-      'SEAI Grant Increase 2026 & Revised BER Scale Guide (March 28 Update)',
+      'SEAI Home Energy Upgrade Grants 2026: Heat Pumps €12,500 & New BER Scale (A0–G)',
   );
   const [topic, setTopic] = useState(
-    'A comprehensive, authoritative guide detailing the March 28, 2026 SEAI grant increases up to €28,500, revised BER scale thresholds, and how EcoSmartHomes advisors simplify compliance and grant applications across Ireland.',
+    'A master guide covering the €558M Budget 2026 SEAI allocation, heat pump grants up to €12,500, One Stop Shop €50,000 deep retrofits, standalone window (€4,000) & door grants, fully funded Warmer Homes scheme, and the simplified 8-tier BER scale (A0, A, B, C, D, E, F, G).',
   );
-  const [pillar, setPillar] = useState('SEAI Grants & BER Scale 2026');
+  const [pillar, setPillar] = useState('SEAI Home Energy Upgrade Grants 2026');
   const [keywordsInput, setKeywordsInput] = useState(
-    'SEAI grant increase 2026, BER scale update March 2026, home energy retrofit Ireland, EcoSmartHomes advisor',
+    'SEAI home energy upgrade grants 2026, new BER scale A0 A B C D E F G, heat pump grant €12,500 Ireland, One Stop Shop deep retrofit €50,000, Warmer Homes Scheme Ireland, EcoSmartHomes retrofit advisor',
   );
   const [tone, setTone] = useState('Authoritative, Reassuring & Clear');
   const [audience, setAudience] = useState('Irish homeowners');
