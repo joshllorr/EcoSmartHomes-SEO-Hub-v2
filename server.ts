@@ -1015,11 +1015,13 @@ app.get('/api/unified-analytics', async (_req, res) => {
 // Lazy-initialization helper for Gemini client
 
 let aiClient: GoogleGenAI | null = null;
+let cachedTokenOrKey: string | null = null;
+
 export function getGeminiClient(): GoogleGenAI | null {
   const tokenOrKey =
-    process.env.GEMINI_ACCESS_TOKEN ||
     process.env.GEMINI_API_KEY ||
-    process.env.VITE_GEMINI_API_KEY;
+    process.env.VITE_GEMINI_API_KEY ||
+    process.env.GEMINI_ACCESS_TOKEN;
 
   if (
     !tokenOrKey ||
@@ -1030,9 +1032,13 @@ export function getGeminiClient(): GoogleGenAI | null {
     tokenOrKey === 'placeholder' ||
     tokenOrKey.startsWith('YOUR_')
   ) {
+    aiClient = null;
+    cachedTokenOrKey = null;
     return null;
   }
-  if (!aiClient) {
+
+  if (!aiClient || cachedTokenOrKey !== tokenOrKey) {
+    cachedTokenOrKey = tokenOrKey;
     const isOAuth = tokenOrKey.startsWith('ya29.');
     aiClient = new GoogleGenAI(
       isOAuth

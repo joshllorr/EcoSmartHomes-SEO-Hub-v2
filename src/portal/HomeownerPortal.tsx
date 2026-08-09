@@ -58,14 +58,15 @@ export default function HomeownerPortal() {
   });
 
   // Paperwork State
-  const [documents, setDocuments] = useState([
-    { docName: "Proof of Property Ownership (MPRN)", status: "verified", uploadedAt: Date.now() - 7200000 },
-    { docName: "Recent Electricity Utility Bill", status: "verified", uploadedAt: Date.now() - 3600000 },
+  const [documents, setDocuments] = useState(() => [
+    { docName: "Proof of Property Ownership (MPRN)", status: "verified", uploadedAt: 1786200000000 },
+    { docName: "Recent Electricity Utility Bill", status: "verified", uploadedAt: 1786203600000 },
     { docName: "Pre-Upgrade BER Assessment Cert", status: "pending", uploadedAt: null },
     { docName: "SEAI Contractor Sign-off Sheet", status: "pending", uploadedAt: null }
   ]);
 
   // Appointment State
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [appointment, setAppointment] = useState<any>({
     booking_id: "book_2026_08_03_1312",
     date: "2026-08-06",
@@ -78,18 +79,18 @@ export default function HomeownerPortal() {
 
   const fetchUser = async () => {
     try {
-      const res = await fetch("/api/auth/me");
-      const data = await res.json();
-      if (data.ok && data.user) {
-        setUser(data.user);
+      const res = await fetch("/api/user/me");
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data);
       }
     } catch {
-      // Keep default
+      // Fallback
     }
   };
 
   useEffect(() => {
-    fetchUser();
+    void fetchUser();
   }, []);
 
   const handleUpload = async (docName: string) => {

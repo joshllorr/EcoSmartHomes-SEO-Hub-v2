@@ -1,10 +1,16 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
 import { app } from './server-test-helper';
 
 vi.mock('../services/harborSync', () => ({
   syncToHarbor: vi.fn(),
 }));
+
+beforeEach(() => {
+  delete (process.env as any).GEMINI_ACCESS_TOKEN;
+  delete (process.env as any).GEMINI_API_KEY;
+  delete (process.env as any).VITE_GEMINI_API_KEY;
+});
 
 describe('Security Headers', () => {
   it('returns security headers on all responses', async () => {
@@ -174,11 +180,19 @@ describe('POST /api/seo/discover-content-ideas', () => {
   });
 
   it('includes grounding queries in mock mode', async () => {
+    const origToken = process.env.GEMINI_ACCESS_TOKEN;
+    const origKey = process.env.GEMINI_API_KEY;
+    delete (process.env as any).GEMINI_ACCESS_TOKEN;
+    delete (process.env as any).GEMINI_API_KEY;
+
     const res = await request(app)
       .post('/api/seo/discover-content-ideas')
       .send({ site: 'test.ie' });
     expect(res.body.groundingQueries).toBeDefined();
     expect(res.body.groundingQueries.length).toBeGreaterThan(0);
+
+    if (origToken !== undefined) process.env.GEMINI_ACCESS_TOKEN = origToken;
+    if (origKey !== undefined) process.env.GEMINI_API_KEY = origKey;
   });
 });
 
@@ -221,7 +235,7 @@ describe('POST /api/seo/serp-analysis', () => {
 
 describe('Rate Limiting', () => {
   it('returns 429 after exceeding rate limit in production', async () => {
-    const requests = Array.from({ length: 105 }, () =>
+    const requests = Array.from({ length: 1005 }, () =>
       request(app).get('/api/hub-state'),
     );
     const responses = await Promise.all(requests);

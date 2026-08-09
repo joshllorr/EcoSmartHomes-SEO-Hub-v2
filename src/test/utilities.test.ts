@@ -1,12 +1,20 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getGeminiClient, callGeminiRESTApi } from './server-test-helper';
+
+beforeEach(() => {
+  delete (process.env as any).GEMINI_ACCESS_TOKEN;
+  delete (process.env as any).GEMINI_API_KEY;
+  delete (process.env as any).VITE_GEMINI_API_KEY;
+});
 
 describe('getGeminiClient', () => {
   it('returns null when GEMINI_API_KEY is missing', () => {
     const originalKey = process.env.GEMINI_API_KEY;
     const originalViteKey = process.env.VITE_GEMINI_API_KEY;
+    const originalToken = process.env.GEMINI_ACCESS_TOKEN;
     delete (process.env as any).GEMINI_API_KEY;
     delete (process.env as any).VITE_GEMINI_API_KEY;
+    delete (process.env as any).GEMINI_ACCESS_TOKEN;
 
     const client = getGeminiClient();
     expect(client).toBeNull();
@@ -14,10 +22,14 @@ describe('getGeminiClient', () => {
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     if (originalViteKey !== undefined)
       process.env.VITE_GEMINI_API_KEY = originalViteKey;
+    if (originalToken !== undefined)
+      process.env.GEMINI_ACCESS_TOKEN = originalToken;
   });
 
   it('returns null when GEMINI_API_KEY is placeholder value', () => {
     const originalKey = process.env.GEMINI_API_KEY;
+    const originalToken = process.env.GEMINI_ACCESS_TOKEN;
+    delete (process.env as any).GEMINI_ACCESS_TOKEN;
     process.env.GEMINI_API_KEY = 'MY_GEMINI_API_KEY';
 
     const client = getGeminiClient();
@@ -25,10 +37,13 @@ describe('getGeminiClient', () => {
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     else delete (process.env as any).GEMINI_API_KEY;
+    if (originalToken !== undefined) process.env.GEMINI_ACCESS_TOKEN = originalToken;
   });
 
   it('returns null when GEMINI_API_KEY is YOUR_ prefix', () => {
     const originalKey = process.env.GEMINI_API_KEY;
+    const originalToken = process.env.GEMINI_ACCESS_TOKEN;
+    delete (process.env as any).GEMINI_ACCESS_TOKEN;
     process.env.GEMINI_API_KEY = 'YOUR_API_KEY_HERE';
 
     const client = getGeminiClient();
@@ -36,10 +51,13 @@ describe('getGeminiClient', () => {
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     else delete (process.env as any).GEMINI_API_KEY;
+    if (originalToken !== undefined) process.env.GEMINI_ACCESS_TOKEN = originalToken;
   });
 
   it('returns null when GEMINI_API_KEY is empty string', () => {
     const originalKey = process.env.GEMINI_API_KEY;
+    const originalToken = process.env.GEMINI_ACCESS_TOKEN;
+    delete (process.env as any).GEMINI_ACCESS_TOKEN;
     process.env.GEMINI_API_KEY = '';
 
     const client = getGeminiClient();
@@ -47,6 +65,7 @@ describe('getGeminiClient', () => {
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     else delete (process.env as any).GEMINI_API_KEY;
+    if (originalToken !== undefined) process.env.GEMINI_ACCESS_TOKEN = originalToken;
   });
 });
 
@@ -54,8 +73,10 @@ describe('callGeminiRESTApi', () => {
   it('returns null when GEMINI_API_KEY is missing', async () => {
     const originalKey = process.env.GEMINI_API_KEY;
     const originalViteKey = process.env.VITE_GEMINI_API_KEY;
+    const originalToken = process.env.GEMINI_ACCESS_TOKEN;
     delete (process.env as any).GEMINI_API_KEY;
     delete (process.env as any).VITE_GEMINI_API_KEY;
+    delete (process.env as any).GEMINI_ACCESS_TOKEN;
 
     const result = await callGeminiRESTApi('test prompt');
     expect(result).toBeNull();
@@ -63,6 +84,8 @@ describe('callGeminiRESTApi', () => {
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     if (originalViteKey !== undefined)
       process.env.VITE_GEMINI_API_KEY = originalViteKey;
+    if (originalToken !== undefined)
+      process.env.GEMINI_ACCESS_TOKEN = originalToken;
   });
 
   it('returns null when GEMINI_API_KEY is placeholder', async () => {
@@ -89,6 +112,10 @@ describe('callGeminiRESTApi', () => {
 
   it('calls Gemini API with correct endpoint and body when key is present', async () => {
     const originalKey = process.env.GEMINI_API_KEY;
+    const originalViteKey = process.env.VITE_GEMINI_API_KEY;
+    const originalToken = process.env.GEMINI_ACCESS_TOKEN;
+    delete (process.env as any).VITE_GEMINI_API_KEY;
+    delete (process.env as any).GEMINI_ACCESS_TOKEN;
     process.env.GEMINI_API_KEY = 'test-api-key';
 
     const mockJson = {
@@ -115,11 +142,17 @@ describe('callGeminiRESTApi', () => {
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     else delete (process.env as any).GEMINI_API_KEY;
+    if (originalViteKey !== undefined) process.env.VITE_GEMINI_API_KEY = originalViteKey;
+    if (originalToken !== undefined) process.env.GEMINI_ACCESS_TOKEN = originalToken;
     delete (global as any).fetch;
   });
 
   it('sends jsonSchema in generationConfig when provided', async () => {
     const originalKey = process.env.GEMINI_API_KEY;
+    const originalViteKey = process.env.VITE_GEMINI_API_KEY;
+    const originalToken = process.env.GEMINI_ACCESS_TOKEN;
+    delete (process.env as any).VITE_GEMINI_API_KEY;
+    delete (process.env as any).GEMINI_ACCESS_TOKEN;
     process.env.GEMINI_API_KEY = 'test-api-key';
 
     const mockJson = {
