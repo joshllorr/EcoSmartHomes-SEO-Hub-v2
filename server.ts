@@ -42,6 +42,14 @@ import {
 } from './src/server/marlCoordinator';
 
 import { getNegotiationState } from './src/server/marlNegotiation';
+import {
+  runOrchestrator,
+  getOrchestratorState,
+} from './src/logic/orchestrator/masterOrchestrator';
+import {
+  generateCoachMessages,
+  getCoachMessages,
+} from './src/logic/coach/retrofitCoachEngine';
 
 import {
   getAllAgentGenomes,
@@ -4852,6 +4860,63 @@ app.post('/api/trigger-link-bait', (req, res) => {
     message: `API Action: Link-Bait asset generated for "${slug}"`,
   });
   return res.json({ ok: true, action: 'link_bait', slug });
+});
+
+// Phase 40 Master Orchestrator Express Endpoints
+app.post('/api/orchestrator/run', async (_req, res) => {
+  try {
+    const state = await runOrchestrator(process.env);
+    return res.json(state);
+  } catch (err: any) {
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to run master orchestrator cycle',
+        details: String(err),
+      });
+  }
+});
+
+app.get('/api/orchestrator/state', async (_req, res) => {
+  try {
+    const state = await getOrchestratorState(process.env);
+    return res.json(state);
+  } catch (err: any) {
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to get orchestrator state',
+        details: String(err),
+      });
+  }
+});
+
+// Phase 39 Proactive Guidance Coach Express Endpoints
+app.post('/api/coach/generate', async (req, res) => {
+  const { user_id = 'user_2026_08_03_1412' } = req.body || {};
+  try {
+    const bundle = await generateCoachMessages(process.env, user_id);
+    return res.json({ success: true, bundle });
+  } catch (err: any) {
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to generate coach messages',
+        details: String(err),
+      });
+  }
+});
+
+app.get('/api/coach/messages', async (req, res) => {
+  const userId = (req.query.user_id as string) || 'user_2026_08_03_1412';
+  try {
+    const bundle = await getCoachMessages(process.env, userId);
+    return res.json({ success: true, bundle });
+  } catch (err: any) {
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch coach messages', details: String(err) });
+  }
 });
 
 // Vite & Static file setup
