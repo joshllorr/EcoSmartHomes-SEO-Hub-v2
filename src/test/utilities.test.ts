@@ -37,7 +37,8 @@ describe('getGeminiClient', () => {
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     else delete (process.env as any).GEMINI_API_KEY;
-    if (originalToken !== undefined) process.env.GEMINI_ACCESS_TOKEN = originalToken;
+    if (originalToken !== undefined)
+      process.env.GEMINI_ACCESS_TOKEN = originalToken;
   });
 
   it('returns null when GEMINI_API_KEY is YOUR_ prefix', () => {
@@ -51,7 +52,8 @@ describe('getGeminiClient', () => {
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     else delete (process.env as any).GEMINI_API_KEY;
-    if (originalToken !== undefined) process.env.GEMINI_ACCESS_TOKEN = originalToken;
+    if (originalToken !== undefined)
+      process.env.GEMINI_ACCESS_TOKEN = originalToken;
   });
 
   it('returns null when GEMINI_API_KEY is empty string', () => {
@@ -65,7 +67,8 @@ describe('getGeminiClient', () => {
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     else delete (process.env as any).GEMINI_API_KEY;
-    if (originalToken !== undefined) process.env.GEMINI_ACCESS_TOKEN = originalToken;
+    if (originalToken !== undefined)
+      process.env.GEMINI_ACCESS_TOKEN = originalToken;
   });
 });
 
@@ -142,8 +145,10 @@ describe('callGeminiRESTApi', () => {
 
     if (originalKey !== undefined) process.env.GEMINI_API_KEY = originalKey;
     else delete (process.env as any).GEMINI_API_KEY;
-    if (originalViteKey !== undefined) process.env.VITE_GEMINI_API_KEY = originalViteKey;
-    if (originalToken !== undefined) process.env.GEMINI_ACCESS_TOKEN = originalToken;
+    if (originalViteKey !== undefined)
+      process.env.VITE_GEMINI_API_KEY = originalViteKey;
+    if (originalToken !== undefined)
+      process.env.GEMINI_ACCESS_TOKEN = originalToken;
     delete (global as any).fetch;
   });
 

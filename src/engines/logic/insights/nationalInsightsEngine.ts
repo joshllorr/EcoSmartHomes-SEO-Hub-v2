@@ -38,7 +38,9 @@ export interface NationalInsights {
   upgradeCategoryDemand: Record<string, number>;
 }
 
-export async function generateNationalInsights(env: any): Promise<NationalInsights> {
+export async function generateNationalInsights(
+  env: any,
+): Promise<NationalInsights> {
   let homeownersKeys: any[] = [];
   let upgradesKeys: any[] = [];
   let contractorsKeys: any[] = [];
@@ -47,34 +49,40 @@ export async function generateNationalInsights(env: any): Promise<NationalInsigh
     try {
       const list = await env.JOURNEY_TIMELINE.list();
       homeownersKeys = list.keys || [];
-    } catch (e) {}
+    } catch (e) {
+      /* ignore */
+    }
   }
 
   if (env.HOME_UPGRADE_RECOMMENDATIONS) {
     try {
       const list = await env.HOME_UPGRADE_RECOMMENDATIONS.list();
       upgradesKeys = list.keys || [];
-    } catch (e) {}
+    } catch (e) {
+      /* ignore */
+    }
   }
 
   if (env.CONTRACTOR_SCORES) {
     try {
       const list = await env.CONTRACTOR_SCORES.list();
       contractorsKeys = list.keys || [];
-    } catch (e) {}
+    } catch (e) {
+      /* ignore */
+    }
   }
 
-  let totalHomeowners = Math.max(114, homeownersKeys.length);
-  let totalUpgradesRecommended = Math.max(342, upgradesKeys.length * 3);
+  const totalHomeowners = Math.max(114, homeownersKeys.length);
+  const totalUpgradesRecommended = Math.max(342, upgradesKeys.length * 3);
 
-  let totalCarbonOffset = 214.8;
-  let totalSavings = 145920; // €1,280 avg * 114
+  const totalCarbonOffset = 214.8;
+  const totalSavings = 145920; // €1,280 avg * 114
 
   const regionalDemand: Record<string, number> = {
     Limerick: 42,
     Cork: 36,
     Clare: 22,
-    Kerry: 14
+    Kerry: 14,
   };
 
   const techMix = {
@@ -83,40 +91,67 @@ export async function generateNationalInsights(env: any): Promise<NationalInsigh
     insulation: 104,
     ventilation: 28,
     controls: 58,
-    battery: 88
+    battery: 88,
   };
 
   const upgradeCategoryDemand: Record<string, number> = {
     storage: 88,
     insulation: 104,
     solar: 92,
-    controls: 58
+    controls: 58,
   };
 
-  let approvalTimes: number[] = [4, 5, 3, 4, 4.5];
-  let installationTimes: number[] = [6, 7, 5, 6.5, 7];
+  const approvalTimes: number[] = [4, 5, 3, 4, 4.5];
+  const installationTimes: number[] = [6, 7, 5, 6.5, 7];
 
   // Process live KV records if populated
   if (homeownersKeys.length > 0) {
     for (const h of homeownersKeys) {
-      if (h.name.startsWith("latest")) continue;
-      const timeline = await env.JOURNEY_TIMELINE.get(h.name, { type: "json" });
+      if (h.name.startsWith('latest')) continue;
+      const timeline = await env.JOURNEY_TIMELINE.get(h.name, { type: 'json' });
       if (!timeline) continue;
 
       const events = timeline.events || [];
 
-      if (events.some((e: any) => e.event === "seai_paid" || (e.notes && e.notes.toLowerCase().includes("solar")))) techMix.solar++;
-      if (events.some((e: any) => e.event === "seai_paid" || (e.notes && e.notes.toLowerCase().includes("heat pump")))) techMix.heatPump++;
-      if (events.some((e: any) => e.event === "seai_paid" || (e.notes && e.notes.toLowerCase().includes("insulation")))) techMix.insulation++;
+      if (
+        events.some(
+          (e: any) =>
+            e.event === 'seai_paid' ||
+            (e.notes && e.notes.toLowerCase().includes('solar')),
+        )
+      )
+        techMix.solar++;
+      if (
+        events.some(
+          (e: any) =>
+            e.event === 'seai_paid' ||
+            (e.notes && e.notes.toLowerCase().includes('heat pump')),
+        )
+      )
+        techMix.heatPump++;
+      if (
+        events.some(
+          (e: any) =>
+            e.event === 'seai_paid' ||
+            (e.notes && e.notes.toLowerCase().includes('insulation')),
+        )
+      )
+        techMix.insulation++;
 
-      const installStart = events.find((e: any) => e.event === "contractor_assigned");
-      const installEnd = events.find((e: any) => e.event === "installation_complete");
+      const installStart = events.find(
+        (e: any) => e.event === 'contractor_assigned',
+      );
+      const installEnd = events.find(
+        (e: any) => e.event === 'installation_complete',
+      );
       if (installStart && installEnd) {
         installationTimes.push((installEnd.at - installStart.at) / 86400000);
       }
 
-      const approvalStart = events.find((e: any) => e.event === "grant_submitted");
-      const approvalEnd = events.find((e: any) => e.event === "seai_approved");
+      const approvalStart = events.find(
+        (e: any) => e.event === 'grant_submitted',
+      );
+      const approvalEnd = events.find((e: any) => e.event === 'seai_approved');
       if (approvalStart && approvalEnd) {
         approvalTimes.push((approvalEnd.at - approvalStart.at) / 86400000);
       }
@@ -124,11 +159,15 @@ export async function generateNationalInsights(env: any): Promise<NationalInsigh
   }
 
   // Contractor capacity
-  let elite = 3, strong = 2, risky = 0;
+  let elite = 3,
+    strong = 2,
+    risky = 0;
   if (contractorsKeys.length > 0) {
-    elite = 0; strong = 0; risky = 0;
+    elite = 0;
+    strong = 0;
+    risky = 0;
     for (const c of contractorsKeys) {
-      const score = await env.CONTRACTOR_SCORES.get(c.name, { type: "json" });
+      const score = await env.CONTRACTOR_SCORES.get(c.name, { type: 'json' });
       if (!score) continue;
 
       if (score.score >= 90) elite++;
@@ -147,13 +186,19 @@ export async function generateNationalInsights(env: any): Promise<NationalInsigh
     regionalDemand,
     techMix,
     contractorCapacity: { elite, strong, risky },
-    avgSEAIApprovalTimeDays: Math.round(approvalTimes.reduce((a, b) => a + b, 0) / Math.max(approvalTimes.length, 1)),
-    avgInstallationTimeDays: Math.round(installationTimes.reduce((a, b) => a + b, 0) / Math.max(installationTimes.length, 1)),
-    upgradeCategoryDemand
+    avgSEAIApprovalTimeDays: Math.round(
+      approvalTimes.reduce((a, b) => a + b, 0) /
+        Math.max(approvalTimes.length, 1),
+    ),
+    avgInstallationTimeDays: Math.round(
+      installationTimes.reduce((a, b) => a + b, 0) /
+        Math.max(installationTimes.length, 1),
+    ),
+    upgradeCategoryDemand,
   };
 
   if (env.NATIONAL_INSIGHTS) {
-    await env.NATIONAL_INSIGHTS.put("latest", JSON.stringify(insights));
+    await env.NATIONAL_INSIGHTS.put('latest', JSON.stringify(insights));
   }
 
   return insights;
@@ -161,7 +206,7 @@ export async function generateNationalInsights(env: any): Promise<NationalInsigh
 
 export async function getNationalInsights(env: any): Promise<NationalInsights> {
   if (env.NATIONAL_INSIGHTS) {
-    const raw = await env.NATIONAL_INSIGHTS.get("latest", { type: "json" });
+    const raw = await env.NATIONAL_INSIGHTS.get('latest', { type: 'json' });
     if (raw) return raw as NationalInsights;
   }
   return generateNationalInsights(env);

@@ -5,26 +5,64 @@
  * Route: /portal/grants/postinstall
  */
 
-import { useState, useEffect } from "react";
-import { CheckCircle2, Clock, Calendar, FileText, DollarSign, Award, ShieldCheck, Upload, AlertCircle } from "lucide-react";
-import { apiGet, apiPost } from "../../hooks/useApi";
+import { useState, useEffect } from 'react';
+import {
+  CheckCircle2,
+  Clock,
+  Calendar,
+  FileText,
+  DollarSign,
+  Award,
+  ShieldCheck,
+  Upload,
+  AlertCircle,
+} from 'lucide-react';
+import { apiGet, apiPost } from '../../hooks/useApi';
 
 export function PostInstallBadge({ status }: { status: string }) {
   switch (status) {
-    case "scheduled":
-      return <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/30">scheduled</span>;
-    case "pending":
-      return <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-slate-700 text-slate-300 border border-slate-600">pending</span>;
-    case "uploaded":
-      return <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-purple-500/20 text-purple-300 border border-purple-500/30">uploaded</span>;
-    case "under_review":
-      return <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">under review</span>;
-    case "approved":
-      return <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">approved</span>;
-    case "paid":
-      return <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-yellow-400 text-slate-950 shadow-md font-extrabold">paid (disbursed)</span>;
+    case 'scheduled':
+      return (
+        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/30">
+          scheduled
+        </span>
+      );
+    case 'pending':
+      return (
+        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-slate-700 text-slate-300 border border-slate-600">
+          pending
+        </span>
+      );
+    case 'uploaded':
+      return (
+        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-purple-500/20 text-purple-300 border border-purple-500/30">
+          uploaded
+        </span>
+      );
+    case 'under_review':
+      return (
+        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          under review
+        </span>
+      );
+    case 'approved':
+      return (
+        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+          approved
+        </span>
+      );
+    case 'paid':
+      return (
+        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-yellow-400 text-slate-950 shadow-md font-extrabold">
+          paid (disbursed)
+        </span>
+      );
     default:
-      return <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-slate-800 text-slate-300">{status}</span>;
+      return (
+        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-slate-800 text-slate-300">
+          {status}
+        </span>
+      );
   }
 }
 
@@ -34,20 +72,20 @@ export function PostInstallTimeline({ timeline }: { timeline: any[] }) {
   return (
     <div className="flex flex-col gap-4 relative pl-6 border-l-2 border-slate-700/60 font-mono text-xs my-3 text-left">
       {timeline.map((entry, idx) => {
-        const dateStr = new Date(entry.at).toLocaleString("en-IE", {
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
+        const dateStr = new Date(entry.at).toLocaleString('en-IE', {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
         });
 
         const eventLabels: Record<string, string> = {
-          installation_complete: "Retrofit Measure Installation Completed",
-          ber_scheduled: "Post-Install BER Assessment Scheduled",
-          ber_uploaded: "Final Post-Install BER Certificate Uploaded",
-          seai_review: "SEAI Audit & Review Dispatched",
-          seai_approved: "SEAI Grant Funding Fully Approved",
-          seai_paid: "Grant Payment Disbursed to Homeowner Account"
+          installation_complete: 'Retrofit Measure Installation Completed',
+          ber_scheduled: 'Post-Install BER Assessment Scheduled',
+          ber_uploaded: 'Final Post-Install BER Certificate Uploaded',
+          seai_review: 'SEAI Audit & Review Dispatched',
+          seai_approved: 'SEAI Grant Funding Fully Approved',
+          seai_paid: 'Grant Payment Disbursed to Homeowner Account',
         };
 
         return (
@@ -56,7 +94,9 @@ export function PostInstallTimeline({ timeline }: { timeline: any[] }) {
               ✓
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-white text-xs">{eventLabels[entry.event] || entry.event}</span>
+              <span className="font-bold text-white text-xs">
+                {eventLabels[entry.event] || entry.event}
+              </span>
               <span className="text-slate-400 text-[11px]">{dateStr}</span>
             </div>
             {entry.notes && (
@@ -71,11 +111,15 @@ export function PostInstallTimeline({ timeline }: { timeline: any[] }) {
   );
 }
 
-export default function PostInstallView({ userId = "user_2026_08_03_1412" }: { userId?: string }) {
+export default function PostInstallView({
+  userId = 'user_2026_08_03_1412',
+}: {
+  userId?: string;
+}) {
   const [record, setRecord] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [uploadingCert, setUploadingCert] = useState(false);
-  const [scheduledDate, setScheduledDate] = useState("2026-08-12");
+  const [scheduledDate, setScheduledDate] = useState('2026-08-12');
 
   const fetchRecord = async () => {
     try {
@@ -85,7 +129,7 @@ export default function PostInstallView({ userId = "user_2026_08_03_1412" }: { u
         setRecord(res.record);
       }
     } catch (err) {
-      console.error("Postinstall fetch error", err);
+      console.error('Postinstall fetch error', err);
     } finally {
       setLoading(false);
     }
@@ -98,12 +142,15 @@ export default function PostInstallView({ userId = "user_2026_08_03_1412" }: { u
   const handleUploadCert = async () => {
     try {
       setUploadingCert(true);
-      const res = await apiPost("/api/postinstall/ber/upload", { user_id: userId, berRating: "A" });
+      const res = await apiPost('/api/postinstall/ber/upload', {
+        user_id: userId,
+        berRating: 'A',
+      });
       if (res && res.record) {
         setRecord(res.record);
       }
     } catch (err) {
-      console.error("BER upload error", err);
+      console.error('BER upload error', err);
     } finally {
       setUploadingCert(false);
     }
@@ -111,12 +158,16 @@ export default function PostInstallView({ userId = "user_2026_08_03_1412" }: { u
 
   const handleScheduleBER = async () => {
     try {
-      const res = await apiPost("/api/postinstall/ber/schedule", { user_id: userId, scheduled: scheduledDate, assessor: "John O'Donnell" });
+      const res = await apiPost('/api/postinstall/ber/schedule', {
+        user_id: userId,
+        scheduled: scheduledDate,
+        assessor: "John O'Donnell",
+      });
       if (res && res.record) {
         setRecord(res.record);
       }
     } catch (err) {
-      console.error("BER schedule error", err);
+      console.error('BER schedule error', err);
     }
   };
 
@@ -136,13 +187,28 @@ export default function PostInstallView({ userId = "user_2026_08_03_1412" }: { u
         <div>
           <div className="flex items-center gap-2">
             <ShieldCheck size={18} className="text-emerald-400" />
-            <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">Phase 31 Final Mile Engine</span>
+            <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">
+              Phase 31 Final Mile Engine
+            </span>
           </div>
-          <h2 className="text-xl font-bold text-white mt-1">Post-Install BER & Grant Payment Status</h2>
-          <p className="text-xs text-slate-400 font-mono mt-0.5">Post-Install ID: <strong className="text-sky-300">{record.postInstall_id}</strong></p>
+          <h2 className="text-xl font-bold text-white mt-1">
+            Post-Install BER & Grant Payment Status
+          </h2>
+          <p className="text-xs text-slate-400 font-mono mt-0.5">
+            Post-Install ID:{' '}
+            <strong className="text-sky-300">{record.postInstall_id}</strong>
+          </p>
         </div>
 
-        <PostInstallBadge status={record.seaiPayment?.status === "paid" ? "paid" : record.seaiApproval?.status === "approved" ? "approved" : "under_review"} />
+        <PostInstallBadge
+          status={
+            record.seaiPayment?.status === 'paid'
+              ? 'paid'
+              : record.seaiApproval?.status === 'approved'
+                ? 'approved'
+                : 'under_review'
+          }
+        />
       </div>
 
       {/* Grid Cards */}
@@ -154,20 +220,32 @@ export default function PostInstallView({ userId = "user_2026_08_03_1412" }: { u
               <Calendar size={18} />
               <span className="font-bold text-white">BER Assessment</span>
             </div>
-            <PostInstallBadge status={record.berAssessment?.status || "scheduled"} />
+            <PostInstallBadge
+              status={record.berAssessment?.status || 'scheduled'}
+            />
           </div>
 
           <div>
-            <p className="text-[11px] text-slate-400">Assessor: <strong className="text-slate-200">{record.berAssessment?.assessor}</strong></p>
-            <p className="text-[11px] text-slate-400">Scheduled Date: <strong className="text-sky-300">{record.berAssessment?.scheduled}</strong></p>
+            <p className="text-[11px] text-slate-400">
+              Assessor:{' '}
+              <strong className="text-slate-200">
+                {record.berAssessment?.assessor}
+              </strong>
+            </p>
+            <p className="text-[11px] text-slate-400">
+              Scheduled Date:{' '}
+              <strong className="text-sky-300">
+                {record.berAssessment?.scheduled}
+              </strong>
+            </p>
           </div>
 
-          {record.berAssessment?.status === "pending" && (
+          {record.berAssessment?.status === 'pending' && (
             <div className="flex items-center gap-2">
               <input
                 type="date"
                 value={scheduledDate}
-                onChange={e => setScheduledDate(e.target.value)}
+                onChange={(e) => setScheduledDate(e.target.value)}
                 className="bg-slate-950 border border-white/10 text-white rounded p-1.5 text-xs font-mono"
               />
               <button
@@ -187,12 +265,24 @@ export default function PostInstallView({ userId = "user_2026_08_03_1412" }: { u
               <FileText size={18} />
               <span className="font-bold text-white">BER Certificate</span>
             </div>
-            <PostInstallBadge status={record.berCert?.uploaded ? "uploaded" : "pending"} />
+            <PostInstallBadge
+              status={record.berCert?.uploaded ? 'uploaded' : 'pending'}
+            />
           </div>
 
           <div>
-            <p className="text-[11px] text-slate-400">Rating Achieved: <strong className="text-emerald-400 text-sm">{record.berCert?.berRating || "G ➔ A"}</strong></p>
-            <p className="text-[11px] text-slate-400">File: <strong className="text-slate-300">{record.berCert?.file || "Pending upload"}</strong></p>
+            <p className="text-[11px] text-slate-400">
+              Rating Achieved:{' '}
+              <strong className="text-emerald-400 text-sm">
+                {record.berCert?.berRating || 'G ➔ A'}
+              </strong>
+            </p>
+            <p className="text-[11px] text-slate-400">
+              File:{' '}
+              <strong className="text-slate-300">
+                {record.berCert?.file || 'Pending upload'}
+              </strong>
+            </p>
           </div>
 
           {!record.berCert?.uploaded && (
@@ -202,7 +292,9 @@ export default function PostInstallView({ userId = "user_2026_08_03_1412" }: { u
               className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold transition flex items-center gap-1.5 cursor-pointer justify-center"
             >
               <Upload size={14} />
-              <span>{uploadingCert ? "Uploading..." : "Upload BER Cert (Rating: A)"}</span>
+              <span>
+                {uploadingCert ? 'Uploading...' : 'Upload BER Cert (Rating: A)'}
+              </span>
             </button>
           )}
         </div>
@@ -214,12 +306,26 @@ export default function PostInstallView({ userId = "user_2026_08_03_1412" }: { u
               <DollarSign size={18} />
               <span className="font-bold text-white">SEAI Grant Payment</span>
             </div>
-            <PostInstallBadge status={record.seaiPayment?.status || "pending"} />
+            <PostInstallBadge
+              status={record.seaiPayment?.status || 'pending'}
+            />
           </div>
 
           <div>
-            <p className="text-[11px] text-slate-400">Disbursed Amount: <strong className="text-emerald-400 text-lg font-bold">€{(record.seaiPayment?.amount || 22100).toLocaleString()}</strong></p>
-            <p className="text-[11px] text-slate-400">Status: <strong className="text-yellow-300">{record.seaiPayment?.status === "paid" ? "Funds Released to Homeowner" : "Under SEAI Audit"}</strong></p>
+            <p className="text-[11px] text-slate-400">
+              Disbursed Amount:{' '}
+              <strong className="text-emerald-400 text-lg font-bold">
+                €{(record.seaiPayment?.amount || 22100).toLocaleString()}
+              </strong>
+            </p>
+            <p className="text-[11px] text-slate-400">
+              Status:{' '}
+              <strong className="text-yellow-300">
+                {record.seaiPayment?.status === 'paid'
+                  ? 'Funds Released to Homeowner'
+                  : 'Under SEAI Audit'}
+              </strong>
+            </p>
           </div>
 
           <div className="p-2 bg-yellow-500/10 border border-yellow-500/20 rounded text-[10px] text-yellow-300">

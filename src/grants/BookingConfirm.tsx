@@ -3,7 +3,16 @@
  * Phase 25 Advisor Consultation Booking Confirmation Screen
  */
 
-import { CheckCircle2, Calendar, FileText, PhoneCall, Mail, ArrowRight, ShieldCheck, MessageSquare } from "lucide-react";
+import {
+  CheckCircle2,
+  Calendar,
+  FileText,
+  PhoneCall,
+  Mail,
+  ArrowRight,
+  ShieldCheck,
+  MessageSquare,
+} from 'lucide-react';
 
 interface BookingConfirmProps {
   bookingRecord: {
@@ -26,11 +35,14 @@ interface BookingConfirmProps {
   onReturnHome: () => void;
 }
 
-export default function BookingConfirm({ bookingRecord, onReturnHome }: BookingConfirmProps) {
+export default function BookingConfirm({
+  bookingRecord,
+  onReturnHome,
+}: BookingConfirmProps) {
   const advisor = bookingRecord.advisor || {
     name: "John O'Donnell",
-    email: "advisor@ecosmart.ie",
-    phone: "085-123-4567"
+    email: 'advisor@ecosmart.ie',
+    phone: '085-123-4567',
   };
 
   return (
@@ -40,9 +52,14 @@ export default function BookingConfirm({ bookingRecord, onReturnHome }: BookingC
       </div>
 
       <div>
-        <h2 className="text-xl font-bold text-white">Your Advisor Appointment Is Requested!</h2>
+        <h2 className="text-xl font-bold text-white">
+          Your Advisor Appointment Is Requested!
+        </h2>
         <p className="text-xs text-slate-400 font-mono mt-1">
-          Booking ID: <strong className="text-purple-300">{bookingRecord.booking_id}</strong>
+          Booking ID:{' '}
+          <strong className="text-purple-300">
+            {bookingRecord.booking_id}
+          </strong>
         </p>
       </div>
 
@@ -50,13 +67,15 @@ export default function BookingConfirm({ bookingRecord, onReturnHome }: BookingC
         <div className="flex justify-between items-center border-b border-white/10 pb-2">
           <span className="text-slate-400">Status:</span>
           <span className="px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-full text-[10px] font-bold uppercase">
-            {bookingRecord.status || "Pending Confirmation"}
+            {bookingRecord.status || 'Pending Confirmation'}
           </span>
         </div>
 
         <div className="flex justify-between items-center">
           <span className="text-slate-400">Requested Date & Time:</span>
-          <span className="text-white font-bold">{bookingRecord.date} @ {bookingRecord.time}</span>
+          <span className="text-white font-bold">
+            {bookingRecord.date} @ {bookingRecord.time}
+          </span>
         </div>
 
         <div className="flex justify-between items-center">
@@ -66,7 +85,9 @@ export default function BookingConfirm({ bookingRecord, onReturnHome }: BookingC
 
         <div className="flex justify-between items-center">
           <span className="text-slate-400">SEAI Grant Plan ID:</span>
-          <span className="text-emerald-300 font-bold">{bookingRecord.grant_id}</span>
+          <span className="text-emerald-300 font-bold">
+            {bookingRecord.grant_id}
+          </span>
         </div>
       </div>
 
@@ -85,11 +106,19 @@ export default function BookingConfirm({ bookingRecord, onReturnHome }: BookingC
 
       {/* Assigned SEAI Advisor Details */}
       <div className="w-full max-w-md p-4 bg-purple-500/10 border border-purple-500/20 rounded-xl text-left font-mono text-xs">
-        <div className="text-[10px] text-purple-300 font-bold uppercase tracking-wider">Your Assigned Registered SEAI Advisor</div>
+        <div className="text-[10px] text-purple-300 font-bold uppercase tracking-wider">
+          Your Assigned Registered SEAI Advisor
+        </div>
         <div className="text-sm font-bold text-white mt-1">{advisor.name}</div>
         <div className="text-[11px] text-slate-300 mt-1 flex flex-col gap-1">
-          <span className="flex items-center gap-1.5"><PhoneCall size={12} className="text-purple-400" /> Phone: {advisor.phone}</span>
-          <span className="flex items-center gap-1.5"><Mail size={12} className="text-purple-400" /> Email: {advisor.email}</span>
+          <span className="flex items-center gap-1.5">
+            <PhoneCall size={12} className="text-purple-400" /> Phone:{' '}
+            {advisor.phone}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Mail size={12} className="text-purple-400" /> Email:{' '}
+            {advisor.email}
+          </span>
         </div>
       </div>
 

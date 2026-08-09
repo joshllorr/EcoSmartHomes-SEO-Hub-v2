@@ -4,7 +4,7 @@
  * Live API Fetcher Hooks for EcoSmartHomes SEO Intelligence Dashboard
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export async function apiGet<T = any>(path: string): Promise<T> {
   const res = await fetch(path);
@@ -16,9 +16,9 @@ export async function apiGet<T = any>(path: string): Promise<T> {
 
 export async function apiPost<T = any>(path: string, body: any): Promise<T> {
   const res = await fetch(path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
   });
   if (!res.ok) {
     throw new Error(`POST ${path} failed with status ${res.status}`);
@@ -38,7 +38,7 @@ export function useApiQuery<T = any>(path: string, pollIntervalMs?: number) {
       setData(json);
       setError(null);
     } catch (err: any) {
-      setError(err?.message || "Failed to load data");
+      setError(err?.message || 'Failed to load data');
     } finally {
       setLoading(false);
     }

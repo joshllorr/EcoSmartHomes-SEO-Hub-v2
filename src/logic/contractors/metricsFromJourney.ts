@@ -2,4 +2,4 @@
  * src/logic/contractors/metricsFromJourney.ts
  */
 
-export * from "../../../logic/contractors/metricsFromJourney";
+export * from '../../../logic/contractors/metricsFromJourney';

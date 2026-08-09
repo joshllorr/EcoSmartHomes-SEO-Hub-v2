@@ -3,8 +3,19 @@
  * Phase 25 Advisor Consultation Booking Form
  */
 
-import { useState } from "react";
-import { Calendar, Clock, User, Mail, Phone, MapPin, ShieldCheck, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
+import { useState } from 'react';
+import {
+  Calendar,
+  Clock,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  ShieldCheck,
+  Loader2,
+  ArrowRight,
+  ArrowLeft,
+} from 'lucide-react';
 
 interface BookAdvisorProps {
   grantId?: string;
@@ -14,37 +25,48 @@ interface BookAdvisorProps {
 }
 
 export default function BookAdvisor({
-  grantId = "grant_2026_08_03_1207",
-  eircode = "V94 X2C9",
+  grantId = 'grant_2026_08_03_1207',
+  eircode = 'V94 X2C9',
   onBookingComplete,
-  onBack
+  onBack,
 }: BookAdvisorProps) {
   const [name, setName] = useState("Sarah O'Connor");
-  const [email, setEmail] = useState("sarah@example.com");
-  const [phone, setPhone] = useState("085-123-4567");
-  const [date, setDate] = useState("2026-08-06");
-  const [time, setTime] = useState("14:00");
+  const [email, setEmail] = useState('sarah@example.com');
+  const [phone, setPhone] = useState('085-123-4567');
+  const [date, setDate] = useState('2026-08-06');
+  const [time, setTime] = useState('14:00');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("/api/advisor/book", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ grant_id: grantId, name, email, phone, date, time, eircode })
+      const res = await fetch('/api/advisor/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          grant_id: grantId,
+          name,
+          email,
+          phone,
+          date,
+          time,
+          eircode,
+        }),
       });
       const data = await res.json();
       if (data.ok && data.record) {
         onBookingComplete(data.record);
       } else {
-        throw new Error("Booking failed");
+        throw new Error('Booking failed');
       }
     } catch {
       // Offline / Fallback Booking Record
       onBookingComplete({
-        booking_id: `book_${new Date().toISOString().replace(/[-:T.]/g, "").slice(0, 12)}_${Math.floor(Math.random() * 9000 + 1000)}`,
+        booking_id: `book_${new Date()
+          .toISOString()
+          .replace(/[-:T.]/g, '')
+          .slice(0, 12)}_${Math.floor(Math.random() * 9000 + 1000)}`,
         grant_id: grantId,
         name,
         email,
@@ -52,16 +74,16 @@ export default function BookAdvisor({
         date,
         time,
         eircode,
-        status: "pending",
+        status: 'pending',
         advisor: {
           name: "John O'Donnell",
-          email: "advisor@ecosmart.ie",
-          phone: "085-123-4567"
+          email: 'advisor@ecosmart.ie',
+          phone: '085-123-4567',
         },
         smsSent: true,
         emailSent: true,
         pdfLink: `/api/grants/plan/${grantId}/pdf`,
-        createdAt: Date.now()
+        createdAt: Date.now(),
       });
     } finally {
       setLoading(false);
@@ -69,7 +91,10 @@ export default function BookAdvisor({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-left font-sans">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-5 text-left font-sans"
+    >
       <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <div>
           <h2 className="text-base font-bold text-white flex items-center gap-2">
@@ -77,7 +102,8 @@ export default function BookAdvisor({
             Book Free SEAI Advisor Consultation
           </h2>
           <p className="text-xs text-slate-400 font-mono mt-0.5">
-            Grant Plan: <strong className="text-purple-300">{grantId}</strong> | Location: <strong className="text-purple-300">{eircode}</strong>
+            Grant Plan: <strong className="text-purple-300">{grantId}</strong> |
+            Location: <strong className="text-purple-300">{eircode}</strong>
           </p>
         </div>
       </div>
@@ -111,7 +137,8 @@ export default function BookAdvisor({
 
         <div className="flex flex-col gap-1.5">
           <label className="text-slate-300 font-bold flex items-center gap-1.5">
-            <Phone size={14} className="text-slate-400" /> Phone Number (for SMS confirmation)
+            <Phone size={14} className="text-slate-400" /> Phone Number (for SMS
+            confirmation)
           </label>
           <input
             type="tel"
@@ -136,7 +163,8 @@ export default function BookAdvisor({
 
         <div className="flex flex-col gap-1.5">
           <label className="text-slate-300 font-bold flex items-center gap-1.5">
-            <Calendar size={14} className="text-slate-400" /> Preferred Consultation Date
+            <Calendar size={14} className="text-slate-400" /> Preferred
+            Consultation Date
           </label>
           <input
             type="date"
@@ -167,7 +195,11 @@ export default function BookAdvisor({
       {/* Trust Microcopy */}
       <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl flex items-center gap-2 text-xs font-mono text-purple-300">
         <ShieldCheck size={16} className="shrink-0 text-purple-400" />
-        <span>"No pressure — just friendly guidance from a local SEAI-registered advisor. We'll confirm your appointment within 24 hours."</span>
+        <span>
+          &quot;No pressure — just friendly guidance from a local
+          SEAI-registered advisor. We&apos;ll confirm your appointment within 24
+          hours.&quot;
+        </span>
       </div>
 
       <div className="flex justify-between items-center mt-2">
@@ -184,8 +216,14 @@ export default function BookAdvisor({
           disabled={loading}
           className="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold rounded-xl transition flex items-center gap-2 shadow-lg cursor-pointer"
         >
-          {loading ? <Loader2 size={14} className="animate-spin" /> : <Calendar size={14} />}
-          <span>{loading ? "Locking Slot..." : "Confirm & Schedule Appointment"}</span>
+          {loading ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <Calendar size={14} />
+          )}
+          <span>
+            {loading ? 'Locking Slot...' : 'Confirm & Schedule Appointment'}
+          </span>
           {!loading && <ArrowRight size={14} />}
         </button>
       </div>

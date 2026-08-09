@@ -2,4 +2,4 @@
  * src/logic/orchestrator/masterOrchestrator.ts
  */
 
-export * from "../../../logic/orchestrator/masterOrchestrator";
+export * from '../../../logic/orchestrator/masterOrchestrator';

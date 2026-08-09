@@ -2,4 +2,4 @@
  * src/logic/forecasting/retrofitForecastEngine.ts
  */
 
-export * from "../../../logic/forecasting/retrofitForecastEngine";
+export * from '../../../logic/forecasting/retrofitForecastEngine';

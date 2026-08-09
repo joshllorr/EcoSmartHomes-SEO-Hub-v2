@@ -5,10 +5,17 @@
  * Route / Sub-view: /dashboard/contractors/quality (p33_contractor_scores)
  */
 
-import { useEffect, useState } from "react";
-import { Award, ShieldCheck, RefreshCw, Star, AlertTriangle, TrendingUp } from "lucide-react";
-import { apiGet } from "../hooks/useApi";
-import { ContractorScoreRecord } from "../logic/contractors/contractorScoresEngine";
+import { useEffect, useState } from 'react';
+import {
+  Award,
+  ShieldCheck,
+  RefreshCw,
+  Star,
+  AlertTriangle,
+  TrendingUp,
+} from 'lucide-react';
+import { apiGet } from '../hooks/useApi';
+import { ContractorScoreRecord } from '../logic/contractors/contractorScoresEngine';
 
 export default function ContractorQualityDashboard() {
   const [records, setRecords] = useState<ContractorScoreRecord[]>([]);
@@ -17,7 +24,7 @@ export default function ContractorQualityDashboard() {
   const fetchScores = async () => {
     try {
       setLoading(true);
-      const res = await apiGet("/api/contractors/scores");
+      const res = await apiGet('/api/contractors/scores');
       if (Array.isArray(res)) {
         setRecords(res);
       } else if (res && res.records) {
@@ -26,7 +33,7 @@ export default function ContractorQualityDashboard() {
         // Fallback default demonstration data
         setRecords([
           {
-            contractor_id: "ctr_2026_08_03_1612",
+            contractor_id: 'ctr_2026_08_03_1612',
             score: 96,
             metrics: {
               jobSpeed: 95,
@@ -36,12 +43,12 @@ export default function ContractorQualityDashboard() {
               homeownerFeedback: 4.9,
               timelineAdherence: 96,
               issueFrequency: 0,
-              seaiCompliance: 100
+              seaiCompliance: 100,
             },
-            updatedAt: Date.now() - 3600000
+            updatedAt: Date.now() - 3600000,
           },
           {
-            contractor_id: "ctr_2026_08_03_1619",
+            contractor_id: 'ctr_2026_08_03_1619',
             score: 91,
             metrics: {
               jobSpeed: 90,
@@ -51,12 +58,12 @@ export default function ContractorQualityDashboard() {
               homeownerFeedback: 4.8,
               timelineAdherence: 92,
               issueFrequency: 1,
-              seaiCompliance: 98
+              seaiCompliance: 98,
             },
-            updatedAt: Date.now() - 7200000
+            updatedAt: Date.now() - 7200000,
           },
           {
-            contractor_id: "ctr_2026_08_03_1625",
+            contractor_id: 'ctr_2026_08_03_1625',
             score: 94,
             metrics: {
               jobSpeed: 92,
@@ -66,14 +73,14 @@ export default function ContractorQualityDashboard() {
               homeownerFeedback: 4.9,
               timelineAdherence: 95,
               issueFrequency: 0,
-              seaiCompliance: 100
+              seaiCompliance: 100,
             },
-            updatedAt: Date.now() - 10800000
-          }
+            updatedAt: Date.now() - 10800000,
+          },
         ]);
       }
     } catch (err) {
-      console.error("Failed to fetch contractor quality scores", err);
+      console.error('Failed to fetch contractor quality scores', err);
     } finally {
       setLoading(false);
     }
@@ -88,8 +95,12 @@ export default function ContractorQualityDashboard() {
       {/* Top Banner */}
       <div className="glass-card p-6 border border-emerald-500/20 rounded-2xl bg-slate-900/80 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">Phase 33 Contractor Quality Scoring Engine</span>
-          <h2 className="text-xl font-bold text-white mt-0.5">SEAI Registered Contractor Audit & Performance Index</h2>
+          <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">
+            Phase 33 Contractor Quality Scoring Engine
+          </span>
+          <h2 className="text-xl font-bold text-white mt-0.5">
+            SEAI Registered Contractor Audit & Performance Index
+          </h2>
         </div>
 
         <button
@@ -97,7 +108,7 @@ export default function ContractorQualityDashboard() {
           disabled={loading}
           className="px-4 py-2 bg-slate-950/80 border border-white/10 text-xs font-mono font-bold text-slate-300 hover:text-white rounded-xl transition flex items-center gap-2 cursor-pointer"
         >
-          <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           <span>Refresh Scores</span>
         </button>
       </div>
@@ -125,8 +136,13 @@ export default function ContractorQualityDashboard() {
           </thead>
           <tbody>
             {records.map((r) => (
-              <tr key={r.contractor_id} className="border-b border-slate-800/40 hover:bg-slate-800/30 transition text-slate-200">
-                <td className="py-3 px-2 font-bold text-sky-300">{r.contractor_id}</td>
+              <tr
+                key={r.contractor_id}
+                className="border-b border-slate-800/40 hover:bg-slate-800/30 transition text-slate-200"
+              >
+                <td className="py-3 px-2 font-bold text-sky-300">
+                  {r.contractor_id}
+                </td>
                 <td className="py-3 px-2">
                   <span className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
                     {r.score} / 100
@@ -135,7 +151,9 @@ export default function ContractorQualityDashboard() {
                 <td className="py-3 px-2">{r.metrics.jobSpeed}%</td>
                 <td className="py-3 px-2">{r.metrics.paperworkAccuracy}%</td>
                 <td className="py-3 px-2">{r.metrics.berUpliftConsistency}%</td>
-                <td className="py-3 px-2 text-emerald-400 font-bold">{r.metrics.grantApprovalRate}%</td>
+                <td className="py-3 px-2 text-emerald-400 font-bold">
+                  {r.metrics.grantApprovalRate}%
+                </td>
                 <td className="py-3 px-2 text-amber-300 font-bold flex items-center gap-1">
                   <Star size={12} className="fill-amber-400 text-amber-400" />
                   <span>{r.metrics.homeownerFeedback} / 5</span>
@@ -144,11 +162,18 @@ export default function ContractorQualityDashboard() {
                   {r.metrics.issueFrequency === 0 ? (
                     <span className="text-emerald-400 font-bold">0 Clean</span>
                   ) : (
-                    <span className="text-amber-400 font-bold">{r.metrics.issueFrequency} Issue</span>
+                    <span className="text-amber-400 font-bold">
+                      {r.metrics.issueFrequency} Issue
+                    </span>
                   )}
                 </td>
                 <td className="py-3 px-2 text-slate-400 text-[11px]">
-                  {new Date(r.updatedAt).toLocaleString("en-IE", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                  {new Date(r.updatedAt).toLocaleString('en-IE', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
                 </td>
               </tr>
             ))}

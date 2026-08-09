@@ -7,41 +7,64 @@
  * contractor performance ratings, and national SEAI operational benchmarks.
  */
 
-import { AdvisorMessage } from "../advisor/retrofitAdvisorEngine";
+import { AdvisorMessage } from '../advisor/retrofitAdvisorEngine';
 
 export interface HomeownerSentiment {
   user_id: string;
-  confidence: number;   // 0–100
-  clarity: number;       // 0–100
-  stress: number;        // 0–100
-  satisfaction: number;  // 0–100
-  trust: number;         // 0–100
+  confidence: number; // 0–100
+  clarity: number; // 0–100
+  stress: number; // 0–100
+  satisfaction: number; // 0–100
+  trust: number; // 0–100
   updatedAt: number;
 }
 
-export function deriveSentimentFromChat(messages: AdvisorMessage[]): Partial<HomeownerSentiment> {
+export function deriveSentimentFromChat(
+  messages: AdvisorMessage[],
+): Partial<HomeownerSentiment> {
   if (!messages || messages.length === 0) return {};
-  const lastUserMsg = [...messages].reverse().find(m => m.role === "user")?.text?.toLowerCase();
+  const lastUserMsg = [...messages]
+    .reverse()
+    .find((m) => m.role === 'user')
+    ?.text?.toLowerCase();
   const sentiment: Partial<HomeownerSentiment> = {};
 
   if (!lastUserMsg) return sentiment;
 
-  if (lastUserMsg.includes("confused") || lastUserMsg.includes("lost") || lastUserMsg.includes("understand")) {
+  if (
+    lastUserMsg.includes('confused') ||
+    lastUserMsg.includes('lost') ||
+    lastUserMsg.includes('understand')
+  ) {
     sentiment.clarity = 40;
     sentiment.confidence = 50;
   }
 
-  if (lastUserMsg.includes("worried") || lastUserMsg.includes("concerned") || lastUserMsg.includes("delay") || lastUserMsg.includes("cost")) {
+  if (
+    lastUserMsg.includes('worried') ||
+    lastUserMsg.includes('concerned') ||
+    lastUserMsg.includes('delay') ||
+    lastUserMsg.includes('cost')
+  ) {
     sentiment.stress = 70;
     sentiment.trust = 60;
   }
 
-  if (lastUserMsg.includes("happy") || lastUserMsg.includes("great") || lastUserMsg.includes("excellent") || lastUserMsg.includes("thanks")) {
+  if (
+    lastUserMsg.includes('happy') ||
+    lastUserMsg.includes('great') ||
+    lastUserMsg.includes('excellent') ||
+    lastUserMsg.includes('thanks')
+  ) {
     sentiment.satisfaction = 90;
     sentiment.confidence = 85;
   }
 
-  if (lastUserMsg.includes("next step") || lastUserMsg.includes("ready") || lastUserMsg.includes("start")) {
+  if (
+    lastUserMsg.includes('next step') ||
+    lastUserMsg.includes('ready') ||
+    lastUserMsg.includes('start')
+  ) {
     sentiment.clarity = 85;
     sentiment.confidence = 80;
   }
@@ -49,21 +72,30 @@ export function deriveSentimentFromChat(messages: AdvisorMessage[]): Partial<Hom
   return sentiment;
 }
 
-export async function calculateHomeownerSentiment(env: any, user_id: string): Promise<HomeownerSentiment> {
+export async function calculateHomeownerSentiment(
+  env: any,
+  user_id: string,
+): Promise<HomeownerSentiment> {
   let session: any = null;
   let timeline: any = null;
   let upgrades: any = null;
 
   if (env.RETROFIT_ADVISOR_SESSIONS) {
-    session = await env.RETROFIT_ADVISOR_SESSIONS.get(`advisor_${user_id}`, { type: "json" });
+    session = await env.RETROFIT_ADVISOR_SESSIONS.get(`advisor_${user_id}`, {
+      type: 'json',
+    });
   }
 
   if (env.JOURNEY_TIMELINE) {
-    timeline = await env.JOURNEY_TIMELINE.get(`timeline_${user_id}`, { type: "json" });
+    timeline = await env.JOURNEY_TIMELINE.get(`timeline_${user_id}`, {
+      type: 'json',
+    });
   }
 
   if (env.HOME_UPGRADE_RECOMMENDATIONS) {
-    upgrades = await env.HOME_UPGRADE_RECOMMENDATIONS.get(user_id, { type: "json" });
+    upgrades = await env.HOME_UPGRADE_RECOMMENDATIONS.get(user_id, {
+      type: 'json',
+    });
   }
 
   const base: HomeownerSentiment = {
@@ -73,7 +105,7 @@ export async function calculateHomeownerSentiment(env: any, user_id: string): Pr
     stress: 24,
     satisfaction: 88,
     trust: 92,
-    updatedAt: Date.now()
+    updatedAt: Date.now(),
   };
 
   // 1. Incorporate Copilot Chat Sentiment Signals
@@ -84,14 +116,14 @@ export async function calculateHomeownerSentiment(env: any, user_id: string): Pr
   // 2. Incorporate Journey Milestone Signals
   if (timeline?.events?.length) {
     const lastEvent = timeline.events[timeline.events.length - 1].event;
-    if (lastEvent === "seai_paid") {
+    if (lastEvent === 'seai_paid') {
       base.satisfaction = 96;
       base.confidence = 94;
       base.stress = 10;
-    } else if (lastEvent === "grant_submitted") {
+    } else if (lastEvent === 'grant_submitted') {
       base.stress = 38;
       base.trust = 88;
-    } else if (lastEvent === "installation_complete") {
+    } else if (lastEvent === 'installation_complete') {
       base.satisfaction = 90;
       base.confidence = 88;
     }
@@ -104,15 +136,18 @@ export async function calculateHomeownerSentiment(env: any, user_id: string): Pr
 
   if (env.HOMEOWNER_SENTIMENT) {
     await env.HOMEOWNER_SENTIMENT.put(user_id, JSON.stringify(base));
-    await env.HOMEOWNER_SENTIMENT.put("latest_sentiment", JSON.stringify(base));
+    await env.HOMEOWNER_SENTIMENT.put('latest_sentiment', JSON.stringify(base));
   }
 
   return base;
 }
 
-export async function getHomeownerSentiment(env: any, user_id: string): Promise<HomeownerSentiment> {
+export async function getHomeownerSentiment(
+  env: any,
+  user_id: string,
+): Promise<HomeownerSentiment> {
   if (env.HOMEOWNER_SENTIMENT) {
-    const raw = await env.HOMEOWNER_SENTIMENT.get(user_id, { type: "json" });
+    const raw = await env.HOMEOWNER_SENTIMENT.get(user_id, { type: 'json' });
     if (raw) return raw as HomeownerSentiment;
   }
   return calculateHomeownerSentiment(env, user_id);

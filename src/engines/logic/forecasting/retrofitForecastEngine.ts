@@ -6,7 +6,10 @@
  * technology adoption, upgrade categories, contractor capacities, and bottleneck risks at Cloudflare Edge.
  */
 
-import { NationalInsights, getNationalInsights } from "../insights/nationalInsightsEngine";
+import {
+  NationalInsights,
+  getNationalInsights,
+} from '../insights/nationalInsightsEngine';
 
 export interface RetrofitForecast {
   generatedAt: number;
@@ -34,8 +37,11 @@ export interface RetrofitForecast {
   };
 }
 
-export function generateForecastFromInsights(insights: NationalInsights, months: number): RetrofitForecast {
-  const growthFactor = 1 + (months * 0.03); // 3% monthly compounding baseline growth
+export function generateForecastFromInsights(
+  insights: NationalInsights,
+  months: number,
+): RetrofitForecast {
+  const growthFactor = 1 + months * 0.03; // 3% monthly compounding baseline growth
 
   const demandForecast: Record<string, number> = {};
   for (const [region, count] of Object.entries(insights.regionalDemand || {})) {
@@ -43,7 +49,9 @@ export function generateForecastFromInsights(insights: NationalInsights, months:
   }
 
   const upgradeForecast: Record<string, number> = {};
-  for (const [cat, count] of Object.entries(insights.upgradeCategoryDemand || {})) {
+  for (const [cat, count] of Object.entries(
+    insights.upgradeCategoryDemand || {},
+  )) {
     upgradeForecast[cat] = Math.round(count * growthFactor);
   }
 
@@ -59,19 +67,29 @@ export function generateForecastFromInsights(insights: NationalInsights, months:
   const contractorCapacityForecast = {
     elite: Math.round(eliteCapacity * growthFactor),
     strong: Math.round(strongCapacity * growthFactor),
-    risky: Math.round(riskyCapacity * growthFactor)
+    risky: Math.round(riskyCapacity * growthFactor),
   };
 
-  const carbonOffsetForecastTonnes = Math.round((insights.totalCarbonOffsetTonnes || 214.8) * growthFactor * 10) / 10;
-  const savingsForecastEuro = Math.round((insights.avgAnnualSavings || 1280) * growthFactor);
+  const carbonOffsetForecastTonnes =
+    Math.round(
+      (insights.totalCarbonOffsetTonnes || 214.8) * growthFactor * 10,
+    ) / 10;
+  const savingsForecastEuro = Math.round(
+    (insights.avgAnnualSavings || 1280) * growthFactor,
+  );
 
   const totalHomeowners = insights.totalHomeowners || 114;
   const avgApprovalDays = insights.avgSEAIApprovalTimeDays || 4;
 
   const bottleneckRisk = {
-    contractorShortage: Math.min(100, Math.round((totalHomeowners / Math.max(1, contractorCapacityForecast.elite)) * 2.5)),
+    contractorShortage: Math.min(
+      100,
+      Math.round(
+        (totalHomeowners / Math.max(1, contractorCapacityForecast.elite)) * 2.5,
+      ),
+    ),
     berAssessorShortage: Math.min(100, Math.round((totalHomeowners / 50) * 8)),
-    seaiQueuePressure: Math.min(100, Math.round(avgApprovalDays * 4.5))
+    seaiQueuePressure: Math.min(100, Math.round(avgApprovalDays * 4.5)),
   };
 
   return {
@@ -82,28 +100,44 @@ export function generateForecastFromInsights(insights: NationalInsights, months:
     techAdoptionForecast,
     contractorCapacityForecast,
     avgApprovalTimeForecastDays: Math.round(avgApprovalDays * growthFactor),
-    avgInstallationTimeForecastDays: Math.round((insights.avgInstallationTimeDays || 6) * growthFactor),
+    avgInstallationTimeForecastDays: Math.round(
+      (insights.avgInstallationTimeDays || 6) * growthFactor,
+    ),
     carbonOffsetForecastTonnes,
     savingsForecastEuro,
-    bottleneckRisk
+    bottleneckRisk,
   };
 }
 
-export async function generateAndStoreForecast(env: any, months: number = 6): Promise<RetrofitForecast> {
+export async function generateAndStoreForecast(
+  env: any,
+  months: number = 6,
+): Promise<RetrofitForecast> {
   const insights = await getNationalInsights(env);
   const forecast = generateForecastFromInsights(insights, months);
 
   if (env.RETROFIT_FORECASTS) {
-    await env.RETROFIT_FORECASTS.put(`forecast_${months}`, JSON.stringify(forecast));
-    await env.RETROFIT_FORECASTS.put("latest_forecast", JSON.stringify(forecast));
+    await env.RETROFIT_FORECASTS.put(
+      `forecast_${months}`,
+      JSON.stringify(forecast),
+    );
+    await env.RETROFIT_FORECASTS.put(
+      'latest_forecast',
+      JSON.stringify(forecast),
+    );
   }
 
   return forecast;
 }
 
-export async function getForecast(env: any, months: number = 6): Promise<RetrofitForecast> {
+export async function getForecast(
+  env: any,
+  months: number = 6,
+): Promise<RetrofitForecast> {
   if (env.RETROFIT_FORECASTS) {
-    const raw = await env.RETROFIT_FORECASTS.get(`forecast_${months}`, { type: "json" });
+    const raw = await env.RETROFIT_FORECASTS.get(`forecast_${months}`, {
+      type: 'json',
+    });
     if (raw) return raw as RetrofitForecast;
   }
   return generateAndStoreForecast(env, months);

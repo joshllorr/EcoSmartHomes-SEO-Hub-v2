@@ -4,17 +4,35 @@
  * Phase 27 AI Retrofit Planner Dashboard Component
  */
 
-import { useState, useEffect } from "react";
-import { Sparkles, Euro, Award, TrendingUp, Calendar, Layers, Wrench, Package, FileText, Loader2, CheckCircle2, ArrowRight } from "lucide-react";
-import { RetrofitPlan, aiPlanner } from "../../../logic/retrofit/aiPlanner";
+import { useState, useEffect } from 'react';
+import {
+  Sparkles,
+  Euro,
+  Award,
+  TrendingUp,
+  Calendar,
+  Layers,
+  Wrench,
+  Package,
+  FileText,
+  Loader2,
+  CheckCircle2,
+  ArrowRight,
+} from 'lucide-react';
+import { RetrofitPlan, aiPlanner } from '../../../logic/retrofit/aiPlanner';
 
 interface PlannerProps {
   grantId?: string;
   userId?: string;
 }
 
-export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "user_2026_08_03_1412" }: PlannerProps) {
-  const [activeTab, setActiveTab] = useState<"overview" | "costs" | "timeline" | "materials" | "contractors">("overview");
+export default function Planner({
+  grantId = 'grant_2026_08_03_1207',
+  userId = 'user_2026_08_03_1412',
+}: PlannerProps) {
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'costs' | 'timeline' | 'materials' | 'contractors'
+  >('overview');
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<RetrofitPlan | null>(null);
 
@@ -42,10 +60,10 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
   const handleGenerate = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/retrofit/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ grant_id: grantId, user_id: userId })
+      const res = await fetch('/api/retrofit/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ grant_id: grantId, user_id: userId }),
       });
       const data = await res.json();
       if (data && data.recommendedUpgrades) {
@@ -74,10 +92,17 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
         <div>
           <div className="flex items-center gap-2">
             <Sparkles size={18} className="text-emerald-400" />
-            <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">AI Retrofit Optimization Engine</span>
+            <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">
+              AI Retrofit Optimization Engine
+            </span>
           </div>
-          <h2 className="text-xl font-bold text-white mt-1">Your Customized SEAI Retrofit Execution Plan</h2>
-          <p className="text-xs text-slate-400 font-mono mt-0.5">Plan ID: <strong className="text-emerald-300">{plan.plan_id}</strong></p>
+          <h2 className="text-xl font-bold text-white mt-1">
+            Your Customized SEAI Retrofit Execution Plan
+          </h2>
+          <p className="text-xs text-slate-400 font-mono mt-0.5">
+            Plan ID:{' '}
+            <strong className="text-emerald-300">{plan.plan_id}</strong>
+          </p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -105,11 +130,11 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
       {/* Sub Navigation Bar */}
       <div className="flex flex-wrap items-center gap-1.5 bg-slate-950/80 p-1.5 rounded-xl border border-white/10 text-xs font-mono">
         {[
-          { id: "overview", label: "Overview", icon: Sparkles },
-          { id: "costs", label: "Cost Breakdown", icon: Euro },
-          { id: "timeline", label: "Timeline", icon: Calendar },
-          { id: "materials", label: "Bill of Materials", icon: Package },
-          { id: "contractors", label: "Contractors Needed", icon: Wrench }
+          { id: 'overview', label: 'Overview', icon: Sparkles },
+          { id: 'costs', label: 'Cost Breakdown', icon: Euro },
+          { id: 'timeline', label: 'Timeline', icon: Calendar },
+          { id: 'materials', label: 'Bill of Materials', icon: Package },
+          { id: 'contractors', label: 'Contractors Needed', icon: Wrench },
         ].map((tab) => {
           const Icon = tab.icon;
           return (
@@ -118,8 +143,8 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
               onClick={() => setActiveTab(tab.id as any)}
               className={`px-3.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
                 activeTab === tab.id
-                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                  : "text-slate-400 hover:text-white"
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               <Icon size={14} />
@@ -130,28 +155,36 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
       </div>
 
       {/* TAB 1: OVERVIEW */}
-      {activeTab === "overview" && (
+      {activeTab === 'overview' && (
         <div className="flex flex-col gap-5 font-mono text-xs">
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="p-4 bg-slate-900/80 border border-white/10 rounded-xl flex flex-col justify-between">
               <span className="text-slate-400">Total Investment:</span>
-              <span className="text-2xl font-extrabold text-white mt-2">€{plan.costEstimate.total.toLocaleString()}</span>
+              <span className="text-2xl font-extrabold text-white mt-2">
+                €{plan.costEstimate.total.toLocaleString()}
+              </span>
             </div>
 
             <div className="p-4 bg-slate-900/80 border border-emerald-500/30 rounded-xl flex flex-col justify-between">
               <span className="text-slate-400">SEAI Grant Offset:</span>
-              <span className="text-2xl font-extrabold text-emerald-400 mt-2">€{plan.grantOffsets.total.toLocaleString()}</span>
+              <span className="text-2xl font-extrabold text-emerald-400 mt-2">
+                €{plan.grantOffsets.total.toLocaleString()}
+              </span>
             </div>
 
             <div className="p-4 bg-slate-900/80 border border-sky-500/30 rounded-xl flex flex-col justify-between">
               <span className="text-slate-400">Net Out-of-Pocket:</span>
-              <span className="text-2xl font-extrabold text-sky-400 mt-2">€{plan.netCost.toLocaleString()}</span>
+              <span className="text-2xl font-extrabold text-sky-400 mt-2">
+                €{plan.netCost.toLocaleString()}
+              </span>
             </div>
 
             <div className="p-4 bg-slate-900/80 border border-purple-500/30 rounded-xl flex flex-col justify-between">
               <span className="text-slate-400">BER Rating Uplift:</span>
-              <span className="text-2xl font-extrabold text-purple-300 mt-2">{plan.berImpact}</span>
+              <span className="text-2xl font-extrabold text-purple-300 mt-2">
+                {plan.berImpact}
+              </span>
             </div>
           </div>
 
@@ -164,9 +197,14 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {plan.recommendedUpgrades.map((item, idx) => (
-                <div key={idx} className="p-3.5 bg-slate-950/80 border border-white/5 rounded-xl flex items-center justify-between">
+                <div
+                  key={idx}
+                  className="p-3.5 bg-slate-950/80 border border-white/5 rounded-xl flex items-center justify-between"
+                >
                   <span className="font-bold text-white">{item}</span>
-                  <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-[10px] uppercase font-bold">Recommended</span>
+                  <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-[10px] uppercase font-bold">
+                    Recommended
+                  </span>
                 </div>
               ))}
             </div>
@@ -175,7 +213,7 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
       )}
 
       {/* TAB 2: COSTS */}
-      {activeTab === "costs" && (
+      {activeTab === 'costs' && (
         <div className="p-5 bg-slate-900/80 border border-white/10 rounded-2xl flex flex-col gap-4 font-mono text-xs">
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
             <Euro size={16} className="text-emerald-400" />
@@ -184,30 +222,58 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
 
           <div className="flex flex-col gap-3">
             {[
-              { measure: "Attic Insulation", gross: plan.costEstimate.attic, grant: plan.grantOffsets.attic },
-              { measure: "Smart Heating Controls", gross: plan.costEstimate.controls, grant: plan.grantOffsets.controls },
-              { measure: "Air-to-Water Heat Pump", gross: plan.costEstimate.heatPump, grant: plan.grantOffsets.heatPump },
-              { measure: "Rooftop Solar PV", gross: plan.costEstimate.solar, grant: plan.grantOffsets.solar }
+              {
+                measure: 'Attic Insulation',
+                gross: plan.costEstimate.attic,
+                grant: plan.grantOffsets.attic,
+              },
+              {
+                measure: 'Smart Heating Controls',
+                gross: plan.costEstimate.controls,
+                grant: plan.grantOffsets.controls,
+              },
+              {
+                measure: 'Air-to-Water Heat Pump',
+                gross: plan.costEstimate.heatPump,
+                grant: plan.grantOffsets.heatPump,
+              },
+              {
+                measure: 'Rooftop Solar PV',
+                gross: plan.costEstimate.solar,
+                grant: plan.grantOffsets.solar,
+              },
             ].map((row, idx) => (
-              <div key={idx} className="p-3.5 bg-slate-950/80 border border-white/5 rounded-xl flex justify-between items-center">
+              <div
+                key={idx}
+                className="p-3.5 bg-slate-950/80 border border-white/5 rounded-xl flex justify-between items-center"
+              >
                 <div>
                   <span className="font-bold text-white">{row.measure}</span>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Gross: €{row.gross.toLocaleString()} | Grant: €{row.grant.toLocaleString()}</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Gross: €{row.gross.toLocaleString()} | Grant: €
+                    {row.grant.toLocaleString()}
+                  </p>
                 </div>
-                <span className="text-sky-300 font-bold">Net: €{(row.gross - row.grant).toLocaleString()}</span>
+                <span className="text-sky-300 font-bold">
+                  Net: €{(row.gross - row.grant).toLocaleString()}
+                </span>
               </div>
             ))}
 
             <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex justify-between items-center text-sm font-bold mt-2">
-              <span className="text-white">Total Net Investment Out-of-Pocket:</span>
-              <span className="text-emerald-400">€{plan.netCost.toLocaleString()}</span>
+              <span className="text-white">
+                Total Net Investment Out-of-Pocket:
+              </span>
+              <span className="text-emerald-400">
+                €{plan.netCost.toLocaleString()}
+              </span>
             </div>
           </div>
         </div>
       )}
 
       {/* TAB 3: TIMELINE */}
-      {activeTab === "timeline" && (
+      {activeTab === 'timeline' && (
         <div className="p-5 bg-slate-900/80 border border-white/10 rounded-2xl flex flex-col gap-4 font-mono text-xs">
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
             <Calendar size={16} className="text-sky-400" />
@@ -216,7 +282,10 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
 
           <div className="flex flex-col gap-3">
             {plan.timeline.map((t, idx) => (
-              <div key={idx} className="p-3.5 bg-slate-950/80 border border-white/5 rounded-xl flex justify-between items-center">
+              <div
+                key={idx}
+                className="p-3.5 bg-slate-950/80 border border-white/5 rounded-xl flex justify-between items-center"
+              >
                 <div className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-[11px]">
                     {t.sequence}
@@ -233,7 +302,7 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
       )}
 
       {/* TAB 4: MATERIALS */}
-      {activeTab === "materials" && (
+      {activeTab === 'materials' && (
         <div className="p-5 bg-slate-900/80 border border-white/10 rounded-2xl flex flex-col gap-4 font-mono text-xs">
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
             <Package size={16} className="text-indigo-400" />
@@ -242,7 +311,10 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
 
           <div className="flex flex-col gap-2.5">
             {plan.materials.map((m, idx) => (
-              <div key={idx} className="p-3 bg-slate-950/80 border border-white/5 rounded-xl flex items-center gap-3">
+              <div
+                key={idx}
+                className="p-3 bg-slate-950/80 border border-white/5 rounded-xl flex items-center gap-3"
+              >
                 <Package size={14} className="text-indigo-400 shrink-0" />
                 <span className="text-slate-200">{m}</span>
               </div>
@@ -252,7 +324,7 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
       )}
 
       {/* TAB 5: CONTRACTORS */}
-      {activeTab === "contractors" && (
+      {activeTab === 'contractors' && (
         <div className="p-5 bg-slate-900/80 border border-white/10 rounded-2xl flex flex-col gap-4 font-mono text-xs">
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
             <Wrench size={16} className="text-purple-400" />
@@ -261,7 +333,10 @@ export default function Planner({ grantId = "grant_2026_08_03_1207", userId = "u
 
           <div className="flex flex-col gap-2.5">
             {plan.contractorsNeeded.map((c, idx) => (
-              <div key={idx} className="p-3.5 bg-slate-950/80 border border-white/5 rounded-xl flex justify-between items-center">
+              <div
+                key={idx}
+                className="p-3.5 bg-slate-950/80 border border-white/5 rounded-xl flex justify-between items-center"
+              >
                 <span className="font-bold text-white">{c}</span>
                 <span className="px-2.5 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded text-[10px] uppercase font-bold">
                   SEAI Registered

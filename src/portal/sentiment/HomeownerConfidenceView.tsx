@@ -5,12 +5,26 @@
  * Route: /portal/confidence
  */
 
-import { useState, useEffect } from "react";
-import { Smile, Heart, ShieldCheck, Zap, AlertTriangle, RefreshCw, Sparkles, CheckCircle2, Clock } from "lucide-react";
-import { apiGet, apiPost } from "../../hooks/useApi";
-import { HomeownerSentiment } from "../../logic/sentiment/homeownerSentimentEngine";
+import { useState, useEffect } from 'react';
+import {
+  Smile,
+  Heart,
+  ShieldCheck,
+  Zap,
+  AlertTriangle,
+  RefreshCw,
+  Sparkles,
+  CheckCircle2,
+  Clock,
+} from 'lucide-react';
+import { apiGet, apiPost } from '../../hooks/useApi';
+import { HomeownerSentiment } from '../../logic/sentiment/homeownerSentimentEngine';
 
-export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412" }: { userId?: string }) {
+export default function HomeownerConfidenceView({
+  userId = 'user_2026_08_03_1412',
+}: {
+  userId?: string;
+}) {
   const [sentiment, setSentiment] = useState<HomeownerSentiment | null>(null);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -30,11 +44,11 @@ export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412
           stress: 20,
           satisfaction: 92,
           trust: 94,
-          updatedAt: Date.now()
+          updatedAt: Date.now(),
         });
       }
     } catch (err) {
-      console.error("Failed to fetch sentiment", err);
+      console.error('Failed to fetch sentiment', err);
     } finally {
       setLoading(false);
     }
@@ -43,12 +57,12 @@ export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412
   const handleUpdate = async () => {
     try {
       setUpdating(true);
-      const res = await apiPost("/api/sentiment/update", { user_id: userId });
+      const res = await apiPost('/api/sentiment/update', { user_id: userId });
       if (res && res.confidence !== undefined) {
         setSentiment(res);
       }
     } catch (err) {
-      console.error("Failed to update sentiment", err);
+      console.error('Failed to update sentiment', err);
     } finally {
       setUpdating(false);
     }
@@ -76,10 +90,17 @@ export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412
         <div>
           <div className="flex items-center gap-2">
             <Smile size={18} className="text-emerald-400" />
-            <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">Phase 38 Psychological Telemetry Engine</span>
+            <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">
+              Phase 38 Psychological Telemetry Engine
+            </span>
           </div>
-          <h2 className="text-xl font-bold text-white mt-1">Your Retrofit Journey Confidence Index</h2>
-          <p className="text-xs text-slate-400 font-mono mt-0.5">Real-time analysis of your peace of mind, clarity, trust, and stress levels.</p>
+          <h2 className="text-xl font-bold text-white mt-1">
+            Your Retrofit Journey Confidence Index
+          </h2>
+          <p className="text-xs text-slate-400 font-mono mt-0.5">
+            Real-time analysis of your peace of mind, clarity, trust, and stress
+            levels.
+          </p>
         </div>
 
         <button
@@ -87,7 +108,7 @@ export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412
           disabled={updating}
           className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-bold rounded-xl transition flex items-center gap-2 shadow-lg cursor-pointer"
         >
-          <RefreshCw size={14} className={updating ? "animate-spin" : ""} />
+          <RefreshCw size={14} className={updating ? 'animate-spin' : ''} />
           <span>Recalculate Index</span>
         </button>
       </div>
@@ -101,12 +122,19 @@ export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412
               <Zap size={16} className="text-emerald-400" />
               Overall Confidence
             </span>
-            <strong className="text-emerald-400 text-xl font-sans">{sentiment.confidence}%</strong>
+            <strong className="text-emerald-400 text-xl font-sans">
+              {sentiment.confidence}%
+            </strong>
           </div>
           <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-            <div className="bg-emerald-400 h-full rounded-full" style={{ width: `${sentiment.confidence}%` }}></div>
+            <div
+              className="bg-emerald-400 h-full rounded-full"
+              style={{ width: `${sentiment.confidence}%` }}
+            ></div>
           </div>
-          <span className="text-[10px] text-slate-400">High readiness for next-step installation milestones.</span>
+          <span className="text-[10px] text-slate-400">
+            High readiness for next-step installation milestones.
+          </span>
         </div>
 
         {/* Clarity Meter */}
@@ -116,12 +144,19 @@ export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412
               <Sparkles size={16} className="text-sky-400" />
               Process Clarity
             </span>
-            <strong className="text-sky-300 text-xl font-sans">{sentiment.clarity}%</strong>
+            <strong className="text-sky-300 text-xl font-sans">
+              {sentiment.clarity}%
+            </strong>
           </div>
           <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-            <div className="bg-sky-400 h-full rounded-full" style={{ width: `${sentiment.clarity}%` }}></div>
+            <div
+              className="bg-sky-400 h-full rounded-full"
+              style={{ width: `${sentiment.clarity}%` }}
+            ></div>
           </div>
-          <span className="text-[10px] text-slate-400">Clear understanding of grant terms and scope.</span>
+          <span className="text-[10px] text-slate-400">
+            Clear understanding of grant terms and scope.
+          </span>
         </div>
 
         {/* Stress Level Meter */}
@@ -131,12 +166,19 @@ export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412
               <AlertTriangle size={16} className="text-amber-400" />
               Stress Level
             </span>
-            <strong className="text-amber-300 text-xl font-sans">{sentiment.stress}%</strong>
+            <strong className="text-amber-300 text-xl font-sans">
+              {sentiment.stress}%
+            </strong>
           </div>
           <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-            <div className="bg-amber-400 h-full rounded-full" style={{ width: `${sentiment.stress}%` }}></div>
+            <div
+              className="bg-amber-400 h-full rounded-full"
+              style={{ width: `${sentiment.stress}%` }}
+            ></div>
           </div>
-          <span className="text-[10px] text-slate-400">Minimal friction during paperwork sign-off.</span>
+          <span className="text-[10px] text-slate-400">
+            Minimal friction during paperwork sign-off.
+          </span>
         </div>
       </div>
 
@@ -144,8 +186,12 @@ export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
         <div className="p-5 bg-slate-900/80 border border-white/10 rounded-2xl flex justify-between items-center">
           <div>
-            <span className="text-slate-400 text-[10px] uppercase font-bold block">Satisfaction Score</span>
-            <strong className="text-white text-lg font-sans">Projected SEAI Satisfaction: {sentiment.satisfaction}%</strong>
+            <span className="text-slate-400 text-[10px] uppercase font-bold block">
+              Satisfaction Score
+            </span>
+            <strong className="text-white text-lg font-sans">
+              Projected SEAI Satisfaction: {sentiment.satisfaction}%
+            </strong>
           </div>
           <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400">
             <Heart size={20} />
@@ -154,8 +200,12 @@ export default function HomeownerConfidenceView({ userId = "user_2026_08_03_1412
 
         <div className="p-5 bg-slate-900/80 border border-white/10 rounded-2xl flex justify-between items-center">
           <div>
-            <span className="text-slate-400 text-[10px] uppercase font-bold block">Platform Trust Index</span>
-            <strong className="text-white text-lg font-sans">Contractor & Advisor Trust: {sentiment.trust}%</strong>
+            <span className="text-slate-400 text-[10px] uppercase font-bold block">
+              Platform Trust Index
+            </span>
+            <strong className="text-white text-lg font-sans">
+              Contractor & Advisor Trust: {sentiment.trust}%
+            </strong>
           </div>
           <div className="p-3 bg-sky-500/10 border border-sky-500/20 rounded-xl text-sky-400">
             <ShieldCheck size={20} />

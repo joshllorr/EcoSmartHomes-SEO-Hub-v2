@@ -4,12 +4,23 @@
  * Phase 33 Homeowner Portal Contractor Quality View
  */
 
-import { useEffect, useState } from "react";
-import { ShieldCheck, Star, Clock, FileCheck, Award, AlertCircle } from "lucide-react";
-import { apiGet } from "../../hooks/useApi";
-import { ContractorScoreRecord } from "../../logic/contractors/contractorScoresEngine";
+import { useEffect, useState } from 'react';
+import {
+  ShieldCheck,
+  Star,
+  Clock,
+  FileCheck,
+  Award,
+  AlertCircle,
+} from 'lucide-react';
+import { apiGet } from '../../hooks/useApi';
+import { ContractorScoreRecord } from '../../logic/contractors/contractorScoresEngine';
 
-export default function ContractorQualityView({ contractorId = "ctr_2026_08_03_1612" }: { contractorId?: string }) {
+export default function ContractorQualityView({
+  contractorId = 'ctr_2026_08_03_1612',
+}: {
+  contractorId?: string;
+}) {
   const [record, setRecord] = useState<ContractorScoreRecord | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -31,9 +42,9 @@ export default function ContractorQualityView({ contractorId = "ctr_2026_08_03_1
               homeownerFeedback: 4.9,
               timelineAdherence: 96,
               issueFrequency: 0,
-              seaiCompliance: 100
+              seaiCompliance: 100,
             },
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           });
         }
       })
@@ -49,9 +60,9 @@ export default function ContractorQualityView({ contractorId = "ctr_2026_08_03_1
             homeownerFeedback: 4.9,
             timelineAdherence: 96,
             issueFrequency: 0,
-            seaiCompliance: 100
+            seaiCompliance: 100,
           },
-          updatedAt: Date.now()
+          updatedAt: Date.now(),
         });
       })
       .finally(() => setLoading(false));
@@ -70,8 +81,12 @@ export default function ContractorQualityView({ contractorId = "ctr_2026_08_03_1
     <div className="flex flex-col gap-4 text-left font-sans bg-slate-900/80 p-6 rounded-2xl border border-white/10 font-mono text-xs">
       <div className="flex justify-between items-center border-b border-slate-700/60 pb-3">
         <div>
-          <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">Phase 33 SEAI Contractor Quality Audit</span>
-          <h3 className="text-base font-bold text-white mt-0.5">Contractor ID: {record.contractor_id}</h3>
+          <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold tracking-wider">
+            Phase 33 SEAI Contractor Quality Audit
+          </span>
+          <h3 className="text-base font-bold text-white mt-0.5">
+            Contractor ID: {record.contractor_id}
+          </h3>
         </div>
         <div className="px-3 py-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-xl text-lg font-bold">
           {record.score} / 100
@@ -85,11 +100,15 @@ export default function ContractorQualityView({ contractorId = "ctr_2026_08_03_1
         </div>
         <div className="p-3 bg-slate-950/80 rounded-xl border border-white/5 flex justify-between items-center">
           <span className="text-slate-400">Paperwork Accuracy</span>
-          <strong className="text-white">{record.metrics.paperworkAccuracy}%</strong>
+          <strong className="text-white">
+            {record.metrics.paperworkAccuracy}%
+          </strong>
         </div>
         <div className="p-3 bg-slate-950/80 rounded-xl border border-white/5 flex justify-between items-center">
           <span className="text-slate-400">SEAI Grant Approval Rate</span>
-          <strong className="text-emerald-400">{record.metrics.grantApprovalRate}%</strong>
+          <strong className="text-emerald-400">
+            {record.metrics.grantApprovalRate}%
+          </strong>
         </div>
         <div className="p-3 bg-slate-950/80 rounded-xl border border-white/5 flex justify-between items-center">
           <span className="text-slate-400">Homeowner Rating</span>
@@ -100,17 +119,34 @@ export default function ContractorQualityView({ contractorId = "ctr_2026_08_03_1
         </div>
         <div className="p-3 bg-slate-950/80 rounded-xl border border-white/5 flex justify-between items-center">
           <span className="text-slate-400">Timeline Adherence</span>
-          <strong className="text-white">{record.metrics.timelineAdherence}%</strong>
+          <strong className="text-white">
+            {record.metrics.timelineAdherence}%
+          </strong>
         </div>
         <div className="p-3 bg-slate-950/80 rounded-xl border border-white/5 flex justify-between items-center">
           <span className="text-slate-400">SEAI Compliance Index</span>
-          <strong className="text-emerald-400">{record.metrics.seaiCompliance}%</strong>
+          <strong className="text-emerald-400">
+            {record.metrics.seaiCompliance}%
+          </strong>
         </div>
       </div>
 
       <div className="text-[11px] text-slate-400 pt-2 flex justify-between items-center border-t border-slate-800/60">
-        <span>Issues Logged: <strong className="text-white">{record.metrics.issueFrequency}</strong></span>
-        <span>Last Audit Update: {new Date(record.updatedAt).toLocaleString("en-IE", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+        <span>
+          Issues Logged:{' '}
+          <strong className="text-white">
+            {record.metrics.issueFrequency}
+          </strong>
+        </span>
+        <span>
+          Last Audit Update:{' '}
+          {new Date(record.updatedAt).toLocaleString('en-IE', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </span>
       </div>
     </div>
   );

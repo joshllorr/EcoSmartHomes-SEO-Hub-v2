@@ -6,14 +6,14 @@
  */
 
 export function generateRetrofitPdfHtml(plan: any, user: any): string {
-  const planId = plan?.plan_id || "plan_2026_08_03_1512";
-  const grantId = plan?.grant_id || "grant_2026_08_03_1207";
+  const planId = plan?.plan_id || 'plan_2026_08_03_1512';
+  const grantId = plan?.grant_id || 'grant_2026_08_03_1207';
   const name = user?.name || "Sarah O'Connor";
-  const eircode = user?.eircode || "V94 X2C9";
-  const generatedDate = new Date().toLocaleDateString("en-IE", {
-    year: "numeric",
-    month: "long",
-    day: "numeric"
+  const eircode = user?.eircode || 'V94 X2C9';
+  const generatedDate = new Date().toLocaleDateString('en-IE', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 
   return `<!DOCTYPE html>

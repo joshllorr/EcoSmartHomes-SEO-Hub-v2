@@ -48,6 +48,8 @@ export default tseslint.config(
       'react/prop-types': 'off',
       'react/display-name': 'off',
       'react/no-unknown-property': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/purity': 'warn',
     },
   },
 );

@@ -2,4 +2,4 @@
  * src/logic/contractors/contractorScoresEngine.ts
  */
 
-export * from "../../../logic/contractors/contractorScoresEngine";
+export * from '../../../logic/contractors/contractorScoresEngine';
