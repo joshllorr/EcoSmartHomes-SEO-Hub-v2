@@ -551,10 +551,10 @@ export default function HomeownerPortal() {
 
             <div className="flex flex-col gap-3">
               {[
-                { step: "Step 1: Attic Insulation", status: "Completed", date: "August 2026", grant: "€1,700" },
+                { step: "Step 1: Attic Insulation", status: "Completed", date: "August 2026", grant: "€2,000" },
                 { step: "Step 2: Smart Heating Controls", status: "Scheduled", date: "September 2026", grant: "€700" },
-                { step: "Step 3: Air-to-Water Heat Pump", status: "Pending", date: "October 2026", grant: "€6,500" },
-                { step: "Step 4: Solar PV Panels", status: "Pending", date: "November 2026", grant: "€2,100" }
+                { step: "Step 3: Air-to-Water Heat Pump", status: "Pending", date: "October 2026", grant: "€12,500" },
+                { step: "Step 4: Solar PV Panels", status: "Pending", date: "November 2026", grant: "€1,800" }
               ].map((item, idx) => (
                 <div key={idx} className="p-4 bg-slate-950/80 border border-white/5 rounded-xl flex justify-between items-center">
                   <div>

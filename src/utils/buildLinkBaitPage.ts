@@ -90,13 +90,13 @@ Return:
   <section className="bg-slate-900/80 p-6 rounded-xl border border-white/10 space-y-4">
     <h2 className="text-xl font-bold text-[#34d399]">Interactive 2026 SEAI Grant Breakdown (${area})</h2>
     <p className="text-slate-300 text-xs leading-relaxed">
-      Homeowners in ${area} upgrading their BER rating from G to A2 can access up to €25,000 in SEAI One-Stop-Shop grant subsidies. Below is the localized cost breakdown:
+      Homeowners in ${area} upgrading their BER rating to A0 or B2 can access up to €50,000 in SEAI One-Stop-Shop grant subsidies. Below is the localized cost breakdown:
     </p>
     
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono pt-2">
       <div className="bg-black/40 p-3 rounded border border-white/10">
         <span className="text-slate-400 block">Heat Pump Subsidies</span>
-        <span className="text-emerald-400 font-bold text-base">Up to €6,500</span>
+        <span className="text-emerald-400 font-bold text-base">Up to €12,500</span>
       </div>
       <div className="bg-black/40 p-3 rounded border border-white/10">
         <span className="text-slate-400 block">External Insulation</span>
@@ -104,7 +104,7 @@ Return:
       </div>
       <div className="bg-black/40 p-3 rounded border border-white/10">
         <span className="text-slate-400 block">Solar PV & Battery</span>
-        <span className="text-emerald-400 font-bold text-base">Up to €2,100</span>
+        <span className="text-emerald-400 font-bold text-base">Up to €1,800</span>
       </div>
     </div>
   </section>

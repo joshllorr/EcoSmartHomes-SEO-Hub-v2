@@ -125,7 +125,7 @@ export default function Linker() {
       difficultyScore: 32,
       subtopicClusters: [
         'Smart Meter Night-Rate Tariff Savings with Heat Pumps',
-        'SEAI Heat Pump Grant (€6,500) Application Rules',
+        'SEAI Heat Pump Grant (€12,500) Application Rules',
         'Coefficient of Performance (COP) in Irish Winter Temps',
         'Underfloor Heating vs Low-Temperature Radiator Retrofits',
       ],

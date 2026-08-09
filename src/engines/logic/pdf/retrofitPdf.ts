@@ -205,16 +205,16 @@ export function generateRetrofitPdfHtml(plan: any, user: any): string {
         </tr>
       </thead>
       <tbody>
-        <tr><td>Attic Insulation Upgrade</td><td>€2,200</td><td>€2,000</td><td class="highlight-net">€200</td></tr>
-        <tr><td>Smart Heating Controls</td><td>€1,400</td><td>€1,000</td><td class="highlight-net">€400</td></tr>
-        <tr><td>Air-to-Water Heat Pump System</td><td>€14,500</td><td>€8,000</td><td class="highlight-net">€6,500</td></tr>
-        <tr><td>4.2kWp Solar PV Array</td><td>€7,500</td><td>€3,000</td><td class="highlight-net">€4,500</td></tr>
-        <tr><td>Full Retrofit + Combo Bonuses</td><td>—</td><td>€4,100</td><td class="highlight-net">-€4,100</td></tr>
+        <tr><td>Attic Insulation Upgrade</td><td>€2,700</td><td>€2,500</td><td class="highlight-net">€200</td></tr>
+        <tr><td>Smart Heating Controls</td><td>€1,400</td><td>€700</td><td class="highlight-net">€700</td></tr>
+        <tr><td>Air-to-Water Heat Pump System</td><td>€16,500</td><td>€12,500</td><td class="highlight-net">€4,000</td></tr>
+        <tr><td>4.2kWp Solar PV Array</td><td>€4,200</td><td>€1,800</td><td class="highlight-net">€2,400</td></tr>
+        <tr><td>External Wall Insulation</td><td>€12,500</td><td>€8,000</td><td class="highlight-net">€4,500</td></tr>
         <tr style="background: #e2e8f0; font-weight: bold;">
           <td>Total Retrofit Project</td>
-          <td>€30,100</td>
-          <td>€22,100</td>
-          <td style="color: #047857; font-size: 16px;">€8,000</td>
+          <td>€37,300</td>
+          <td>€25,500</td>
+          <td style="color: #047857; font-size: 16px;">€11,800</td>
         </tr>
       </tbody>
     </table>
