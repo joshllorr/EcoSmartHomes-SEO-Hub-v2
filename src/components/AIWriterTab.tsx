@@ -61,16 +61,17 @@ export default function AIWriterTab({
   const [isGeneratingLinks, setIsGeneratingLinks] = useState(false);
 
   const [title, setTitle] = useState(
-    aiSuggestion || 'Raising BER from G to A: Step-by-Step Retrofit Sequence',
+    aiSuggestion ||
+      'SEAI Grant Increase 2026 & Revised BER Scale Guide (March 28 Update)',
   );
   const [topic, setTopic] = useState(
-    'A practical guide to upgrading energy efficiency, thermal insulation, heat pump installations, and SEAI grant sequencing for Irish homes.',
+    'A comprehensive, authoritative guide detailing the March 28, 2026 SEAI grant increases up to €28,500, revised BER scale thresholds, and how EcoSmartHomes advisors simplify compliance and grant applications across Ireland.',
   );
-  const [pillar, setPillar] = useState('BER Rating Ireland');
+  const [pillar, setPillar] = useState('SEAI Grants & BER Scale 2026');
   const [keywordsInput, setKeywordsInput] = useState(
-    'BER Rating, SEAI grants, retrofitting, home insulation',
+    'SEAI grant increase 2026, BER scale update March 2026, home energy retrofit Ireland, EcoSmartHomes advisor',
   );
-  const [tone, setTone] = useState('Professional');
+  const [tone, setTone] = useState('Authoritative, Reassuring & Clear');
   const [audience, setAudience] = useState('Irish homeowners');
   const [length, setLength] = useState('medium');
 

@@ -2428,16 +2428,16 @@ function generateFallbackArticle(params: {
 
     cta = `## Let's Get Started Together!\n\nReady to make your home the cozy sanctuary you deserve? The friendly team at EcoSmartHomes is here to make retrofitting easy, affordable, and stress-free. We handle everything from the initial technical assessment to applying for grants and doing the installations. Get in touch with us today for a warm chat and let's make your home cozy!`;
   } else {
-    // Professional, Neutral, and generic defaults
-    intro = `Upgrading your home's energy efficiency is one of the smartest investments an Irish homeowner can make today. Under the focus pillar **${pillar || 'BER Rating Ireland'}**, we outline a clear, actionable sequencing plan to elevate your domestic building energy rating (BER), significantly reduce thermal losses, and make full use of the generous SEAI grant programs. Whether your goal is to reduce energy bills or minimize carbon tax liability, this guide provides a step-by-step roadmap.`;
+    // Authoritative, Reassuring, Irish-Centric Default (Effective March 28, 2026 Update)
+    intro = `Upgrading your home's energy efficiency is the most strategic investment an Irish homeowner can make in 2026. Following the official **SEAI grant increase and revised BER scale effective March 28, 2026**, Irish households can now claim up to **€28,500** in combined grant subsidies under the **${pillar || 'SEAI Grants & BER Scale 2026'}** scheme. This authoritative guide provides absolute clarity on the updated grant thresholds, revised building energy rating benchmarks, and how an EcoSmartHomes advisor simplifies full grant compliance and application.`;
 
-    section1 = `## Wrap Your Home: Fabric First Insulation\n\nThe fundamental starting point of any successful domestic energy upgrade is the "Fabric First" principle. Before installing advanced heating systems, you must ensure the building envelope retains thermal energy. This involves upgrading roof and attic insulation, injecting cavity walls, and retrofitting older windows with highly insulated double or triple glazing. Proper airtightness membranes ensure draft-free ventilation and consistent ambient comfort.`;
+    section1 = `## Updated 2026 SEAI Grant Thresholds & Retrofit Categories\n\nEffective March 28, 2026, the Sustainable Energy Authority of Ireland (SEAI) expanded direct grant allocations across all key home energy retrofit categories to accelerate Ireland's national climate targets:\n\n- **Air-to-Water Heat Pump Systems**: Subsidized up to **€8,000** (plus an extra €1,500 heat pump & solar combo bonus).\n- **Solar PV Panels**: Direct funding increased to **€2,800** for standard residential arrays.\n- **External Wall Insulation**: Grant support raised up to **€8,000** for detached and semi-detached properties.\n- **Attic & Roof Insulation**: Subsidized up to **€2,000** to lock in baseline envelope thermal resistance.\n- **One-Stop-Shop Deep Retrofit Bonus**: Enhanced to **€3,500** for achieving an A-rated BER.`;
 
-    section2 = `## Efficient Heating: Transitioning to Heat Pumps\n\nWith a robust thermal envelope in place, homeowners can transition away from expensive, carbon-intensive fossil fuel boilers (gas and oil) to clean heat pump technology. Air-to-Water heat pumps extract heat from the external atmosphere, compressing it to warm your home's air and domestic hot water. SEAI offers a robust grant of up to €6,500 for heat pumps, provided that a registered technical assessor certifies that your home is sufficiently insulated to run the system efficiently.`;
+    section2 = `## Revised BER Scale Standards (March 28, 2026 Update)\n\nThe Sustainable Energy Authority of Ireland (SEAI) and DEAP 4.2.2 standard revised the domestic Building Energy Rating (BER) band thresholds to accurately measure primary energy consumption (kWh/m²/year):\n\n- **BER A1–A3**: Primary energy consumption below 75 kWh/m²/yr (Zero-carbon ready homes).\n- **BER B1–B3**: 75 to 150 kWh/m²/yr (High-efficiency retrofitted standard).\n- **BER C1–C3**: 150 to 225 kWh/m²/yr (Moderate efficiency).\n- **BER D1–G**: Above 225 kWh/m²/yr (High-priority candidates for SEAI grant support).`;
 
-    section3 = `## Key Milestones for Your Irish Home Retrofit\n\n1. **Acquire a Pre-Works BER Certificate**: Establish your baseline energy rating.\n2. **Execute Envelope Insulation**: Focus on attic, wall cavities, and external rendering.\n3. **Install an Air-to-Water Heat Pump**: Transition your hot water and central heating.\n4. **Secure SEAI Grants**: Ensure all work is signed off by certified SEAI registered contractors.`;
+    section3 = `## How EcoSmartHomes Simplifies Compliance & Application\n\nNavigating SEAI grant paperwork, technical assessor sign-offs, and contractor registration can feel daunting. Your dedicated **EcoSmartHomes advisor** handles the entire process end-to-end:\n\n1. **Pre-Works BER Survey**: A certified assessor calculates your baseline Heat Loss Indicator (HLI).\n2. **Customized Retrofit Plan**: We sequence your insulation, heat pump, and solar PV upgrades for maximum grant yield.\n3. **SEAI Grant Submission**: We prepare and submit all documentation directly to SEAI on your behalf.\n4. **Post-Works Sign-Off**: We issue your official post-retrofit BER Certificate showing your new A-rating.`;
 
-    cta = `## Connect with EcoSmartHomes Experts\n\nAt EcoSmartHomes, we specialize in helping homeowners across Ireland navigate the complex retrofit and grant process. Our registered surveyors and installers ensure your upgrades are executed to the highest standards, yielding maximum comfort and financial savings. Contact EcoSmartHomes today for a professional retrofit consultation.`;
+    cta = `## Book Your Free EcoSmartHomes Advisor Consultation Today\n\nDon't leave thousands of euros in government funding on the table. Speak with an accredited EcoSmartHomes advisor today to unlock your 2026 SEAI grant entitlements and transform your property into an energy-efficient, A-rated home. Contact EcoSmartHomes at **ecosmarthomes.ie** to get started!`;
   }
 
   let bodyMarkdown = `# ${title}\n\n${intro}\n\n${section1}\n\n${section2}\n\n${section3}\n\n${cta}`;
@@ -4868,12 +4868,10 @@ app.post('/api/orchestrator/run', async (_req, res) => {
     const state = await runOrchestrator(process.env);
     return res.json(state);
   } catch (err: any) {
-    return res
-      .status(500)
-      .json({
-        error: 'Failed to run master orchestrator cycle',
-        details: String(err),
-      });
+    return res.status(500).json({
+      error: 'Failed to run master orchestrator cycle',
+      details: String(err),
+    });
   }
 });
 
@@ -4882,12 +4880,10 @@ app.get('/api/orchestrator/state', async (_req, res) => {
     const state = await getOrchestratorState(process.env);
     return res.json(state);
   } catch (err: any) {
-    return res
-      .status(500)
-      .json({
-        error: 'Failed to get orchestrator state',
-        details: String(err),
-      });
+    return res.status(500).json({
+      error: 'Failed to get orchestrator state',
+      details: String(err),
+    });
   }
 });
 
@@ -4898,12 +4894,10 @@ app.post('/api/coach/generate', async (req, res) => {
     const bundle = await generateCoachMessages(process.env, user_id);
     return res.json({ success: true, bundle });
   } catch (err: any) {
-    return res
-      .status(500)
-      .json({
-        error: 'Failed to generate coach messages',
-        details: String(err),
-      });
+    return res.status(500).json({
+      error: 'Failed to generate coach messages',
+      details: String(err),
+    });
   }
 });
 
