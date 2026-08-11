@@ -88,7 +88,7 @@
     "@types/d3-transition": "^3.0.9",
     "@types/d3-zoom": "^3.0.8",
     "@types/express": "^5.0.6",
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.2.0",
     "@types/node-schedule": "^2.1.7",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
