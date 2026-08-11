@@ -233,6 +233,46 @@ describe('POST /api/seo/serp-analysis', () => {
   });
 });
 
+describe('Article Serving & Publishing Endpoints', () => {
+  it('GET /articles/:slug returns 404 for non-existent article', async () => {
+    const res = await request(app).get('/articles/non-existent-article-12345');
+    expect(res.status).toBe(404);
+    expect(res.text).toBe('Article not found');
+  });
+
+  it('GET /articles/:slug returns 200 and html content when test article exists', async () => {
+    const res = await request(app).get('/articles/test-article');
+    expect(res.status).toBe(200);
+    expect(res.text).toContain('Test Article');
+  });
+
+  it('POST /api/publish returns 400 if slug is missing', async () => {
+    const res = await request(app)
+      .post('/api/publish')
+      .send({ html: '<p>Content</p>' });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Slug is required');
+  });
+
+  it('POST /api/publish creates and publishes an article successfully', async () => {
+    const res = await request(app).post('/api/publish').send({
+      slug: 'unit-test-article',
+      title: 'Unit Test Article',
+      html: '<p>This is a unit test published article.</p>',
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.slug).toBe('unit-test-article');
+    expect(res.body.url).toBe('/articles/unit-test-article');
+
+    // Verify GET route now serves the published article
+    const getRes = await request(app).get('/articles/unit-test-article');
+    expect(getRes.status).toBe(200);
+    expect(getRes.text).toContain('Unit Test Article');
+  });
+});
+
 describe('Rate Limiting', () => {
   it('returns 429 after exceeding rate limit in production', async () => {
     const requests = Array.from({ length: 1005 }, () =>

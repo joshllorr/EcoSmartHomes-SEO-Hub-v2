@@ -60,6 +60,7 @@ import {
 
 import { publishToCMS } from './src/server/cmsPublisher';
 import { runBacklinkDiscoveryAgent } from './src/server/backlinkAgent';
+import publishHandler from './api/publish.js';
 
 const app = express();
 const PORT = 3000;
@@ -172,6 +173,24 @@ app.use((req, _res, next) => {
 
 import commandRouter from './src/server/commands';
 app.use('/api', commandRouter);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Article Serving & Publishing Endpoints (EcoSmartHomes Bridge Connection)
+// ─────────────────────────────────────────────────────────────────────────────
+
+app.get('/articles/:slug', (req, res) => {
+  const slug = req.params.slug;
+  const filePath = path.join(process.cwd(), 'articles', `${slug}.html`);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('Article not found');
+  }
+
+  const html = fs.readFileSync(filePath, 'utf8');
+  res.send(html);
+});
+
+app.post('/api/publish', publishHandler);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Layer 7 — Autonomous Decision Engine Endpoints & Scheduler
