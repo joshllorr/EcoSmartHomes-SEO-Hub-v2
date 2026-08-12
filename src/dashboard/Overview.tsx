@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import { apiGet } from '../hooks/useApi';
 import DeploymentHealth from './DeploymentHealth';
+import VercelTimeline from './VercelTimeline';
+import GitHubDiffViewer from './GitHubDiffViewer';
 
 export default function Overview() {
   const [loading, setLoading] = useState(true);
@@ -157,6 +159,8 @@ export default function Overview() {
       </div>
 
       <DeploymentHealth />
+      <VercelTimeline />
+      <GitHubDiffViewer />
     </div>
   );
 }
