@@ -1,41 +1,6 @@
-import {
-  LayoutDashboard,
-  Search,
-  FileText,
-  Globe,
-  Sparkles,
-  Layers,
-  Settings,
-  Zap,
-  CheckCircle,
-  HelpCircle,
-  Menu,
-  X,
-  FileCheck,
-  Thermometer,
-  TrendingUp,
-  MessageSquare,
-  Smile,
-  Cpu,
-  Lightbulb,
-  BookOpen,
-  Link2,
-  Map,
-  Activity,
-  Compass,
-  Users,
-  ShieldCheck,
-  DollarSign,
-  Eye,
-  Layout,
-  Dna,
-  Scale,
-  Award,
-  Calendar,
-  Wrench,
-} from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import * as LucideIcons from 'lucide-react';
 
 interface SidebarProps {
   activeTab: string;
@@ -49,327 +14,310 @@ export default function Sidebar({
   site,
 }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState<
+    'all' | 'p29_40' | 'p15_28' | 'p1_14' | 'tools'
+  >('all');
   const navigate = useNavigate();
   const location = useLocation();
 
-  const menuItems = [
+  const menuSections = [
     {
-      id: 'dashboard',
-      label: 'Dashboard',
-      name: 'Dashboard',
-      path: '/dashboard',
-      icon: LayoutDashboard,
+      id: 'p29_40',
+      title: '🔥 Phases 29–40 Master Suite',
+      items: [
+        {
+          id: 'p29_pdf',
+          name: 'Retrofit Blueprint PDF',
+          label: 'Phase 29 PDF Analytics',
+          icon: LucideIcons.FileText,
+        },
+        {
+          id: 'p30_submissions',
+          name: 'Grant Submissions',
+          label: 'Phase 30 Grant Submissions',
+          icon: LucideIcons.FileCheck,
+        },
+        {
+          id: 'p31_postinstall',
+          name: 'Post-Install BER & Payment',
+          label: 'Phase 31 Post-Install',
+          path: '/post-install',
+          icon: LucideIcons.Award,
+        },
+        {
+          id: 'p32_journey',
+          name: 'Master Journey Timeline',
+          label: 'Phase 32 Master Journey',
+          path: '/journey',
+          icon: LucideIcons.Compass,
+        },
+        {
+          id: 'p33_contractor_scores',
+          name: 'Contractor Quality Scores',
+          label: 'Phase 33 Quality Scores',
+          icon: LucideIcons.ShieldCheck,
+        },
+        {
+          id: 'p33_contractor_insights',
+          name: 'Contractor Score Insights',
+          label: 'Phase 33 Insights',
+          icon: LucideIcons.TrendingUp,
+        },
+        {
+          id: 'p34_upgrades',
+          name: 'AI Home Upgrades',
+          label: 'Phase 34 Recommendations',
+          icon: LucideIcons.Sparkles,
+        },
+        {
+          id: 'p35_national',
+          name: 'National Market Insights',
+          label: 'Phase 35 National Market',
+          path: '/national-insights',
+          icon: LucideIcons.Globe,
+        },
+        {
+          id: 'p36_forecasting',
+          name: 'Predictive Forecasting',
+          label: 'Phase 36 Predictive Forecasting',
+          path: '/forecasting',
+          icon: LucideIcons.TrendingUp,
+        },
+        {
+          id: 'p37_advisor',
+          name: 'AI Advisor Monitoring',
+          label: 'Phase 37 Advisor Sessions',
+          icon: LucideIcons.MessageSquare,
+        },
+        {
+          id: 'p38_sentiment',
+          name: 'Sentiment Intelligence',
+          label: 'Phase 38 Sentiment Intelligence',
+          icon: LucideIcons.Smile,
+        },
+        {
+          id: 'p39_coach',
+          name: 'Proactive Coaching',
+          label: 'Phase 39 Proactive Coaching',
+          path: '/coach',
+          icon: LucideIcons.Sparkles,
+        },
+        {
+          id: 'p40_orchestrator',
+          name: 'Master Orchestrator',
+          label: 'Phase 40 Master Orchestrator',
+          icon: LucideIcons.Cpu,
+        },
+      ],
     },
     {
-      id: 'p7_overview',
-      label: 'Intelligence Console',
-      name: 'Intelligence Console',
-      icon: LayoutDashboard,
+      id: 'p15_28',
+      title: '🏡 Strategy & Retrofit (Phases 15–28)',
+      items: [
+        {
+          id: 'p15_negotiation',
+          name: 'Multi-Agent Negotiation',
+          icon: LucideIcons.Users,
+        },
+        {
+          id: 'p16_budget',
+          name: 'Budget Allocation',
+          icon: LucideIcons.DollarSign,
+        },
+        {
+          id: 'p17_watchdog',
+          name: 'Competitor Watchdog',
+          icon: LucideIcons.Eye,
+        },
+        {
+          id: 'p18_landing',
+          name: 'Landing Optimizer',
+          icon: LucideIcons.Layout,
+        },
+        {
+          id: 'p19_ecosystem',
+          name: 'Ecosystem Intelligence',
+          icon: LucideIcons.Globe,
+        },
+        {
+          id: 'p20_evolution',
+          name: 'Strategy Evolution',
+          icon: LucideIcons.Dna,
+        },
+        {
+          id: 'p21_content',
+          name: 'Content Engine',
+          icon: LucideIcons.FileText,
+        },
+        {
+          id: 'p22_conflict',
+          name: 'Conflict Resolution',
+          icon: LucideIcons.Scale,
+        },
+        {
+          id: 'p23_grants',
+          name: 'SEAI Grant Intelligence',
+          icon: LucideIcons.Award,
+        },
+        {
+          id: 'p24_pdf',
+          name: 'SEAI PDF Analytics',
+          icon: LucideIcons.FileText,
+        },
+        {
+          id: 'p25_advisor',
+          name: 'Advisor Scheduler',
+          path: '/advisor',
+          icon: LucideIcons.Calendar,
+        },
+        {
+          id: 'p26_homeowners',
+          name: 'Homeowner Accounts',
+          icon: LucideIcons.Users,
+        },
+        {
+          id: 'p27_retrofit',
+          name: 'AI Retrofit Analytics',
+          icon: LucideIcons.Sparkles,
+        },
+        {
+          id: 'p28_contractors',
+          name: 'Contractor Coordination',
+          path: '/contractor-engine',
+          icon: LucideIcons.Wrench,
+        },
+      ],
     },
     {
-      id: 'p7_backlinks',
-      label: 'Backlink AI Engine',
-      name: 'Backlink AI Engine',
-      icon: Link2,
+      id: 'p1_14',
+      title: '📊 Core Intelligence (Phases 1–14)',
+      items: [
+        {
+          id: 'dashboard',
+          name: 'Dashboard Overview',
+          path: '/dashboard',
+          icon: LucideIcons.LayoutDashboard,
+        },
+        {
+          id: 'p7_overview',
+          name: 'Intelligence Console',
+          icon: LucideIcons.LayoutDashboard,
+        },
+        {
+          id: 'p7_backlinks',
+          name: 'Backlink AI Engine',
+          icon: LucideIcons.Link2,
+        },
+        {
+          id: 'p7_competitors',
+          name: 'Competitor SERP Diff',
+          icon: LucideIcons.TrendingUp,
+        },
+        {
+          id: 'p7_heatmap',
+          name: 'Regional Demand Map',
+          icon: LucideIcons.Map,
+        },
+        {
+          id: 'p7_marl',
+          name: 'MARL Safety Loop',
+          path: '/marl',
+          icon: LucideIcons.Sparkles,
+        },
+        {
+          id: 'p9_autonomy',
+          name: 'Autonomy Campaign Console',
+          icon: LucideIcons.Zap,
+        },
+        {
+          id: 'p11_fusion',
+          name: 'SEO + Ads Fusion Engine',
+          icon: LucideIcons.Layers,
+        },
+        {
+          id: 'p12_growth',
+          name: 'Predictive Growth Console',
+          icon: LucideIcons.TrendingUp,
+        },
+        {
+          id: 'p13_strategy',
+          name: 'Strategic Planning Console',
+          icon: LucideIcons.Compass,
+        },
+        {
+          id: 'p14_simulation',
+          name: 'Autonomous Market Simulator',
+          icon: LucideIcons.Cpu,
+        },
+      ],
     },
     {
-      id: 'p7_competitors',
-      label: 'Competitor SERP Diff',
-      name: 'Competitor SERP Diff',
-      icon: TrendingUp,
-    },
-    {
-      id: 'p7_heatmap',
-      label: 'Regional Demand Map',
-      name: 'Regional Demand Map',
-      icon: Map,
-    },
-    {
-      id: 'p7_marl',
-      label: 'MARL Safety Loop',
-      name: 'MARL Safety Loop',
-      path: '/marl',
-      icon: Sparkles,
-    },
-    {
-      id: 'p9_autonomy',
-      label: 'Autonomy Campaign Console',
-      name: 'Autonomy Campaign Console',
-      icon: Zap,
-    },
-    {
-      id: 'p11_fusion',
-      label: 'SEO + Ads Fusion Engine',
-      name: 'SEO + Ads Fusion Engine',
-      icon: Layers,
-    },
-    {
-      id: 'p12_growth',
-      label: 'Predictive Growth Console',
-      name: 'Predictive Growth Console',
-      icon: TrendingUp,
-    },
-    {
-      id: 'p13_strategy',
-      label: 'Strategic Planning Console',
-      name: 'Strategic Planning Console',
-      icon: Compass,
-    },
-    {
-      id: 'p14_simulation',
-      label: 'Autonomous Market Simulator',
-      name: 'Autonomous Market Simulator',
-      icon: Cpu,
-    },
-    {
-      id: 'p15_negotiation',
-      label: 'Multi-Agent Negotiation',
-      name: 'Multi-Agent Negotiation',
-      icon: Users,
-    },
-    {
-      id: 'p16_budget',
-      label: 'Budget Allocation',
-      name: 'Budget Allocation',
-      icon: DollarSign,
-    },
-    {
-      id: 'p17_watchdog',
-      label: 'Competitor Watchdog',
-      name: 'Competitor Watchdog',
-      icon: Eye,
-    },
-    {
-      id: 'p18_landing',
-      label: 'Landing Optimizer',
-      name: 'Landing Optimizer',
-      icon: Layout,
-    },
-    {
-      id: 'p19_ecosystem',
-      label: 'Ecosystem Intelligence',
-      name: 'Ecosystem Intelligence',
-      icon: Globe,
-    },
-    {
-      id: 'p20_evolution',
-      label: 'Strategy Evolution',
-      name: 'Strategy Evolution',
-      icon: Dna,
-    },
-    {
-      id: 'p21_content',
-      label: 'Content Engine',
-      name: 'Content Engine',
-      icon: FileText,
-    },
-    {
-      id: 'p22_conflict',
-      label: 'Conflict Resolution',
-      name: 'Conflict Resolution',
-      icon: Scale,
-    },
-    {
-      id: 'p23_grants',
-      label: 'SEAI Grant Intelligence',
-      name: 'SEAI Grant Intelligence',
-      icon: Award,
-    },
-    {
-      id: 'p24_pdf',
-      label: 'SEAI PDF Analytics',
-      name: 'SEAI PDF Analytics',
-      icon: FileText,
-    },
-    {
-      id: 'p25_advisor',
-      label: 'Advisor Scheduler',
-      name: 'Advisor Scheduler',
-      path: '/advisor',
-      icon: Calendar,
-    },
-    {
-      id: 'p26_homeowners',
-      label: 'Homeowner Accounts',
-      name: 'Homeowner Accounts',
-      icon: Users,
-    },
-    {
-      id: 'p27_retrofit',
-      label: 'AI Retrofit Analytics',
-      name: 'AI Retrofit Analytics',
-      icon: Sparkles,
-    },
-    {
-      id: 'p28_contractors',
-      label: 'Contractor Coordination',
-      name: 'Contractor Coordination',
-      path: '/contractor-engine',
-      icon: Wrench,
-    },
-    {
-      id: 'p29_pdf',
-      label: 'Retrofit Blueprint PDF',
-      name: 'Retrofit Blueprint PDF',
-      icon: FileText,
-    },
-    {
-      id: 'p30_submissions',
-      label: 'Grant Submissions',
-      name: 'Grant Submissions',
-      icon: FileCheck,
-    },
-    {
-      id: 'p31_postinstall',
-      label: 'Post-Install BER & Payment',
-      name: 'Post-Install BER & Payment',
-      path: '/post-install',
-      icon: Award,
-    },
-    {
-      id: 'p32_journey',
-      label: 'Master Journey Timeline',
-      name: 'Master Journey Timeline',
-      path: '/journey',
-      icon: Compass,
-    },
-    {
-      id: 'p33_contractor_scores',
-      label: 'Contractor Quality Scores',
-      name: 'Contractor Quality Scores',
-      icon: ShieldCheck,
-    },
-    {
-      id: 'p33_contractor_insights',
-      label: 'Contractor Score Insights',
-      name: 'Contractor Score Insights',
-      icon: TrendingUp,
-    },
-    {
-      id: 'p34_upgrades',
-      label: 'AI Home Upgrades',
-      name: 'AI Home Upgrades',
-      icon: Sparkles,
-    },
-    {
-      id: 'p35_national',
-      label: 'National Market Insights',
-      name: 'National Market Insights',
-      path: '/national-insights',
-      icon: Globe,
-    },
-    {
-      id: 'p36_forecasting',
-      label: 'Predictive Forecasting',
-      name: 'Predictive Forecasting',
-      path: '/forecasting',
-      icon: TrendingUp,
-    },
-    {
-      id: 'p37_advisor',
-      label: 'AI Advisor Monitoring',
-      name: 'AI Advisor Monitoring',
-      icon: MessageSquare,
-    },
-    {
-      id: 'p38_sentiment',
-      label: 'Sentiment Intelligence',
-      name: 'Sentiment Intelligence',
-      icon: Smile,
-    },
-    {
-      id: 'p39_coach',
-      label: 'Proactive Coaching',
-      name: 'Proactive Coaching',
-      path: '/coach',
-      icon: Sparkles,
-    },
-    {
-      id: 'p40_orchestrator',
-      label: 'Master Orchestrator',
-      name: 'Master Orchestrator',
-      icon: Cpu,
-    },
-    {
-      id: 'ranking_map',
-      label: 'Ranking Stability',
-      name: 'Ranking Stability',
-      icon: Activity,
-    },
-    { id: 'crawler', label: 'Crawler Feed', name: 'Crawler Feed', icon: Zap },
-    {
-      id: 'content_ideas',
-      label: 'Discover Ideas',
-      name: 'Discover Ideas',
-      icon: Lightbulb,
-    },
-    {
-      id: 'link_builder',
-      label: 'Link Builder',
-      name: 'Link Builder',
-      icon: Link2,
-    },
-    { id: 'writer', label: 'AI Writer', name: 'AI Writer', icon: FileText },
-    {
-      id: 'library',
-      label: 'Content Library',
-      name: 'Content Library',
-      icon: BookOpen,
-    },
-    {
-      id: 'content_audit',
-      label: 'Content Audit',
-      name: 'Content Audit',
-      icon: FileCheck,
-    },
-    {
-      id: 'content_map',
-      label: 'Content Map',
-      name: 'Content Map',
-      path: '/content-map',
-      icon: Map,
-    },
-    {
-      id: 'keywords',
-      label: 'Keyword Research',
-      name: 'Keyword Research',
-      icon: Search,
-    },
-    {
-      id: 'serp',
-      label: 'SERP Analyzer',
-      name: 'SERP Analyzer',
-      icon: TrendingUp,
-    },
-    {
-      id: 'audit',
-      label: 'Site Health Scan',
-      name: 'Site Health Scan',
-      icon: Globe,
-    },
-    {
-      id: 'estimator',
-      label: 'Energy Estimator',
-      name: 'Energy Estimator',
-      icon: Thermometer,
-    },
-    {
-      id: 'visibility',
-      label: 'AI Answer Visibility',
-      name: 'AI Answer Visibility',
-      icon: Sparkles,
+      id: 'tools',
+      title: '🛠️ SEO & Content Tools',
+      items: [
+        {
+          id: 'ranking_map',
+          name: 'Ranking Stability',
+          icon: LucideIcons.Activity,
+        },
+        { id: 'crawler', name: 'Crawler Feed', icon: LucideIcons.Zap },
+        {
+          id: 'content_ideas',
+          name: 'Discover Ideas',
+          icon: LucideIcons.Lightbulb,
+        },
+        { id: 'link_builder', name: 'Link Builder', icon: LucideIcons.Link2 },
+        { id: 'writer', name: 'AI Writer', icon: LucideIcons.FileText },
+        { id: 'library', name: 'Content Library', icon: LucideIcons.BookOpen },
+        {
+          id: 'content_audit',
+          name: 'Content Audit',
+          icon: LucideIcons.FileCheck,
+        },
+        {
+          id: 'content_map',
+          name: 'Content Map',
+          path: '/content-map',
+          icon: LucideIcons.Map,
+        },
+        { id: 'keywords', name: 'Keyword Research', icon: LucideIcons.Search },
+        { id: 'serp', name: 'SERP Analyzer', icon: LucideIcons.TrendingUp },
+        { id: 'audit', name: 'Site Health Scan', icon: LucideIcons.Globe },
+        {
+          id: 'estimator',
+          name: 'Energy Estimator',
+          icon: LucideIcons.Thermometer,
+        },
+        {
+          id: 'visibility',
+          name: 'AI Answer Visibility',
+          icon: LucideIcons.Sparkles,
+        },
+      ],
     },
   ];
+
+  const handleTabClick = (item: { id: string; path?: string }) => {
+    if (item.path) {
+      navigate(item.path);
+    } else {
+      if (location.pathname !== '/') {
+        navigate('/');
+      }
+    }
+    setActiveTab(item.id);
+  };
 
   return (
     <div
       className={`glass-sidebar text-slate-100 flex flex-col transition-all duration-300 border-r border-white/10 ${
-        collapsed ? 'w-16' : 'w-64'
-      } h-screen max-h-screen relative overflow-hidden shrink-0`}
+        collapsed ? 'w-16' : 'w-64 sm:w-72'
+      } h-screen max-h-screen relative overflow-hidden shrink-0 z-30`}
       id="sidebar-container"
     >
       {/* Top Brand Block */}
-      <div className="p-4 border-b border-white/10 flex items-center justify-between">
+      <div className="p-4 border-b border-white/10 flex items-center justify-between shrink-0">
         {!collapsed && (
           <div className="flex flex-col">
             <span className="font-display font-bold text-lg text-[#34d399] tracking-tight whitespace-nowrap">
@@ -382,71 +330,168 @@ export default function Sidebar({
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1 hover:bg-white/10 rounded text-slate-400 hover:text-[#34d399] transition cursor-pointer"
+          className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-[#34d399] transition cursor-pointer"
           id="toggle-sidebar"
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {collapsed ? <Menu size={20} /> : <X size={20} />}
+          {collapsed ? (
+            <LucideIcons.Menu size={20} />
+          ) : (
+            <LucideIcons.X size={20} />
+          )}
         </button>
       </div>
 
-      {/* Nav Menu Items */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = item.path
-            ? location.pathname === item.path || activeTab === item.id
-            : activeTab === item.id;
-          return (
+      {!collapsed && (
+        <div className="p-3 border-b border-white/10 space-y-2 shrink-0 bg-black/20">
+          {/* Live Search Input */}
+          <div className="relative">
+            <LucideIcons.Search
+              size={14}
+              className="absolute left-2.5 top-2.5 text-slate-400"
+            />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search 40+ phases & engines..."
+              className="w-full bg-slate-900/90 text-xs text-white pl-8 pr-7 py-1.5 rounded-lg border border-white/10 focus:border-[#34d399] focus:outline-hidden font-sans placeholder:text-slate-500"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2 top-2 text-slate-400 hover:text-white"
+              >
+                <LucideIcons.X size={12} />
+              </button>
+            )}
+          </div>
+
+          {/* Category Quick Filter Pills */}
+          <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none text-[11px] font-medium">
             <button
-              key={item.id}
-              onClick={() => {
-                if (item.path) {
-                  navigate(item.path);
-                } else {
-                  if (location.pathname !== '/') {
-                    navigate('/');
-                  }
-                }
-                setActiveTab(item.id);
-              }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition group cursor-pointer ${
-                isActive
-                  ? 'bg-white/10 text-white border border-white/10'
-                  : 'text-slate-400 hover:bg-white/5 hover:text-white'
+              onClick={() => setActiveCategory('all')}
+              className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
+                activeCategory === 'all'
+                  ? 'bg-[#34d399]/20 text-[#34d399] border border-[#34d399]/40 font-bold'
+                  : 'bg-white/5 text-slate-400 hover:text-white'
               }`}
-              id={`nav-${item.id}`}
             >
-              <Icon
-                size={18}
-                className={`shrink-0 ${isActive ? 'text-[#34d399]' : 'text-slate-400 group-hover:text-[#34d399] transition'}`}
-              />
-              {!collapsed && (
-                <span className="truncate">{item.name || item.label}</span>
-              )}
+              All
             </button>
-          );
-        })}
+            <button
+              onClick={() => setActiveCategory('p29_40')}
+              className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
+                activeCategory === 'p29_40'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
+                  : 'bg-white/5 text-slate-400 hover:text-white'
+              }`}
+            >
+              Phases 29–40 🔥
+            </button>
+            <button
+              onClick={() => setActiveCategory('p15_28')}
+              className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
+                activeCategory === 'p15_28'
+                  ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold'
+                  : 'bg-white/5 text-slate-400 hover:text-white'
+              }`}
+            >
+              15–28
+            </button>
+            <button
+              onClick={() => setActiveCategory('p1_14')}
+              className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
+                activeCategory === 'p1_14'
+                  ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold'
+                  : 'bg-white/5 text-slate-400 hover:text-white'
+              }`}
+            >
+              1–14
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Nav Menu Items */}
+      <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+        {menuSections
+          .filter(
+            (section) =>
+              activeCategory === 'all' || activeCategory === section.id,
+          )
+          .map((section) => {
+            const matchingItems = section.items.filter((item) =>
+              searchQuery === ''
+                ? true
+                : item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  item.id.toLowerCase().includes(searchQuery.toLowerCase()),
+            );
+
+            if (matchingItems.length === 0) return null;
+
+            return (
+              <div key={section.id} className="space-y-1">
+                {!collapsed && (
+                  <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-white/5 flex items-center justify-between">
+                    <span>{section.title}</span>
+                    <span className="bg-white/10 px-1.5 py-0.2 rounded-full text-[9px]">
+                      {matchingItems.length}
+                    </span>
+                  </div>
+                )}
+
+                {matchingItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = item.path
+                    ? location.pathname === item.path || activeTab === item.id
+                    : activeTab === item.id;
+
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleTabClick(item)}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition group cursor-pointer ${
+                        isActive
+                          ? 'bg-white/10 text-white border border-white/15 shadow-xs font-semibold'
+                          : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                      }`}
+                      id={`nav-${item.id}`}
+                    >
+                      <Icon
+                        size={16}
+                        className={`shrink-0 ${
+                          isActive
+                            ? 'text-[#34d399]'
+                            : 'text-slate-400 group-hover:text-[#34d399] transition'
+                        }`}
+                      />
+                      {!collapsed && (
+                        <span className="truncate text-left">{item.name}</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })}
       </nav>
 
       {/* Footer Branding Info */}
-      <div className="p-4 border-t border-white/10 space-y-3">
+      <div className="p-3 border-t border-white/10 space-y-2 shrink-0 bg-black/30">
         {!collapsed && (
-          <div className="bg-white/5 p-3 rounded-lg border border-white/10 text-center">
-            <div className="flex items-center gap-2 justify-center mb-1 text-[#34d399]">
-              <Zap size={14} className="fill-[#34d399]/20" />
-              <span className="text-xs font-bold uppercase tracking-wider">
-                Active Workspace
+          <div className="bg-white/5 p-2.5 rounded-lg border border-white/10 text-center">
+            <div className="flex items-center gap-1.5 justify-center mb-0.5 text-[#34d399]">
+              <LucideIcons.Zap size={13} className="fill-[#34d399]/20" />
+              <span className="text-[11px] font-bold uppercase tracking-wider">
+                Full 40-Phase Engine Active
               </span>
             </div>
             <p className="text-[10px] text-slate-400 leading-tight">
-              SEO & AI Visibility Suite
+              Phases 1–40 SEO & Retrofit Suite
             </p>
           </div>
         )}
-        <div className="flex justify-center text-slate-500 hover:text-slate-400 cursor-help transition">
-          <HelpCircle size={16} />
-        </div>
       </div>
     </div>
   );
