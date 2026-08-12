@@ -1,4 +1,10 @@
 {
   "buildCommand": "npm run build",
-  "ignoreCommand": "false"
+  "ignoreCommand": "false",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    }
+  ]
 }
