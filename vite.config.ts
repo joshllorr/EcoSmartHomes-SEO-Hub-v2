@@ -32,5 +32,16 @@ export default defineConfig(() => {
         },
       },
     },
+    build: {
+      target: ['esnext', 'safari13'],
+      cssTarget: 'safari13',
+      rollupOptions: {
+        output: {
+          entryFileNames: `assets/[name].[hash].js`,
+          chunkFileNames: `assets/[name].[hash].js`,
+          assetFileNames: `assets/[name].[hash].[ext]`,
+        },
+      },
+    },
   };
 });
