@@ -365,7 +365,7 @@ export default function Sidebar({
     <div
       className={`glass-sidebar text-slate-100 flex flex-col transition-all duration-300 border-r border-white/10 ${
         collapsed ? 'w-16' : 'w-64'
-      } min-h-screen relative`}
+      } h-screen max-h-screen relative overflow-hidden shrink-0`}
       id="sidebar-container"
     >
       {/* Top Brand Block */}
@@ -391,7 +391,7 @@ export default function Sidebar({
       </div>
 
       {/* Nav Menu Items */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.path
