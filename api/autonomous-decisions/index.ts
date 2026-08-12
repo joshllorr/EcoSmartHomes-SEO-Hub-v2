@@ -1,6 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { proxyOrHandle } from '../_proxy';
 import app from '../../server';
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
-  return app(req as any, res as any);
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  return proxyOrHandle('/api/autonomous-decisions', req, res, (q, s) =>
+    app(q as any, s as any),
+  );
 }
