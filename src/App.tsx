@@ -57,6 +57,8 @@ import HomeownerPortal from './portal/HomeownerPortal';
 import { INITIAL_DASHBOARD_DATA } from './data';
 import { ArticleDraft, DashboardState } from './types';
 import { useDashboardStore } from './store/useDashboardStore';
+import LiveVersion from './components/LiveVersion';
+import { checkDeploymentDrift } from './utils/deploymentCheck';
 
 export default function App() {
   const routeToTab: Record<string, string> = {
@@ -167,6 +169,7 @@ export default function App() {
   };
 
   useEffect(() => {
+    checkDeploymentDrift();
     if (typeof window === 'undefined') return;
 
     const syncActiveTabFromHash = () => {
@@ -503,6 +506,9 @@ export default function App() {
           {renderTabContent()}
         </main>
       </div>
+
+      {/* Live Version Fingerprint Badge */}
+      <LiveVersion />
     </div>
   );
 }
