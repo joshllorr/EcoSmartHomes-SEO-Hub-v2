@@ -11,6 +11,8 @@ export default tseslint.config(
       'build/',
       'coverage/',
       'node_modules/',
+      'assets/',
+      '*.zip',
       '*.log',
       '.env*',
       'server.js',
