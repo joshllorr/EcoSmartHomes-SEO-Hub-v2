@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { apiGet } from '../hooks/useApi';
+import DeploymentHealth from './DeploymentHealth';
 
 export default function Overview() {
   const [loading, setLoading] = useState(true);
@@ -154,6 +155,8 @@ export default function Overview() {
           </span>
         </div>
       </div>
+
+      <DeploymentHealth />
     </div>
   );
 }
