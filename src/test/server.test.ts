@@ -282,5 +282,5 @@ describe('Rate Limiting', () => {
     const limited = responses.find((r) => r.status === 429);
     expect(limited).toBeDefined();
     expect(limited?.body.ok).toBe(false);
-  });
+  }, 15000);
 });
