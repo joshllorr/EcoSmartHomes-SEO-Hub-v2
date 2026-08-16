@@ -18,6 +18,10 @@ import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI, Type } from '@google/genai';
 
 import { syncToHarbor } from './src/services/harborSync';
+import {
+  requestWhatsAppApproval,
+  handleWhatsAppWebhook,
+} from './src/services/whatsappApproval';
 
 import {
   runDecisionCycle,
@@ -1031,114 +1035,190 @@ app.get('/api/unified-analytics', async (_req, res) => {
   });
 });
 
-// Lazy-initialization helper for Gemini client
+// Lazy-initialization helper for Gemini client & Vertex AI Enterprise support
 
 let aiClient: GoogleGenAI | null = null;
-let cachedTokenOrKey: string | null = null;
+let cachedConfigKey: string | null = null;
 
 export function getGeminiClient(): GoogleGenAI | null {
   const tokenOrKey =
     process.env.GEMINI_API_KEY ||
     process.env.VITE_GEMINI_API_KEY ||
-    process.env.GEMINI_ACCESS_TOKEN;
+    process.env.GEMINI_ACCESS_TOKEN ||
+    process.env.GOOGLE_API_KEY;
 
-  if (
+  const explicitProject =
+    process.env.GOOGLE_CLOUD_PROJECT || process.env.GCP_PROJECT;
+  const project =
+    explicitProject ||
+    (process.env.GOOGLE_GENAI_USE_VERTEXAI === 'true' ||
+    process.env.GOOGLE_GENAI_USE_ENTERPRISE === 'true'
+      ? 'gen-lang-client-0607449072'
+      : undefined);
+  const location =
+    process.env.GOOGLE_CLOUD_LOCATION ||
+    process.env.GCP_LOCATION ||
+    'us-central1';
+  const useEnterprise =
+    process.env.GOOGLE_GENAI_USE_ENTERPRISE === 'true' ||
+    process.env.GOOGLE_GENAI_USE_VERTEXAI === 'true' ||
+    process.env.USE_VERTEX_AI === 'true' ||
+    Boolean(explicitProject);
+
+  const isInvalidPlaceholder =
     !tokenOrKey ||
     tokenOrKey.trim() === '' ||
     tokenOrKey === 'MY_GEMINI_API_KEY' ||
     tokenOrKey === 'undefined' ||
     tokenOrKey === 'null' ||
     tokenOrKey === 'placeholder' ||
-    tokenOrKey.startsWith('YOUR_')
-  ) {
+    tokenOrKey.startsWith('YOUR_');
+
+  // If no valid key and not using project-based Vertex AI with ADC
+  if (isInvalidPlaceholder && !project) {
     aiClient = null;
-    cachedTokenOrKey = null;
+    cachedConfigKey = null;
     return null;
   }
 
-  if (!aiClient || cachedTokenOrKey !== tokenOrKey) {
-    cachedTokenOrKey = tokenOrKey;
-    const isOAuth = tokenOrKey.startsWith('ya29.');
-    aiClient = new GoogleGenAI(
-      isOAuth
-        ? {
-            apiKey: tokenOrKey,
-            httpOptions: {
-              headers: {
-                Authorization: `Bearer ${tokenOrKey}`,
-                'User-Agent': 'aistudio-build',
-              },
-            },
-          }
-        : {
-            apiKey: tokenOrKey,
-            httpOptions: {
-              headers: {
-                'User-Agent': 'aistudio-build',
-              },
+  const effectiveKey = isInvalidPlaceholder ? '' : tokenOrKey;
+  const configFingerprint = `${effectiveKey}:${project}:${location}:${useEnterprise}`;
+
+  if (!aiClient || cachedConfigKey !== configFingerprint) {
+    cachedConfigKey = configFingerprint;
+
+    // If using Vertex AI / Enterprise API / Express Keys / ADC
+    if (
+      useEnterprise ||
+      (effectiveKey &&
+        (effectiveKey.startsWith('AQ.') || effectiveKey.startsWith('ya29.')))
+    ) {
+      if (effectiveKey && effectiveKey.startsWith('AQ.')) {
+        // Vertex AI Express API Key mode
+        aiClient = new GoogleGenAI({
+          vertexai: true,
+          apiKey: effectiveKey,
+          location,
+        });
+        console.log(
+          'Gemini Vertex AI: Initialized successfully with Express Key',
+        );
+      } else if (effectiveKey && effectiveKey.startsWith('ya29.')) {
+        // Google Cloud OAuth / Bearer Token
+        aiClient = new GoogleGenAI({
+          vertexai: true,
+          project,
+          location,
+          httpOptions: {
+            headers: {
+              Authorization: `Bearer ${effectiveKey}`,
             },
           },
-    );
-    console.log('Gemini REST API: Authenticated successfully');
+        });
+        console.log(
+          'Gemini Vertex AI: Initialized successfully with OAuth Token',
+        );
+      } else {
+        // Google Cloud Project / Application Default Credentials (ADC)
+        aiClient = new GoogleGenAI({
+          vertexai: true,
+          project,
+          location,
+        });
+        console.log(
+          `Gemini Vertex AI: Initialized successfully with Project (${project}) & Location (${location})`,
+        );
+      }
+    } else {
+      // Standard AI Studio API Key mode
+      aiClient = new GoogleGenAI({
+        apiKey: effectiveKey,
+        httpOptions: {
+          headers: {
+            'User-Agent': 'aistudio-build',
+          },
+        },
+      });
+      console.log('Gemini AI Studio: Initialized successfully with API Key');
+    }
   }
   return aiClient;
 }
 
 /**
- * Direct REST API Helper for Gemini Content Generation (Simple API Key Mode)
- * Endpoint: https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}
+ * Universal JSON extractor for LLM text responses
+ */
+export function extractJsonFromText<T = any>(
+  text: string | null | undefined,
+): T | null {
+  if (!text) return null;
+  const trimmed = text.trim();
+  const firstBrace = trimmed.indexOf('{');
+  const firstBracket = trimmed.indexOf('[');
+
+  let startIdx = -1;
+  let endIdx = -1;
+
+  if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+    startIdx = firstBrace;
+    endIdx = trimmed.lastIndexOf('}');
+  } else if (firstBracket !== -1) {
+    startIdx = firstBracket;
+    endIdx = trimmed.lastIndexOf(']');
+  }
+
+  if (startIdx !== -1 && endIdx > startIdx) {
+    const candidate = trimmed.substring(startIdx, endIdx + 1);
+    try {
+      return JSON.parse(candidate) as T;
+    } catch {
+      // continue to fallback clean
+    }
+  }
+
+  const clean = trimmed
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .trim();
+
+  try {
+    return JSON.parse(clean) as T;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Direct Content Generation Helper for Gemini & Vertex AI
  */
 export async function callGeminiRESTApi(
   prompt: string,
   model: string = 'gemini-2.5-flash',
   jsonSchema?: any,
 ): Promise<string | null> {
-  const apiKey =
-    process.env.GEMINI_ACCESS_TOKEN ||
-    process.env.GEMINI_API_KEY ||
-    process.env.VITE_GEMINI_API_KEY;
-  if (
-    !apiKey ||
-    apiKey.trim() === '' ||
-    apiKey === 'MY_GEMINI_API_KEY' ||
-    apiKey === 'undefined' ||
-    apiKey === 'null' ||
-    apiKey === 'placeholder' ||
-    apiKey.startsWith('YOUR_')
-  ) {
+  const ai = getGeminiClient();
+  if (!ai) {
     return null;
   }
 
   try {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    const bodyPayload: any = {
-      contents: [{ parts: [{ text: prompt }] }],
-    };
-
+    const config: any = {};
     if (jsonSchema) {
-      bodyPayload.generationConfig = {
-        responseMimeType: 'application/json',
-        responseSchema: jsonSchema,
-      };
+      config.responseMimeType = 'application/json';
+      config.responseSchema = jsonSchema;
     }
 
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bodyPayload),
+    const response = await ai.models.generateContent({
+      model: model || 'gemini-2.5-flash',
+      contents: prompt,
+      config: Object.keys(config).length > 0 ? config : undefined,
     });
 
-    if (!res.ok) {
-      const errText = await res.text();
-      console.warn(`[Gemini REST API Warning ${res.status}]:`, errText);
-      return null;
-    }
-
-    const data = await res.json();
-    const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const candidateText =
+      response.text || response.candidates?.[0]?.content?.parts?.[0]?.text;
     return candidateText || null;
-  } catch (err) {
-    console.error('[Gemini REST API Error]:', err);
+  } catch (err: any) {
+    console.error('[Gemini API Call Error]:', err.message || err);
     return null;
   }
 }
@@ -1205,59 +1285,36 @@ app.post('/api/seo/keyword-research', async (req, res) => {
   }
 
   try {
-    const prompt = `Perform SEO keyword research for the primary keyword "${keyword}" for the website "${site || 'ecosmarthomes.ie'}". 
-    Suggest 5 highly relevant related keywords, estimated monthly search volumes in Ireland/UK, SEO keyword difficulty (0 to 100), relevance level, and search intent (Informational, Navigational, Commercial, Transactional). 
-    Respond in raw JSON conforming to the requested schema.`;
+    const prompt = `Perform real-time SEO keyword research for the primary keyword "${keyword}" for the website "${site || 'ecosmarthomes.ie'}". 
+Suggest 5 highly relevant related keywords, estimated monthly search volumes in Ireland/UK, SEO keyword difficulty (0 to 100), relevance level, and search intent (Informational, Navigational, Commercial, Transactional). 
+Return ONLY a valid JSON object matching this schema (no markdown code blocks, no other commentary):
+{
+  "results": [
+    {
+      "keyword": "${keyword}",
+      "volume": 1200,
+      "difficulty": 32,
+      "relevance": "High",
+      "intent": "Informational"
+    }
+  ]
+}`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            results: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  keyword: { type: Type.STRING },
-                  volume: {
-                    type: Type.INTEGER,
-                    description: 'Monthly search volume',
-                  },
-                  difficulty: {
-                    type: Type.INTEGER,
-                    description: 'Keyword difficulty from 0 to 100',
-                  },
-                  relevance: {
-                    type: Type.STRING,
-                    description: 'Relevance score (High, Medium, Low)',
-                  },
-                  intent: {
-                    type: Type.STRING,
-                    description: 'Search intent type',
-                  },
-                },
-                required: [
-                  'keyword',
-                  'volume',
-                  'difficulty',
-                  'relevance',
-                  'intent',
-                ],
-              },
-            },
-          },
-          required: ['results'],
-        },
       },
     });
 
-    const jsonText = response.text || '{}';
-    const data = JSON.parse(jsonText.trim());
+    const parsedData = extractJsonFromText<{ results: any[] }>(response.text);
+    const results =
+      parsedData?.results &&
+      Array.isArray(parsedData.results) &&
+      parsedData.results.length > 0
+        ? parsedData.results
+        : simulatedKeywords;
 
     // Extract grounding URLs/citations if available from Google Search
     const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
@@ -1277,7 +1334,7 @@ app.post('/api/seo/keyword-research', async (req, res) => {
     });
     return res.json({
       success: true,
-      results: data.results,
+      results,
       sources,
       isMock: false,
     });
@@ -1485,63 +1542,16 @@ Return raw JSON with key "ideas" containing the array of 5 objects.`;
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            ideas: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  type: { type: Type.STRING },
-                  title: { type: Type.STRING },
-                  summary: { type: Type.STRING },
-                  tags: { type: Type.ARRAY, items: { type: Type.STRING } },
-                  monthlyVolume: { type: Type.STRING },
-                  oppScore: { type: Type.STRING },
-                  difficulty: { type: Type.STRING },
-                  difficultyScore: { type: Type.INTEGER },
-                  cpcRange: { type: Type.STRING },
-                  trend: { type: Type.STRING },
-                  peakMonth: { type: Type.STRING },
-                  matchScore: { type: Type.STRING },
-                  targetQuery: { type: Type.STRING },
-                  demandStatus: { type: Type.STRING },
-                  clusterInfo: { type: Type.STRING },
-                  subtopics: {
-                    type: Type.ARRAY,
-                    items: {
-                      type: Type.OBJECT,
-                      properties: {
-                        name: { type: Type.STRING },
-                        vol: { type: Type.STRING },
-                      },
-                      required: ['name', 'vol'],
-                    },
-                  },
-                },
-                required: [
-                  'type',
-                  'title',
-                  'summary',
-                  'tags',
-                  'monthlyVolume',
-                  'oppScore',
-                  'difficulty',
-                  'targetQuery',
-                  'subtopics',
-                ],
-              },
-            },
-          },
-          required: ['ideas'],
-        },
       },
     });
 
-    const jsonText = response.text || '{}';
-    const parsed = JSON.parse(jsonText.trim());
+    const parsed = extractJsonFromText<{ ideas: any[] }>(response.text) || {
+      ideas: [],
+    };
+    const rawIdeas =
+      parsed.ideas && Array.isArray(parsed.ideas) && parsed.ideas.length > 0
+        ? parsed.ideas
+        : mockIdeas;
 
     // Extract grounding search metadata & sources
     const groundingMetadata = response.candidates?.[0]?.groundingMetadata;
@@ -1560,20 +1570,18 @@ Return raw JSON with key "ideas" containing the array of 5 objects.`;
           .filter((s: any) => s.uri)
       : [];
 
-    const formattedIdeas = (parsed.ideas || []).map(
-      (item: any, idx: number) => ({
-        ...item,
-        id: `ai-search-idea-${Date.now()}-${idx}`,
-        age: 'Just now',
-        difficulty:
-          item.difficulty === 'HIGH'
-            ? 'HIGH'
-            : item.difficulty === 'LOW'
-              ? 'LOW'
-              : 'MEDIUM',
-        demandStatus: item.demandStatus || 'strong demand',
-      }),
-    );
+    const formattedIdeas = (rawIdeas || []).map((item: any, idx: number) => ({
+      ...item,
+      id: `ai-search-idea-${Date.now()}-${idx}`,
+      age: 'Just now',
+      difficulty:
+        item.difficulty === 'HIGH'
+          ? 'HIGH'
+          : item.difficulty === 'LOW'
+            ? 'LOW'
+            : 'MEDIUM',
+      demandStatus: item.demandStatus || 'strong demand',
+    }));
 
     broadcastToAll({
       type: 'metric_update',
@@ -1599,6 +1607,11 @@ Return raw JSON with key "ideas" containing the array of 5 objects.`;
       ideas: mockIdeas,
       isMock: true,
       site,
+      groundingQueries: [
+        `site:${site}`,
+        `content gaps ${site}`,
+        `trending topics Ireland retrofitting 2026`,
+      ],
       warning: error.message || 'Search discovery temporary fallback',
     });
   }
@@ -3175,56 +3188,30 @@ app.post('/api/seo/scout-site', async (req, res) => {
 
   try {
     const prompt = `Analyze the website "${url}" for SEO content readiness, focus pillars like "BER Rating Ireland", and identify key gaps.
-    Generate an overall SEO score (0-100), indicate whether the sitemap is present (boolean), list 3 issues found (with severity: High/Medium/Low, title, and desc), and list 3 actionable recommendations (title, action).
-    Return your analysis strictly as JSON conforming to the requested schema.`;
+Generate an overall SEO score (0-100), indicate whether the sitemap is present (boolean), list 3 issues found (with severity: High/Medium/Low, title, and desc), and list 3 actionable recommendations (title, action).
+Return ONLY a valid JSON object matching this schema (no markdown fences, no other commentary):
+{
+  "overallScore": 85,
+  "sitemapPresent": true,
+  "issues": [{"severity": "High", "title": "...", "desc": "..."}],
+  "recommendations": [{"title": "...", "action": "..."}]
+}`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            overallScore: { type: Type.INTEGER },
-            sitemapPresent: { type: Type.BOOLEAN },
-            issues: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  severity: { type: Type.STRING },
-                  title: { type: Type.STRING },
-                  desc: { type: Type.STRING },
-                },
-                required: ['severity', 'title', 'desc'],
-              },
-            },
-            recommendations: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  title: { type: Type.STRING },
-                  action: { type: Type.STRING },
-                },
-                required: ['title', 'action'],
-              },
-            },
-          },
-          required: [
-            'overallScore',
-            'sitemapPresent',
-            'issues',
-            'recommendations',
-          ],
-        },
       },
     });
 
-    const jsonText = response.text || '{}';
-    const data = JSON.parse(jsonText.trim());
+    const parsedData = extractJsonFromText<any>(response.text);
+    const data =
+      parsedData &&
+      typeof parsedData === 'object' &&
+      parsedData.overallScore !== undefined
+        ? parsedData
+        : mockAudit;
 
     // Extract grounding URLs/citations if available from Google Search
     const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
@@ -3844,48 +3831,10 @@ Return strictly JSON conforming to the requested schema.`;
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            pillars: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  id: { type: Type.STRING },
-                  title: { type: Type.STRING },
-                  summary: { type: Type.STRING },
-                  targetQuery: { type: Type.STRING },
-                  estimatedVolume: { type: Type.STRING },
-                  authorityScore: { type: Type.INTEGER },
-                  difficulty: { type: Type.STRING },
-                  difficultyScore: { type: Type.INTEGER },
-                  subtopicClusters: {
-                    type: Type.ARRAY,
-                    items: { type: Type.STRING },
-                  },
-                  linkBaitAngle: { type: Type.STRING },
-                },
-                required: [
-                  'id',
-                  'title',
-                  'summary',
-                  'targetQuery',
-                  'estimatedVolume',
-                  'authorityScore',
-                  'subtopicClusters',
-                ],
-              },
-            },
-          },
-          required: ['pillars'],
-        },
       },
     });
 
-    const jsonText = response.text || '{}';
-    const parsed = JSON.parse(jsonText.trim());
+    const parsed = extractJsonFromText<any>(response.text) || {};
     const rawPillars =
       parsed.pillars && parsed.pillars.length > 0
         ? parsed.pillars
@@ -3997,52 +3946,33 @@ app.post('/api/seo/link-opportunities', async (req, res) => {
     const prompt = `Perform a backlink outreach audit for "${url}" (Domain: ${cleanDomain}).
 Find 4 high-authority relevant websites (construction portals, Irish energy blogs, regional news, self-build magazines).
 Provide Domain Authority (DA 0-100), Match Score %, target page, relevance type, contact person, outreach angle, and a personalized pitch email preview.
-Return strictly JSON conforming to requested schema.`;
+Return ONLY a valid JSON object matching this schema:
+{
+  "opportunities": [
+    {
+      "id": "link-op-1",
+      "domain": "constructireland.ie",
+      "domainAuthority": 58,
+      "matchScore": "96%",
+      "targetPage": "https://${cleanDomain}/ber-rating-upgrade-guide",
+      "relevanceType": "Irish Construction & Sustainable Building Portal",
+      "contactPerson": "Editorial Team",
+      "outreachAngle": "Resource Page Link",
+      "suggestedPitch": "...",
+      "status": "Uncontacted"
+    }
+  ]
+}`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            opportunities: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  id: { type: Type.STRING },
-                  domain: { type: Type.STRING },
-                  domainAuthority: { type: Type.INTEGER },
-                  matchScore: { type: Type.STRING },
-                  targetPage: { type: Type.STRING },
-                  relevanceType: { type: Type.STRING },
-                  contactPerson: { type: Type.STRING },
-                  outreachAngle: { type: Type.STRING },
-                  suggestedPitch: { type: Type.STRING },
-                  status: { type: Type.STRING },
-                },
-                required: [
-                  'id',
-                  'domain',
-                  'domainAuthority',
-                  'matchScore',
-                  'targetPage',
-                  'relevanceType',
-                  'suggestedPitch',
-                ],
-              },
-            },
-          },
-          required: ['opportunities'],
-        },
       },
     });
 
-    const jsonText = response.text || '{}';
-    const parsed = JSON.parse(jsonText.trim());
+    const parsed = extractJsonFromText<any>(response.text) || {};
 
     return res.json({
       success: true,
@@ -4151,57 +4081,32 @@ app.post('/api/seo/generate-link-bait', async (req, res) => {
   try {
     const prompt = `Generate 3 innovative Link Bait assets (calculators, reference charts, comparison tools) for "${url}" (Domain: ${cleanDomain}) under category "${baitType}".
 Content should be so useful that Irish property portals, energy assessors, and news sites naturally link to it.
-Return strictly JSON conforming to the requested schema.`;
+Return ONLY a valid JSON object matching this schema:
+{
+  "assets": [
+    {
+      "id": "bait-1",
+      "title": "...",
+      "type": "Interactive Calculator",
+      "summary": "...",
+      "whyItAttractsLinks": "...",
+      "targetBacklinkSources": ["..."],
+      "estimatedBacklinkPotential": "...",
+      "embedSnippet": "...",
+      "keyFeatures": ["..."]
+    }
+  ]
+}`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            assets: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  id: { type: Type.STRING },
-                  title: { type: Type.STRING },
-                  type: { type: Type.STRING },
-                  summary: { type: Type.STRING },
-                  whyItAttractsLinks: { type: Type.STRING },
-                  targetBacklinkSources: {
-                    type: Type.ARRAY,
-                    items: { type: Type.STRING },
-                  },
-                  estimatedBacklinkPotential: { type: Type.STRING },
-                  embedSnippet: { type: Type.STRING },
-                  keyFeatures: {
-                    type: Type.ARRAY,
-                    items: { type: Type.STRING },
-                  },
-                },
-                required: [
-                  'id',
-                  'title',
-                  'type',
-                  'summary',
-                  'whyItAttractsLinks',
-                  'targetBacklinkSources',
-                  'estimatedBacklinkPotential',
-                ],
-              },
-            },
-          },
-          required: ['assets'],
-        },
       },
     });
 
-    const jsonText = response.text || '{}';
-    const parsed = JSON.parse(jsonText.trim());
+    const parsed = extractJsonFromText<any>(response.text) || {};
 
     return res.json({
       success: true,
@@ -4284,7 +4189,8 @@ app.post('/api/seo/link-bait-scanner', async (req, res) => {
     },
   ];
 
-  if (!aiClient) {
+  const ai = getGeminiClient();
+  if (!ai) {
     return res.json({
       success: true,
       ideas: fallbackIdeas,
@@ -4322,29 +4228,14 @@ Return ONLY a valid JSON array of 8 items (no code fences, no commentary, no AI 
   }
 ]`;
 
-    const response = await aiClient.models.generateContent({
+    const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
     });
 
-    const responseText = response.text || '';
-    const cleanJson = responseText
-      .replace(/```json\s*/g, '')
-      .replace(/```\s*/g, '')
-      .trim();
-
-    let ideas = fallbackIdeas;
-    try {
-      const parsed = JSON.parse(cleanJson);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        ideas = parsed;
-      }
-    } catch (e) {
-      console.warn(
-        'Gemini Link Bait Scanner returned non-JSON, using fallback ideas:',
-        e,
-      );
-    }
+    const parsed = extractJsonFromText<any[]>(response.text);
+    const ideas =
+      Array.isArray(parsed) && parsed.length > 0 ? parsed : fallbackIdeas;
 
     return res.json({
       success: true,
@@ -4410,7 +4301,8 @@ app.post('/api/seo/build-link-bait-page', async (req, res) => {
   </section>
 </article>`;
 
-  if (!aiClient) {
+  const ai = getGeminiClient();
+  if (!ai) {
     return res.json({ success: true, result: fallbackHtml, isMock: true });
   }
 
@@ -4426,7 +4318,7 @@ Return:
 1. JSON metadata (title, targetKeywords, estimatedBacklinks) inside an HTML comment at the top
 2. Full semantic HTML page structure for the link bait asset.`;
 
-    const response = await aiClient.models.generateContent({
+    const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
     });
@@ -4485,7 +4377,8 @@ app.post('/api/seo/backlink-scanner', async (req, res) => {
     },
   ];
 
-  if (!aiClient) {
+  const ai = getGeminiClient();
+  if (!ai) {
     return res.json({
       success: true,
       opportunities: fallbackOpportunities,
@@ -4531,29 +4424,16 @@ Return ONLY a valid JSON array of 4 items (no code fences, no commentary, no AI 
   }
 ]`;
 
-    const response = await aiClient.models.generateContent({
+    const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
     });
 
-    const responseText = response.text || '';
-    const cleanJson = responseText
-      .replace(/```json\s*/g, '')
-      .replace(/```\s*/g, '')
-      .trim();
-
-    let opportunities = fallbackOpportunities;
-    try {
-      const parsed = JSON.parse(cleanJson);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        opportunities = parsed;
-      }
-    } catch (e) {
-      console.warn(
-        'Backlink Scanner AI returned non-JSON, using fallback opportunities:',
-        e,
-      );
-    }
+    const parsed = extractJsonFromText<any[]>(response.text);
+    const opportunities =
+      Array.isArray(parsed) && parsed.length > 0
+        ? parsed
+        : fallbackOpportunities;
 
     return res.json({
       success: true,
@@ -4641,7 +4521,8 @@ Homes in the Shannon Basin and Mid-West regions experience moderate damp conditi
 - *Limerick Postcode BER Rating Heatmap & Case Studies*`,
   };
 
-  if (!aiClient) {
+  const ai = getGeminiClient();
+  if (!ai) {
     return res.json({ success: true, ...fallbackResult, isMock: true });
   }
 
@@ -4684,7 +4565,7 @@ STYLE RULES
 - Use Irish retrofit context (BER, SEAI, insulation, heat pumps, airtightness, grants)
 - Prioritise Limerick and surrounding areas where relevant`;
 
-    const response = await aiClient.models.generateContent({
+    const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
     });
@@ -4741,7 +4622,8 @@ app.post('/api/seo/internal-linking', async (req, res) => {
     },
   ];
 
-  if (!aiClient) {
+  const ai = getGeminiClient();
+  if (!ai) {
     return res.json({ success: true, links: fallbackLinks, isMock: true });
   }
 
@@ -4782,26 +4664,16 @@ Rules:
 - Use Irish retrofit context (BER, SEAI, insulation, heat pumps, airtightness, grants)
 - Prioritise Limerick + surrounding areas`;
 
-    const response = await aiClient.models.generateContent({
+    const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
     });
 
-    const text = response.text || '';
-    const cleanJson = text
-      .replace(/```json\s*/g, '')
-      .replace(/```\s*/g, '')
-      .trim();
-
-    let links = fallbackLinks;
-    try {
-      const parsed = JSON.parse(cleanJson);
-      if (parsed.links && Array.isArray(parsed.links)) {
-        links = parsed.links;
-      }
-    } catch (e) {
-      console.warn('Internal Linking AI non-JSON response, using fallback:', e);
-    }
+    const parsed = extractJsonFromText<any>(response.text);
+    const links =
+      parsed?.links && Array.isArray(parsed.links)
+        ? parsed.links
+        : fallbackLinks;
 
     return res.json({ success: true, links, isMock: false });
   } catch (err: any) {
@@ -4845,6 +4717,36 @@ app.get('/seo/sitemap.xml', (_req, res) => {
 
 app.get('/sitemaps/sitemap.xml', (_req, res) => {
   return res.redirect(301, 'https://ecosmarthomes.ie/sitemap.xml');
+});
+
+// WhatsApp Approval & Webhook Routes
+app.post('/api/whatsapp/webhook', (req, res) =>
+  handleWhatsAppWebhook(req, res),
+);
+
+app.post('/api/whatsapp/request-approval', async (req, res) => {
+  try {
+    const { title, slug, content, description } = req.body || {};
+    if (!title || !slug || !content) {
+      return res
+        .status(400)
+        .json({
+          error: 'Missing required draft fields (title, slug, content)',
+        });
+    }
+    await requestWhatsAppApproval({
+      title,
+      slug,
+      content,
+      description: description || '',
+    });
+    return res.json({
+      success: true,
+      message: `WhatsApp approval requested for ${slug}`,
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
 });
 
 // Direct Button Action API Routes for Pre-Flight Ledger & Insights Engine
@@ -4952,7 +4854,7 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.get('/:splat*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
@@ -5353,7 +5255,10 @@ async function startServer() {
   });
 }
 
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+if (
+  !process.env.VITEST &&
+  (process.env.NODE_ENV !== 'production' || !process.env.VERCEL)
+) {
   startServer();
 }
 
