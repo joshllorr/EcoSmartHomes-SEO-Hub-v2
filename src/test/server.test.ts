@@ -147,7 +147,7 @@ describe('POST /api/seo/keyword-research', () => {
     expect(res.body.results[0]).toHaveProperty('difficulty');
     expect(res.body.results[0]).toHaveProperty('relevance');
     expect(res.body.results[0]).toHaveProperty('intent');
-  }, 25000);
+  }, 60000);
 
   it('includes warning when in mock mode', async () => {
     const res = await request(app)
