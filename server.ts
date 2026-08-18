@@ -64,7 +64,7 @@ import {
 
 import { publishToCMS } from './src/server/cmsPublisher';
 import { runBacklinkDiscoveryAgent } from './src/server/backlinkAgent';
-import publishHandler from './api/publish.js';
+import publishHandler from './src/server/publishHandler';
 
 import {
   globalKeywordRegistry,
@@ -2757,11 +2757,9 @@ app.post('/api/automation/record-impact', (req, res) => {
     preRefreshRank === undefined ||
     postRefreshRank === undefined
   ) {
-    return res
-      .status(400)
-      .json({
-        error: 'Keyword, preRefreshRank, and postRefreshRank are required.',
-      });
+    return res.status(400).json({
+      error: 'Keyword, preRefreshRank, and postRefreshRank are required.',
+    });
   }
 
   const record = globalAutomationEngine.recordRefreshImpact({
