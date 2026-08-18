@@ -63,7 +63,46 @@ export default function EmbeddableGrantCalculator() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Interactive Controls */}
         <div className="p-4 rounded-xl bg-slate-950/60 border border-white/10 flex flex-col gap-3">
-          <label className="text-xs font-bold text-slate-300 block">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-slate-300">Property Type:</label>
+            <div className="grid grid-cols-3 gap-1.5 text-xs font-mono">
+              <button
+                type="button"
+                onClick={() => setPropertyType('detached')}
+                className={`py-1 px-2 rounded-lg border text-[11px] font-bold transition cursor-pointer ${
+                  propertyType === 'detached'
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                    : 'bg-black/30 text-slate-400 border-white/10 hover:text-white'
+                }`}
+              >
+                Detached
+              </button>
+              <button
+                type="button"
+                onClick={() => setPropertyType('semi')}
+                className={`py-1 px-2 rounded-lg border text-[11px] font-bold transition cursor-pointer ${
+                  propertyType === 'semi'
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                    : 'bg-black/30 text-slate-400 border-white/10 hover:text-white'
+                }`}
+              >
+                Semi-Det.
+              </button>
+              <button
+                type="button"
+                onClick={() => setPropertyType('apartment')}
+                className={`py-1 px-2 rounded-lg border text-[11px] font-bold transition cursor-pointer ${
+                  propertyType === 'apartment'
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                    : 'bg-black/30 text-slate-400 border-white/10 hover:text-white'
+                }`}
+              >
+                Apartment
+              </button>
+            </div>
+          </div>
+
+          <label className="text-xs font-bold text-slate-300 block pt-1 border-t border-white/10">
             Select 2026 Home Energy Upgrades:
           </label>
 
@@ -74,7 +113,7 @@ export default function EmbeddableGrantCalculator() {
               onChange={(e) => setHasHeatPump(e.target.checked)}
               className="rounded accent-emerald-500"
             />
-            <span>Heat Pump System (up to €12,500 SEAI Grant)</span>
+            <span>Heat Pump System ({propertyType === 'apartment' ? 'up to €9,500' : 'up to €12,500'} Grant)</span>
           </label>
 
           <label className="flex items-center gap-2 text-xs text-slate-200 cursor-pointer">
@@ -117,13 +156,19 @@ export default function EmbeddableGrantCalculator() {
             <span>One Stop Shop (OSS) Deep Retrofit (up to €50,000 cap)</span>
           </label>
 
-          <div className="pt-2 border-t border-white/10 flex justify-between items-center">
-            <span className="text-xs text-slate-400 font-medium">
-              Estimated 2026 Grant Support:
-            </span>
-            <span className="text-xl font-bold font-mono text-emerald-400">
-              €{totalGrant.toLocaleString()}
-            </span>
+          <div className="pt-2 border-t border-white/10 flex flex-col gap-1.5">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-slate-400 font-medium">
+                Estimated 2026 Grant Support:
+              </span>
+              <span className="text-xl font-bold font-mono text-emerald-400">
+                €{totalGrant.toLocaleString()}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-xs font-mono">
+              <span className="text-slate-400">Est. Annual Bill Savings:</span>
+              <span className="text-sky-300 font-bold">€{estimatedSavingsAnnual.toLocaleString()} / year</span>
+            </div>
           </div>
         </div>
 

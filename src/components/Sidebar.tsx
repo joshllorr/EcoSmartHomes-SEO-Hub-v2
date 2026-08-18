@@ -6,12 +6,16 @@ interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   site: string;
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export default function Sidebar({
   activeTab,
   setActiveTab,
   site,
+  isMobileOpen = false,
+  onCloseMobile,
 }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -307,40 +311,75 @@ export default function Sidebar({
       }
     }
     setActiveTab(item.id);
+    if (onCloseMobile) {
+      onCloseMobile();
+    }
   };
 
   return (
-    <div
-      className={`glass-sidebar text-slate-100 flex flex-col transition-all duration-300 border-r border-white/10 ${
-        collapsed ? 'w-16' : 'w-64 sm:w-72'
-      } h-screen max-h-screen relative overflow-hidden shrink-0 z-30`}
-      id="sidebar-container"
-    >
-      {/* Top Brand Block */}
-      <div className="p-4 border-b border-white/10 flex items-center justify-between shrink-0">
-        {!collapsed && (
-          <div className="flex flex-col">
-            <span className="font-display font-bold text-lg text-[#34d399] tracking-tight whitespace-nowrap">
-              EcoSmart SEO
-            </span>
-            <span className="text-xs text-slate-400 font-mono tracking-tight font-medium">
-              {site}
-            </span>
-          </div>
-        )}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-[#34d399] transition cursor-pointer"
-          id="toggle-sidebar"
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? (
-            <LucideIcons.Menu size={20} />
-          ) : (
-            <LucideIcons.X size={20} />
+    <>
+      {/* Mobile Drawer Backdrop Overlay */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-40 md:hidden transition-opacity duration-200"
+          onClick={onCloseMobile}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Main Sidebar Shell */}
+      <aside
+        className={`glass-sidebar text-slate-100 flex flex-col transition-all duration-300 border-r border-white/10 ${
+          collapsed ? 'md:w-16' : 'md:w-64 lg:w-72'
+        } ${
+          isMobileOpen
+            ? 'fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] translate-x-0 shadow-2xl'
+            : 'fixed inset-y-0 left-0 z-50 -translate-x-full md:translate-x-0 md:relative md:z-30'
+        } h-screen max-h-screen overflow-hidden shrink-0`}
+        id="sidebar-container"
+        aria-label="Sidebar Navigation"
+      >
+        {/* Top Brand Block */}
+        <div className="p-4 border-b border-white/10 flex items-center justify-between shrink-0">
+          {(!collapsed || isMobileOpen) && (
+            <div className="flex flex-col">
+              <span className="font-display font-bold text-lg text-[#34d399] tracking-tight whitespace-nowrap">
+                EcoSmart SEO
+              </span>
+              <span className="text-xs text-slate-400 font-mono tracking-tight font-medium">
+                {site}
+              </span>
+            </div>
           )}
-        </button>
-      </div>
+
+          <div className="flex items-center gap-1">
+            {/* Desktop Collapse Toggle */}
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="hidden md:flex p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-[#34d399] transition cursor-pointer"
+              id="toggle-sidebar"
+              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {collapsed ? (
+                <LucideIcons.Menu size={20} />
+              ) : (
+                <LucideIcons.X size={20} />
+              )}
+            </button>
+
+            {/* Mobile Close Button */}
+            {onCloseMobile && (
+              <button
+                onClick={onCloseMobile}
+                className="md:hidden p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition cursor-pointer"
+                title="Close Menu"
+                aria-label="Close navigation menu"
+              >
+                <LucideIcons.X size={20} />
+              </button>
+            )}
+          </div>
+        </div>
 
       {!collapsed && (
         <div className="p-3 border-b border-white/10 space-y-2 shrink-0 bg-black/20">
@@ -493,6 +532,7 @@ export default function Sidebar({
           </div>
         )}
       </div>
-    </div>
-  );
+    </aside>
+  </>
+);
 }

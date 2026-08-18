@@ -13,6 +13,9 @@ import QuickActionsGrid from './QuickActionsGrid';
 import ActivityFeed from './ActivityFeed';
 import ErrorBoundary from './ErrorBoundary';
 import RankingStabilityMap from './RankingStabilityMap';
+import SEOInsightsPanel from './SEOInsightsPanel';
+import AutomationLogsPanel from './AutomationLogsPanel';
+import PhaseDriftPanel from './PhaseDriftPanel';
 import { DashboardState } from '../types';
 
 interface MainDashboardProps {
@@ -22,9 +25,10 @@ interface MainDashboardProps {
   onAddSupportPage: () => void;
   onUpgradeLimit: () => void;
   onToggleTask: (taskId: string) => void;
-  onRetryScan: (sitemapPath?: string) => void;
+  onRetryScan: (sitemapPath?: string) => Promise<void> | void;
   onOptimizeAIVisibility: () => void;
   onQuickAction: (actionId: string) => void;
+  onNavigateToSERP?: (keyword: string) => void;
 }
 
 export default function MainDashboard({
@@ -37,6 +41,7 @@ export default function MainDashboard({
   onRetryScan,
   onOptimizeAIVisibility,
   onQuickAction,
+  onNavigateToSERP,
 }: MainDashboardProps) {
   const isCMSConnected =
     state.tasks.find((t) => t.id === 'connect_cms')?.completed || false;
@@ -89,8 +94,29 @@ export default function MainDashboard({
         </motion.div>
 
         <motion.div variants={cardVariants}>
+          <ErrorBoundary sectionName="Phase Drift Detector">
+            <PhaseDriftPanel />
+          </ErrorBoundary>
+        </motion.div>
+
+        <motion.div variants={cardVariants}>
+          <ErrorBoundary sectionName="Predictive SEO & Retrofit Insights">
+            <SEOInsightsPanel
+              onOpenInWriter={onOpenInWriter}
+              onNavigateToSERP={onNavigateToSERP}
+            />
+          </ErrorBoundary>
+        </motion.div>
+
+        <motion.div variants={cardVariants}>
           <ErrorBoundary sectionName="Ranking Stability Map">
-            <RankingStabilityMap />
+            <RankingStabilityMap onNavigateToSERP={onNavigateToSERP} />
+          </ErrorBoundary>
+        </motion.div>
+
+        <motion.div variants={cardVariants}>
+          <ErrorBoundary sectionName="Automation Engine Logs">
+            <AutomationLogsPanel />
           </ErrorBoundary>
         </motion.div>
 

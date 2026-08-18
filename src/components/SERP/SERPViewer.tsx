@@ -18,38 +18,42 @@ import {
   Building2,
   Check,
   Zap,
+  Activity,
+  Bell,
+  GitCommit,
+  Radio,
+  Eye,
+  MapPin,
+  HelpCircle,
+  Video,
+  Calculator,
 } from 'lucide-react';
+import {
+  SERPFeatureItem,
+  CompetitorDiffResult,
+  SERPAlertItem,
+  SERPCompetitor,
+  SERPRankingGapKeyword,
+  detectSERPFeatures,
+  classifySearchIntent,
+  computeCompetitorDiff,
+} from '../../logic/serpIntelligence';
 
 export interface SERPResult {
   keyword: string;
   intent: string;
   difficulty: number;
   search_volume?: number;
-  top_results: {
-    position: number;
-    title: string;
-    url: string;
-    meta_description: string;
-    themes: string[];
-    strengths: string[];
-    weaknesses: string[];
-    domain_authority?: number;
-    monthly_traffic?: number;
-    content_type?: string;
-    ranking_gaps?: string[];
-  }[];
+  top_results: SERPCompetitor[];
   opportunities: string[];
-  ranking_gap_keywords?: {
-    keyword: string;
-    competitor: string;
-    competitorRank: number;
-    volume: number;
-    difficulty: number;
-    opportunityScore: number;
-    suggestedAction: string;
-  }[];
+  ranking_gap_keywords?: SERPRankingGapKeyword[];
   recommended_outline: string[];
   summary_markdown?: string;
+  features?: SERPFeatureItem[];
+  diff?: CompetitorDiffResult;
+  volatilityIndex?: number;
+  volatilityCategory?: 'stable' | 'moderate_shift' | 'high_turbulence';
+  alerts?: SERPAlertItem[];
 }
 
 interface SERPViewerProps {
@@ -59,7 +63,7 @@ interface SERPViewerProps {
 
 export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'competitors' | 'gaps' | 'outline'
+    'overview' | 'competitors' | 'diff' | 'features' | 'gaps' | 'outline' | 'alerts'
   >('overview');
   const [copiedOutline, setCopiedOutline] = useState(false);
 
@@ -76,12 +80,17 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
           No SERP analysis yet
         </h4>
         <p className="text-xs text-slate-400 max-w-sm mt-1 leading-normal">
-          Run a comprehensive SERP analysis from the search engine intelligence
-          dashboard.
+          Run a comprehensive SERP analysis from the search engine intelligence dashboard.
         </p>
       </div>
     );
   }
+
+  // Derive dynamic fallback features/diff if not already compiled
+  const features = serp.features || detectSERPFeatures(serp.keyword, serp.top_results);
+  const diff = serp.diff || computeCompetitorDiff(null, serp.top_results, serp.keyword);
+  const volatility = serp.volatilityIndex ?? Math.round(diff.volatilityShift * 100);
+  const alerts = serp.alerts || [];
 
   // Determine difficulty color badges
   const getDifficultyColor = (score: number) => {
@@ -124,6 +133,9 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
             <span className="bg-emerald-500/10 text-[#34d399] border border-emerald-500/20 text-[10px] font-mono px-2 py-0.5 rounded uppercase font-bold tracking-wider">
               Google Ireland (.ie) SERP
             </span>
+            <span className="bg-sky-500/10 text-sky-300 border border-sky-500/20 text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase">
+              Phase 8–15 Engine
+            </span>
             {serp.search_volume && (
               <span className="bg-white/5 text-slate-300 border border-white/10 text-[10px] font-mono px-2 py-0.5 rounded font-semibold">
                 Est. Volume: {serp.search_volume.toLocaleString()}/mo
@@ -140,8 +152,7 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
             </span>
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            Expanded competitor landscape, ranking gaps, and strategic content
-            opportunities
+            Expanded competitor landscape, competitor diff engine, rich SERP features, and ranking gaps
           </p>
         </div>
 
@@ -158,66 +169,101 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
             <strong>Difficulty:</strong> {serp.difficulty}/100
           </span>
           <span className="px-3 py-1 rounded-full text-xs font-semibold border bg-white/5 border-white/10 text-slate-300">
-            <strong>Competitors Audited:</strong> {serp.top_results.length}
+            <strong>Turbulence:</strong> {volatility}%
           </span>
         </div>
       </div>
 
-      {/* Internal Navigation Tabs */}
+      {/* Internal Navigation Tabs (Phases 8–15) */}
       <div className="flex items-center gap-2 border-b border-white/10 pb-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
             activeTab === 'overview'
               ? 'bg-[#34d399] text-[#0f172a]'
               : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
           }`}
         >
           <BarChart3 size={13} />
-          <span>Overview & Insights</span>
+          <span>Overview</span>
         </button>
 
         <button
           onClick={() => setActiveTab('competitors')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
             activeTab === 'competitors'
               ? 'bg-[#34d399] text-[#0f172a]'
               : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
           }`}
         >
           <Building2 size={13} />
-          <span>Expanded Competitors ({serp.top_results.length})</span>
+          <span>Top Competitors ({serp.top_results.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('diff')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            activeTab === 'diff'
+              ? 'bg-[#34d399] text-[#0f172a]'
+              : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+          }`}
+        >
+          <GitCommit size={13} />
+          <span>Competitor Diff ({diff.totalChanges} shifts)</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('features')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            activeTab === 'features'
+              ? 'bg-[#34d399] text-[#0f172a]'
+              : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+          }`}
+        >
+          <Sparkles size={13} />
+          <span>SERP Features ({features.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('gaps')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
             activeTab === 'gaps'
               ? 'bg-[#34d399] text-[#0f172a]'
               : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
           }`}
         >
           <Target size={13} />
-          <span>Ranking Gaps Matrix</span>
+          <span>Ranking Gaps</span>
         </button>
 
         <button
           onClick={() => setActiveTab('outline')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
             activeTab === 'outline'
               ? 'bg-[#34d399] text-[#0f172a]'
               : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
           }`}
         >
           <FileText size={13} />
-          <span>Target Article Outline</span>
+          <span>Target Outline</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('alerts')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            activeTab === 'alerts'
+              ? 'bg-[#34d399] text-[#0f172a]'
+              : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+          }`}
+        >
+          <Bell size={13} />
+          <span>Change Alerts {alerts.length > 0 && `(${alerts.length})`}</span>
         </button>
       </div>
 
       {/* TAB 1: OVERVIEW & INSIGHTS */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
-          {/* Executive Summary Markdown */}
           {serp.summary_markdown && (
             <div
               className="glass-card p-6 space-y-4 border-l-4 border-l-[#34d399]"
@@ -233,13 +279,8 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
             </div>
           )}
 
-          {/* Quick 2-Column Bento: Opportunities & Outline Preview */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {/* Strategic Opportunities */}
-            <div
-              className="glass-card p-5 space-y-3"
-              id="serp-opportunities-card"
-            >
+            <div className="glass-card p-5 space-y-3" id="serp-opportunities-card">
               <h3 className="text-xs font-bold uppercase tracking-wider text-[#34d399] font-mono flex items-center gap-2 border-b border-white/10 pb-2">
                 <Zap size={13} className="text-[#34d399]" />
                 <span>Content Opportunities & Winning Angles</span>
@@ -250,7 +291,7 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                     key={i}
                     className="flex items-start gap-2.5 leading-relaxed bg-white/5 p-3 rounded-xl border border-white/5 hover:border-white/10 transition"
                   >
-                    <span className="bg-[#34d399]/20 text-[#34d399] font-bold text-xs p-1 rounded-md shrink-0">
+                    <span className="bg-[#34d399]/20 text-[#34d399] font-bold text-xs p-1 rounded-md shrink-0 font-mono">
                       #{i + 1}
                     </span>
                     <span>{o}</span>
@@ -259,46 +300,20 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
               </ul>
             </div>
 
-            {/* Outline Preview */}
-            <div
-              className="glass-card p-5 space-y-3"
-              id="serp-outline-preview-card"
-            >
+            <div className="glass-card p-5 space-y-3" id="serp-outline-preview-card">
               <div className="flex items-center justify-between border-b border-white/10 pb-2">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-sky-400 font-mono flex items-center gap-2">
                   <FileText size={13} className="text-sky-400" />
                   <span>Recommended Article Outline</span>
                 </h3>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleCopyOutline}
-                    className="text-[10px] text-slate-300 hover:text-white bg-white/5 border border-white/10 px-2 py-1 rounded font-mono flex items-center gap-1 cursor-pointer"
-                  >
-                    {copiedOutline ? (
-                      <Check size={10} className="text-emerald-400" />
-                    ) : (
-                      <Copy size={10} />
-                    )}
-                    <span>{copiedOutline ? 'Copied' : 'Copy'}</span>
-                  </button>
-                  {onSendToWriter && (
-                    <button
-                      onClick={() =>
-                        onSendToWriter(
-                          serp.recommended_outline,
-                          `Ultimate Guide to ${serp.keyword}`,
-                          serp.keyword,
-                        )
-                      }
-                      className="text-[10px] bg-[#34d399] text-[#0f172a] hover:bg-[#2bc48d] px-2.5 py-1 rounded font-bold font-mono flex items-center gap-1 cursor-pointer shrink-0"
-                    >
-                      <ArrowRight size={10} />
-                      <span>Send to Writer</span>
-                    </button>
-                  )}
-                </div>
+                <button
+                  onClick={handleCopyOutline}
+                  className="text-[10px] text-slate-300 hover:text-white bg-white/5 border border-white/10 px-2 py-1 rounded font-mono flex items-center gap-1 cursor-pointer"
+                >
+                  {copiedOutline ? <Check size={10} className="text-emerald-400" /> : <Copy size={10} />}
+                  <span>{copiedOutline ? 'Copied' : 'Copy'}</span>
+                </button>
               </div>
-
               <ul className="space-y-2 text-xs text-slate-300">
                 {serp.recommended_outline.map((o, i) => (
                   <li
@@ -317,15 +332,13 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
         </div>
       )}
 
-      {/* TAB 2: EXPANDED COMPETITORS LIST */}
+      {/* TAB 2: EXPANDED COMPETITORS */}
       {activeTab === 'competitors' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-[#34d399] font-mono flex items-center gap-2">
               <Building2 size={14} />
-              <span>
-                Google Ireland Top {serp.top_results.length} Ranking Domains
-              </span>
+              <span>Google Ireland Top {serp.top_results.length} Ranking Domains</span>
             </h3>
             <span className="text-[10px] font-mono text-slate-400">
               Sorted by SERP Organic Rank #1 - #{serp.top_results.length}
@@ -382,87 +395,57 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                   </div>
                 </div>
 
-                {/* Quick grids for Themes, Strengths, Weaknesses, Ranking Gaps */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 pt-4 border-t border-white/5">
-                  {/* Themes */}
                   <div className="space-y-1.5">
                     <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-slate-400 block">
                       Themes:
                     </span>
                     <ul className="space-y-1 text-slate-300 text-xs">
                       {r.themes.map((t, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-1.5 leading-normal"
-                        >
-                          <span className="text-[#34d399] font-bold shrink-0">
-                            ·
-                          </span>
+                        <li key={i} className="flex items-start gap-1.5 leading-normal">
+                          <span className="text-[#34d399] font-bold shrink-0">·</span>
                           <span>{t}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  {/* Strengths */}
                   <div className="space-y-1.5">
                     <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-[#34d399] block">
                       Strengths:
                     </span>
                     <ul className="space-y-1 text-slate-300 text-xs">
                       {r.strengths.map((t, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-1.5 leading-normal"
-                        >
-                          <span className="text-[#34d399] font-bold shrink-0">
-                            ✓
-                          </span>
+                        <li key={i} className="flex items-start gap-1.5 leading-normal">
+                          <span className="text-[#34d399] font-bold shrink-0">✓</span>
                           <span>{t}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  {/* Weaknesses */}
                   <div className="space-y-1.5">
                     <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-rose-400 block">
                       Weaknesses:
                     </span>
                     <ul className="space-y-1 text-slate-300 text-xs">
                       {r.weaknesses.map((t, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-1.5 leading-normal"
-                        >
-                          <span className="text-rose-400 font-bold shrink-0">
-                            ✗
-                          </span>
+                        <li key={i} className="flex items-start gap-1.5 leading-normal">
+                          <span className="text-rose-400 font-bold shrink-0">✗</span>
                           <span>{t}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  {/* Ranking Gaps */}
                   <div className="space-y-1.5">
                     <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-sky-400 block">
                       Content Gaps:
                     </span>
                     <ul className="space-y-1 text-slate-300 text-xs">
-                      {(
-                        r.ranking_gaps || [
-                          'No interactive tools',
-                          'Complex jargon',
-                        ]
-                      ).map((g, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-1.5 leading-normal"
-                        >
-                          <span className="text-sky-400 font-bold shrink-0">
-                            ⚡
-                          </span>
+                      {(r.ranking_gaps || ['No interactive tools', 'Complex jargon']).map((g, i) => (
+                        <li key={i} className="flex items-start gap-1.5 leading-normal">
+                          <span className="text-sky-400 font-bold shrink-0">⚡</span>
                           <span>{g}</span>
                         </li>
                       ))}
@@ -475,18 +458,144 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
         </div>
       )}
 
-      {/* TAB 3: RANKING GAPS MATRIX */}
+      {/* TAB 3: COMPETITOR DIFF ENGINE (Phase 9) */}
+      {activeTab === 'diff' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-sky-400 font-mono flex items-center gap-2">
+                <GitCommit size={14} />
+                <span>Phase 9 — Competitor Diff Engine</span>
+              </h3>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Tracks position changes (Δpos), new Page 1 entrants, and dropped domains between crawler snapshot passes.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono px-2 py-0.5 rounded font-bold">
+                +{diff.climbedCount} Climbed
+              </span>
+              <span className="bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-mono px-2 py-0.5 rounded font-bold">
+                -{diff.fallenCount} Dropped
+              </span>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto rounded-xl border border-white/10 bg-black/20">
+            <table className="w-full text-left text-xs text-slate-300">
+              <thead className="bg-white/5 border-b border-white/10 text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+                <tr>
+                  <th className="p-3">Domain / Result</th>
+                  <th className="p-3 text-center">Previous</th>
+                  <th className="p-3 text-center">Current</th>
+                  <th className="p-3 text-center">Rank Diff (Δ)</th>
+                  <th className="p-3">Shift Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {diff.diffs.map((d, idx) => (
+                  <tr key={idx} className="hover:bg-white/5 transition">
+                    <td className="p-3">
+                      <div className="font-semibold text-white font-mono">{d.domain}</div>
+                      <div className="text-[10px] text-slate-400 truncate max-w-sm">{d.title}</div>
+                    </td>
+                    <td className="p-3 text-center font-mono">
+                      {d.oldPosition ? `#${d.oldPosition}` : '—'}
+                    </td>
+                    <td className="p-3 text-center font-mono font-bold text-white">
+                      #{d.newPosition}
+                    </td>
+                    <td className="p-3 text-center font-mono font-bold">
+                      {d.positionChange > 0 ? (
+                        <span className="text-emerald-400">+{d.positionChange} ↑</span>
+                      ) : d.positionChange < 0 ? (
+                        <span className="text-rose-400">{d.positionChange} ↓</span>
+                      ) : (
+                        <span className="text-slate-400">0 →</span>
+                      )}
+                    </td>
+                    <td className="p-3">
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                          d.status === 'climbed'
+                            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                            : d.status === 'fallen'
+                              ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                              : d.status === 'new_entrant'
+                                ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                                : 'bg-white/5 text-slate-400 border border-white/10'
+                        }`}
+                      >
+                        {d.status.replace('_', ' ')}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 4: SERP FEATURES & INTENT (Phases 10 & 11) */}
+      {activeTab === 'features' && (
+        <div className="space-y-5">
+          <div className="border-b border-white/10 pb-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-emerald-400 font-mono flex items-center gap-2">
+              <Sparkles size={14} />
+              <span>Phases 10 & 11 — Detected SERP Features & Search Intent</span>
+            </h3>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Identifies Google Ireland rich snippets, People Also Ask accordions, local packs, and multi-intent query semantics.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {features.map((feat, idx) => (
+              <div key={idx} className="glass-card p-4 space-y-2 border border-white/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {feat.type === 'featured_snippet' && <Sparkles size={14} className="text-amber-400" />}
+                    {feat.type === 'people_also_ask' && <HelpCircle size={14} className="text-sky-400" />}
+                    {feat.type === 'local_pack' && <MapPin size={14} className="text-emerald-400" />}
+                    {feat.type === 'calculator_widget' && <Calculator size={14} className="text-purple-400" />}
+                    {feat.type === 'video_pack' && <Video size={14} className="text-rose-400" />}
+                    {feat.type === 'sitelinks' && <Layers size={14} className="text-blue-400" />}
+                    <h4 className="text-xs font-bold text-white font-mono">{feat.title}</h4>
+                  </div>
+                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-semibold">
+                    Relevance: {feat.relevanceScore}%
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">{feat.description}</p>
+                {feat.sourceUrl && (
+                  <a
+                    href={feat.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] text-sky-400 hover:underline flex items-center gap-1 font-mono pt-1"
+                  >
+                    <span>{feat.sourceUrl}</span>
+                    <ExternalLink size={10} />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 5: RANKING GAPS */}
       {activeTab === 'gaps' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-[#34d399] font-mono flex items-center gap-2">
                 <Target size={14} />
-                <span>Google Ireland Organic Ranking Gap Matrix</span>
+                <span>Google Ireland Organic Ranking Gap Matrix (Phase 12)</span>
               </h3>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                High-intent Irish keywords where competitors rank on Page 1 but
-                lack depth or localized answers.
+                High-intent Irish keywords where competitors rank on Page 1 but lack depth or localized answers.
               </p>
             </div>
           </div>
@@ -505,55 +614,9 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {(
-                  serp.ranking_gap_keywords || [
-                    {
-                      keyword: 'SEAI grant heat pump Limerick V94',
-                      competitor: 'SEAI Ireland',
-                      competitorRank: 1,
-                      volume: 4800,
-                      difficulty: 32,
-                      opportunityScore: 94,
-                      suggestedAction:
-                        'Create targeted regional landing page with V94 Eircode map and local installer directory.',
-                    },
-                    {
-                      keyword: 'BER rating G to A upgrade cost Ireland',
-                      competitor: 'SuperHomes',
-                      competitorRank: 3,
-                      volume: 3600,
-                      difficulty: 35,
-                      opportunityScore: 91,
-                      suggestedAction:
-                        'Publish step-by-step cost breakdown table comparing individual grants vs One-Stop-Shop.',
-                    },
-                    {
-                      keyword:
-                        'attic insulation grant application process 2026',
-                      competitor: 'Citizens Information',
-                      competitorRank: 2,
-                      volume: 2900,
-                      difficulty: 28,
-                      opportunityScore: 88,
-                      suggestedAction:
-                        'Draft a visual 4-step infographic guide with direct SEAI portal download checklist.',
-                    },
-                    {
-                      keyword: 'heat loss indicator pre assessment checklist',
-                      competitor: 'RetroKit',
-                      competitorRank: 4,
-                      volume: 2100,
-                      difficulty: 25,
-                      opportunityScore: 85,
-                      suggestedAction:
-                        'Integrate our dynamic Energy Estimator tool with automated HLI calculation.',
-                    },
-                  ]
-                ).map((gap, idx) => (
+                {(serp.ranking_gap_keywords || []).map((gap, idx) => (
                   <tr key={idx} className="hover:bg-white/5 transition">
-                    <td className="p-3 font-semibold text-white font-mono">
-                      {gap.keyword}
-                    </td>
+                    <td className="p-3 font-semibold text-white font-mono">{gap.keyword}</td>
                     <td className="p-3 text-slate-300">{gap.competitor}</td>
                     <td className="p-3 text-center font-mono">
                       <span className="bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[11px]">
@@ -575,9 +638,7 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                         {gap.opportunityScore}/100
                       </span>
                     </td>
-                    <td className="p-3 text-slate-300 leading-normal max-w-xs">
-                      {gap.suggestedAction}
-                    </td>
+                    <td className="p-3 text-slate-300 leading-normal max-w-xs">{gap.suggestedAction}</td>
                   </tr>
                 ))}
               </tbody>
@@ -586,7 +647,7 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
         </div>
       )}
 
-      {/* TAB 4: TARGET ARTICLE OUTLINE & ACTION */}
+      {/* TAB 6: TARGET OUTLINE */}
       {activeTab === 'outline' && (
         <div className="glass-card p-6 space-y-5 border border-sky-500/20">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
@@ -596,8 +657,7 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                 <span>Recommended Article Content Outline</span>
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                Structured section-by-section outline engineered to outrank top
-                competitors on Google Ireland.
+                Structured section-by-section outline engineered to outrank top competitors on Google Ireland.
               </p>
             </div>
 
@@ -606,14 +666,8 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                 onClick={handleCopyOutline}
                 className="bg-white/5 hover:bg-white/10 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border border-white/10 transition flex items-center gap-1.5 cursor-pointer"
               >
-                {copiedOutline ? (
-                  <Check size={12} className="text-emerald-400" />
-                ) : (
-                  <Copy size={12} />
-                )}
-                <span>
-                  {copiedOutline ? 'Copied to Clipboard' : 'Copy Outline'}
-                </span>
+                {copiedOutline ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                <span>{copiedOutline ? 'Copied' : 'Copy Outline'}</span>
               </button>
 
               {onSendToWriter && (
@@ -648,23 +702,84 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                     Section {i + 1}: {o}
                   </h4>
                   <p className="text-[11px] text-slate-400 mt-1 leading-normal">
-                    Target focus keywords:{' '}
-                    <span className="text-slate-300 font-mono">
-                      {serp.keyword}
-                    </span>
-                    ,{' '}
-                    <span className="text-slate-300 font-mono">
-                      BER upgrade Ireland
-                    </span>
-                    ,{' '}
-                    <span className="text-slate-300 font-mono">
-                      SEAI grant steps
-                    </span>
-                    .
+                    Target focus keywords: <span className="text-slate-300 font-mono">{serp.keyword}</span>,{' '}
+                    <span className="text-slate-300 font-mono">BER upgrade Ireland</span>,{' '}
+                    <span className="text-slate-300 font-mono">SEAI grant steps</span>.
                   </p>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 7: CHANGE ALERTS & VOLATILITY (Phases 13 & 14) */}
+      {activeTab === 'alerts' && (
+        <div className="space-y-5">
+          <div className="border-b border-white/10 pb-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-rose-400 font-mono flex items-center gap-2">
+              <Bell size={14} />
+              <span>Phases 13 & 14 — SERP Volatility Predictor & Change Alerts</span>
+            </h3>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Live algorithmic turbulence monitoring and automated strategic change alerts.
+            </p>
+          </div>
+
+          {/* Volatility Meter Card */}
+          <div className="glass-card p-5 space-y-3 border border-white/10">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold font-mono text-slate-300 uppercase">
+                SERP Page 1 Turbulence Index:
+              </span>
+              <span className="font-mono font-bold text-sm text-emerald-400">{volatility}%</span>
+            </div>
+            <div className="w-full bg-white/5 h-3 rounded-full overflow-hidden border border-white/10">
+              <div
+                className={`h-full transition-all duration-500 ${
+                  volatility < 35 ? 'bg-emerald-400' : volatility < 65 ? 'bg-amber-400' : 'bg-rose-400'
+                }`}
+                style={{ width: `${volatility}%` }}
+              />
+            </div>
+            <p className="text-xs text-slate-400">
+              {volatility < 35
+                ? 'Stable SERP environment. Top rankings have low displacement velocity.'
+                : volatility < 65
+                  ? 'Moderate SERP fluctuation. Periodic position shifts observed.'
+                  : 'Severe turbulence detected. Active algorithm testing or content competition in progress.'}
+            </p>
+          </div>
+
+          {/* Alerts List */}
+          <div className="space-y-3">
+            {alerts.length === 0 ? (
+              <div className="p-6 bg-white/5 rounded-xl text-center text-xs text-slate-400 font-mono border border-white/5">
+                No critical SERP disruption alerts detected for this query.
+              </div>
+            ) : (
+              alerts.map((al) => (
+                <div
+                  key={al.id}
+                  className={`p-4 rounded-xl border flex items-start gap-3 ${
+                    al.severity === 'high'
+                      ? 'bg-rose-950/30 border-rose-500/30 text-rose-300'
+                      : al.severity === 'medium'
+                        ? 'bg-amber-950/30 border-amber-500/30 text-amber-300'
+                        : 'bg-sky-950/30 border-sky-500/30 text-sky-300'
+                  }`}
+                >
+                  <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                  <div className="space-y-1 text-xs">
+                    <div className="font-bold font-mono uppercase">{al.type.replace(/_/g, ' ')}</div>
+                    <div>{al.message}</div>
+                    <div className="text-[11px] opacity-80 pt-1 font-mono">
+                      <strong>Action:</strong> {al.actionRequired}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}

@@ -35,11 +35,41 @@ export default defineConfig(() => {
     build: {
       target: ['esnext', 'safari13'],
       cssTarget: 'safari13',
+      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
           entryFileNames: `assets/[name].[hash].js`,
           chunkFileNames: `assets/[name].[hash].js`,
           assetFileNames: `assets/[name].[hash].[ext]`,
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (
+                id.includes('react-dom') ||
+                id.includes('/react/') ||
+                id.includes('react-router')
+              ) {
+                return 'vendor-react';
+              }
+              if (id.includes('recharts') || id.includes('/d3') || id.includes('d3-')) {
+                return 'vendor-charts';
+              }
+              if (id.includes('lucide-react')) {
+                return 'vendor-icons';
+              }
+              if (id.includes('jspdf')) {
+                return 'vendor-pdf';
+              }
+              if (id.includes('motion')) {
+                return 'vendor-motion';
+              }
+              if (id.includes('@sentry')) {
+                return 'vendor-sentry';
+              }
+              if (id.includes('react-markdown')) {
+                return 'vendor-markdown';
+              }
+            }
+          },
         },
       },
     },
