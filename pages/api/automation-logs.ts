@@ -1,19 +1,28 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { globalAutomationEngine } from '../../src/logic/automationEngine';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   try {
-    const limit = req.query?.limit ? Number(req.query.limit) : 50;
-    const logs = globalAutomationEngine.getLogs(limit);
-    return res.status(200).json({
+    const workerUrl = process.env.WORKER_URL;
+    const limit = req.query.limit || 50;
+
+    const response = await fetch(`${workerUrl}/automation/logs?limit=${limit}`);
+    const data = await response.json().catch(() => null);
+
+    res.status(200).json({
       ok: true,
-      success: true,
-      logs,
-      total: logs.length,
+      source: 'automation-logs',
+      limit,
+      worker: workerUrl,
+      data,
     });
   } catch (err: any) {
-    return res
-      .status(500)
-      .json({ ok: false, error: err.message || 'Internal Server Error' });
+    res.status(500).json({
+      ok: false,
+      error: err.message,
+      route: 'automation-logs',
+    });
   }
 }

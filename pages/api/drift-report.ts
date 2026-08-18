@@ -1,29 +1,26 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import {
-  detectPhaseDrift,
-  autoRepairDrift,
-} from '../../src/logic/phaseDriftDetector';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   try {
-    if (req.method === 'POST') {
-      const result = autoRepairDrift();
-      return res.status(200).json({
-        ok: true,
-        success: true,
-        result,
-      });
-    }
+    const workerUrl = process.env.WORKER_URL;
 
-    const report = detectPhaseDrift();
-    return res.status(200).json({
+    const response = await fetch(`${workerUrl}/drift-report`);
+    const data = await response.json().catch(() => null);
+
+    res.status(200).json({
       ok: true,
-      success: true,
-      report,
+      source: 'drift-report',
+      worker: workerUrl,
+      data,
     });
   } catch (err: any) {
-    return res
-      .status(500)
-      .json({ ok: false, error: err.message || 'Internal Server Error' });
+    res.status(500).json({
+      ok: false,
+      error: err.message,
+      route: 'drift-report',
+    });
   }
 }
