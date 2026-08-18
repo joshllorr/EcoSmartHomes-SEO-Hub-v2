@@ -1,9 +1,21 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { proxyOrHandle } from '../_proxy';
-import app from '../../server';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  return proxyOrHandle('/api/whatsapp/webhook', req, res, (q, s) =>
-    app(q as any, s as any),
-  );
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  try {
+    const workerUrl = process.env.WORKER_URL;
+    res.status(200).json({
+      ok: true,
+      route: 'whatsapp/webhook',
+      worker: workerUrl || 'internal',
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      ok: false,
+      error: err.message,
+      route: 'whatsapp/webhook',
+    });
+  }
 }

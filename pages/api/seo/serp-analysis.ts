@@ -6,16 +6,22 @@ export default async function handler(
 ) {
   try {
     const workerUrl = process.env.WORKER_URL;
-    if (!workerUrl) throw new Error('WORKER_URL not set');
+    if (!workerUrl) {
+      throw new Error('WORKER_URL not set in environment variables');
+    }
 
+    // Basic test call to Worker SERP endpoint
     const response = await fetch(`${workerUrl}/serp-intelligence?keyword=test`);
-    const text = await response.text();
+
+    // Read raw text so we avoid JSON parse crashes
+    const raw = await response.text();
 
     res.status(200).json({
       ok: true,
       message: 'SERP analysis endpoint online',
       workerUrl,
-      rawResponse: text.slice(0, 200), // preview first 200 chars
+      status: response.status,
+      rawResponsePreview: raw.slice(0, 300),
     });
   } catch (err: any) {
     res.status(500).json({
