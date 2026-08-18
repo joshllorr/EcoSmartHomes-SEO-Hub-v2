@@ -2,8 +2,8 @@
   "buildCommand": "npm run build",
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "http://35.193.82.0:3000/api/:path*"
+      "source": "/((?!api|articles|assets|favicon.ico).*)",
+      "destination": "/index.html"
     }
   ]
 }
