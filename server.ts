@@ -1673,10 +1673,22 @@ Return raw JSON with key "ideas" containing the array of 5 objects.`;
 // 1.5. API: SERP Analysis Engine Endpoint
 export function generateTopicAwareSERP(keyword: string) {
   const kwLower = (keyword || 'SEAI grants Limerick V94').toLowerCase();
-  const isSolar = kwLower.includes('solar') || kwLower.includes('pv') || kwLower.includes('panel');
-  const isInsulation = kwLower.includes('insulation') || kwLower.includes('attic') || kwLower.includes('wall');
-  const isHeatPump = kwLower.includes('heat pump') || kwLower.includes('hvac') || kwLower.includes('heating');
-  const isBER = kwLower.includes('ber') || kwLower.includes('rating') || kwLower.includes('energy assessment');
+  const isSolar =
+    kwLower.includes('solar') ||
+    kwLower.includes('pv') ||
+    kwLower.includes('panel');
+  const isInsulation =
+    kwLower.includes('insulation') ||
+    kwLower.includes('attic') ||
+    kwLower.includes('wall');
+  const isHeatPump =
+    kwLower.includes('heat pump') ||
+    kwLower.includes('hvac') ||
+    kwLower.includes('heating');
+  const isBER =
+    kwLower.includes('ber') ||
+    kwLower.includes('rating') ||
+    kwLower.includes('energy assessment');
 
   if (isSolar) {
     return {
@@ -1694,28 +1706,54 @@ export function generateTopicAwareSERP(keyword: string) {
           domain_authority: 88,
           monthly_traffic: 145000,
           content_type: 'Government Portal',
-          themes: ['Solar Electricity Grant', 'Clean Export Guarantee', 'SEAI Domestic Solar'],
-          strengths: ['Authoritative grant guidelines', 'Official payment rate tables', 'Registered installer portal'],
-          weaknesses: ['Does not include real-time solar ROI calculators', 'Complex application bureaucracy'],
-          ranking_gaps: ['Lacks interactive battery vs standalone PV payback comparisons', 'No regional Limerick V94 installer matchmaking']
+          themes: [
+            'Solar Electricity Grant',
+            'Clean Export Guarantee',
+            'SEAI Domestic Solar',
+          ],
+          strengths: [
+            'Authoritative grant guidelines',
+            'Official payment rate tables',
+            'Registered installer portal',
+          ],
+          weaknesses: [
+            'Does not include real-time solar ROI calculators',
+            'Complex application bureaucracy',
+          ],
+          ranking_gaps: [
+            'Lacks interactive battery vs standalone PV payback comparisons',
+            'No regional Limerick V94 installer matchmaking',
+          ],
         },
         {
           position: 2,
-          title: 'Solar Panels Ireland: Costs, SEAI Grants & Savings 2026 | Citizens Information',
+          title:
+            'Solar Panels Ireland: Costs, SEAI Grants & Savings 2026 | Citizens Information',
           url: 'https://www.citizensinformation.ie/en/housing/housing_grants_and_schemes/solar_panels.html',
           meta_description:
             'Objective homeowner advice on solar PV panel installations, VAT exemptions on solar equipment, and SEAI grant application procedures in Ireland.',
           domain_authority: 82,
           monthly_traffic: 110000,
           content_type: 'Civic Advice Guide',
-          themes: ['Citizen Advice', 'VAT Zero Rating', 'Microgeneration Scheme'],
-          strengths: ['Unbiased legal and consumer guidance', 'Clear eligibility prerequisites'],
+          themes: [
+            'Citizen Advice',
+            'VAT Zero Rating',
+            'Microgeneration Scheme',
+          ],
+          strengths: [
+            'Unbiased legal and consumer guidance',
+            'Clear eligibility prerequisites',
+          ],
           weaknesses: ['Visually plain', 'No detailed wattage sizing tables'],
-          ranking_gaps: ['No comparison between battery storage capacities (5kWh vs 10kWh)', 'Missing smart inverter reviews']
+          ranking_gaps: [
+            'No comparison between battery storage capacities (5kWh vs 10kWh)',
+            'Missing smart inverter reviews',
+          ],
         },
         {
           position: 3,
-          title: 'Solar PV Grants & Home Battery Storage Systems | Activ8 Solar Energies',
+          title:
+            'Solar PV Grants & Home Battery Storage Systems | Activ8 Solar Energies',
           url: 'https://activ8energies.com/solar-grants-ireland',
           meta_description:
             'Leading Irish solar panel installer. Get €2,100 grant deduction directly off your quote. High-efficiency tier 1 monocrystalline panels with smart monitoring.',
@@ -1723,51 +1761,94 @@ export function generateTopicAwareSERP(keyword: string) {
           monthly_traffic: 32000,
           content_type: 'Commercial Solar Installer',
           themes: ['Residential Solar', 'Battery Storage', 'Turnkey Quotes'],
-          strengths: ['Clear product specifications', 'High customer trust scores', 'Turnkey grant administration'],
+          strengths: [
+            'Clear product specifications',
+            'High customer trust scores',
+            'Turnkey grant administration',
+          ],
           weaknesses: ['Sales-heavy copy', 'High minimum system pricing'],
-          ranking_gaps: ['Lacks DIY grant submission checklists', 'Limited independent brand comparisons']
+          ranking_gaps: [
+            'Lacks DIY grant submission checklists',
+            'Limited independent brand comparisons',
+          ],
         },
         {
           position: 4,
-          title: 'Solar Panel Grants Ireland 2026: Complete Cost Breakdown | EnergyStream',
+          title:
+            'Solar Panel Grants Ireland 2026: Complete Cost Breakdown | EnergyStream',
           url: 'https://www.energystream.ie/solar-panel-costs-grants-ireland',
           meta_description:
             'Average solar installation prices in Dublin, Cork, and Limerick. How much a 4kWp system costs before and after the SEAI grant.',
           domain_authority: 46,
           monthly_traffic: 18400,
           content_type: 'Industry Research',
-          themes: ['Pricing Transparency', '4kWp System Sizing', 'Microgeneration Export'],
-          strengths: ['Detailed cost breakdown tables', 'Realistic post-grant net pricing'],
-          weaknesses: ['Infrequent updates', 'Lacks regional Munster / Limerick installer profiles'],
-          ranking_gaps: ['No direct integration with BER rating calculators', 'No EV charger solar integration guide']
+          themes: [
+            'Pricing Transparency',
+            '4kWp System Sizing',
+            'Microgeneration Export',
+          ],
+          strengths: [
+            'Detailed cost breakdown tables',
+            'Realistic post-grant net pricing',
+          ],
+          weaknesses: [
+            'Infrequent updates',
+            'Lacks regional Munster / Limerick installer profiles',
+          ],
+          ranking_gaps: [
+            'No direct integration with BER rating calculators',
+            'No EV charger solar integration guide',
+          ],
         },
         {
           position: 5,
-          title: 'Electric Ireland Solar PV Packages with Smart Export Guarantee (CEG)',
+          title:
+            'Electric Ireland Solar PV Packages with Smart Export Guarantee (CEG)',
           url: 'https://www.electricireland.ie/residential/products/solar-pv',
           meta_description:
             'Generate clean energy and sell excess electricity back to Electric Ireland at market-leading feed-in tariffs. Full SEAI grant assistance included.',
           domain_authority: 76,
           monthly_traffic: 52000,
           content_type: 'Utility Provider',
-          themes: ['CEG Export Tariff', 'Utility Energy Bundles', 'Smart Meter Integration'],
+          themes: [
+            'CEG Export Tariff',
+            'Utility Energy Bundles',
+            'Smart Meter Integration',
+          ],
           strengths: ['Massive brand trust', 'Combined billing discounts'],
-          weaknesses: ['Long project installation lead times', 'Focuses heavily on existing utility customers'],
-          ranking_gaps: ['Lacks independent equipment performance benchmarks', 'No modular battery upgrade guides']
+          weaknesses: [
+            'Long project installation lead times',
+            'Focuses heavily on existing utility customers',
+          ],
+          ranking_gaps: [
+            'Lacks independent equipment performance benchmarks',
+            'No modular battery upgrade guides',
+          ],
         },
         {
           position: 6,
-          title: 'Solar PV & Heat Pump Integration in Limerick V94 | Mid-West Solar Energy',
+          title:
+            'Solar PV & Heat Pump Integration in Limerick V94 | Mid-West Solar Energy',
           url: 'https://www.midwestsolar.ie/limerick-v94-grants',
           meta_description:
             'Specialist solar installations across Castletroy, Raheen, and Dooradoyle. Maximize heat pump efficiency by running off your own solar electricity.',
           domain_authority: 38,
           monthly_traffic: 9500,
           content_type: 'Regional Installer',
-          themes: ['Limerick V94 Local Focus', 'Solar + Heat Pump Pairing', 'Registered SEAI Installers'],
-          strengths: ['Localized search relevance for Limerick', 'Strong customer project photos'],
+          themes: [
+            'Limerick V94 Local Focus',
+            'Solar + Heat Pump Pairing',
+            'Registered SEAI Installers',
+          ],
+          strengths: [
+            'Localized search relevance for Limerick',
+            'Strong customer project photos',
+          ],
           weaknesses: ['Thin editorial content', 'Short articles'],
-          ranking_gaps: ['No downloadable solar planning guides', 'No explanation of roof orientation and pitch losses']
+          ranking_gaps: [
+            'No downloadable solar planning guides',
+            'No explanation of roof orientation and pitch losses',
+          ],
         },
         {
           position: 7,
@@ -1778,10 +1859,23 @@ export function generateTopicAwareSERP(keyword: string) {
           domain_authority: 44,
           monthly_traffic: 14200,
           content_type: 'Solar Contractor',
-          themes: ['Technical Engineering', 'Microinverters', 'Long-term Warranties'],
-          strengths: ['High engineering precision', 'Explains shading and degradation factors'],
-          weaknesses: ['Overly complex technical terms', 'No direct online grant estimator'],
-          ranking_gaps: ['Missing homeowner financing comparisons', 'No BER boost certificate explanation']
+          themes: [
+            'Technical Engineering',
+            'Microinverters',
+            'Long-term Warranties',
+          ],
+          strengths: [
+            'High engineering precision',
+            'Explains shading and degradation factors',
+          ],
+          weaknesses: [
+            'Overly complex technical terms',
+            'No direct online grant estimator',
+          ],
+          ranking_gaps: [
+            'Missing homeowner financing comparisons',
+            'No BER boost certificate explanation',
+          ],
         },
         {
           position: 8,
@@ -1793,38 +1887,69 @@ export function generateTopicAwareSERP(keyword: string) {
           monthly_traffic: 41000,
           content_type: 'Utility Provider',
           themes: ['Solar Panels', 'Home Battery', 'SEAI Grants'],
-          strengths: ['Seamless application support', 'Established service infrastructure'],
-          weaknesses: ['Higher overall quote pricing than independent contractors', 'Restrictive contract terms'],
-          ranking_gaps: ['No DIY energy monitoring guides', 'No standalone inverter replacement advice']
+          strengths: [
+            'Seamless application support',
+            'Established service infrastructure',
+          ],
+          weaknesses: [
+            'Higher overall quote pricing than independent contractors',
+            'Restrictive contract terms',
+          ],
+          ranking_gaps: [
+            'No DIY energy monitoring guides',
+            'No standalone inverter replacement advice',
+          ],
         },
         {
           position: 9,
-          title: 'Solar PV Return on Investment & Payback Period Ireland | SolarQuotes.ie',
+          title:
+            'Solar PV Return on Investment & Payback Period Ireland | SolarQuotes.ie',
           url: 'https://solarquotes.ie/payback-roi-calculator-ireland',
           meta_description:
             'Calculate exact solar panel payback timelines based on Irish electricity prices, export tariffs, and seasonal sunlight hours.',
           domain_authority: 42,
           monthly_traffic: 12100,
           content_type: 'Industry Portal',
-          themes: ['Payback Period (5-7 Years)', 'Electricity Price Trends', 'System Sizing ROI'],
+          themes: [
+            'Payback Period (5-7 Years)',
+            'Electricity Price Trends',
+            'System Sizing ROI',
+          ],
           strengths: ['Engaging financial tables', 'Realistic ROI forecasts'],
-          weaknesses: ['Basic visual interface', 'No contractor verification system'],
-          ranking_gaps: ['Missing whole-house BER rating improvement metrics', 'No grant forms checklist']
+          weaknesses: [
+            'Basic visual interface',
+            'No contractor verification system',
+          ],
+          ranking_gaps: [
+            'Missing whole-house BER rating improvement metrics',
+            'No grant forms checklist',
+          ],
         },
         {
           position: 10,
-          title: 'EcoEnergy Ireland: Solar PV Building Energy Rating (BER) Lift Audits',
+          title:
+            'EcoEnergy Ireland: Solar PV Building Energy Rating (BER) Lift Audits',
           url: 'https://www.ecoenergy.ie/solar-ber-improvement',
           meta_description:
             'How installing a 4kWp solar PV system instantly elevates your home energy rating from C3 to A2. SEAI pre-and-post assessment audits.',
           domain_authority: 40,
           monthly_traffic: 7800,
           content_type: 'BER Assessor Network',
-          themes: ['BER Certification', 'A2 Rating Milestone', 'Technical Assessments'],
-          strengths: ['Direct link between solar and official BER points', 'Clear heat loss equations'],
+          themes: [
+            'BER Certification',
+            'A2 Rating Milestone',
+            'Technical Assessments',
+          ],
+          strengths: [
+            'Direct link between solar and official BER points',
+            'Clear heat loss equations',
+          ],
           weaknesses: ['Short content depth', 'Sparse imagery'],
-          ranking_gaps: ['No solar installer price comparison tables', 'No discussion of battery tax credits']
-        }
+          ranking_gaps: [
+            'No solar installer price comparison tables',
+            'No discussion of battery tax credits',
+          ],
+        },
       ],
       ranking_gap_keywords: [
         {
@@ -1834,7 +1959,8 @@ export function generateTopicAwareSERP(keyword: string) {
           volume: 5400,
           difficulty: 30,
           opportunityScore: 95,
-          suggestedAction: 'Publish comprehensive guide on combining solar panels with 5kWh battery systems and Clean Export Guarantee (CEG) revenue.'
+          suggestedAction:
+            'Publish comprehensive guide on combining solar panels with 5kWh battery systems and Clean Export Guarantee (CEG) revenue.',
         },
         {
           keyword: 'Clean Export Guarantee CEG export rates Ireland 2026',
@@ -1843,7 +1969,8 @@ export function generateTopicAwareSERP(keyword: string) {
           volume: 4200,
           difficulty: 28,
           opportunityScore: 92,
-          suggestedAction: 'Create live comparison table ranking electricity supplier export tariffs (24c/kWh vs 21c/kWh) for Irish microgenerators.'
+          suggestedAction:
+            'Create live comparison table ranking electricity supplier export tariffs (24c/kWh vs 21c/kWh) for Irish microgenerators.',
         },
         {
           keyword: 'solar panel installer Limerick V94 grant registered',
@@ -1852,7 +1979,8 @@ export function generateTopicAwareSERP(keyword: string) {
           volume: 2800,
           difficulty: 22,
           opportunityScore: 90,
-          suggestedAction: 'Launch dedicated regional landing page with verified SEAI-registered solar contractors across Castletroy, Raheen, and Dooradoyle.'
+          suggestedAction:
+            'Launch dedicated regional landing page with verified SEAI-registered solar contractors across Castletroy, Raheen, and Dooradoyle.',
         },
         {
           keyword: 'solar pv payback period Ireland 4kWp with battery',
@@ -1861,14 +1989,15 @@ export function generateTopicAwareSERP(keyword: string) {
           volume: 3100,
           difficulty: 26,
           opportunityScore: 88,
-          suggestedAction: 'Incorporate an interactive solar payback timeline slider on EcoSmartHomes with annual kWh production estimates.'
-        }
+          suggestedAction:
+            'Incorporate an interactive solar payback timeline slider on EcoSmartHomes with annual kWh production estimates.',
+        },
       ],
       opportunities: [
         'No competitor explains the Clean Export Guarantee (CEG) feed-in tariff alongside SEAI grants in simple, jargon-free homeowner terms.',
         'Detail the exact payback timeline (5 to 7 years) for a standard 4kWp system with battery storage in Ireland.',
         'Create a localized Limerick V94 solar installer directory with verified SEAI registration and customer review badges.',
-        'Bridge the gap between Solar PV and BER letter improvements (explaining how 10-12 panels can elevate a home straight into A-rating).'
+        'Bridge the gap between Solar PV and BER letter improvements (explaining how 10-12 panels can elevate a home straight into A-rating).',
       ],
       recommended_outline: [
         'Introduction: Why 2026 is the Peak Year for Solar PV in Ireland (SEAI Grants + 0% VAT).',
@@ -1877,9 +2006,9 @@ export function generateTopicAwareSERP(keyword: string) {
         'Section 3: System Sizing Guide: Comparing 2kWp vs 4kWp vs 6kWp Systems with 5kWh Battery Storage.',
         'Section 4: The BER Bonus: Elevating Your Building Energy Rating from C/D to A2/A1 with Solar PV.',
         'Section 5: Step-by-Step SEAI Grant Application Process & Finding Registered Installers in Limerick V94.',
-        'Conclusion: Calculating Your Exact Return on Investment and Long-Term Energy Independence.'
+        'Conclusion: Calculating Your Exact Return on Investment and Long-Term Energy Independence.',
       ],
-      summary_markdown: `### Key Insights for "${keyword}"\nMost top-ranking Google Ireland results are split between government documentation (SEAI, Citizens Information) and commercial installers (Activ8, PV Gen, Electric Ireland). Government pages provide official grant figures but lack interactive savings calculators and battery ROI modeling. Commercial installers push high-priced turnkey packages with limited editorial transparency.\n\n### Winning Content Strategy\nPublish a high-authority, visually rich pillar article titled **"The Complete 2026 Homeowner Guide to SEAI Solar PV Grants in Ireland"**. Incorporate clear price breakdowns, Clean Export Guarantee (CEG) feed-in tariff comparisons, and localized Limerick V94 contractor advice.\n\n### Competitor Ranking Gaps\n1. **Feed-in Tariff Transparency**: None of the top 3 competitors explain how smart export meters automatically monetize surplus electricity alongside the SEAI grant.\n2. **Battery Sizing Clarity**: Homeowners are frequently confused about whether to add a €2,000 battery storage unit — provide clear break-even equations.\n3. **Local Search Dominance**: High demand in Munster / Limerick V94 with very low keyword difficulty (KD 22-28).\n\n### Target Article Length\n**1,400 - 1,800 words** with bold subheadings, comparison tables, and direct links to the EcoSmartHomes Energy Estimator.`
+      summary_markdown: `### Key Insights for "${keyword}"\nMost top-ranking Google Ireland results are split between government documentation (SEAI, Citizens Information) and commercial installers (Activ8, PV Gen, Electric Ireland). Government pages provide official grant figures but lack interactive savings calculators and battery ROI modeling. Commercial installers push high-priced turnkey packages with limited editorial transparency.\n\n### Winning Content Strategy\nPublish a high-authority, visually rich pillar article titled **"The Complete 2026 Homeowner Guide to SEAI Solar PV Grants in Ireland"**. Incorporate clear price breakdowns, Clean Export Guarantee (CEG) feed-in tariff comparisons, and localized Limerick V94 contractor advice.\n\n### Competitor Ranking Gaps\n1. **Feed-in Tariff Transparency**: None of the top 3 competitors explain how smart export meters automatically monetize surplus electricity alongside the SEAI grant.\n2. **Battery Sizing Clarity**: Homeowners are frequently confused about whether to add a €2,000 battery storage unit — provide clear break-even equations.\n3. **Local Search Dominance**: High demand in Munster / Limerick V94 with very low keyword difficulty (KD 22-28).\n\n### Target Article Length\n**1,400 - 1,800 words** with bold subheadings, comparison tables, and direct links to the EcoSmartHomes Energy Estimator.`,
     };
   }
 
@@ -1899,10 +2028,26 @@ export function generateTopicAwareSERP(keyword: string) {
         domain_authority: 88,
         monthly_traffic: 125000,
         content_type: 'Government Portal',
-        themes: ['Government Grants', 'SEAI Subsidies', 'Technical Specifications'],
-        strengths: ['Ultimate domain authority', 'Clear, official grant rates', 'Complete PDF guidelines'],
-        weaknesses: ['Complex bureaucratic jargon', 'Hard to navigate for first-time applicants', 'Lack of step-by-step homeowner stories'],
-        ranking_gaps: ['Lacks interactive grant eligibility calculator', 'No regional contractor directory', 'Dry academic phrasing']
+        themes: [
+          'Government Grants',
+          'SEAI Subsidies',
+          'Technical Specifications',
+        ],
+        strengths: [
+          'Ultimate domain authority',
+          'Clear, official grant rates',
+          'Complete PDF guidelines',
+        ],
+        weaknesses: [
+          'Complex bureaucratic jargon',
+          'Hard to navigate for first-time applicants',
+          'Lack of step-by-step homeowner stories',
+        ],
+        ranking_gaps: [
+          'Lacks interactive grant eligibility calculator',
+          'No regional contractor directory',
+          'Dry academic phrasing',
+        ],
       },
       {
         position: 2,
@@ -1913,10 +2058,25 @@ export function generateTopicAwareSERP(keyword: string) {
         domain_authority: 82,
         monthly_traffic: 98000,
         content_type: 'Civic Advice Guide',
-        themes: ['Homeowner Rights', 'Step-by-Step Sequence', 'One-Stop-Shop Model'],
-        strengths: ['Highly structured content', 'Objective unbiased analysis', 'Detailed application links'],
-        weaknesses: ['Visually dry', 'No real-time cost estimators', 'Lacks interactive planning elements'],
-        ranking_gaps: ['No specific BER upgrade letter calculations', 'Missing localized V94 Eircode guidance']
+        themes: [
+          'Homeowner Rights',
+          'Step-by-Step Sequence',
+          'One-Stop-Shop Model',
+        ],
+        strengths: [
+          'Highly structured content',
+          'Objective unbiased analysis',
+          'Detailed application links',
+        ],
+        weaknesses: [
+          'Visually dry',
+          'No real-time cost estimators',
+          'Lacks interactive planning elements',
+        ],
+        ranking_gaps: [
+          'No specific BER upgrade letter calculations',
+          'Missing localized V94 Eircode guidance',
+        ],
       },
       {
         position: 3,
@@ -1927,24 +2087,55 @@ export function generateTopicAwareSERP(keyword: string) {
         domain_authority: 64,
         monthly_traffic: 34000,
         content_type: 'Commercial Service',
-        themes: ['Commercial Retrofitting', 'BER Level Upgrade', 'Contractor Selection'],
-        strengths: ['Clear engineering definitions', 'Case studies from actual Irish properties', 'Focus on air-to-water heat pump performance'],
-        weaknesses: ['Pushes their proprietary One-Stop-Shop service heavily', 'Fails to detail individual DIY-friendly grant paths', 'Limited scope outside East Coast region'],
-        ranking_gaps: ['No direct pricing breakdowns for standalone insulation', 'High minimum project spend requirement']
+        themes: [
+          'Commercial Retrofitting',
+          'BER Level Upgrade',
+          'Contractor Selection',
+        ],
+        strengths: [
+          'Clear engineering definitions',
+          'Case studies from actual Irish properties',
+          'Focus on air-to-water heat pump performance',
+        ],
+        weaknesses: [
+          'Pushes their proprietary One-Stop-Shop service heavily',
+          'Fails to detail individual DIY-friendly grant paths',
+          'Limited scope outside East Coast region',
+        ],
+        ranking_gaps: [
+          'No direct pricing breakdowns for standalone insulation',
+          'High minimum project spend requirement',
+        ],
       },
       {
         position: 4,
-        title: 'Insulation and Airtightness Solutions for Irish Buildings | RetroKit',
+        title:
+          'Insulation and Airtightness Solutions for Irish Buildings | RetroKit',
         url: 'https://www.retrokit.ie/solutions-insulation-airtightness',
         meta_description:
           "How to properly seal your home's envelope. Advanced guide detailing U-values, thermal bridging, double glazing, and continuous ventilation systems.",
         domain_authority: 52,
         monthly_traffic: 18500,
         content_type: 'Technical Knowledge Base',
-        themes: ['Envelope Thermal Retentiveness', 'U-values Specification', 'Airtightness Testing'],
-        strengths: ['Deeply technical insulation advice', 'Clear explanation of thermal bridges', 'Interactive diagrams'],
-        weaknesses: ['Too technical for average homeowners', 'Sparse details on grant eligibility', 'No content on financial budgeting'],
-        ranking_gaps: ['Omits heat pump grant prerequisites', 'No customer testimonial videos']
+        themes: [
+          'Envelope Thermal Retentiveness',
+          'U-values Specification',
+          'Airtightness Testing',
+        ],
+        strengths: [
+          'Deeply technical insulation advice',
+          'Clear explanation of thermal bridges',
+          'Interactive diagrams',
+        ],
+        weaknesses: [
+          'Too technical for average homeowners',
+          'Sparse details on grant eligibility',
+          'No content on financial budgeting',
+        ],
+        ranking_gaps: [
+          'Omits heat pump grant prerequisites',
+          'No customer testimonial videos',
+        ],
       },
       {
         position: 5,
@@ -1955,10 +2146,25 @@ export function generateTopicAwareSERP(keyword: string) {
         domain_authority: 58,
         monthly_traffic: 22000,
         content_type: 'Industry News',
-        themes: ['Cost Analysis', 'Inflation & Material Surcharges', 'Contractor Hourly Rates'],
-        strengths: ['Transparent financial figures', 'Realistic post-grant calculations', 'Excellent table structures'],
-        weaknesses: ['Lacks actionable next steps', 'Fails to map costs back to specific BER rating levels', 'No continuous update schedule'],
-        ranking_gaps: ['Does not cover Mid-West / Limerick V94 grant conditions', 'Outdated 2024 SEAI baseline data']
+        themes: [
+          'Cost Analysis',
+          'Inflation & Material Surcharges',
+          'Contractor Hourly Rates',
+        ],
+        strengths: [
+          'Transparent financial figures',
+          'Realistic post-grant calculations',
+          'Excellent table structures',
+        ],
+        weaknesses: [
+          'Lacks actionable next steps',
+          'Fails to map costs back to specific BER rating levels',
+          'No continuous update schedule',
+        ],
+        ranking_gaps: [
+          'Does not cover Mid-West / Limerick V94 grant conditions',
+          'Outdated 2024 SEAI baseline data',
+        ],
       },
       {
         position: 6,
@@ -1970,9 +2176,19 @@ export function generateTopicAwareSERP(keyword: string) {
         monthly_traffic: 45000,
         content_type: 'Utility Brand Portal',
         themes: ['Utility Grants', 'Whole House Retrofit', 'Solar PV Systems'],
-        strengths: ['Massive brand trust', 'Integrated utility billing discounts', 'Strong regional installer network'],
-        weaknesses: ['Strict long waiting lists', 'Lacks step-by-step DIY individual grant breakdown'],
-        ranking_gaps: ['No quick interactive BER letter simulator', 'No comparison between air-to-air vs air-to-water']
+        strengths: [
+          'Massive brand trust',
+          'Integrated utility billing discounts',
+          'Strong regional installer network',
+        ],
+        weaknesses: [
+          'Strict long waiting lists',
+          'Lacks step-by-step DIY individual grant breakdown',
+        ],
+        ranking_gaps: [
+          'No quick interactive BER letter simulator',
+          'No comparison between air-to-air vs air-to-water',
+        ],
       },
       {
         position: 7,
@@ -1983,10 +2199,23 @@ export function generateTopicAwareSERP(keyword: string) {
         domain_authority: 48,
         monthly_traffic: 15200,
         content_type: 'Regional Contractor',
-        themes: ['Window Glazing', 'External Wall Insulation', 'Limerick Coverage'],
-        strengths: ['Strong local search presence in Limerick V94', 'High customer rating reviews'],
-        weaknesses: ['Narrow focus on glazing', 'No whole-home heat loss indicator analysis'],
-        ranking_gaps: ['Lacks technical assessment guides', 'No coverage of BER G to A sequence']
+        themes: [
+          'Window Glazing',
+          'External Wall Insulation',
+          'Limerick Coverage',
+        ],
+        strengths: [
+          'Strong local search presence in Limerick V94',
+          'High customer rating reviews',
+        ],
+        weaknesses: [
+          'Narrow focus on glazing',
+          'No whole-home heat loss indicator analysis',
+        ],
+        ranking_gaps: [
+          'Lacks technical assessment guides',
+          'No coverage of BER G to A sequence',
+        ],
       },
       {
         position: 8,
@@ -1997,10 +2226,23 @@ export function generateTopicAwareSERP(keyword: string) {
         domain_authority: 74,
         monthly_traffic: 38000,
         content_type: 'Utility Brand Portal',
-        themes: ['Heat Pump Subsidies', 'Smart Thermostats', 'Gas Boiler Replacement'],
-        strengths: ['Prominent search rankings for heat pump grants', 'Strong customer service infrastructure'],
-        weaknesses: ['Focuses heavily on existing gas customers', 'Complex application process'],
-        ranking_gaps: ['No standalone attic insulation calculator', 'Lacks rural off-grid oil replacement guide']
+        themes: [
+          'Heat Pump Subsidies',
+          'Smart Thermostats',
+          'Gas Boiler Replacement',
+        ],
+        strengths: [
+          'Prominent search rankings for heat pump grants',
+          'Strong customer service infrastructure',
+        ],
+        weaknesses: [
+          'Focuses heavily on existing gas customers',
+          'Complex application process',
+        ],
+        ranking_gaps: [
+          'No standalone attic insulation calculator',
+          'Lacks rural off-grid oil replacement guide',
+        ],
       },
       {
         position: 9,
@@ -2011,10 +2253,23 @@ export function generateTopicAwareSERP(keyword: string) {
         domain_authority: 56,
         monthly_traffic: 11400,
         content_type: 'Non-Profit Energy Hub',
-        themes: ['Community Energy', 'Mid-West Retrofitting', 'SEAI Partnership'],
-        strengths: ['High regional trust in Munster', 'Deep understanding of Irish building stock'],
-        weaknesses: ['Outdated website user experience', 'Sparse visual infographics'],
-        ranking_gaps: ['No live web tools', 'Poor mobile optimization on SERP landing pages']
+        themes: [
+          'Community Energy',
+          'Mid-West Retrofitting',
+          'SEAI Partnership',
+        ],
+        strengths: [
+          'High regional trust in Munster',
+          'Deep understanding of Irish building stock',
+        ],
+        weaknesses: [
+          'Outdated website user experience',
+          'Sparse visual infographics',
+        ],
+        ranking_gaps: [
+          'No live web tools',
+          'Poor mobile optimization on SERP landing pages',
+        ],
       },
       {
         position: 10,
@@ -2025,11 +2280,21 @@ export function generateTopicAwareSERP(keyword: string) {
         domain_authority: 42,
         monthly_traffic: 8900,
         content_type: 'Assessor Network',
-        themes: ['BER Technical Assessment', 'Advisory Reports', 'Heat Loss Indicator'],
-        strengths: ['Focused on technical assessment accuracy', 'Fast turnaround times'],
+        themes: [
+          'BER Technical Assessment',
+          'Advisory Reports',
+          'Heat Loss Indicator',
+        ],
+        strengths: [
+          'Focused on technical assessment accuracy',
+          'Fast turnaround times',
+        ],
         weaknesses: ['Low domain authority', 'Short thin content pages'],
-        ranking_gaps: ['Missing comprehensive grant guides', 'No solar PV payback analysis']
-      }
+        ranking_gaps: [
+          'Missing comprehensive grant guides',
+          'No solar PV payback analysis',
+        ],
+      },
     ],
     ranking_gap_keywords: [
       {
@@ -2039,7 +2304,8 @@ export function generateTopicAwareSERP(keyword: string) {
         volume: 4800,
         difficulty: 32,
         opportunityScore: 94,
-        suggestedAction: 'Create targeted regional landing page with V94 Eircode map and local installer directory.'
+        suggestedAction:
+          'Create targeted regional landing page with V94 Eircode map and local installer directory.',
       },
       {
         keyword: 'BER rating G to A upgrade cost Ireland',
@@ -2048,7 +2314,8 @@ export function generateTopicAwareSERP(keyword: string) {
         volume: 3600,
         difficulty: 35,
         opportunityScore: 91,
-        suggestedAction: 'Publish step-by-step cost breakdown table comparing individual grants vs One-Stop-Shop.'
+        suggestedAction:
+          'Publish step-by-step cost breakdown table comparing individual grants vs One-Stop-Shop.',
       },
       {
         keyword: 'attic insulation grant application process 2026',
@@ -2057,7 +2324,8 @@ export function generateTopicAwareSERP(keyword: string) {
         volume: 2900,
         difficulty: 28,
         opportunityScore: 88,
-        suggestedAction: 'Draft a visual 4-step infographic guide with direct SEAI portal download checklist.'
+        suggestedAction:
+          'Draft a visual 4-step infographic guide with direct SEAI portal download checklist.',
       },
       {
         keyword: 'heat loss indicator pre assessment checklist',
@@ -2066,14 +2334,15 @@ export function generateTopicAwareSERP(keyword: string) {
         volume: 2100,
         difficulty: 25,
         opportunityScore: 85,
-        suggestedAction: 'Integrate our dynamic Energy Estimator tool with automated HLI calculation.'
-      }
+        suggestedAction:
+          'Integrate our dynamic Energy Estimator tool with automated HLI calculation.',
+      },
     ],
     opportunities: [
       "No competitor offers a simple, step-by-step cost vs. grant estimator on-page (EcoSmartHomes' Energy Estimator can dominate this niche).",
       'Write a beginner-friendly, jargon-free guide detailing exactly what a One-Stop-Shop does versus individual SEAI grants in Limerick V94.',
       'Highlight heat pump specifications using casual, reassuring language to ease consumer anxiety about cold Irish winters.',
-      "Target high-intent keywords like 'BER rating G to A cost' with clear ROI tables comparing oil vs air-to-water heat pump running costs."
+      "Target high-intent keywords like 'BER rating G to A cost' with clear ROI tables comparing oil vs air-to-water heat pump running costs.",
     ],
     recommended_outline: [
       `Introduction: Why ${keyword} is the best long-term energy investment for Irish homes.`,
@@ -2081,9 +2350,9 @@ export function generateTopicAwareSERP(keyword: string) {
       'Step 2: Meeting the HLI prerequisites for heat pumps (Target HLI <= 2.0).',
       'Step 3: Navigating SEAI grants — One-Stop-Shop vs. Individual grants.',
       'Step 4: Your retrofitting timeline and finding registered contractors in Limerick V94.',
-      'Conclusion: Comfort, cost savings, and the A-rated home difference.'
+      'Conclusion: Comfort, cost savings, and the A-rated home difference.',
     ],
-    summary_markdown: `### Key Insights for "${keyword}"\nMost high-ranking sites are either government hubs (SEAI, Citizens Information) or heavily commercial energy utilities. Government sites suffer from dry, complex wording, while commercial sites push proprietary whole-house packages with high minimum spend thresholds.\n\n### What EcoSmartHomes Should Write\nWrite a highly engaging, visual article called: **"The Absolute Beginner's Guide to ${keyword} & Home Retrofitting in Ireland (2026 Edition)"**. Focus heavily on the "Fabric First" methodology using clear, relatable analogies and actionable bullet points.\n\n### Gaps in Competitors\n1. **Interactive Tools**: None of the top 10 competitors provide a quick, 2-minute dynamic cost and grant savings calculator.\n2. **Readability**: Extreme academic jargon around U-values and thermal conductivity confuses average consumers.\n3. **Local Actionability**: Hard-to-find directories of regional registered SEAI assessors and installers in Limerick & V94 Eircode zone.\n\n### Recommended Article Length\n**1,200 - 1,500 words** of deep, highly structured, sub-headed content to rank comfortably in the Top 3.`
+    summary_markdown: `### Key Insights for "${keyword}"\nMost high-ranking sites are either government hubs (SEAI, Citizens Information) or heavily commercial energy utilities. Government sites suffer from dry, complex wording, while commercial sites push proprietary whole-house packages with high minimum spend thresholds.\n\n### What EcoSmartHomes Should Write\nWrite a highly engaging, visual article called: **"The Absolute Beginner's Guide to ${keyword} & Home Retrofitting in Ireland (2026 Edition)"**. Focus heavily on the "Fabric First" methodology using clear, relatable analogies and actionable bullet points.\n\n### Gaps in Competitors\n1. **Interactive Tools**: None of the top 10 competitors provide a quick, 2-minute dynamic cost and grant savings calculator.\n2. **Readability**: Extreme academic jargon around U-values and thermal conductivity confuses average consumers.\n3. **Local Actionability**: Hard-to-find directories of regional registered SEAI assessors and installers in Limerick & V94 Eircode zone.\n\n### Recommended Article Length\n**1,200 - 1,500 words** of deep, highly structured, sub-headed content to rank comfortably in the Top 3.`,
   };
 }
 
@@ -2100,10 +2369,14 @@ app.post('/api/seo/serp-analysis', async (req, res) => {
 
   const ai = getGeminiClient();
   if (!ai) {
-    const compiledSnapshot = globalSERPIntelligenceEngine.compileSnapshot(fallbackSERP);
+    const compiledSnapshot =
+      globalSERPIntelligenceEngine.compileSnapshot(fallbackSERP);
 
     // Auto-sync with Keyword Registry & Stability Map
-    globalKeywordRegistry.recordRank(cleanKeyword, compiledSnapshot.top_results[0]?.position || 3);
+    globalKeywordRegistry.recordRank(
+      cleanKeyword,
+      compiledSnapshot.top_results[0]?.position || 3,
+    );
 
     broadcastToAll({
       type: 'metric_update',
@@ -2176,14 +2449,23 @@ Provide 8-10 realistic Irish competitors (SEAI, Citizens Information, SuperHomes
     const responseText = response.text || '';
     const parsedData = extractJsonFromText(responseText);
 
-    if (parsedData && parsedData.top_results && Array.isArray(parsedData.top_results)) {
+    if (
+      parsedData &&
+      parsedData.top_results &&
+      Array.isArray(parsedData.top_results)
+    ) {
       parsedData.keyword = cleanKeyword;
-      parsedData.summary_markdown = parsedData.summary_markdown || fallbackSERP.summary_markdown;
+      parsedData.summary_markdown =
+        parsedData.summary_markdown || fallbackSERP.summary_markdown;
 
-      const compiledSnapshot = globalSERPIntelligenceEngine.compileSnapshot(parsedData);
+      const compiledSnapshot =
+        globalSERPIntelligenceEngine.compileSnapshot(parsedData);
 
       // Auto-sync with Keyword Registry & Stability Map
-      globalKeywordRegistry.recordRank(cleanKeyword, compiledSnapshot.top_results[0]?.position || 3);
+      globalKeywordRegistry.recordRank(
+        cleanKeyword,
+        compiledSnapshot.top_results[0]?.position || 3,
+      );
 
       broadcastToAll({
         type: 'metric_update',
@@ -2197,17 +2479,23 @@ Provide 8-10 realistic Irish competitors (SEAI, Citizens Information, SuperHomes
         isMock: false,
       });
     } else {
-      throw new Error('Gemini output could not be parsed into valid SERP schema.');
+      throw new Error(
+        'Gemini output could not be parsed into valid SERP schema.',
+      );
     }
   } catch (error: any) {
     console.warn(
       'Gemini SERP analysis fallback activated:',
       error.message || error,
     );
-    const compiledSnapshot = globalSERPIntelligenceEngine.compileSnapshot(fallbackSERP);
+    const compiledSnapshot =
+      globalSERPIntelligenceEngine.compileSnapshot(fallbackSERP);
 
     // Auto-sync with Keyword Registry & Stability Map
-    globalKeywordRegistry.recordRank(cleanKeyword, compiledSnapshot.top_results[0]?.position || 3);
+    globalKeywordRegistry.recordRank(
+      cleanKeyword,
+      compiledSnapshot.top_results[0]?.position || 3,
+    );
 
     broadcastToAll({
       type: 'metric_update',
@@ -2295,9 +2583,12 @@ app.get('/api/automation/refresh-queue', (req, res) => {
 });
 
 app.post('/api/automation/refresh-queue', (req, res) => {
-  const { keyword, url, currentRank, slope, volatility, zone, reason } = req.body;
+  const { keyword, url, currentRank, slope, volatility, zone, reason } =
+    req.body;
   if (!keyword || !String(keyword).trim()) {
-    return res.status(400).json({ error: 'Keyword is required to enqueue content refresh.' });
+    return res
+      .status(400)
+      .json({ error: 'Keyword is required to enqueue content refresh.' });
   }
 
   const item = globalAutomationEngine.enqueueContentRefresh({
@@ -2329,7 +2620,9 @@ app.post('/api/automation/refresh-queue/:id/process', (req, res) => {
     return res.status(404).json({ error: `Queue item "${id}" not found.` });
   }
 
-  const generated = globalAutomationEngine.generateArticleContent(updated.keyword);
+  const generated = globalAutomationEngine.generateArticleContent(
+    updated.keyword,
+  );
 
   broadcastToAll({
     type: 'metric_update',
@@ -2347,9 +2640,14 @@ app.post('/api/automation/refresh-queue/:id/process', (req, res) => {
 app.post('/api/automation/reinforce-links', (req, res) => {
   const { content, customTargets } = req.body;
   if (!content) {
-    return res.status(400).json({ error: 'Content is required for link reinforcement.' });
+    return res
+      .status(400)
+      .json({ error: 'Content is required for link reinforcement.' });
   }
-  const result = globalAutomationEngine.reinforeInternalLinks(content, customTargets);
+  const result = globalAutomationEngine.reinforeInternalLinks(
+    content,
+    customTargets,
+  );
   res.json({
     success: true,
     ...result,
@@ -2359,9 +2657,14 @@ app.post('/api/automation/reinforce-links', (req, res) => {
 app.post('/api/automation/boost-entities', (req, res) => {
   const { content, topic } = req.body;
   if (!content) {
-    return res.status(400).json({ error: 'Content is required for semantic entity boost.' });
+    return res
+      .status(400)
+      .json({ error: 'Content is required for semantic entity boost.' });
   }
-  const result = globalAutomationEngine.boostSemanticEntities(content, topic || 'Irish Retrofit');
+  const result = globalAutomationEngine.boostSemanticEntities(
+    content,
+    topic || 'Irish Retrofit',
+  );
   res.json({
     success: true,
     ...result,
@@ -2371,9 +2674,15 @@ app.post('/api/automation/boost-entities', (req, res) => {
 app.post('/api/automation/correct-metadata', (req, res) => {
   const { keyword, currentTitle, currentDescription } = req.body;
   if (!keyword) {
-    return res.status(400).json({ error: 'Keyword is required for metadata correction.' });
+    return res
+      .status(400)
+      .json({ error: 'Keyword is required for metadata correction.' });
   }
-  const result = globalAutomationEngine.correctMetadata(keyword, currentTitle, currentDescription);
+  const result = globalAutomationEngine.correctMetadata(
+    keyword,
+    currentTitle,
+    currentDescription,
+  );
   res.json({
     success: true,
     ...result,
@@ -2401,9 +2710,15 @@ app.get('/api/automation/crawl-schedule', (req, res) => {
 app.post('/api/automation/crawl-schedule', (req, res) => {
   const { keyword, targetUrl, priority } = req.body;
   if (!keyword) {
-    return res.status(400).json({ error: 'Keyword is required to schedule crawl.' });
+    return res
+      .status(400)
+      .json({ error: 'Keyword is required to schedule crawl.' });
   }
-  const job = globalAutomationEngine.scheduleCrawl(keyword, targetUrl || `https://ecosmarthomes.ie/${keyword}`, priority);
+  const job = globalAutomationEngine.scheduleCrawl(
+    keyword,
+    targetUrl || `https://ecosmarthomes.ie/${keyword}`,
+    priority,
+  );
   res.json({
     success: true,
     job,
@@ -2413,7 +2728,9 @@ app.post('/api/automation/crawl-schedule', (req, res) => {
 app.post('/api/automation/scan-url', (req, res) => {
   const { url } = req.body;
   if (!url) {
-    return res.status(400).json({ error: 'URL is required to perform crawl scan.' });
+    return res
+      .status(400)
+      .json({ error: 'URL is required to perform crawl scan.' });
   }
   const scanResult = globalAutomationEngine.scanUrl(url);
   res.json({
@@ -2435,8 +2752,16 @@ app.post('/api/automation/record-impact', (req, res) => {
     measuredDaysAfter,
   } = req.body;
 
-  if (!keyword || preRefreshRank === undefined || postRefreshRank === undefined) {
-    return res.status(400).json({ error: 'Keyword, preRefreshRank, and postRefreshRank are required.' });
+  if (
+    !keyword ||
+    preRefreshRank === undefined ||
+    postRefreshRank === undefined
+  ) {
+    return res
+      .status(400)
+      .json({
+        error: 'Keyword, preRefreshRank, and postRefreshRank are required.',
+      });
   }
 
   const record = globalAutomationEngine.recordRefreshImpact({
@@ -2483,11 +2808,83 @@ app.get('/api/drift/report', (req, res) => {
   });
 });
 
+// Alias for /api/drift-report
+app.get('/api/drift-report', (req, res) => {
+  const report = detectPhaseDrift();
+  res.json({
+    success: true,
+    report,
+  });
+});
+
 app.post('/api/drift/auto-repair', (req, res) => {
   const repairResult = autoRepairDrift();
   res.json({
     success: true,
     result: repairResult,
+  });
+});
+
+// Alias for /api/automation-logs
+app.get('/api/automation-logs', (req, res) => {
+  const limit = req.query.limit ? Number(req.query.limit) : 50;
+  const logs = globalAutomationEngine.getLogs(limit);
+  res.json({
+    success: true,
+    logs,
+    total: logs.length,
+  });
+});
+
+// Alias for /api/serp-intelligence
+app.get('/api/serp-intelligence', (req, res) => {
+  const keyword = (req.query.keyword as string) || 'solar pv grants ireland';
+  const snapshot = globalSERPIntelligenceEngine.getLatestSnapshot(keyword);
+  res.json({
+    success: true,
+    snapshot: snapshot || null,
+    message: snapshot ? 'Snapshot retrieved' : 'No snapshot found for keyword',
+  });
+});
+
+app.post('/api/serp-intelligence', async (req, res) => {
+  const { keyword } = req.body || {};
+  if (!keyword) {
+    return res
+      .status(400)
+      .json({ success: false, error: 'Keyword is required' });
+  }
+  const cleanKw = String(keyword).trim();
+  const snapshot = globalSERPIntelligenceEngine.compileSnapshot({
+    keyword: cleanKw,
+    difficulty: 32,
+    search_volume: 18600,
+    top_results: [
+      {
+        position: 1,
+        title: `SEAI ${cleanKw} Ireland | Official Guidance`,
+        url: `https://www.seai.ie/${cleanKw.replace(/\s+/g, '-')}`,
+        meta_description: `Complete government details on ${cleanKw} grants in Ireland.`,
+        themes: ['SEAI Grants', 'Government Subsidies'],
+        strengths: ['High domain authority', 'Direct grant portal link'],
+        weaknesses: ['Lacks interactive cost calculator'],
+        features: ['featured_snippet'],
+      },
+      {
+        position: 2,
+        title: `${cleanKw} Installers & Grant Calculator`,
+        url: `https://ecosmarthomes.ie/${cleanKw.replace(/\s+/g, '-')}`,
+        meta_description: `Compare vetted installers and calculate your grant deduction instantly.`,
+        themes: ['Installers', 'Cost Calculator'],
+        strengths: ['Interactive tools', 'Fast quote generation'],
+        weaknesses: ['Lower backlink volume'],
+      },
+    ],
+  });
+
+  res.json({
+    success: true,
+    snapshot,
   });
 });
 
@@ -2515,9 +2912,15 @@ app.get('/api/infrastructure/errors', (req, res) => {
 
 app.post('/api/infrastructure/normalize-data', (req, res) => {
   const { url, keyword, metrics } = req.body || {};
-  const normalizedUrl = url ? DataNormalizationLayer.normalizeUrl(url) : undefined;
-  const normalizedKeyword = keyword ? DataNormalizationLayer.normalizeKeyword(keyword) : undefined;
-  const sanitizedMetrics = metrics ? DataNormalizationLayer.sanitizeMetrics(metrics) : undefined;
+  const normalizedUrl = url
+    ? DataNormalizationLayer.normalizeUrl(url)
+    : undefined;
+  const normalizedKeyword = keyword
+    ? DataNormalizationLayer.normalizeKeyword(keyword)
+    : undefined;
+  const sanitizedMetrics = metrics
+    ? DataNormalizationLayer.sanitizeMetrics(metrics)
+    : undefined;
 
   res.json({
     success: true,
@@ -2533,7 +2936,9 @@ app.get('/api/infrastructure/kv/:namespace/:key', async (req, res) => {
   const { namespace, key } = req.params;
   const store = (globalKVNamespaces as any)[namespace.toUpperCase()];
   if (!store) {
-    return res.status(404).json({ success: false, error: `KV namespace '${namespace}' not found` });
+    return res
+      .status(404)
+      .json({ success: false, error: `KV namespace '${namespace}' not found` });
   }
 
   const val = await store.get(key);
@@ -2551,7 +2956,9 @@ app.post('/api/infrastructure/kv/:namespace/:key', async (req, res) => {
   const { value, ttlSeconds } = req.body || {};
   const store = (globalKVNamespaces as any)[namespace.toUpperCase()];
   if (!store) {
-    return res.status(404).json({ success: false, error: `KV namespace '${namespace}' not found` });
+    return res
+      .status(404)
+      .json({ success: false, error: `KV namespace '${namespace}' not found` });
   }
 
   await store.put(key, value, ttlSeconds);
@@ -2619,8 +3026,18 @@ app.get('/api/predictive/keyword/:idOrKeyword', (req, res) => {
 app.get('/api/predictive/seasonality', (req, res) => {
   const categories = ['Solar PV', 'Heat Pumps', 'Insulation', 'BER Rating'];
   const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   const seasonalityMatrix = categories.map((category) => {
@@ -2661,7 +3078,15 @@ app.get('/api/keywords/stability-map', (req, res) => {
 });
 
 app.post('/api/keywords', (req, res) => {
-  const { keyword, category, targetUrl, intent, searchVolume, difficulty, currentRank } = req.body || {};
+  const {
+    keyword,
+    category,
+    targetUrl,
+    intent,
+    searchVolume,
+    difficulty,
+    currentRank,
+  } = req.body || {};
   if (!keyword || !String(keyword).trim()) {
     return res.status(400).json({ error: 'Keyword is required' });
   }
@@ -3855,7 +4280,8 @@ app.post('/api/seo/sitemap-scan', async (req, res) => {
     return res.status(400).json({ error: 'Website URL is required' });
   }
 
-  const sitemapPath = (customSitemapPath && customSitemapPath.trim()) || '/sitemap.xml';
+  const sitemapPath =
+    (customSitemapPath && customSitemapPath.trim()) || '/sitemap.xml';
   const cleanUrl = url.replace(/^https?:\/\//i, '').replace(/\/.*$/, '');
 
   // Verify sitemap discovery: ecosmarthomes.ie has public/sitemap.xml, or any valid .xml path provided
@@ -5343,11 +5769,9 @@ app.post('/api/whatsapp/request-approval', async (req, res) => {
   try {
     const { title, slug, content, description } = req.body || {};
     if (!title || !slug || !content) {
-      return res
-        .status(400)
-        .json({
-          error: 'Missing required draft fields (title, slug, content)',
-        });
+      return res.status(400).json({
+        error: 'Missing required draft fields (title, slug, content)',
+      });
     }
     await requestWhatsAppApproval({
       title,
