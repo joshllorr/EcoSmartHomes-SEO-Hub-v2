@@ -37,66 +37,54 @@ export default async function handler(
       body.topic ||
       body.query ||
       'solar pv grants ireland';
-    const enterpriseToken =
-      process.env.GEMINI_ACCESS_TOKEN ||
+
+    // Check Permanent Key First, then Access Token
+    const apiKey =
       process.env.GEMINI_API_KEY ||
-      process.env.GOOGLE_API_KEY;
-    const project =
-      process.env.GOOGLE_CLOUD_PROJECT || 'gen-lang-client-0607449072';
-    const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
+      process.env.GOOGLE_API_KEY ||
+      process.env.GEMINI_ACCESS_TOKEN;
 
     let articleText = '';
     let isLiveAI = false;
+    let apiStatus = 'fallback';
 
-    // 1. Live Google Enterprise API Call (Auto-detects OAuth Token vs API Key)
-    if (enterpriseToken) {
-      const prompt = `Write a comprehensive, high-authority Irish SEO guide for EcoSmartHomes Ireland about: "${keyword}". Include official SEAI grant deductions (€2,100 Solar PV, €6,500 Heat Pump, €25,000 One-Stop-Shop), ROI payback calculations, BER impact, and vetted contractor guidelines. Format in clean markdown with H1, H2, and H3 headings.`;
+    if (apiKey) {
+      const prompt = `Write a comprehensive, high-authority Irish SEO article for EcoSmartHomes Ireland about: "${keyword}". Include official SEAI grant deductions (€2,100 Solar PV, €6,500 Heat Pump, up to €25,000 One-Stop-Shop), ROI payback calculations, BER rating impact, and vetted contractor guidelines. Format in clean markdown with H1, H2, and H3 headings.`;
 
       try {
-        // Attempt A: Direct Generative Language / AI Studio Endpoint
-        const directUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${enterpriseToken}`;
-        const directRes = await fetch(directUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': enterpriseToken,
-          },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-          }),
-        });
-
-        if (directRes.ok) {
-          const data = await directRes.json();
-          articleText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          if (articleText) isLiveAI = true;
-        } else if (enterpriseToken.startsWith('ya29.')) {
-          // Attempt B: Vertex AI Enterprise OAuth Endpoint (Bearer Token)
-          const vertexUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${project}/locations/${location}/publishers/google/models/gemini-2.5-flash:generateContent`;
-          const vertexRes = await fetch(vertexUrl, {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+          {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${enterpriseToken}`,
+              'x-goog-api-key': apiKey,
             },
             body: JSON.stringify({
-              contents: [{ role: 'user', parts: [{ text: prompt }] }],
+              contents: [{ parts: [{ text: prompt }] }],
             }),
-          });
+          },
+        );
 
-          if (vertexRes.ok) {
-            const vData = await vertexRes.json();
-            articleText =
-              vData?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-            if (articleText) isLiveAI = true;
+        if (response.ok) {
+          const data = await response.json();
+          articleText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          if (articleText) {
+            isLiveAI = true;
+            apiStatus = 'live-gemini-2.5';
           }
+        } else {
+          const errBody = await response.text();
+          console.warn('Google API returned status:', response.status, errBody);
+          apiStatus = `google-api-status-${response.status}`;
         }
-      } catch (callErr: any) {
-        console.warn('Live API call error:', callErr.message);
+      } catch (e: any) {
+        console.warn('Fetch error to Gemini:', e.message);
+        apiStatus = `fetch-error-${e.message}`;
       }
     }
 
-    // 2. Guaranteed High-Authority Content Fallback (Never empty)
+    // High-Authority Fallback
     if (!articleText) {
       articleText = `# Complete Guide to ${keyword.charAt(0).toUpperCase() + keyword.slice(1)} in Ireland (2026)
 
@@ -137,11 +125,10 @@ With current Irish residential electricity tariffs and the Clean Export Guarante
         keyword,
       },
       isLiveAI,
-      authSource: 'GEMINI_ACCESS_TOKEN',
+      apiStatus,
       timestamp: new Date().toISOString(),
     });
   } catch (err: any) {
-    console.error('Handler error:', err);
     return res.status(500).json({ ok: false, error: err.message });
   }
 }
