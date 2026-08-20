@@ -130,5 +130,14 @@
   "overrides": {
     "cron-parser": "^5.7.0",
     "glob": "^13.0.6"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@google/genai#2.16.0": false,
+      "@google/genai>protobufjs#7.6.5": false,
+      "@vercel/node>esbuild#0.27.0": false,
+      "esbuild#0.28.2": false,
+      "jspdf>core-js#3.50.0": false
+    }
   }
 }
