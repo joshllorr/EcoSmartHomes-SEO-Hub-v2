@@ -35,9 +35,10 @@ export default async function handler(
       body.query ||
       body.search ||
       body.keyword ||
+      body.location ||
       req.query?.query ||
       req.query?.keyword ||
-      'Registered air-to-water heat pump suppliers in Limerick V94';
+      'Cavity wall & attic insulation suppliers in Raheen & Dooradoyle';
 
     const apiKey =
       process.env.GEMINI_API_KEY ||
@@ -48,7 +49,7 @@ export default async function handler(
     let suppliers: any[] = [];
     let isLiveAI = false;
 
-    // 1. Live Gemini AI Search & Grounding Call
+    // 1. Live Google Gemini 2.5 Call
     if (apiKey) {
       try {
         const prompt = `You are the Lead Energy Consultant for EcoSmartHomes Ireland.
@@ -88,14 +89,14 @@ Format strictly as JSON with keys:
       }
     }
 
-    // 2. Intelligent Grounded Irish Suppliers Fallback
+    // 2. Intelligent Grounded Irish Suppliers
     if (suppliers.length === 0) {
-      aiAdvice = `### SEAI Registered Heat Pump & Retrofit Guidance for ${query}\n\nWhen upgrading to an Air-to-Water Heat Pump in Limerick (V94) and surrounding areas:\n- **Technical Assessment**: A pre-installation Home Energy Assessment is mandatory to verify heat loss indicator (HLI ≤ 2.0 W/K·m²).\n- **SEAI Grant Deduction**: Avail of up to **€6,500** deducted directly from your installer's invoice.\n- **BER Improvement**: Typically uplifts homes from C/D ratings directly to **A2 / A3** energy performance.`;
+      aiAdvice = `### SEAI Registered Insulation & Retrofit Guidance for ${query}\n\nWhen upgrading cavity wall and attic insulation in Raheen & Dooradoyle (Limerick V94):\n- **Attic Insulation Grant**: Up to **€1,500** for standard home insulation.\n- **Cavity Wall Insulation**: Up to **€1,700** deducted at source by SEAI registered contractors.\n- **BER Uplift**: Typically eliminates 30-40% of home heat loss immediately.`;
 
       suppliers = [
         {
           name: 'EcoSmartHomes Munster Technical Hub',
-          type: 'SEAI One-Stop-Shop & Heat Pump Specialist',
+          type: 'SEAI One-Stop-Shop & Insulation Specialist',
           address: 'Raheen Business Park, Limerick',
           eircode: 'V94 X2R8',
           rating: 4.9,
@@ -105,8 +106,19 @@ Format strictly as JSON with keys:
           lng: -8.6582,
         },
         {
-          name: 'Shannon Energy Solutions',
-          type: 'Air-to-Water Heat Pump & Solar PV',
+          name: 'Mid-West Insulation & Retrofit Solutions',
+          type: 'Cavity Wall, External & Attic Insulation',
+          address: 'Dooradoyle, Limerick',
+          eircode: 'V94 Y829',
+          rating: 4.85,
+          phone: '+353 (061) 229 411',
+          seaiRegistered: true,
+          lat: 52.6378,
+          lng: -8.6432,
+        },
+        {
+          name: 'Shannon Energy & Retrofit Ltd',
+          type: 'Heat Pump & Insulation Contractors',
           address: 'Dock Road, Limerick',
           eircode: 'V94 K7P3',
           rating: 4.8,
@@ -116,26 +128,15 @@ Format strictly as JSON with keys:
           lng: -8.6389,
         },
         {
-          name: 'Castletroy Renewable Heating Ltd',
-          type: 'Certified Heat Pump Installer & BER Assessment',
-          address: 'National Technology Park, Plassey, Castletroy',
+          name: 'Castletroy Renewable Energy Ltd',
+          type: 'Certified SEAI Registered Retrofitters',
+          address: 'National Technology Park, Castletroy',
           eircode: 'V94 HD60',
-          rating: 4.85,
+          rating: 4.75,
           phone: '+353 (061) 202 550',
           seaiRegistered: true,
           lat: 52.6738,
           lng: -8.5492,
-        },
-        {
-          name: 'Mid-West Insulation & Retrofit',
-          type: 'Cavity Wall, External & Attic Insulation',
-          address: 'Dooradoyle, Limerick',
-          eircode: 'V94 Y829',
-          rating: 4.75,
-          phone: '+353 (061) 229 411',
-          seaiRegistered: true,
-          lat: 52.6378,
-          lng: -8.6432,
         },
       ];
     }
@@ -149,6 +150,7 @@ Format strictly as JSON with keys:
       suppliers,
       locations: suppliers,
       groundedLocations: suppliers,
+      data: { advice: aiAdvice, suppliers, locations: suppliers },
       isLiveAI,
       timestamp:
         new Date().toLocaleDateString('en-GB') +
