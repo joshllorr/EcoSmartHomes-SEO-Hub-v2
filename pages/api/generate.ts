@@ -28,10 +28,9 @@ export default async function handler(
       process.env.GOOGLE_API_KEY ||
       process.env.VITE_GEMINI_API_KEY;
 
-    let generatedArticle = null;
+    let generatedArticle: any = null;
     let isLiveAI = false;
 
-    // 1. Direct HTTPS Call to Google Gemini API (Zero ADC required)
     if (apiKey) {
       try {
         const prompt = `You are the Lead SEO Content Strategist for EcoSmartHomes Ireland.
@@ -43,7 +42,7 @@ Include:
 - Payback calculations and ROI timelines
 - Vetted contractor recommendation callouts
 - FAQ schema section
-Format strictly as JSON with keys: title, slug, metaDescription, outline (array), content (markdown), tags (array).`;
+Format strictly as JSON with keys: title, slug, metaDescription, outline (array of strings), content (pure markdown string), tags (array of strings).`;
 
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
@@ -65,7 +64,28 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array)
             data?.candidates?.[0]?.content?.parts?.[0]?.text;
           if (candidateText) {
             try {
-              generatedArticle = JSON.parse(candidateText);
+              const parsed = JSON.parse(candidateText);
+              generatedArticle = {
+                title: parsed.title || `Guide to ${effectiveKeyword}`,
+                slug:
+                  parsed.slug ||
+                  effectiveKeyword.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                content: parsed.content || candidateText,
+                outline: Array.isArray(parsed.outline)
+                  ? parsed.outline
+                  : outline || [
+                      'Overview',
+                      'SEAI Grants',
+                      'Costs & Savings',
+                      'Next Steps',
+                    ],
+                metaDescription:
+                  parsed.metaDescription ||
+                  `Complete Irish homeowner guide to ${effectiveKeyword}.`,
+                tags: Array.isArray(parsed.tags)
+                  ? parsed.tags
+                  : ['SEAI Grants', 'Energy Efficiency', 'Ireland Retrofit'],
+              };
               isLiveAI = true;
             } catch {
               generatedArticle = {
@@ -92,7 +112,6 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array)
       }
     }
 
-    // 2. Intelligent Dynamic Irish SEO Generator Fallback
     if (!generatedArticle) {
       const cleanSlug = effectiveKeyword
         .toLowerCase()
