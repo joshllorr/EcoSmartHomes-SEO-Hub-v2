@@ -1,4 +1,4 @@
-declare module 'next' {
+﻿declare module 'next' {
   export interface NextApiRequest {
     query: Record<string, any>;
     body?: any;
@@ -9,5 +9,7 @@ declare module 'next' {
     status: (code: number) => NextApiResponse;
     json: (body: any) => NextApiResponse | void;
     send: (body: any) => NextApiResponse | void;
+    setHeader: (name: string, value: string | string[]) => NextApiResponse;
+    end: (chunk?: any) => NextApiResponse | void;
   }
 }
