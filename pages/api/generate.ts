@@ -1,30 +1,4 @@
 ﻿import type { NextApiRequest, NextApiResponse } from 'next';
-import { GoogleGenAI } from '@google/genai';
-
-function getGenAIClient(): GoogleGenAI | null {
-  const apiKey =
-    process.env.GEMINI_API_KEY ||
-    process.env.GOOGLE_API_KEY ||
-    process.env.VITE_GEMINI_API_KEY;
-
-  // 1. Direct API Key (Vercel-native, Zero-ADC required)
-  if (apiKey) {
-    return new GoogleGenAI({ apiKey });
-  }
-
-  // 2. Vertex AI with Project ID (for GCP-hosted environments with ADC)
-  const project = process.env.GOOGLE_CLOUD_PROJECT;
-  const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
-  if (project) {
-    try {
-      return new GoogleGenAI({ vertexai: true, project, location });
-    } catch (e) {
-      console.warn('Vertex ADC initialization skipped:', e);
-    }
-  }
-
-  return null;
-}
 
 export default async function handler(
   req: NextApiRequest,
@@ -49,14 +23,17 @@ export default async function handler(
   try {
     const { keyword, topic, targetAudience, outline } = req.body || {};
     const effectiveKeyword = keyword || topic || 'solar pv grants ireland';
+    const apiKey =
+      process.env.GEMINI_API_KEY ||
+      process.env.GOOGLE_API_KEY ||
+      process.env.VITE_GEMINI_API_KEY;
 
     let generatedArticle = null;
     let isLiveAI = false;
 
-    // 1. Attempt Live Gemini Model Generation
-    try {
-      const ai = getGenAIClient();
-      if (ai) {
+    // 1. Direct HTTPS Call to Google Gemini API (Zero ADC required)
+    if (apiKey) {
+      try {
         const prompt = `You are the Lead SEO Content Strategist for EcoSmartHomes Ireland.
 Write a comprehensive, highly authoritative, conversion-optimized Irish home energy article for the topic: "${effectiveKeyword}".
 Target Audience: ${targetAudience || 'Irish Homeowners seeking SEAI Grants'}.
@@ -68,44 +45,54 @@ Include:
 - FAQ schema section
 Format strictly as JSON with keys: title, slug, metaDescription, outline (array), content (markdown), tags (array).`;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: prompt,
-          config: {
-            responseMimeType: 'application/json',
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: {
+                responseMimeType: 'application/json',
+              },
+            }),
           },
-        });
+        );
 
-        if (response && response.text) {
-          try {
-            generatedArticle = JSON.parse(response.text);
-            isLiveAI = true;
-          } catch {
-            generatedArticle = {
-              title: `Guide to ${effectiveKeyword}`,
-              slug: effectiveKeyword.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-              content: response.text,
-              outline: outline || [
-                'Overview',
-                'SEAI Grants',
-                'Costs & Savings',
-                'Next Steps',
-              ],
-              metaDescription: `Complete Irish homeowner guide to ${effectiveKeyword}.`,
-              tags: ['SEAI Grants', 'Energy Efficiency', 'Ireland Retrofit'],
-            };
-            isLiveAI = true;
+        if (response.ok) {
+          const data = await response.json();
+          const candidateText =
+            data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (candidateText) {
+            try {
+              generatedArticle = JSON.parse(candidateText);
+              isLiveAI = true;
+            } catch {
+              generatedArticle = {
+                title: `Guide to ${effectiveKeyword}`,
+                slug: effectiveKeyword
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-'),
+                content: candidateText,
+                outline: outline || [
+                  'Overview',
+                  'SEAI Grants',
+                  'Costs & Savings',
+                  'Next Steps',
+                ],
+                metaDescription: `Complete Irish homeowner guide to ${effectiveKeyword}.`,
+                tags: ['SEAI Grants', 'Energy Efficiency', 'Ireland Retrofit'],
+              };
+              isLiveAI = true;
+            }
           }
         }
+      } catch (fetchErr: any) {
+        console.warn('Direct Gemini fetch error:', fetchErr.message);
       }
-    } catch (aiErr: any) {
-      console.warn(
-        'Live Gemini API generation error, falling back dynamically:',
-        aiErr.message,
-      );
     }
 
-    // 2. Intelligent Dynamic SEO Engine Fallback
+    // 2. Intelligent Dynamic Irish SEO Generator Fallback
     if (!generatedArticle) {
       const cleanSlug = effectiveKeyword
         .toLowerCase()
@@ -124,6 +111,7 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array)
         content: `## Complete Guide to ${effectiveKeyword}\n\nHomeowners across Ireland can take advantage of updated 2026 SEAI grant subsidies to upgrade their homes to BER A-ratings.\n\n### Grant Breakdown\n- **Solar PV Grant**: Up to €2,100 deducted at source\n- **Heat Pump Grant**: Up to €6,500 with technical assessment\n- **Insulation Subsidies**: Up to €4,000 for external wall insulation\n\n### Annual Savings\nAverage Irish homes achieve between €800 and €1,450 in annual electricity and heating bill reductions.\n\n### How to Apply\n1. Review your current BER assessment\n2. Select a registered SEAI contractor\n3. Submit your application before commencing work.`,
         metaDescription: `Discover how to maximize ${effectiveKeyword} in Ireland with vetted installers and SEAI grant deductions.`,
         tags: ['SEAI Grants', 'Energy Efficiency', 'Ireland Retrofit'],
+        isLiveAI: false,
       };
     }
 
