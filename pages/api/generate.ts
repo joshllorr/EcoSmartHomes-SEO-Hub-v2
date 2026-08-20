@@ -2,25 +2,25 @@
 import { GoogleGenAI } from '@google/genai';
 
 function getEnterpriseClient(): GoogleGenAI | null {
-  const apiKey =
-    process.env.GEMINI_API_KEY ||
-    process.env.GOOGLE_API_KEY ||
-    process.env.VITE_GEMINI_API_KEY;
-  const project = process.env.GOOGLE_CLOUD_PROJECT || process.env.GCP_PROJECT;
+  const useVertex =
+    process.env.GOOGLE_GENAI_USE_VERTEXAI === 'true' ||
+    Boolean(process.env.GOOGLE_CLOUD_PROJECT);
+  const project = process.env.GOOGLE_CLOUD_PROJECT;
   const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
-  // Mode A: Enterprise Vertex AI via Google Cloud Project
-  if (project) {
+  // 1. Enterprise Vertex AI Mode
+  if (useVertex && project) {
     try {
       return new GoogleGenAI({
         vertexAI: { project, location },
       });
     } catch (e) {
-      console.warn('Vertex AI initialization fallback:', e);
+      console.warn('Vertex AI initialization fallback to API Key:', e);
     }
   }
 
-  // Mode B: Google Cloud API Key
+  // 2. Enterprise Gemini API Key Mode
   if (apiKey) {
     return new GoogleGenAI({ apiKey });
   }
@@ -123,9 +123,10 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array)
       success: true,
       data: generatedArticle,
       isLiveAI: Boolean(ai),
-      provider: process.env.GOOGLE_CLOUD_PROJECT
-        ? 'google-cloud-vertex'
-        : 'google-ai-studio',
+      authMode:
+        process.env.GOOGLE_GENAI_USE_VERTEXAI === 'true'
+          ? 'vertex-enterprise'
+          : 'gemini-api-key',
       timestamp: Date.now(),
     });
   } catch (err: any) {
