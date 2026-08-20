@@ -4,6 +4,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  // 1. CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -12,7 +13,7 @@ export default async function handler(
   );
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-vercel-protection-bypass',
   );
 
   if (req.method === 'OPTIONS') {
@@ -21,8 +22,30 @@ export default async function handler(
   }
 
   try {
-    const { keyword, topic, targetAudience, outline } = req.body || {};
-    const effectiveKeyword = keyword || topic || 'solar pv grants ireland';
+    // 2. Safe Body Parser (Handles object, string, or query params)
+    let body = req.body;
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch {
+        body = {};
+      }
+    }
+    body = body || {};
+
+    const targetKeyword =
+      body.keyword ||
+      body.title ||
+      body.topic ||
+      body.prompt ||
+      req.query?.keyword ||
+      req.query?.title ||
+      'Solar PV Grants Ireland 2026';
+
+    const context =
+      body.context ||
+      body.targetAudience ||
+      'Irish Homeowners seeking SEAI Grants';
     const apiKey =
       process.env.GEMINI_API_KEY ||
       process.env.GOOGLE_API_KEY ||
@@ -31,13 +54,14 @@ export default async function handler(
     let generatedArticle: any = null;
     let isLiveAI = false;
 
+    // 3. Live Google Gemini 2.5 Call
     if (apiKey) {
       try {
         const prompt = `You are the Lead SEO Content Strategist for EcoSmartHomes Ireland.
-Write a comprehensive, highly authoritative, conversion-optimized Irish home energy article for the topic: "${effectiveKeyword}".
-Target Audience: ${targetAudience || 'Irish Homeowners seeking SEAI Grants'}.
+Write an in-depth, authoritative Irish home energy SEO article for: "${targetKeyword}".
+Context: ${context}.
 Include:
-- High-intent H2 and H3 sections matching Google Ireland SERP search intent
+- High-intent H2/H3 headings targeting Irish homeowner queries
 - Official SEAI grant deductions (€2,100 Solar PV, €6,500 Heat Pump, up to €25,000 One-Stop-Shop)
 - Payback calculations and ROI timelines
 - Vetted contractor recommendation callouts
@@ -51,9 +75,7 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: {
-                responseMimeType: 'application/json',
-              },
+              generationConfig: { responseMimeType: 'application/json' },
             }),
           },
         );
@@ -66,14 +88,14 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
             try {
               const parsed = JSON.parse(candidateText);
               generatedArticle = {
-                title: parsed.title || `Guide to ${effectiveKeyword}`,
+                title: parsed.title || `Guide to ${targetKeyword}`,
                 slug:
                   parsed.slug ||
-                  effectiveKeyword.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                  targetKeyword.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
                 content: parsed.content || candidateText,
                 outline: Array.isArray(parsed.outline)
                   ? parsed.outline
-                  : outline || [
+                  : [
                       'Overview',
                       'SEAI Grants',
                       'Costs & Savings',
@@ -81,7 +103,7 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
                     ],
                 metaDescription:
                   parsed.metaDescription ||
-                  `Complete Irish homeowner guide to ${effectiveKeyword}.`,
+                  `Complete Irish homeowner guide to ${targetKeyword}.`,
                 tags: Array.isArray(parsed.tags)
                   ? parsed.tags
                   : ['SEAI Grants', 'Energy Efficiency', 'Ireland Retrofit'],
@@ -89,55 +111,65 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
               isLiveAI = true;
             } catch {
               generatedArticle = {
-                title: `Guide to ${effectiveKeyword}`,
-                slug: effectiveKeyword
-                  .toLowerCase()
-                  .replace(/[^a-z0-9]+/g, '-'),
+                title: `Guide to ${targetKeyword}`,
+                slug: targetKeyword.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
                 content: candidateText,
-                outline: outline || [
+                outline: [
                   'Overview',
                   'SEAI Grants',
                   'Costs & Savings',
                   'Next Steps',
                 ],
-                metaDescription: `Complete Irish homeowner guide to ${effectiveKeyword}.`,
+                metaDescription: `Complete Irish homeowner guide to ${targetKeyword}.`,
                 tags: ['SEAI Grants', 'Energy Efficiency', 'Ireland Retrofit'],
               };
               isLiveAI = true;
             }
           }
         }
-      } catch (fetchErr: any) {
-        console.warn('Direct Gemini fetch error:', fetchErr.message);
+      } catch (e: any) {
+        console.warn('Gemini fetch warning:', e.message);
       }
     }
 
+    // 4. Dynamic Fallback
     if (!generatedArticle) {
-      const cleanSlug = effectiveKeyword
+      const cleanSlug = targetKeyword
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
+      const markdown = `## Complete Guide to ${targetKeyword}\n\nHomeowners across Ireland can take advantage of updated 2026 SEAI grant subsidies to upgrade their homes to BER A-ratings.\n\n### Grant Breakdown\n- **Solar PV Grant**: Up to €2,100 deducted at source\n- **Heat Pump Grant**: Up to €6,500 with technical assessment\n- **Insulation Subsidies**: Up to €4,000 for external wall insulation\n\n### Annual Savings\nAverage Irish homes achieve between €800 and €1,450 in annual electricity and heating bill reductions.\n\n### How to Apply\n1. Review your current BER assessment\n2. Select a registered SEAI contractor\n3. Submit your application before commencing work.`;
+
       generatedArticle = {
-        title: `Comprehensive Guide to ${effectiveKeyword.charAt(0).toUpperCase() + effectiveKeyword.slice(1)} (2026)`,
+        title: `Comprehensive Guide to ${targetKeyword.charAt(0).toUpperCase() + targetKeyword.slice(1)} (2026)`,
         slug: cleanSlug,
-        outline: outline || [
+        outline: [
           '1. Overview of SEAI Grant Schemes in Ireland',
           '2. System Specifications & Eligibility Criteria',
           '3. Estimated Energy Savings & Payback Timeline',
           '4. Step-by-Step Grant Application Process',
           '5. Frequently Asked Questions',
         ],
-        content: `## Complete Guide to ${effectiveKeyword}\n\nHomeowners across Ireland can take advantage of updated 2026 SEAI grant subsidies to upgrade their homes to BER A-ratings.\n\n### Grant Breakdown\n- **Solar PV Grant**: Up to €2,100 deducted at source\n- **Heat Pump Grant**: Up to €6,500 with technical assessment\n- **Insulation Subsidies**: Up to €4,000 for external wall insulation\n\n### Annual Savings\nAverage Irish homes achieve between €800 and €1,450 in annual electricity and heating bill reductions.\n\n### How to Apply\n1. Review your current BER assessment\n2. Select a registered SEAI contractor\n3. Submit your application before commencing work.`,
-        metaDescription: `Discover how to maximize ${effectiveKeyword} in Ireland with vetted installers and SEAI grant deductions.`,
+        content: markdown,
+        metaDescription: `Discover how to maximize ${targetKeyword} in Ireland with vetted installers and SEAI grant deductions.`,
         tags: ['SEAI Grants', 'Energy Efficiency', 'Ireland Retrofit'],
-        isLiveAI: false,
       };
     }
 
+    // 5. Universal Response (Satisfies all frontend variable expectations)
     return res.status(200).json({
       ok: true,
       success: true,
       data: generatedArticle,
+      draft: generatedArticle.content,
+      content: generatedArticle.content,
+      markdown: generatedArticle.content,
+      article: generatedArticle,
+      title: generatedArticle.title,
+      outline: generatedArticle.outline,
+      metaDescription: generatedArticle.metaDescription,
+      slug: generatedArticle.slug,
+      tags: generatedArticle.tags,
       isLiveAI,
       timestamp: Date.now(),
     });
