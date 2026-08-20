@@ -1,5 +1,5 @@
 ﻿import type { NextApiRequest, NextApiResponse } from 'next';
-import { VertexAI } from '@google-cloud/vertexai';
+import { GoogleGenAI } from '@google/genai';
 
 export default async function handler(
   req: NextApiRequest,
@@ -35,38 +35,30 @@ export default async function handler(
     const keyword =
       body.keyword || body.title || body.topic || 'solar pv grants ireland';
 
-    // 🎯 ENTERPRISE VERTEX AI CLIENT WITH GEMINI_ACCESS_TOKEN
-    const client = new VertexAI({
-      project: process.env.GOOGLE_CLOUD_PROJECT,
-      location: process.env.GOOGLE_CLOUD_LOCATION,
+    // ⭐ THE SINGLE MOST IMPORTANT LINE
+    const ai = new GoogleGenAI({
       apiKey: process.env.GEMINI_ACCESS_TOKEN, // ← ENTERPRISE KEY (THE FIX)
-    } as any);
-
-    const model = client.getGenerativeModel({
-      model: 'gemini-1.5-flash-001',
     });
 
-    const result = await model.generateContent(
-      `Write a detailed SEO article about: ${keyword}`,
-    );
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: `Write a detailed, high-authority Irish SEO article for EcoSmartHomes Ireland about: "${keyword}". Include official SEAI grant deductions (€2,100 Solar PV, €6,500 Heat Pump, up to €25,000 One-Stop-Shop), ROI payback calculations, BER impact, and vetted contractor guidelines. Format in clean markdown with H1, H2, and H3 headings.`,
+    });
 
-    const text =
-      result?.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      (typeof (result?.response as any)?.text === 'function'
-        ? (result.response as any).text()
-        : '');
+    const articleText = response?.text || '';
 
     return res.status(200).json({
       ok: true,
       success: true,
       keyword,
-      article: text,
-      content: text,
-      draft: text,
-      markdown: text,
+      article: articleText,
+      content: articleText,
+      draft: articleText,
+      markdown: articleText,
       data: {
-        article: text,
-        content: text,
+        title: `Comprehensive Guide to ${keyword}`,
+        content: articleText,
+        article: articleText,
         keyword,
       },
       timestamp: new Date().toISOString(),
