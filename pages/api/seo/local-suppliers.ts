@@ -40,20 +40,17 @@ export default async function handler(
       req.query?.keyword ||
       'Cavity wall & attic insulation suppliers in Raheen & Dooradoyle';
 
-    // Enterprise GCC Token Resolution
-    const enterpriseToken =
+    // 🎯 ENTERPRISE GCC KEY
+    const apiKey =
       process.env.GEMINI_ACCESS_TOKEN ||
       process.env.GEMINI_API_KEY ||
       process.env.GOOGLE_API_KEY;
-
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
-    const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
 
     let aiAdvice = '';
     let suppliers: any[] = [];
     let isLiveAI = false;
 
-    if (enterpriseToken) {
+    if (apiKey) {
       try {
         const prompt = `You are the Lead Energy Consultant for EcoSmartHomes Ireland.
 Search Query: "${query}".
@@ -64,23 +61,21 @@ Format strictly as JSON with keys:
 - "advice": string (markdown format with clear headings)
 - "suppliers": array of objects with { "name": string, "type": string, "address": string, "eircode": string, "rating": number, "phone": string, "seaiRegistered": boolean, "lat": number, "lng": number }`;
 
-        // Support both Enterprise Vertex AI and Generative Language
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': enterpriseToken,
-          Authorization: `Bearer ${enterpriseToken}`,
-        };
-
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${enterpriseToken}`;
-
-        const response = await fetch(url, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { responseMimeType: 'application/json' },
-          }),
-        });
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-goog-api-key': apiKey,
+              Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { responseMimeType: 'application/json' },
+            }),
+          },
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -94,11 +89,10 @@ Format strictly as JSON with keys:
           }
         }
       } catch (e: any) {
-        console.warn('Enterprise GCC Grounding warning:', e.message);
+        console.warn('Enterprise Grounding warning:', e.message);
       }
     }
 
-    // High-Precision Grounded Irish Suppliers (Limerick / Munster Focus)
     if (suppliers.length === 0) {
       aiAdvice = `### SEAI Registered Retrofit Guidance for ${query}\n\nWhen upgrading energy efficiency in Limerick (V94) and Munster:\n- **Technical Assessment**: Mandatory pre-grant assessment verifies heat loss indicator (HLI ≤ 2.0 W/K·m²).\n- **SEAI Grants**: Up to **€6,500** for Heat Pumps, **€2,100** for Solar PV, and up to **€25,000** for One-Stop-Shop deep retrofits.\n- **BER Uplift**: Upgrades typical homes from C/D ratings to **A2 / A3** standard.`;
 
@@ -161,7 +155,6 @@ Format strictly as JSON with keys:
       groundedLocations: suppliers,
       data: { advice: aiAdvice, suppliers, locations: suppliers },
       isLiveAI,
-      authMode: 'enterprise-gcc-token',
       timestamp:
         new Date().toLocaleDateString('en-GB') +
         ' ' +
@@ -170,8 +163,8 @@ Format strictly as JSON with keys:
   } catch (err: any) {
     return res.status(500).json({
       ok: false,
-      error: err.message || 'Smart search failed',
-      route: 'api/smart-search',
+      error: err.message || 'Grounding search failed',
+      route: 'api/ground',
     });
   }
 }

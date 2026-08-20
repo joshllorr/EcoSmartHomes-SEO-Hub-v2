@@ -45,8 +45,8 @@ export default async function handler(
       body.targetAudience ||
       'Irish Homeowners seeking SEAI Grants';
 
-    // Enterprise GCC Token Resolution
-    const enterpriseToken =
+    // 🎯 ENTERPRISE GCC KEY
+    const apiKey =
       process.env.GEMINI_ACCESS_TOKEN ||
       process.env.GEMINI_API_KEY ||
       process.env.GOOGLE_API_KEY;
@@ -54,7 +54,7 @@ export default async function handler(
     let generatedArticle: any = null;
     let isLiveAI = false;
 
-    if (enterpriseToken) {
+    if (apiKey) {
       try {
         const prompt = `You are the Lead SEO Content Strategist for EcoSmartHomes Ireland.
 Write an in-depth, authoritative Irish home energy SEO article for: "${targetKeyword}".
@@ -67,17 +67,15 @@ Include:
 - FAQ schema section
 Format strictly as JSON with keys: title, slug, metaDescription, outline (array of strings), content (pure markdown string), tags (array of strings).`;
 
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': enterpriseToken,
-          Authorization: `Bearer ${enterpriseToken}`,
-        };
-
         const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${enterpriseToken}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
           {
             method: 'POST',
-            headers,
+            headers: {
+              'Content-Type': 'application/json',
+              'x-goog-api-key': apiKey,
+              Authorization: `Bearer ${apiKey}`,
+            },
             body: JSON.stringify({
               contents: [{ parts: [{ text: prompt }] }],
               generationConfig: { responseMimeType: 'application/json' },
@@ -133,7 +131,7 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
           }
         }
       } catch (e: any) {
-        console.warn('Enterprise Gemini generation warning:', e.message);
+        console.warn('Enterprise generation warning:', e.message);
       }
     }
 
@@ -174,7 +172,6 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
       slug: generatedArticle.slug,
       tags: generatedArticle.tags,
       isLiveAI,
-      authMode: 'enterprise-gcc-token',
       timestamp: Date.now(),
     });
   } catch (err: any) {
