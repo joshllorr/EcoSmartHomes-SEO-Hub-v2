@@ -9,11 +9,13 @@ function getEnterpriseClient(): GoogleGenAI | null {
   const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
   const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
-  // 1. Enterprise Vertex AI Mode
+  // 1. Enterprise Vertex AI Mode (lowercase vertexai)
   if (useVertex && project) {
     try {
       return new GoogleGenAI({
-        vertexAI: { project, location },
+        vertexai: true,
+        project,
+        location,
       });
     } catch (e) {
       console.warn('Vertex AI initialization fallback to API Key:', e);
