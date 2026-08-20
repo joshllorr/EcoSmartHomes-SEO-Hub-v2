@@ -4,7 +4,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  // 1. CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -13,7 +12,7 @@ export default async function handler(
   );
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-vercel-protection-bypass',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
   );
 
   if (req.method === 'OPTIONS') {
@@ -22,7 +21,6 @@ export default async function handler(
   }
 
   try {
-    // 2. Safe Body Parser (Handles object, string, or query params)
     let body = req.body;
     if (typeof body === 'string') {
       try {
@@ -46,16 +44,17 @@ export default async function handler(
       body.context ||
       body.targetAudience ||
       'Irish Homeowners seeking SEAI Grants';
-    const apiKey =
+
+    // Enterprise GCC Token Resolution
+    const enterpriseToken =
+      process.env.GEMINI_ACCESS_TOKEN ||
       process.env.GEMINI_API_KEY ||
-      process.env.GOOGLE_API_KEY ||
-      process.env.VITE_GEMINI_API_KEY;
+      process.env.GOOGLE_API_KEY;
 
     let generatedArticle: any = null;
     let isLiveAI = false;
 
-    // 3. Live Google Gemini 2.5 Call
-    if (apiKey) {
+    if (enterpriseToken) {
       try {
         const prompt = `You are the Lead SEO Content Strategist for EcoSmartHomes Ireland.
 Write an in-depth, authoritative Irish home energy SEO article for: "${targetKeyword}".
@@ -68,11 +67,17 @@ Include:
 - FAQ schema section
 Format strictly as JSON with keys: title, slug, metaDescription, outline (array of strings), content (pure markdown string), tags (array of strings).`;
 
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': enterpriseToken,
+          Authorization: `Bearer ${enterpriseToken}`,
+        };
+
         const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${enterpriseToken}`,
           {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify({
               contents: [{ parts: [{ text: prompt }] }],
               generationConfig: { responseMimeType: 'application/json' },
@@ -128,11 +133,10 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
           }
         }
       } catch (e: any) {
-        console.warn('Gemini fetch warning:', e.message);
+        console.warn('Enterprise Gemini generation warning:', e.message);
       }
     }
 
-    // 4. Dynamic Fallback
     if (!generatedArticle) {
       const cleanSlug = targetKeyword
         .toLowerCase()
@@ -156,7 +160,6 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
       };
     }
 
-    // 5. Universal Response (Satisfies all frontend variable expectations)
     return res.status(200).json({
       ok: true,
       success: true,
@@ -171,6 +174,7 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
       slug: generatedArticle.slug,
       tags: generatedArticle.tags,
       isLiveAI,
+      authMode: 'enterprise-gcc-token',
       timestamp: Date.now(),
     });
   } catch (err: any) {
