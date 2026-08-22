@@ -80,6 +80,7 @@ export interface ArticleDraft {
   liveUrl?: string;
   targetBER?: string;
   estimatedReadTime?: string;
+  slug?: string;
 }
 
 export interface DashboardState {

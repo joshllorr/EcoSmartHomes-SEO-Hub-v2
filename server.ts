@@ -6302,17 +6302,12 @@ app.get('/api/journey/:userId', async (req, res) => {
 });
 
 app.post('/api/journey/event', async (req, res) => {
-  const { user_id = 'user_2026_08_03_1412', event, notes, phaseRef } = req.body || {};
+  const { user_id = 'user_2026_08_03_1412', event, notes } = req.body || {};
   if (!event) {
     return res.status(400).json({ error: 'Missing event field' });
   }
   try {
-    const updated = await addTimelineEvent(process.env, user_id, {
-      event,
-      at: Date.now(),
-      notes,
-      phaseRef,
-    });
+    const updated = await addTimelineEvent(process.env, user_id, String(event), notes ? String(notes) : undefined);
     return res.json({ success: true, timeline: updated });
   } catch (err: any) {
     return res.status(500).json({ error: 'Failed to record journey event', details: String(err) });
@@ -6324,11 +6319,11 @@ app.get('/api/contractors/scores', async (_req, res) => {
   try {
     const scores = await Promise.all(
       SAMPLE_CONTRACTORS.map(async (c) => {
-        const scoreRec = await getContractorScore(process.env, c.id);
+        const scoreRec = await getContractorScore(process.env, c.contractor_id);
         return {
-          contractor_id: `${c.id} (${c.name})`,
-          score: scoreRec.score || 94,
-          metrics: scoreRec.metrics || {
+          contractor_id: `${c.contractor_id} (${c.name})`,
+          score: scoreRec?.score || 94,
+          metrics: scoreRec?.metrics || {
             jobSpeed: 94,
             paperworkAccuracy: 96,
             berUpliftConsistency: 95,
@@ -6338,7 +6333,7 @@ app.get('/api/contractors/scores', async (_req, res) => {
             issueFrequency: 0,
             seaiCompliance: 100,
           },
-          updatedAt: scoreRec.updatedAt || Date.now(),
+          updatedAt: scoreRec?.updatedAt || Date.now(),
         };
       }),
     );
@@ -6356,10 +6351,10 @@ app.get('/api/contractors/scores/insights', async (_req, res) => {
       eliteContractorsCount: 4,
       totalVettedContractors: SAMPLE_CONTRACTORS.length,
       topPerformers: SAMPLE_CONTRACTORS.slice(0, 3).map((c) => ({
-        id: c.id,
+        id: c.contractor_id,
         name: c.name,
-        specialties: c.specialties,
-        county: c.counties.join(', '),
+        specialties: c.type,
+        county: c.region.join(', '),
       })),
     });
   } catch (err: any) {
@@ -6567,9 +6562,14 @@ app.get('/api/advisor/calendar', async (_req, res) => {
 });
 
 app.post('/api/advisor/chat', async (req, res) => {
-  const { messages = [] } = req.body || {};
+  const { user_id = 'user_2026_08_03_1412', messages = [], message } = req.body || {};
   try {
-    const reply = await generateAdvisorReply(process.env, messages);
+    const lastUserMsg =
+      message ||
+      (Array.isArray(messages) && messages.length > 0
+        ? messages[messages.length - 1]?.text || messages[messages.length - 1]?.content || ''
+        : 'What is my next step?');
+    const reply = await generateAdvisorReply(process.env, user_id, String(lastUserMsg));
     return res.json({ success: true, reply });
   } catch (err: any) {
     return res.status(500).json({ error: 'Failed to generate advisor reply', details: String(err) });

@@ -13,6 +13,7 @@ const mockDrafts: ArticleDraft[] = [
   {
     id: 'draft-test-101',
     title: 'SEAI Heat Pump Grants Ireland 2026 Homeowner Guide',
+    topic: 'Heat Pumps & SEAI Grants',
     metaTitle: 'SEAI Heat Pump Grants Ireland 2026: Complete Home Guide',
     metaDescription:
       'Discover complete SEAI grant values up to €6,500 for heat pump installations in Ireland. Check eligibility criteria and application steps.',

@@ -283,7 +283,9 @@ export default function ContentStrategyFunnel({
     setItems(updated);
     try {
       localStorage.setItem('ecosmart_content_funnel_items', JSON.stringify(updated));
-    } catch (_) {}
+    } catch {
+      // Ignore localStorage write failures in restricted environments
+    }
     if (onUpdateDrafts) {
       onUpdateDrafts(updated);
     }

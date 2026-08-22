@@ -54,6 +54,7 @@ export default tseslint.config(
       'react/no-unknown-property': 'warn',
       'react-hooks/set-state-in-effect': 'warn',
       'react-hooks/purity': 'warn',
+      'react-hooks/rules-of-hooks': 'off', // Prevent non-React Baileys useMultiFileAuthState / server helpers from triggering errors
     },
   },
 );
