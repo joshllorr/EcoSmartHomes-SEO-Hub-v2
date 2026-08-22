@@ -1,0 +1,138 @@
+{
+  "project": "EcoSmartHomes SEO Hub v2",
+  "market": "Ireland (Munster Region Focus)",
+  "currency": "EUR",
+  "lastUpdated": "2026-08-13",
+  "clusters": [
+    {
+      "clusterId": "seai-grant-intelligence",
+      "coreTopic": "SEAI Retrofit Grants and One Stop Shop Schemes",
+      "intent": "Transactional / Commercial Investigation",
+      "keywords": [
+        {
+          "phrase": "seai one stop shop grant application process ireland",
+          "intent": "commercial",
+          "avgMonthlySearchVolumeEstimate": 880,
+          "difficulty": "medium",
+          "targetUrls": ["/grants/seai-one-stop-shop-blueprint"]
+        },
+        {
+          "phrase": "seai retrofit grant approval timeline 2026",
+          "intent": "informational",
+          "avgMonthlySearchVolumeEstimate": 420,
+          "difficulty": "low",
+          "targetUrls": ["/grants/seai-retrofit-approval-timeline"]
+        },
+        {
+          "phrase": "how much is the seai deep retrofit grant",
+          "intent": "informational",
+          "avgMonthlySearchVolumeEstimate": 720,
+          "difficulty": "medium",
+          "targetUrls": ["/grants/deep-retrofit-costs-calculator"]
+        },
+        {
+          "phrase": "seai home upgrade grant eligibility criteria",
+          "intent": "informational",
+          "avgMonthlySearchVolumeEstimate": 590,
+          "difficulty": "low",
+          "targetUrls": ["/grants/home-upgrade-eligibility"]
+        }
+      ],
+      "geographicModifiers": {
+        "tier1Cities": ["Limerick", "Cork", "Waterford"],
+        "tier2Towns": ["Adare", "Castletroy", "Douglas", "Kinsale", "Tralee", "Killarney", "Ennis", "Shannon", "Mallow", "Clonakilty"]
+      }
+    },
+    {
+      "clusterId": "heat-pump-insulation-engineering",
+      "coreTopic": "Heat Pump Upgrades and Fabric-First Insulation Packages",
+      "intent": "Transactional / Informational Integration",
+      "keywords": [
+        {
+          "phrase": "seai approved heat pump contractors munster",
+          "intent": "transactional",
+          "avgMonthlySearchVolumeEstimate": 480,
+          "difficulty": "medium",
+          "targetUrls": ["/services/seai-approved-heat-pump-contractors"]
+        },
+        {
+          "phrase": "external wall insulation cost ireland calculator",
+          "intent": "commercial",
+          "avgMonthlySearchVolumeEstimate": 610,
+          "difficulty": "high",
+          "targetUrls": ["/insulation/external-wall-cost-calculator"]
+        },
+        {
+          "phrase": "is a heat pump worth it in an older irish home",
+          "intent": "informational",
+          "avgMonthlySearchVolumeEstimate": 930,
+          "difficulty": "low",
+          "targetUrls": ["/retrofit-advisor/heat-pump-older-homes-guide"]
+        },
+        {
+          "phrase": "cavity wall insulation grants limerick clare",
+          "intent": "transactional",
+          "avgMonthlySearchVolumeEstimate": 310,
+          "difficulty": "low",
+          "targetUrls": ["/insulation/cavity-wall-grants-mid-west"]
+        }
+      ],
+      "geographicModifiers": {
+        "tier1Cities": ["Limerick", "Cork"],
+        "tier2Towns": ["Newcastle West", "Ballincollig", "Carrigaline", "Cobh", "Thurles", "Nenagh", "Dungarvan", "Youghal"]
+      }
+    },
+    {
+      "clusterId": "retrofit-financial-analytics",
+      "coreTopic": "Net-Cost Calculations, BER Upgrades, and ROI Analytics",
+      "intent": "Transactional",
+      "keywords": [
+        {
+          "phrase": "home energy retrofit cost before and after grants",
+          "intent": "commercial",
+          "avgMonthlySearchVolumeEstimate": 540,
+          "difficulty": "medium",
+          "targetUrls": ["/analytics/retrofit-net-cost-breakdown"]
+        },
+        {
+          "phrase": "how to get a house from ber e1 to b2",
+          "intent": "informational",
+          "avgMonthlySearchVolumeEstimate": 380,
+          "difficulty": "low",
+          "targetUrls": ["/ber/e1-to-b2-upgrade-blueprint"]
+        },
+        {
+          "phrase": "low interest retrofit loans ireland eligibility",
+          "intent": "commercial",
+          "avgMonthlySearchVolumeEstimate": 670,
+          "difficulty": "medium",
+          "targetUrls": ["/finance/low-interest-retrofit-loans"]
+        },
+        {
+          "phrase": "seai technical advisor fee repayment",
+          "intent": "informational",
+          "avgMonthlySearchVolumeEstimate": 210,
+          "difficulty": "low",
+          "targetUrls": ["/retrofit-advisor/technical-advisor-fees"]
+        }
+      ],
+      "geographicModifiers": {
+        "tier1Cities": ["Cork", "Limerick", "Waterford"],
+        "tier2Towns": ["Midleton", "Fermoy", "Bandon", "Skibbereen", "Askeaton", "Kilrush", "Ennistymon", "Listowel", "Kenmare", "Cashel"]
+      }
+    }
+  ],
+  "programmaticCombinations": {
+    "structures": [
+      "Core Keyword + Tier 1 City",
+      "Core Keyword + Tier 2 Town",
+      "Modifier + Core Keyword + Location"
+    ],
+    "examplesToGenerate": [
+      "seai approved heat pump contractors Adare",
+      "seai one stop shop grant application process Cork City",
+      "external wall insulation cost tralee calculator",
+      "how to get a house from ber e1 to b2 limerick"
+    ]
+  }
+}
