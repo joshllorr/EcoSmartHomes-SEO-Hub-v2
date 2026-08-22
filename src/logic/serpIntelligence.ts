@@ -274,7 +274,9 @@ export function computeCompetitorDiff(
       let domain = c.url;
       try {
         domain = new URL(c.url).hostname.replace('www.', '');
-      } catch {}
+      } catch {
+        // Fall back to raw URL if parsing fails
+      }
       const simulatedOldPos = c.position === 1 ? 1 : c.position % 2 === 0 ? c.position - 1 : c.position + 1;
       oldMap.set(domain, { position: simulatedOldPos, title: c.title });
     });
@@ -291,7 +293,9 @@ export function computeCompetitorDiff(
     let domain = curr.url;
     try {
       domain = new URL(curr.url).hostname.replace('www.', '');
-    } catch {}
+    } catch {
+      // Fall back to raw URL if parsing fails
+    }
     currentDomains.add(domain);
 
     const oldData = oldMap.get(domain);

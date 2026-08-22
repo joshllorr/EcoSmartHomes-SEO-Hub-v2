@@ -41,15 +41,6 @@ export default function SERPAnalyzerTab({
     'attic insulation grant application process 2026',
   ];
 
-  useEffect(() => {
-    if (initialKeyword && initialKeyword.trim()) {
-      setKeyword(initialKeyword);
-      if (!currentSerp || currentSerp.keyword.toLowerCase() !== initialKeyword.trim().toLowerCase()) {
-        handleAnalyze(initialKeyword);
-      }
-    }
-  }, [initialKeyword]);
-
   const handleAnalyze = async (targetKw?: string) => {
     const searchTarget = (targetKw || keyword).trim();
     if (!searchTarget) return;
@@ -172,6 +163,15 @@ export default function SERPAnalyzerTab({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (initialKeyword && initialKeyword.trim()) {
+      setKeyword(initialKeyword);
+      if (!currentSerp || currentSerp.keyword.toLowerCase() !== initialKeyword.trim().toLowerCase()) {
+        handleAnalyze(initialKeyword);
+      }
+    }
+  }, [initialKeyword]);
 
   return (
     <div className="space-y-6 text-left" id="serp-analyzer-tab">

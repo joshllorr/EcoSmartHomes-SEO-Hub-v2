@@ -81,7 +81,7 @@ describe('callGeminiRESTApi', () => {
     delete (process.env as any).GOOGLE_GENAI_USE_VERTEXAI;
     process.env.GEMINI_API_KEY = 'placeholder';
 
-    const result = await callGeminiRESTApi('test prompt', 'gemini-2.5-flash');
+    const result = await callGeminiRESTApi('test prompt', 'gemini-3.7-flash');
     expect(result).toBeNull();
   });
 

@@ -47,7 +47,7 @@ export default async function handler(
     // 1. Authenticate with Vertex AI Enterprise via OAuth2 Bearer Header (Fixes 401)
     if (accessToken) {
       try {
-        const vertexUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${project}/locations/${location}/publishers/google/models/gemini-2.5-flash:generateContent`;
+        const vertexUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${project}/locations/${location}/publishers/google/models/gemini-3.7-flash:generateContent`;
         const vertexRes = await fetch(vertexUrl, {
           method: 'POST',
           headers: {
@@ -78,7 +78,7 @@ export default async function handler(
     // 2. Direct API Key Fallback if Access Token is not active
     if (!articleText && apiKey) {
       try {
-        const directUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+        const directUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.7-flash:generateContent?key=${apiKey}`;
         const directRes = await fetch(directUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

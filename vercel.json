@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://YOUR_VM_PUBLIC_IP:3000/api/:path*"
+    }
+  ]
+}

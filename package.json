@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"tsx server.ts\"",
-    "crawler": "concurrently \"vite\" \"tsx server.ts\"",
+    "dev": "tsx server.ts",
+    "crawler": "tsx server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
     "build:frontend": "vite build",
     "start": "node dist/server.cjs",

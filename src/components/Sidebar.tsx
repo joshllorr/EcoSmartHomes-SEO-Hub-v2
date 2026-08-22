@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import * as LucideIcons from 'lucide-react';
+import { PRIMARY_DASHBOARD_SHORTCUTS } from '../hooks/useDashboardShortcuts';
 
 interface SidebarProps {
   activeTab: string;
@@ -8,7 +9,17 @@ interface SidebarProps {
   site: string;
   isMobileOpen?: boolean;
   onCloseMobile?: () => void;
+  onOpenShortcuts?: () => void;
+  onOpenSettings?: () => void;
 }
+
+const SHORTCUT_MAP: Record<string, string> = PRIMARY_DASHBOARD_SHORTCUTS.reduce(
+  (acc, item) => {
+    acc[item.id] = item.key;
+    return acc;
+  },
+  {} as Record<string, string>,
+);
 
 export default function Sidebar({
   activeTab,
@@ -16,6 +27,8 @@ export default function Sidebar({
   site,
   isMobileOpen = false,
   onCloseMobile,
+  onOpenShortcuts,
+  onOpenSettings,
 }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -485,6 +498,7 @@ export default function Sidebar({
                   const isActive = item.path
                     ? location.pathname === item.path || activeTab === item.id
                     : activeTab === item.id;
+                  const shortcutKey = SHORTCUT_MAP[item.id];
 
                   return (
                     <button
@@ -496,6 +510,11 @@ export default function Sidebar({
                           : 'text-slate-400 hover:bg-white/5 hover:text-white'
                       }`}
                       id={`nav-${item.id}`}
+                      title={
+                        shortcutKey
+                          ? `${item.name} (Ctrl+${shortcutKey} / ⌘${shortcutKey})`
+                          : item.name
+                      }
                     >
                       <Icon
                         size={16}
@@ -506,7 +525,14 @@ export default function Sidebar({
                         }`}
                       />
                       {!collapsed && (
-                        <span className="truncate text-left">{item.name}</span>
+                        <span className="truncate text-left flex-1">
+                          {item.name}
+                        </span>
+                      )}
+                      {!collapsed && shortcutKey && (
+                        <kbd className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-white/5 group-hover:bg-white/10 text-slate-500 group-hover:text-slate-300 border border-white/10 shadow-2xs shrink-0">
+                          ^{shortcutKey}
+                        </kbd>
                       )}
                     </button>
                   );
@@ -516,8 +542,61 @@ export default function Sidebar({
           })}
       </nav>
 
-      {/* Footer Branding Info */}
+      {/* Footer Branding Info & Shortcut Trigger */}
       <div className="p-3 border-t border-white/10 space-y-2 shrink-0 bg-black/30">
+        {/* Settings Button */}
+        {onOpenSettings && (
+          <button
+            onClick={onOpenSettings}
+            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs transition cursor-pointer ${
+              collapsed ? 'justify-center' : ''
+            }`}
+            title="Platform Settings & Vite HMR"
+            id="sidebar-settings-btn"
+          >
+            <div className="flex items-center gap-2">
+              <LucideIcons.Settings
+                size={14}
+                className="text-[#34d399] shrink-0"
+              />
+              {!collapsed && (
+                <span className="text-[11px] font-medium">Settings & HMR</span>
+              )}
+            </div>
+            {!collapsed && (
+              <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-bold">
+                Config
+              </span>
+            )}
+          </button>
+        )}
+
+        {onOpenShortcuts && (
+          <button
+            onClick={onOpenShortcuts}
+            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs transition cursor-pointer ${
+              collapsed ? 'justify-center' : ''
+            }`}
+            title="Keyboard Shortcuts (? or Ctrl+1..9)"
+            id="sidebar-shortcuts-btn"
+          >
+            <div className="flex items-center gap-2">
+              <LucideIcons.Keyboard
+                size={14}
+                className="text-emerald-400 shrink-0"
+              />
+              {!collapsed && (
+                <span className="text-[11px] font-medium">Shortcuts</span>
+              )}
+            </div>
+            {!collapsed && (
+              <kbd className="px-1.5 py-0.2 text-[10px] font-mono bg-black/40 border border-white/10 rounded text-slate-400">
+                ?
+              </kbd>
+            )}
+          </button>
+        )}
+
         {!collapsed && (
           <div className="bg-white/5 p-2.5 rounded-lg border border-white/10 text-center">
             <div className="flex items-center gap-1.5 justify-center mb-0.5 text-[#34d399]">

@@ -797,7 +797,9 @@ export const RankingStabilityMap: React.FC<RankingStabilityMapProps> = ({
                       setNotice(`Enqueued "${kw}" into Autonomous Content Refresh Queue.`);
                       setSelectedDrawerKeyword(null);
                       setTimeout(() => setNotice(null), 4000);
-                    } catch {}
+                    } catch {
+                      // ignore network errors in drawer preview
+                    }
                   }}
                   className="py-2 px-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-lg font-mono flex items-center justify-center gap-1.5 transition cursor-pointer"
                 >

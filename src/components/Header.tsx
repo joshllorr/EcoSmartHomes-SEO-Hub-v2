@@ -15,6 +15,8 @@ import {
   ExternalLink,
   CheckCheck,
   MapPin,
+  Keyboard,
+  Settings,
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useDashboardStore } from '../store/useDashboardStore';
@@ -74,6 +76,8 @@ interface HeaderProps {
   level: number;
   onNavigateToTab: (tab: string) => void;
   onToggleMobileMenu?: () => void;
+  onOpenShortcuts?: () => void;
+  onOpenSettings?: () => void;
 }
 
 export default function Header({
@@ -81,6 +85,8 @@ export default function Header({
   level,
   onNavigateToTab,
   onToggleMobileMenu,
+  onOpenShortcuts,
+  onOpenSettings,
 }: HeaderProps) {
   const targetDomain = useDashboardStore((s) => s.targetDomain);
   const setTargetDomain = useDashboardStore((s) => s.setTargetDomain);
@@ -306,7 +312,20 @@ export default function Header({
       </div>
 
       {/* Right User Actions */}
-      <div className="flex items-center gap-4 shrink-0 justify-end">
+      <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 justify-end">
+        {/* Keyboard Shortcuts Trigger Button */}
+        {onOpenShortcuts && (
+          <button
+            onClick={onOpenShortcuts}
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 hover:border-slate-600 rounded-xl text-xs font-medium transition cursor-pointer shadow-xs"
+            title="Keyboard Shortcuts (Ctrl+1..9 or ?)"
+            id="header-shortcuts-btn"
+          >
+            <Keyboard size={15} className="text-emerald-400" />
+            <span className="font-mono text-[11px] text-slate-400">?</span>
+          </button>
+        )}
+
         {/* Light/Dark Mode Theme Toggle */}
         <button
           onClick={toggleTheme}
@@ -325,6 +344,18 @@ export default function Header({
             />
           )}
         </button>
+
+        {/* System & HMR Settings Menu Trigger */}
+        {onOpenSettings && (
+          <button
+            onClick={onOpenSettings}
+            className="p-2 text-slate-400 hover:text-[#34d399] hover:bg-white/5 rounded-xl transition cursor-pointer flex items-center justify-center border border-transparent hover:border-white/10"
+            title="Platform Settings & Vite HMR Config"
+            id="header-settings-btn"
+          >
+            <Settings size={18} />
+          </button>
+        )}
 
         {/* Live Interactive Notification Dropdown */}
         <div className="relative" ref={notifRef}>

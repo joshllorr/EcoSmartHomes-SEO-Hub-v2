@@ -16,7 +16,8 @@ import RankingStabilityMap from './RankingStabilityMap';
 import SEOInsightsPanel from './SEOInsightsPanel';
 import AutomationLogsPanel from './AutomationLogsPanel';
 import PhaseDriftPanel from './PhaseDriftPanel';
-import { DashboardState } from '../types';
+import ContentStrategyFunnel from './ContentStrategyFunnel';
+import { DashboardState, ArticleDraft } from '../types';
 
 interface MainDashboardProps {
   state: DashboardState;
@@ -29,6 +30,9 @@ interface MainDashboardProps {
   onOptimizeAIVisibility: () => void;
   onQuickAction: (actionId: string) => void;
   onNavigateToSERP?: (keyword: string) => void;
+  onUpdateDraft?: (updatedDraft: ArticleDraft) => void;
+  onUpdateDrafts?: (updatedDrafts: ArticleDraft[]) => void;
+  onXPUnlock?: (amount: number) => void;
 }
 
 export default function MainDashboard({
@@ -42,6 +46,9 @@ export default function MainDashboard({
   onOptimizeAIVisibility,
   onQuickAction,
   onNavigateToSERP,
+  onUpdateDraft,
+  onUpdateDrafts,
+  onXPUnlock,
 }: MainDashboardProps) {
   const isCMSConnected =
     state.tasks.find((t) => t.id === 'connect_cms')?.completed || false;
@@ -89,6 +96,19 @@ export default function MainDashboard({
             <WelcomeCard
               onConnectCMS={onConnectCMS}
               isCMSConnected={isCMSConnected}
+            />
+          </ErrorBoundary>
+        </motion.div>
+
+        <motion.div variants={cardVariants}>
+          <ErrorBoundary sectionName="Content Strategy Funnel">
+            <ContentStrategyFunnel
+              drafts={state.drafts}
+              onOpenInWriter={onOpenInWriter}
+              onUpdateDraft={onUpdateDraft}
+              onUpdateDrafts={onUpdateDrafts}
+              onXPUnlock={onXPUnlock}
+              site={state.site}
             />
           </ErrorBoundary>
         </motion.div>
