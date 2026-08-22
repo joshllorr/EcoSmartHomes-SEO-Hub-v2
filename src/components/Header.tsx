@@ -1,4 +1,5 @@
 import {
+  Menu,
   Bell,
   Globe,
   Sun,
@@ -14,6 +15,8 @@ import {
   ExternalLink,
   CheckCheck,
   MapPin,
+  Keyboard,
+  Settings,
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useDashboardStore } from '../store/useDashboardStore';
@@ -72,12 +75,18 @@ interface HeaderProps {
   streak: number;
   level: number;
   onNavigateToTab: (tab: string) => void;
+  onToggleMobileMenu?: () => void;
+  onOpenShortcuts?: () => void;
+  onOpenSettings?: () => void;
 }
 
 export default function Header({
   streak,
   level,
   onNavigateToTab,
+  onToggleMobileMenu,
+  onOpenShortcuts,
+  onOpenSettings,
 }: HeaderProps) {
   const targetDomain = useDashboardStore((s) => s.targetDomain);
   const setTargetDomain = useDashboardStore((s) => s.setTargetDomain);
@@ -237,59 +246,86 @@ export default function Header({
   };
 
   return (
-    <header className="glass-header sticky top-0 z-40 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10">
-      {/* Interactive Active SEO Target Input */}
-      <div className="flex items-center gap-2.5 bg-emerald-500/10 px-3.5 py-2 rounded-xl border border-emerald-500/25 text-emerald-400 font-medium text-xs">
-        <Globe size={15} className="text-emerald-400 shrink-0" />
-        <span className="shrink-0 font-semibold text-slate-300">
-          Active SEO Target:
-        </span>
-        {isEditing ? (
-          <div className="flex items-center gap-1.5">
-            <input
-              type="text"
-              value={inputDomain}
-              onChange={(e) => setInputDomain(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSaveDomain()}
-              placeholder="e.g. mywebsite.com"
-              className="bg-black/50 text-emerald-300 font-mono text-xs font-bold px-2.5 py-1 rounded-lg border border-emerald-500/40 focus:border-emerald-400 focus:outline-hidden transition w-44 sm:w-60"
-              autoFocus
-              id="header-target-domain-input"
-            />
-            <button
-              onClick={handleSaveDomain}
-              className="bg-emerald-500 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[11px] hover:bg-emerald-400 cursor-pointer flex items-center gap-1 transition shrink-0"
-              title="Save Target Domain"
-              id="save-target-domain-btn"
-            >
-              <Check size={12} />
-              <span>Save</span>
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold text-emerald-300 bg-black/30 px-2 py-0.5 rounded border border-emerald-500/20">
-              {targetDomain}
-            </span>
-            <div className="flex items-center gap-1 bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shadow-xs">
-              <MapPin size={11} className="text-emerald-400 shrink-0" />
-              <span>Limerick (V94 Eircode Zone)</span>
-            </div>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="text-slate-400 hover:text-emerald-300 text-[11px] font-mono flex items-center gap-1 hover:underline cursor-pointer transition"
-              title="Change target website domain"
-              id="edit-target-domain-btn"
-            >
-              <Edit2 size={11} />
-              <span>Change</span>
-            </button>
-          </div>
+    <header className="glass-header sticky top-0 z-40 px-4 sm:px-6 py-3.5 sm:py-4 flex flex-wrap items-center justify-between gap-3 sm:gap-4 border-b border-white/10">
+      {/* Mobile Toggle + Interactive Active SEO Target Input */}
+      <div className="flex items-center gap-2.5 min-w-0 flex-1 sm:flex-initial">
+        {onToggleMobileMenu && (
+          <button
+            onClick={onToggleMobileMenu}
+            className="md:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-[#34d399] border border-white/10 transition cursor-pointer shrink-0"
+            title="Open Navigation Menu"
+            aria-label="Open Navigation Menu"
+            id="mobile-menu-toggle-btn"
+          >
+            <Menu size={18} />
+          </button>
         )}
+
+        <div className="flex items-center gap-2 bg-emerald-500/10 px-3 py-1.5 sm:py-2 rounded-xl border border-emerald-500/25 text-emerald-400 font-medium text-xs truncate">
+          <Globe size={14} className="text-emerald-400 shrink-0" />
+          <span className="hidden sm:inline shrink-0 font-semibold text-slate-300">
+            Active Target:
+          </span>
+          {isEditing ? (
+            <div className="flex items-center gap-1.5">
+              <input
+                type="text"
+                value={inputDomain}
+                onChange={(e) => setInputDomain(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSaveDomain()}
+                placeholder="e.g. mywebsite.com"
+                className="bg-black/50 text-emerald-300 font-mono text-xs font-bold px-2 py-0.5 rounded-lg border border-emerald-500/40 focus:border-emerald-400 focus:outline-hidden transition w-32 sm:w-48"
+                autoFocus
+                id="header-target-domain-input"
+              />
+              <button
+                onClick={handleSaveDomain}
+                className="bg-emerald-500 text-slate-950 font-bold px-2 py-0.5 rounded-lg text-[10px] sm:text-[11px] hover:bg-emerald-400 cursor-pointer flex items-center gap-1 transition shrink-0"
+                title="Save Target Domain"
+                id="save-target-domain-btn"
+              >
+                <Check size={11} />
+                <span>Save</span>
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 sm:gap-2 truncate">
+              <span className="font-mono text-xs font-bold text-emerald-300 bg-black/30 px-1.5 sm:px-2 py-0.5 rounded border border-emerald-500/20 truncate">
+                {targetDomain}
+              </span>
+              <div className="hidden md:flex items-center gap-1 bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shadow-xs">
+                <MapPin size={10} className="text-emerald-400 shrink-0" />
+                <span>Limerick (V94)</span>
+              </div>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-slate-400 hover:text-emerald-300 text-[10px] sm:text-[11px] font-mono flex items-center gap-0.5 hover:underline cursor-pointer transition shrink-0"
+                title="Change target website domain"
+                id="edit-target-domain-btn"
+              >
+                <Edit2 size={10} />
+                <span>Edit</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Right User Actions */}
-      <div className="flex items-center gap-4 shrink-0 justify-end">
+      <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 justify-end">
+        {/* Keyboard Shortcuts Trigger Button */}
+        {onOpenShortcuts && (
+          <button
+            onClick={onOpenShortcuts}
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 hover:border-slate-600 rounded-xl text-xs font-medium transition cursor-pointer shadow-xs"
+            title="Keyboard Shortcuts (Ctrl+1..9 or ?)"
+            id="header-shortcuts-btn"
+          >
+            <Keyboard size={15} className="text-emerald-400" />
+            <span className="font-mono text-[11px] text-slate-400">?</span>
+          </button>
+        )}
+
         {/* Light/Dark Mode Theme Toggle */}
         <button
           onClick={toggleTheme}
@@ -308,6 +344,18 @@ export default function Header({
             />
           )}
         </button>
+
+        {/* System & HMR Settings Menu Trigger */}
+        {onOpenSettings && (
+          <button
+            onClick={onOpenSettings}
+            className="p-2 text-slate-400 hover:text-[#34d399] hover:bg-white/5 rounded-xl transition cursor-pointer flex items-center justify-center border border-transparent hover:border-white/10"
+            title="Platform Settings & Vite HMR Config"
+            id="header-settings-btn"
+          >
+            <Settings size={18} />
+          </button>
+        )}
 
         {/* Live Interactive Notification Dropdown */}
         <div className="relative" ref={notifRef}>

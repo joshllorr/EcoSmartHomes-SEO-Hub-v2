@@ -155,7 +155,7 @@ export default function HomeUpgradeInsightsDashboard() {
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {metrics.categoryBreakdown.map((cat, idx) => (
+          {(metrics?.categoryBreakdown || []).map((cat, idx) => (
             <div
               key={idx}
               className="p-4 bg-slate-950/80 border border-white/5 rounded-xl flex flex-col justify-between gap-2"

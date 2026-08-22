@@ -12,7 +12,7 @@ import { useDashboardStore } from '../store/useDashboardStore';
 interface SiteHealthCardProps {
   status: 'failed' | 'success' | 'running';
   error: string | null;
-  onRetryScan: (sitemapPath?: string) => void;
+  onRetryScan: (sitemapPath?: string) => Promise<void> | void;
 }
 
 export default function SiteHealthCard({
@@ -25,12 +25,13 @@ export default function SiteHealthCard({
   const [sitemapInput, setSitemapInput] = useState('');
   const [showPathInput, setShowPathInput] = useState(false);
 
-  const triggerScan = (path?: string) => {
+  const triggerScan = async (path?: string) => {
     setLoading(true);
-    setTimeout(() => {
+    try {
+      await onRetryScan(path || sitemapInput || '/sitemap.xml');
+    } finally {
       setLoading(false);
-      onRetryScan(path);
-    }, 1500);
+    }
   };
 
   const isFailed = status === 'failed';

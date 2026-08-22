@@ -6,7 +6,8 @@
  */
 export async function generateTitleMeta(
   topic: string,
-  tone: string,
+  tone: string = 'Professional',
+  content?: string,
 ): Promise<{
   title: string;
   slug: string;
@@ -21,6 +22,7 @@ export async function generateTitleMeta(
     body: JSON.stringify({
       topic,
       tone,
+      content: content ? content.substring(0, 2500) : undefined,
       audience: 'Irish homeowners',
     }),
   });

@@ -16,9 +16,11 @@ import {
   FileCheck,
   ChevronRight,
   Info,
+  Download,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArticleDraft, DashboardState } from '../types';
+import { generateAuditReportPdf } from '../utils/generateAuditReportPdf';
 
 interface ContentAuditTabProps {
   drafts: ArticleDraft[];
@@ -37,6 +39,7 @@ export default function ContentAuditTab({
   const [selectedDraftId, setSelectedDraftId] = useState<string>('');
   const [activeDraft, setActiveDraft] = useState<ArticleDraft | null>(null);
   const [fixingMetric, setFixingMetric] = useState<string | null>(null);
+  const [isDownloadingReport, setIsDownloadingReport] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [warningMsg, setWarningMsg] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -272,6 +275,34 @@ export default function ContentAuditTab({
     }
   };
 
+  // -------------------------------------------------------------
+  // PDF Report Download Handler (jsPDF)
+  // -------------------------------------------------------------
+  const handleDownloadReport = () => {
+    if (!activeDraft) return;
+    setIsDownloadingReport(true);
+    setErrorMsg(null);
+
+    try {
+      generateAuditReportPdf({
+        draft: activeDraft,
+        targetDomain: targetDomain || 'ecosmarthomes.ie',
+      });
+      setSuccessMsg(
+        `Generated & downloaded PDF SEO Audit Report for "${activeDraft.title}"!`,
+      );
+      // Reward XP for auditing and downloading diagnostic reports
+      onXPUnlock(10);
+    } catch (err: any) {
+      console.error('Failed to export PDF audit report', err);
+      setErrorMsg(
+        'Failed to generate PDF report. Please verify draft content and retry.',
+      );
+    } finally {
+      setIsDownloadingReport(false);
+    }
+  };
+
   return (
     <div className="space-y-6 text-left" id="content-audit-tab">
       {/* Tab Header & Dropdown */}
@@ -287,26 +318,44 @@ export default function ContentAuditTab({
           </p>
         </div>
 
-        {/* Draft Selector */}
-        <div className="flex items-center gap-3">
-          <label className="text-xs text-slate-400 font-mono whitespace-nowrap">
-            Select Draft:
-          </label>
-          <select
-            value={selectedDraftId}
-            onChange={(e) => setSelectedDraftId(e.target.value)}
-            className="bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-[#34d399]"
-            id="draft-select-dropdown"
+        {/* Action Controls & Draft Selector */}
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={handleDownloadReport}
+            disabled={isDownloadingReport}
+            className="bg-[#34d399]/15 hover:bg-[#34d399]/25 text-[#34d399] hover:text-white border border-[#34d399]/30 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-xs active:scale-98"
+            id="download-audit-report-btn"
+            title="Download PDF Summary of SEO Readiness Checklist Results"
           >
-            {drafts.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.title.length > 35
-                  ? d.title.substring(0, 32) + '...'
-                  : d.title}{' '}
-                ({d.status})
-              </option>
-            ))}
-          </select>
+            <Download
+              size={14}
+              className={isDownloadingReport ? 'animate-bounce' : ''}
+            />
+            <span>
+              {isDownloadingReport ? 'Exporting PDF...' : 'Download Report'}
+            </span>
+          </button>
+
+          <div className="flex items-center gap-2 bg-slate-900 border border-white/10 rounded-xl px-3 py-1.5">
+            <label className="text-xs text-slate-400 font-mono whitespace-nowrap">
+              Draft:
+            </label>
+            <select
+              value={selectedDraftId}
+              onChange={(e) => setSelectedDraftId(e.target.value)}
+              className="bg-transparent text-xs text-white focus:outline-none focus:ring-0 cursor-pointer"
+              id="draft-select-dropdown"
+            >
+              {drafts.map((d) => (
+                <option key={d.id} value={d.id} className="bg-slate-900 text-white">
+                  {d.title.length > 30
+                    ? d.title.substring(0, 27) + '...'
+                    : d.title}{' '}
+                  ({d.status})
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -770,16 +819,27 @@ export default function ContentAuditTab({
 
       {/* Interactive Active Content Sandbox view */}
       <div className="glass-card p-6 text-left space-y-4">
-        <div className="flex justify-between items-center border-b border-white/10 pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
             <FileText size={18} className="text-[#34d399]" />
             <h3 className="font-semibold text-white text-base">
               Active Article Text Draft Box
             </h3>
           </div>
-          <span className="text-[10px] text-slate-400 font-mono">
-            ID: {activeDraft.id} | Last Edited: {activeDraft.date}
-          </span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleDownloadReport}
+              disabled={isDownloadingReport}
+              className="text-[11px] font-bold text-[#34d399] hover:text-[#2bc48d] flex items-center gap-1.5 transition cursor-pointer bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-lg border border-white/10"
+              title="Download SEO Readiness Checklist PDF Report"
+            >
+              <Download size={12} />
+              <span>Export PDF Report</span>
+            </button>
+            <span className="text-[10px] text-slate-400 font-mono">
+              ID: {activeDraft.id} | Last Edited: {activeDraft.date}
+            </span>
+          </div>
         </div>
 
         <div className="space-y-4">

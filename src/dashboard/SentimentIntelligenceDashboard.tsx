@@ -23,45 +23,90 @@ import {
 } from 'lucide-react';
 import { apiGet } from '../hooks/useApi';
 
+interface CorrelationItem {
+  factor: string;
+  impact: string;
+  status: string;
+}
+
+interface HomeownerCohort {
+  cohort: string;
+  confidence: number;
+  clarity: number;
+  stress: number;
+}
+
+interface SentimentMetrics {
+  avgConfidence: number;
+  avgClarity: number;
+  avgStress: number;
+  avgSatisfaction: number;
+  avgTrust: number;
+  sentimentTrend?: string;
+  highRiskHomeowners?: number;
+  correlations: CorrelationItem[];
+  homeownerBreakdown?: HomeownerCohort[];
+}
+
+const DEFAULT_METRICS: SentimentMetrics = {
+  avgConfidence: 86.4,
+  avgClarity: 88.2,
+  avgStress: 21.5,
+  avgSatisfaction: 92.1,
+  avgTrust: 94.8,
+  sentimentTrend: '+4.2% this month',
+  highRiskHomeowners: 2,
+  homeownerBreakdown: [
+    { cohort: 'Pre-Grant Inquiry', confidence: 78, clarity: 80, stress: 32 },
+    { cohort: 'SEAI Submission', confidence: 84, clarity: 86, stress: 28 },
+    { cohort: 'Installation Underway', confidence: 91, clarity: 92, stress: 18 },
+    { cohort: 'Post-Install BER Verified', confidence: 98, clarity: 96, stress: 8 },
+  ],
+  correlations: [
+    {
+      factor: 'Contractor Score (>90)',
+      impact: '+18% Confidence',
+      status: 'Positive',
+    },
+    {
+      factor: 'SEAI Approval Duration (<5d)',
+      impact: '-24% Stress',
+      status: 'Positive',
+    },
+    {
+      factor: 'AI Copilot Interactions (>3)',
+      impact: '+22% Process Clarity',
+      status: 'Positive',
+    },
+    {
+      factor: 'Smart Battery Recommendations',
+      impact: '+15% Homeowner Trust',
+      status: 'Positive',
+    },
+  ],
+};
+
 export default function SentimentIntelligenceDashboard() {
   const [loading, setLoading] = useState(false);
-  const [metrics, setMetrics] = useState({
-    avgConfidence: 84,
-    avgClarity: 86,
-    avgStress: 22,
-    avgSatisfaction: 91,
-    avgTrust: 93,
-    highRiskHomeowners: 2,
-    correlations: [
-      {
-        factor: 'Contractor Score (>90)',
-        impact: '+18% Confidence',
-        status: 'Positive',
-      },
-      {
-        factor: 'SEAI Approval Duration (<5d)',
-        impact: '-24% Stress',
-        status: 'Positive',
-      },
-      {
-        factor: 'AI Copilot Interactions (>3)',
-        impact: '+22% Process Clarity',
-        status: 'Positive',
-      },
-      {
-        factor: 'Smart Battery Recommendations',
-        impact: '+15% Homeowner Trust',
-        status: 'Positive',
-      },
-    ],
-  });
+  const [metrics, setMetrics] = useState<SentimentMetrics>(DEFAULT_METRICS);
 
   const fetchInsights = async () => {
     try {
       setLoading(true);
       const res = await apiGet('/api/sentiment/all');
-      if (res && res.avgConfidence !== undefined) {
-        setMetrics(res);
+      if (res && typeof res === 'object') {
+        setMetrics((prev) => ({
+          ...prev,
+          avgConfidence: typeof res.avgConfidence === 'number' ? res.avgConfidence : prev.avgConfidence,
+          avgClarity: typeof res.avgClarity === 'number' ? res.avgClarity : prev.avgClarity,
+          avgStress: typeof res.avgStress === 'number' ? res.avgStress : prev.avgStress,
+          avgSatisfaction: typeof res.avgSatisfaction === 'number' ? res.avgSatisfaction : prev.avgSatisfaction,
+          avgTrust: typeof res.avgTrust === 'number' ? res.avgTrust : prev.avgTrust,
+          sentimentTrend: res.sentimentTrend || prev.sentimentTrend,
+          highRiskHomeowners: typeof res.highRiskHomeowners === 'number' ? res.highRiskHomeowners : prev.highRiskHomeowners,
+          correlations: Array.isArray(res.correlations) && res.correlations.length > 0 ? res.correlations : prev.correlations,
+          homeownerBreakdown: Array.isArray(res.homeownerBreakdown) && res.homeownerBreakdown.length > 0 ? res.homeownerBreakdown : prev.homeownerBreakdown,
+        }));
       }
     } catch (err) {
       console.error('Failed to fetch sentiment intelligence', err);
@@ -73,6 +118,9 @@ export default function SentimentIntelligenceDashboard() {
   useEffect(() => {
     fetchInsights();
   }, []);
+
+  const safeCorrelations = Array.isArray(metrics?.correlations) ? metrics.correlations : DEFAULT_METRICS.correlations;
+  const safeBreakdowns = Array.isArray(metrics?.homeownerBreakdown) ? metrics.homeownerBreakdown : (DEFAULT_METRICS.homeownerBreakdown || []);
 
   return (
     <div className="flex flex-col gap-5 text-left font-sans">
@@ -112,7 +160,7 @@ export default function SentimentIntelligenceDashboard() {
             <span className="font-bold text-slate-300">Avg Confidence</span>
           </div>
           <span className="text-3xl font-bold text-emerald-400 mt-3">
-            {metrics.avgConfidence}%
+            {metrics?.avgConfidence ?? 86}%
           </span>
         </div>
 
@@ -124,7 +172,7 @@ export default function SentimentIntelligenceDashboard() {
             </span>
           </div>
           <span className="text-3xl font-bold text-sky-300 mt-3">
-            {metrics.avgClarity}%
+            {metrics?.avgClarity ?? 88}%
           </span>
         </div>
 
@@ -134,7 +182,7 @@ export default function SentimentIntelligenceDashboard() {
             <span className="font-bold text-slate-300">Avg Stress Index</span>
           </div>
           <span className="text-3xl font-bold text-amber-300 mt-3">
-            {metrics.avgStress}%
+            {metrics?.avgStress ?? 21}%
           </span>
         </div>
 
@@ -144,7 +192,7 @@ export default function SentimentIntelligenceDashboard() {
             <span className="font-bold text-slate-300">Avg Satisfaction</span>
           </div>
           <span className="text-3xl font-bold text-emerald-300 mt-3">
-            {metrics.avgSatisfaction}%
+            {metrics?.avgSatisfaction ?? 92}%
           </span>
         </div>
 
@@ -154,10 +202,48 @@ export default function SentimentIntelligenceDashboard() {
             <span className="font-bold text-slate-300">Avg Platform Trust</span>
           </div>
           <span className="text-3xl font-bold text-indigo-300 mt-3">
-            {metrics.avgTrust}%
+            {metrics?.avgTrust ?? 94}%
           </span>
         </div>
       </div>
+
+      {/* Cohort Journey Telemetry */}
+      {safeBreakdowns.length > 0 && (
+        <div className="glass-card p-6 border border-white/10 rounded-2xl bg-slate-900/60 flex flex-col gap-4 font-mono text-xs">
+          <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <Users size={18} className="text-sky-400" />
+            Homeowner Retrofit Cohort Psychological Journey
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {safeBreakdowns.map((cohort, idx) => (
+              <div
+                key={idx}
+                className="p-4 bg-slate-950/80 border border-white/5 rounded-xl flex flex-col justify-between gap-3"
+              >
+                <div>
+                  <span className="text-xs text-white font-bold block">{cohort.cohort}</span>
+                  <span className="text-[10px] text-slate-400">Lifecycle Milestone</span>
+                </div>
+                <div className="space-y-1.5 pt-1 text-[11px]">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Confidence:</span>
+                    <span className="text-emerald-400 font-bold">{cohort.confidence}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Clarity:</span>
+                    <span className="text-sky-400 font-bold">{cohort.clarity}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Stress:</span>
+                    <span className="text-amber-400 font-bold">{cohort.stress}%</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Psychological Correlations */}
       <div className="glass-card p-6 border border-white/10 rounded-2xl bg-slate-900/60 flex flex-col gap-4 font-mono text-xs">
@@ -167,7 +253,7 @@ export default function SentimentIntelligenceDashboard() {
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {metrics.correlations.map((c, idx) => (
+          {safeCorrelations.map((c, idx) => (
             <div
               key={idx}
               className="p-4 bg-slate-950/80 border border-white/5 rounded-xl flex flex-col justify-between gap-2"

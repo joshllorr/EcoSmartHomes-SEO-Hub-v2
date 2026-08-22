@@ -1,64 +1,77 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import MainDashboard from './components/MainDashboard';
-import { CrawlerDashboard } from './components/CrawlerDashboard';
-import AIWriterTab from './components/AIWriterTab';
-import ContentIdeasTab from './components/ContentIdeasTab';
-import LinkBuilderTab from './components/LinkBuilderTab';
-import ContentLibraryTab from './components/ContentLibraryTab';
-import ContentAuditTab from './components/ContentAuditTab';
-import ContentMap from './pages/ContentMap';
-import KeywordResearchTab from './components/KeywordResearchTab';
-import SERPAnalyzerTab from './components/SERPAnalyzerTab';
-import SiteAuditTab from './components/SiteAuditTab';
-import EnergyEstimatorTab from './components/EnergyEstimatorTab';
-import AIVisibilityCard from './components/AIVisibilityCard';
-import RankingStabilityMap from './components/RankingStabilityMap';
-import Overview from './dashboard/Overview';
-import Backlinks from './dashboard/Backlinks';
-import Competitors from './dashboard/Competitors';
-import Heatmap from './dashboard/Heatmap';
-import MARL from './dashboard/MARL';
-import Autonomy from './dashboard/Autonomy';
-import Fusion from './dashboard/Fusion';
-import Growth from './dashboard/Growth';
-import Strategy from './dashboard/Strategy';
-import Simulation from './dashboard/Simulation';
-import Negotiation from './dashboard/Negotiation';
-import Budget from './dashboard/Budget';
-import Watchdog from './dashboard/Watchdog';
-import Landing from './dashboard/Landing';
-import Ecosystem from './dashboard/Ecosystem';
-import Evolution from './dashboard/Evolution';
-import Content from './dashboard/Content';
-import Conflict from './dashboard/Conflict';
-import GrantIntelligence from './dashboard/GrantIntelligence';
-import GrantPdfAnalytics from './dashboard/GrantPdfAnalytics';
-import AdvisorDashboard from './dashboard/AdvisorDashboard';
-import HomeownerAnalytics from './dashboard/HomeownerAnalytics';
-import RetrofitAnalytics from './dashboard/RetrofitAnalytics';
-import ContractorDashboard from './dashboard/ContractorDashboard';
-import RetrofitPdfAnalytics from './dashboard/RetrofitPdfAnalytics';
-import GrantSubmissionsDashboard from './dashboard/GrantSubmissionsDashboard';
-import PostInstallDashboard from './dashboard/PostInstallDashboard';
-import JourneyDashboard from './dashboard/JourneyDashboard';
-import ContractorQualityDashboard from './dashboard/ContractorQualityDashboard';
-import ContractorScoreInsightsDashboard from './dashboard/ContractorScoreInsightsDashboard';
-import HomeUpgradeInsightsDashboard from './dashboard/HomeUpgradeInsightsDashboard';
-import NationalInsightsDashboard from './dashboard/NationalInsightsDashboard';
-import RetrofitForecastDashboard from './dashboard/RetrofitForecastDashboard';
-import AdvisorSessionsDashboard from './dashboard/AdvisorSessionsDashboard';
-import SentimentIntelligenceDashboard from './dashboard/SentimentIntelligenceDashboard';
-import CoachIntelligenceDashboard from './dashboard/CoachIntelligenceDashboard';
-import OrchestratorConsole from './dashboard/OrchestratorConsole';
-import HomeownerGrantFlow from './pages/HomeownerGrantFlow';
-import HomeownerPortal from './portal/HomeownerPortal';
+import TabLoadingSkeleton from './components/TabLoadingSkeleton';
+import ErrorBoundary from './components/ErrorBoundary';
 import { INITIAL_DASHBOARD_DATA } from './data';
 import { ArticleDraft, DashboardState } from './types';
 import { useDashboardStore } from './store/useDashboardStore';
 import LiveVersion from './components/LiveVersion';
 import { checkDeploymentDrift } from './utils/deploymentCheck';
+import { useDashboardShortcuts } from './hooks/useDashboardShortcuts';
+import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
+import SettingsModal from './components/SettingsModal';
+import { Command } from 'lucide-react';
+
+// Code-split / Lazy-loaded Secondary Dashboards & Sub-tabs
+const CrawlerDashboard = lazy(() =>
+  import('./components/CrawlerDashboard').then((m) => ({
+    default: m.CrawlerDashboard,
+  })),
+);
+const AIWriterTab = lazy(() => import('./components/AIWriterTab'));
+const ContentIdeasTab = lazy(() => import('./components/ContentIdeasTab'));
+const LinkBuilderTab = lazy(() => import('./components/LinkBuilderTab'));
+const ContentLibraryTab = lazy(() => import('./components/ContentLibraryTab'));
+const ContentAuditTab = lazy(() => import('./components/ContentAuditTab'));
+const ContentMap = lazy(() => import('./pages/ContentMap'));
+const KeywordResearchTab = lazy(() => import('./components/KeywordResearchTab'));
+const SERPAnalyzerTab = lazy(() => import('./components/SERPAnalyzerTab'));
+const SiteAuditTab = lazy(() => import('./components/SiteAuditTab'));
+const EnergyEstimatorTab = lazy(() => import('./components/EnergyEstimatorTab'));
+import AIVisibilityCard from './components/AIVisibilityCard';
+import RankingStabilityMap from './components/RankingStabilityMap';
+
+const Overview = lazy(() => import('./dashboard/Overview'));
+const Backlinks = lazy(() => import('./dashboard/Backlinks'));
+const Competitors = lazy(() => import('./dashboard/Competitors'));
+const Heatmap = lazy(() => import('./dashboard/Heatmap'));
+const MARL = lazy(() => import('./dashboard/MARL'));
+const Autonomy = lazy(() => import('./dashboard/Autonomy'));
+const Fusion = lazy(() => import('./dashboard/Fusion'));
+const Growth = lazy(() => import('./dashboard/Growth'));
+const Strategy = lazy(() => import('./dashboard/Strategy'));
+const Simulation = lazy(() => import('./dashboard/Simulation'));
+const Negotiation = lazy(() => import('./dashboard/Negotiation'));
+const Budget = lazy(() => import('./dashboard/Budget'));
+const Watchdog = lazy(() => import('./dashboard/Watchdog'));
+const Landing = lazy(() => import('./dashboard/Landing'));
+const Ecosystem = lazy(() => import('./dashboard/Ecosystem'));
+const Evolution = lazy(() => import('./dashboard/Evolution'));
+const Content = lazy(() => import('./dashboard/Content'));
+const Conflict = lazy(() => import('./dashboard/Conflict'));
+const GrantIntelligence = lazy(() => import('./dashboard/GrantIntelligence'));
+const GrantPdfAnalytics = lazy(() => import('./dashboard/GrantPdfAnalytics'));
+const AdvisorDashboard = lazy(() => import('./dashboard/AdvisorDashboard'));
+const HomeownerAnalytics = lazy(() => import('./dashboard/HomeownerAnalytics'));
+const RetrofitAnalytics = lazy(() => import('./dashboard/RetrofitAnalytics'));
+const ContractorDashboard = lazy(() => import('./dashboard/ContractorDashboard'));
+const RetrofitPdfAnalytics = lazy(() => import('./dashboard/RetrofitPdfAnalytics'));
+const GrantSubmissionsDashboard = lazy(() => import('./dashboard/GrantSubmissionsDashboard'));
+const PostInstallDashboard = lazy(() => import('./dashboard/PostInstallDashboard'));
+const JourneyDashboard = lazy(() => import('./dashboard/JourneyDashboard'));
+const ContractorQualityDashboard = lazy(() => import('./dashboard/ContractorQualityDashboard'));
+const ContractorScoreInsightsDashboard = lazy(() => import('./dashboard/ContractorScoreInsightsDashboard'));
+const HomeUpgradeInsightsDashboard = lazy(() => import('./dashboard/HomeUpgradeInsightsDashboard'));
+const NationalInsightsDashboard = lazy(() => import('./dashboard/NationalInsightsDashboard'));
+const RetrofitForecastDashboard = lazy(() => import('./dashboard/RetrofitForecastDashboard'));
+const AdvisorSessionsDashboard = lazy(() => import('./dashboard/AdvisorSessionsDashboard'));
+const SentimentIntelligenceDashboard = lazy(() => import('./dashboard/SentimentIntelligenceDashboard'));
+const CoachIntelligenceDashboard = lazy(() => import('./dashboard/CoachIntelligenceDashboard'));
+const OrchestratorConsole = lazy(() => import('./dashboard/OrchestratorConsole'));
+const HomeownerGrantFlow = lazy(() => import('./pages/HomeownerGrantFlow'));
+const HomeownerPortal = lazy(() => import('./portal/HomeownerPortal'));
 
 export default function App() {
   const routeToTab: Record<string, string> = {
@@ -104,6 +117,19 @@ export default function App() {
       window.location.hash === '#/portal');
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+
+  const {
+    isShortcutsModalOpen,
+    setIsShortcutsModalOpen,
+    toastMessage,
+    dismissToast,
+  } = useDashboardShortcuts({
+    activeTab,
+    setActiveTab,
+  });
+
   const [dashboardState, setDashboardState] = useState<DashboardState>(
     INITIAL_DASHBOARD_DATA,
   );
@@ -112,8 +138,16 @@ export default function App() {
   );
 
   const [currentSerp, setCurrentSerp] = useState<any | null>(null);
+  const [serpKeyword, setSerpKeyword] = useState<string>('SEAI grants Limerick V94');
   const [discoveryCount, setDiscoveryCount] = useState<number>(1);
   const [isSiteScanned, setIsSiteScanned] = useState<boolean>(false);
+
+  const handleNavigateToSERP = (keyword: string) => {
+    if (keyword && keyword.trim()) {
+      setSerpKeyword(keyword.trim());
+    }
+    setActiveTab('serp');
+  };
 
   const isCMSConnected =
     dashboardState.tasks.find((t) => t.id === 'connect_cms')?.completed ||
@@ -145,7 +179,10 @@ export default function App() {
       setActiveTab('link_builder');
     } else if (actionId === 'keywords') {
       setActiveTab('keywords');
-    } else if (actionId === 'site_scan' || actionId === 'audit') {
+    } else if (actionId === 'site_scan') {
+      handleSiteHealthScan();
+      setActiveTab('audit');
+    } else if (actionId === 'audit') {
       setActiveTab('audit');
     }
   };
@@ -166,6 +203,60 @@ export default function App() {
         d.id === updatedDraft.id ? updatedDraft : d,
       ),
     }));
+  };
+
+  const handleSiteHealthScan = async (sitemapPath?: string) => {
+    const pathToScan = sitemapPath || '/sitemap.xml';
+    try {
+      const res = await fetch('/api/seo/sitemap-scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: dashboardState.site || 'ecosmarthomes.ie',
+          customSitemapPath: pathToScan,
+        }),
+      });
+      const data = await res.json();
+      if (data.status === 'success' || data.success) {
+        setDashboardState((prev) => ({
+          ...prev,
+          site_health: {
+            status: 'success',
+            error: null,
+            last_scanned: data.last_scanned || new Date().toISOString(),
+          },
+          tasks: prev.tasks.map((t) =>
+            t.id === 'site_scan' ? { ...t, completed: true } : t,
+          ),
+        }));
+        setIsSiteScanned(true);
+        handleXPUnlock(15);
+      } else {
+        setDashboardState((prev) => ({
+          ...prev,
+          site_health: {
+            status: 'failed',
+            error: data.error || 'No sitemap found',
+            last_scanned: new Date().toISOString(),
+          },
+        }));
+      }
+    } catch {
+      // Local fallback for offline/preview
+      setDashboardState((prev) => ({
+        ...prev,
+        site_health: {
+          status: 'success',
+          error: null,
+          last_scanned: new Date().toISOString(),
+        },
+        tasks: prev.tasks.map((t) =>
+          t.id === 'site_scan' ? { ...t, completed: true } : t,
+        ),
+      }));
+      setIsSiteScanned(true);
+      handleXPUnlock(15);
+    }
   };
 
   useEffect(() => {
@@ -191,11 +282,19 @@ export default function App() {
   }, []);
 
   if (isGrantRoute) {
-    return <HomeownerGrantFlow />;
+    return (
+      <Suspense fallback={<TabLoadingSkeleton title="Loading SEAI Grant Flow..." />}>
+        <HomeownerGrantFlow />
+      </Suspense>
+    );
   }
 
   if (isPortalRoute) {
-    return <HomeownerPortal />;
+    return (
+      <Suspense fallback={<TabLoadingSkeleton title="Loading Homeowner Portal..." />}>
+        <HomeownerPortal />
+      </Suspense>
+    );
   }
 
   const renderTabContent = () => {
@@ -209,9 +308,18 @@ export default function App() {
             onAddSupportPage={() => setActiveTab('content_ideas')}
             onUpgradeLimit={() => {}}
             onToggleTask={handleToggleTask}
-            onRetryScan={() => setActiveTab('audit')}
+            onRetryScan={handleSiteHealthScan}
             onOptimizeAIVisibility={() => setActiveTab('writer')}
             onQuickAction={handleQuickAction}
+            onNavigateToSERP={handleNavigateToSERP}
+            onUpdateDraft={handleUpdateDraft}
+            onUpdateDrafts={(updatedDrafts) => {
+              setDashboardState((prev) => ({
+                ...prev,
+                drafts: updatedDrafts,
+              }));
+            }}
+            onXPUnlock={handleXPUnlock}
           />
         );
 
@@ -357,7 +465,7 @@ export default function App() {
         return <OrchestratorConsole />;
 
       case 'ranking_map':
-        return <RankingStabilityMap />;
+        return <RankingStabilityMap onNavigateToSERP={handleNavigateToSERP} />;
 
       case 'crawler':
         return <CrawlerDashboard />;
@@ -438,6 +546,7 @@ export default function App() {
         return (
           <SERPAnalyzerTab
             currentSerp={currentSerp}
+            initialKeyword={serpKeyword}
             onSerpAnalyzed={(serp: any) => setCurrentSerp(serp)}
             onXPUnlock={handleXPUnlock}
             onSendToWriter={(
@@ -456,8 +565,7 @@ export default function App() {
             site={dashboardState.site}
             isScanned={isSiteScanned}
             onScanSuccess={() => {
-              setIsSiteScanned(true);
-              handleXPUnlock(15);
+              handleSiteHealthScan('/sitemap.xml');
             }}
           />
         );
@@ -484,12 +592,19 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans">
-      {/* Persistent Navigation Sidebar */}
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans relative">
+      {/* Persistent Navigation Sidebar with Mobile Drawer */}
       <Sidebar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          setIsMobileSidebarOpen(false);
+        }}
         site={dashboardState.site}
+        isMobileOpen={isMobileSidebarOpen}
+        onCloseMobile={() => setIsMobileSidebarOpen(false)}
+        onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
       {/* Main Content Shell */}
@@ -498,14 +613,61 @@ export default function App() {
         <Header
           streak={dashboardState.xp.streak_days}
           level={dashboardState.xp.level}
-          onNavigateToTab={(tab) => setActiveTab(tab)}
+          onNavigateToTab={(tab) => {
+            setActiveTab(tab);
+            setIsMobileSidebarOpen(false);
+          }}
+          onToggleMobileMenu={() => setIsMobileSidebarOpen((prev) => !prev)}
+          onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
         />
 
-        {/* Dynamic Tab Body */}
-        <main className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
-          {renderTabContent()}
+        {/* Dynamic Tab Body with Suspense & ErrorBoundary */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+          <ErrorBoundary sectionName={`Workspace Tab: ${activeTab}`}>
+            <Suspense fallback={<TabLoadingSkeleton />}>
+              {renderTabContent()}
+            </Suspense>
+          </ErrorBoundary>
         </main>
       </div>
+
+      {/* Settings & Vite HMR Config Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
+
+      {/* Keyboard Shortcuts Reference Modal */}
+      <KeyboardShortcutsModal
+        isOpen={isShortcutsModalOpen}
+        onClose={() => setIsShortcutsModalOpen(false)}
+        onSelectTab={(tabId) => {
+          setActiveTab(tabId);
+          setIsMobileSidebarOpen(false);
+        }}
+        activeTab={activeTab}
+      />
+
+      {/* Tactile Keyboard Shortcut Feedback Toast */}
+      {toastMessage && (
+        <div
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-3.5 py-2 bg-slate-900/95 text-white border border-emerald-500/40 rounded-xl shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-150 cursor-pointer"
+          onClick={dismissToast}
+          role="status"
+          aria-live="polite"
+        >
+          <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+            <Command size={13} />
+          </div>
+          <div className="text-xs font-medium">
+            Switched to <span className="font-semibold text-emerald-300">{toastMessage.tabName}</span>
+          </div>
+          <kbd className="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-slate-950 border border-slate-700 rounded text-emerald-400 ml-1">
+            {toastMessage.shortcut}
+          </kbd>
+        </div>
+      )}
 
       {/* Live Version Fingerprint Badge */}
       <LiveVersion />

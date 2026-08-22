@@ -1,17 +1,34 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import * as LucideIcons from 'lucide-react';
+import { PRIMARY_DASHBOARD_SHORTCUTS } from '../hooks/useDashboardShortcuts';
 
 interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   site: string;
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
+  onOpenShortcuts?: () => void;
+  onOpenSettings?: () => void;
 }
+
+const SHORTCUT_MAP: Record<string, string> = PRIMARY_DASHBOARD_SHORTCUTS.reduce(
+  (acc, item) => {
+    acc[item.id] = item.key;
+    return acc;
+  },
+  {} as Record<string, string>,
+);
 
 export default function Sidebar({
   activeTab,
   setActiveTab,
   site,
+  isMobileOpen = false,
+  onCloseMobile,
+  onOpenShortcuts,
+  onOpenSettings,
 }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -307,40 +324,75 @@ export default function Sidebar({
       }
     }
     setActiveTab(item.id);
+    if (onCloseMobile) {
+      onCloseMobile();
+    }
   };
 
   return (
-    <div
-      className={`glass-sidebar text-slate-100 flex flex-col transition-all duration-300 border-r border-white/10 ${
-        collapsed ? 'w-16' : 'w-64 sm:w-72'
-      } h-screen max-h-screen relative overflow-hidden shrink-0 z-30`}
-      id="sidebar-container"
-    >
-      {/* Top Brand Block */}
-      <div className="p-4 border-b border-white/10 flex items-center justify-between shrink-0">
-        {!collapsed && (
-          <div className="flex flex-col">
-            <span className="font-display font-bold text-lg text-[#34d399] tracking-tight whitespace-nowrap">
-              EcoSmart SEO
-            </span>
-            <span className="text-xs text-slate-400 font-mono tracking-tight font-medium">
-              {site}
-            </span>
-          </div>
-        )}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-[#34d399] transition cursor-pointer"
-          id="toggle-sidebar"
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? (
-            <LucideIcons.Menu size={20} />
-          ) : (
-            <LucideIcons.X size={20} />
+    <>
+      {/* Mobile Drawer Backdrop Overlay */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-40 md:hidden transition-opacity duration-200"
+          onClick={onCloseMobile}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Main Sidebar Shell */}
+      <aside
+        className={`glass-sidebar text-slate-100 flex flex-col transition-all duration-300 border-r border-white/10 ${
+          collapsed ? 'md:w-16' : 'md:w-64 lg:w-72'
+        } ${
+          isMobileOpen
+            ? 'fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] translate-x-0 shadow-2xl'
+            : 'fixed inset-y-0 left-0 z-50 -translate-x-full md:translate-x-0 md:relative md:z-30'
+        } h-screen max-h-screen overflow-hidden shrink-0`}
+        id="sidebar-container"
+        aria-label="Sidebar Navigation"
+      >
+        {/* Top Brand Block */}
+        <div className="p-4 border-b border-white/10 flex items-center justify-between shrink-0">
+          {(!collapsed || isMobileOpen) && (
+            <div className="flex flex-col">
+              <span className="font-display font-bold text-lg text-[#34d399] tracking-tight whitespace-nowrap">
+                EcoSmart SEO
+              </span>
+              <span className="text-xs text-slate-400 font-mono tracking-tight font-medium">
+                {site}
+              </span>
+            </div>
           )}
-        </button>
-      </div>
+
+          <div className="flex items-center gap-1">
+            {/* Desktop Collapse Toggle */}
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="hidden md:flex p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-[#34d399] transition cursor-pointer"
+              id="toggle-sidebar"
+              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {collapsed ? (
+                <LucideIcons.Menu size={20} />
+              ) : (
+                <LucideIcons.X size={20} />
+              )}
+            </button>
+
+            {/* Mobile Close Button */}
+            {onCloseMobile && (
+              <button
+                onClick={onCloseMobile}
+                className="md:hidden p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition cursor-pointer"
+                title="Close Menu"
+                aria-label="Close navigation menu"
+              >
+                <LucideIcons.X size={20} />
+              </button>
+            )}
+          </div>
+        </div>
 
       {!collapsed && (
         <div className="p-3 border-b border-white/10 space-y-2 shrink-0 bg-black/20">
@@ -446,6 +498,7 @@ export default function Sidebar({
                   const isActive = item.path
                     ? location.pathname === item.path || activeTab === item.id
                     : activeTab === item.id;
+                  const shortcutKey = SHORTCUT_MAP[item.id];
 
                   return (
                     <button
@@ -457,6 +510,11 @@ export default function Sidebar({
                           : 'text-slate-400 hover:bg-white/5 hover:text-white'
                       }`}
                       id={`nav-${item.id}`}
+                      title={
+                        shortcutKey
+                          ? `${item.name} (Ctrl+${shortcutKey} / ⌘${shortcutKey})`
+                          : item.name
+                      }
                     >
                       <Icon
                         size={16}
@@ -467,7 +525,14 @@ export default function Sidebar({
                         }`}
                       />
                       {!collapsed && (
-                        <span className="truncate text-left">{item.name}</span>
+                        <span className="truncate text-left flex-1">
+                          {item.name}
+                        </span>
+                      )}
+                      {!collapsed && shortcutKey && (
+                        <kbd className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-white/5 group-hover:bg-white/10 text-slate-500 group-hover:text-slate-300 border border-white/10 shadow-2xs shrink-0">
+                          ^{shortcutKey}
+                        </kbd>
                       )}
                     </button>
                   );
@@ -477,8 +542,61 @@ export default function Sidebar({
           })}
       </nav>
 
-      {/* Footer Branding Info */}
+      {/* Footer Branding Info & Shortcut Trigger */}
       <div className="p-3 border-t border-white/10 space-y-2 shrink-0 bg-black/30">
+        {/* Settings Button */}
+        {onOpenSettings && (
+          <button
+            onClick={onOpenSettings}
+            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs transition cursor-pointer ${
+              collapsed ? 'justify-center' : ''
+            }`}
+            title="Platform Settings & Vite HMR"
+            id="sidebar-settings-btn"
+          >
+            <div className="flex items-center gap-2">
+              <LucideIcons.Settings
+                size={14}
+                className="text-[#34d399] shrink-0"
+              />
+              {!collapsed && (
+                <span className="text-[11px] font-medium">Settings & HMR</span>
+              )}
+            </div>
+            {!collapsed && (
+              <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-bold">
+                Config
+              </span>
+            )}
+          </button>
+        )}
+
+        {onOpenShortcuts && (
+          <button
+            onClick={onOpenShortcuts}
+            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs transition cursor-pointer ${
+              collapsed ? 'justify-center' : ''
+            }`}
+            title="Keyboard Shortcuts (? or Ctrl+1..9)"
+            id="sidebar-shortcuts-btn"
+          >
+            <div className="flex items-center gap-2">
+              <LucideIcons.Keyboard
+                size={14}
+                className="text-emerald-400 shrink-0"
+              />
+              {!collapsed && (
+                <span className="text-[11px] font-medium">Shortcuts</span>
+              )}
+            </div>
+            {!collapsed && (
+              <kbd className="px-1.5 py-0.2 text-[10px] font-mono bg-black/40 border border-white/10 rounded text-slate-400">
+                ?
+              </kbd>
+            )}
+          </button>
+        )}
+
         {!collapsed && (
           <div className="bg-white/5 p-2.5 rounded-lg border border-white/10 text-center">
             <div className="flex items-center gap-1.5 justify-center mb-0.5 text-[#34d399]">
@@ -493,6 +611,7 @@ export default function Sidebar({
           </div>
         )}
       </div>
-    </div>
-  );
+    </aside>
+  </>
+);
 }

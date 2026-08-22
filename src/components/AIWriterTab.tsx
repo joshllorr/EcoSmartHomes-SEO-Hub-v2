@@ -21,12 +21,17 @@ import {
   Server,
   Save,
   Trash2,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { ArticleDraft } from '../types';
+import { ArticleDraft, FeaturedImageMeta } from '../types';
 import { generateArticleWithGemini } from '../utils/generateWithGemini';
 import { generateInternalLinks } from '../utils/generateInternalLinks';
 import InternalLinks from './Linker/InternalLinks';
+import ContentReadinessChecklist from './ContentReadinessChecklist';
+import ReadabilityTimeWidget from './ReadabilityTimeWidget';
+import AutoLinkerWidget from './AutoLinkerWidget';
+import ImageGeneratorWidget from './ImageGeneratorWidget';
 import { useDashboardStore } from '../store/useDashboardStore';
 
 interface AIWriterTabProps {
@@ -106,6 +111,8 @@ export default function AIWriterTab({
   const [localTitle, setLocalTitle] = useState('');
   const [localContent, setLocalContent] = useState('');
   const [localTone, setLocalTone] = useState('Professional');
+  const [localMetaDescription, setLocalMetaDescription] = useState('');
+  const [localKeywords, setLocalKeywords] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
   const [sources, setSources] = useState<{ title: string; uri: string }[]>([]);
@@ -134,6 +141,8 @@ export default function AIWriterTab({
       title: localTitle,
       content: localContent,
       tone: localTone,
+      metaDescription: localMetaDescription,
+      keywords: localKeywords,
       wordCount: updatedWordCount,
       date: new Date().toLocaleDateString('en-GB'),
     };
@@ -269,14 +278,24 @@ export default function AIWriterTab({
   useEffect(() => {
     if (activeDraft) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLocalTitle(activeDraft.title);
-      setLocalContent(activeDraft.content);
+      setLocalTitle(activeDraft.title || '');
+      setLocalContent(activeDraft.content || '');
       setLocalTone(activeDraft.tone || 'Professional');
+      setLocalMetaDescription(activeDraft.metaDescription || '');
+      setLocalKeywords(
+        Array.isArray(activeDraft.keywords) && activeDraft.keywords.length > 0
+          ? activeDraft.keywords
+          : activeDraft.topic
+          ? [activeDraft.topic]
+          : [],
+      );
       setPublishedSuccess(activeDraft.status === 'Published');
     } else {
       setLocalTitle('');
       setLocalContent('');
       setLocalTone('Professional');
+      setLocalMetaDescription('');
+      setLocalKeywords([]);
       setPublishedSuccess(false);
     }
   }, [activeDraftId]);
@@ -291,7 +310,9 @@ export default function AIWriterTab({
         currentDraft &&
         (localTitle !== currentDraft.title ||
           localContent !== currentDraft.content ||
-          localTone !== (currentDraft.tone || 'Professional'))
+          localTone !== (currentDraft.tone || 'Professional') ||
+          localMetaDescription !== (currentDraft.metaDescription || '') ||
+          JSON.stringify(localKeywords) !== JSON.stringify(currentDraft.keywords || []))
       ) {
         setIsSaving(true);
         onUpdateDraft({
@@ -299,6 +320,8 @@ export default function AIWriterTab({
           title: localTitle,
           content: localContent,
           tone: localTone,
+          metaDescription: localMetaDescription,
+          keywords: localKeywords,
           wordCount: localContent.split(/\s+/).filter(Boolean).length,
         });
         setTimeout(() => {
@@ -313,6 +336,8 @@ export default function AIWriterTab({
     localTitle,
     localContent,
     localTone,
+    localMetaDescription,
+    localKeywords,
     drafts,
     onUpdateDraft,
   ]);
@@ -1379,6 +1404,36 @@ export default function AIWriterTab({
 
                 <div className="flex flex-wrap items-center gap-2">
                   <button
+                    onClick={() => {
+                      const el = document.getElementById('image-generator-section');
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-500/40 text-emerald-200 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                    title="Jump to Imagen Featured Image Studio"
+                    id="toolbar-image-generator-btn"
+                  >
+                    <ImageIcon size={13} className="text-[#34d399]" />
+                    <span>Featured Image</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const el = document.getElementById('auto-linker-section');
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-200 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                    title="Jump to Semantic Auto-Linker"
+                    id="toolbar-auto-linker-btn"
+                  >
+                    <Zap size={13} className="text-indigo-400 fill-indigo-400/20" />
+                    <span>Auto-Linker</span>
+                  </button>
+
+                  <button
                     onClick={handleGenerateInternalLinks}
                     disabled={isGeneratingLinks}
                     className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-600/20"
@@ -1567,6 +1622,73 @@ export default function AIWriterTab({
                     <span>Save as PDF</span>
                   </button>
                 </div>
+              </div>
+
+              {/* Readability & Time Widget (Calculates estimated reading time & Flesch-Kincaid grade level accessibility score) */}
+              <div className="p-5 border-b border-white/10">
+                <ReadabilityTimeWidget content={localContent} />
+              </div>
+
+              {/* Content Readiness Checklist (SEO Best Practices: Title, Meta, Keywords, Readability) */}
+              <ContentReadinessChecklist
+                title={localTitle}
+                content={localContent}
+                metaDescription={localMetaDescription}
+                keywords={localKeywords}
+                siteUrl={site || 'ecosmarthomes.ie'}
+                tone={localTone}
+                onUpdateMetaDescription={(newMeta) => setLocalMetaDescription(newMeta)}
+                onUpdateKeywords={(newKw) => setLocalKeywords(newKw)}
+                onApplyTitleSuggestion={(suggestedTitle) => setLocalTitle(suggestedTitle)}
+                onQuickFixApplied={({ title: updatedTitle, metaDescription: updatedMeta }) => {
+                  setLocalTitle(updatedTitle);
+                  setLocalMetaDescription(updatedMeta);
+                  if (onXPUnlock) onXPUnlock(5);
+                }}
+              />
+
+              {/* Semantic Auto-Linker Widget (Scans draft text & suggests internal links to content library with 1-click insertion) */}
+              <div className="p-5 border-t border-white/10" id="auto-linker-section">
+                <AutoLinkerWidget
+                  content={localContent}
+                  onUpdateContent={(newContent) => {
+                    setLocalContent(newContent);
+                    setIsSaving(true);
+                    setTimeout(() => setIsSaving(false), 500);
+                  }}
+                  siteUrl={site || 'ecosmarthomes.ie'}
+                  currentDraftId={activeDraftId || undefined}
+                  currentTitle={localTitle}
+                  drafts={drafts}
+                  onXPUnlock={onXPUnlock}
+                />
+              </div>
+
+              {/* Imagen Blog Featured Image Studio (AI-powered SEO blog hero image generator based on title & keywords) */}
+              <div className="p-5 border-t border-white/10" id="image-generator-section">
+                <ImageGeneratorWidget
+                  articleTitle={localTitle}
+                  articleKeywords={localKeywords}
+                  articleTopic={activeDraft?.topic || localTitle}
+                  articleTone={localTone}
+                  currentContent={localContent}
+                  featuredImage={activeDraft?.featuredImage}
+                  siteUrl={site || 'ecosmarthomes.ie'}
+                  onUpdateContent={(newContent) => {
+                    setLocalContent(newContent);
+                    setIsSaving(true);
+                    setTimeout(() => setIsSaving(false), 500);
+                  }}
+                  onUpdateFeaturedImage={(imageMeta: FeaturedImageMeta) => {
+                    if (activeDraft) {
+                      onUpdateDraft({
+                        ...activeDraft,
+                        featuredImage: imageMeta,
+                      });
+                    }
+                  }}
+                  onXPUnlock={onXPUnlock}
+                />
               </div>
 
               {/* Internal Link Suggestions */}

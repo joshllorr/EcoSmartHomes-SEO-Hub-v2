@@ -43,8 +43,12 @@ export default function CoachIntelligenceDashboard() {
     try {
       setLoading(true);
       const res = await apiGet('/api/coach/all');
-      if (res && res.totalNudgesSent !== undefined) {
-        setMetrics(res);
+      if (res && typeof res === 'object') {
+        setMetrics((prev) => ({
+          ...prev,
+          ...res,
+          toneBreakdown: Array.isArray(res.toneBreakdown) && res.toneBreakdown.length > 0 ? res.toneBreakdown : prev.toneBreakdown,
+        }));
       }
     } catch (err) {
       console.error('Failed to fetch coach intelligence', err);
@@ -142,7 +146,7 @@ export default function CoachIntelligenceDashboard() {
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {metrics.toneBreakdown.map((t, idx) => (
+          {(metrics?.toneBreakdown || []).map((t, idx) => (
             <div
               key={idx}
               className="p-4 bg-slate-950/80 border border-white/5 rounded-xl flex flex-col justify-between gap-2"

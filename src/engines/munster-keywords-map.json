@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "project": "EcoSmartHomes SEO Hub v2",
   "market": "Ireland (Munster Region Focus)",
   "currency": "EUR",
@@ -135,4 +136,48 @@
       "how to get a house from ber e1 to b2 limerick"
     ]
   }
+=======
+  "region": "Munster",
+  "country": "Ireland",
+  "updatedAt": "2026-08-22",
+  "clusters": [
+    {
+      "clusterId": "seai-grants-advisory",
+      "coreTopic": "SEAI Technical Assessment & Grant Repayment",
+      "geographicModifiers": {
+        "tier1Cities": ["Cork", "Limerick", "Waterford"],
+        "tier2Towns": ["Cashel", "Midleton", "Kenmare", "Fermoy", "Bandon", "Killarney", "Tralee", "Clonmel", "Dungarvan", "Ennis", "Mallow", "Kinsale"]
+      },
+      "keywords": [
+        { "phrase": "seai technical advisor fee repayment", "intent": "commercial_transactional", "targetAudience": "Irish homeowners" },
+        { "phrase": "low interest retrofit loans ireland eligibility", "intent": "informational_commercial", "targetAudience": "Irish property owners" },
+        { "phrase": "one stop shop seai grant calculator", "intent": "transactional", "targetAudience": "Munster homeowners" }
+      ]
+    },
+    {
+      "clusterId": "heat-pumps-munster",
+      "coreTopic": "Air to Water Heat Pump Installation & Grants",
+      "geographicModifiers": {
+        "tier1Cities": ["Cork", "Limerick", "Waterford"],
+        "tier2Towns": ["Cashel", "Midleton", "Kenmare", "Fermoy", "Bandon", "Killarney", "Tralee", "Clonmel", "Dungarvan", "Ennis"]
+      },
+      "keywords": [
+        { "phrase": "air to water heat pump grant seai", "intent": "commercial", "targetAudience": "Irish homeowners" },
+        { "phrase": "heat pump running costs vs oil boiler", "intent": "informational", "targetAudience": "Rural Munster homeowners" }
+      ]
+    },
+    {
+      "clusterId": "insulation-ber-munster",
+      "coreTopic": "Deep Retrofit Insulation & BER Uplift",
+      "geographicModifiers": {
+        "tier1Cities": ["Cork", "Limerick", "Waterford"],
+        "tier2Towns": ["Cashel", "Midleton", "Kenmare", "Fermoy", "Bandon", "Killarney", "Tralee", "Clonmel", "Dungarvan", "Ennis"]
+      },
+      "keywords": [
+        { "phrase": "external wall insulation grant munster", "intent": "commercial_transactional", "targetAudience": "Homeowners" },
+        { "phrase": "ber assessment a2 target checklist", "intent": "informational", "targetAudience": "Property renovators" }
+      ]
+    }
+  ]
+>>>>>>> 4db0a330e215240e901521ca8c5f917725d70480
 }
