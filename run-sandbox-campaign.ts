@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import { executeProgrammaticMunsterCampaign } from './src/engines/marlCoordinator.ts';
-executeProgrammaticMunsterCampaign().catch(console.error);
-=======
 import fs from 'fs';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -19,9 +15,10 @@ import { executeProgrammaticMunsterCampaign } from './src/engines/marlCoordinato
 
 executeProgrammaticMunsterCampaign({ limit: 10 })
   .then((res) => {
-    console.log(`✅ Sandbox campaign finished successfully. Generated ${res.generatedCount} pages.`);
+    console.log(
+      `✅ Sandbox campaign finished successfully. Generated ${res.generatedCount} pages.`,
+    );
   })
   .catch((err) => {
     console.error('❌ Sandbox campaign execution error:', err);
   });
->>>>>>> 4db0a330e215240e901521ca8c5f917725d70480

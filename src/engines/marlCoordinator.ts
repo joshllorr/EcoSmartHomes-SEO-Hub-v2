@@ -1,13 +1,4 @@
 import { GoogleGenAI } from '@google/genai';
-<<<<<<< HEAD
-import { GoogleGenAI } from '@google/genai';
-import fs from 'fs';
-import path from 'path';
-const ai = new GoogleGenAI({ apiKey: (process.env.GEMINI_API_KEY || '').trim() });
-const MATRIX_PATH = path.join(process.cwd(), 'src', 'engines', 'munster-keywords-map.json');
-const MATRIX_PATH = path.join(process.cwd(), 'src', 'engines', 'munster-keywords-map.json');
-export async function executeProgrammaticMunsterCampaign() {
-=======
 import fs from 'fs';
 import path from 'path';
 
@@ -15,7 +6,12 @@ import path from 'path';
 const apiKeyString = (process.env.GEMINI_API_KEY || '').trim();
 const ai = new GoogleGenAI(apiKeyString ? { apiKey: apiKeyString } : {});
 
-const MATRIX_PATH = path.join(process.cwd(), 'src', 'engines', 'munster-keywords-map.json');
+const MATRIX_PATH = path.join(
+  process.cwd(),
+  'src',
+  'engines',
+  'munster-keywords-map.json',
+);
 const OUTPUT_DIR = path.join(process.cwd(), 'content', 'pages');
 
 export interface ProgrammaticGenerationOptions {
@@ -27,7 +23,10 @@ export interface ProgrammaticGenerationOptions {
 /**
  * Builds the dynamic interactive SEAI Grant Calculator widget HTML/Markdown embed
  */
-export function renderGrantCalculatorWidget(location: string, topic: string): string {
+export function renderGrantCalculatorWidget(
+  location: string,
+  topic: string,
+): string {
   return `
 <!-- START: Interactive SEAI Grant Calculator Component -->
 <div class="ecosmart-grant-calculator my-8 p-6 bg-slate-900 text-white rounded-xl border border-emerald-500/30 shadow-2xl" data-location="${location}">
@@ -71,7 +70,10 @@ export function renderGrantCalculatorWidget(location: string, topic: string): st
 /**
  * Builds the high-converting Stripe E-Commerce Survey Bridge CTA Checkout Container (€49)
  */
-export function renderStripeSurveyBridgeWidget(location: string, localizedKeyword: string): string {
+export function renderStripeSurveyBridgeWidget(
+  location: string,
+  localizedKeyword: string,
+): string {
   return `
 <!-- START: Stripe E-Commerce Survey Bridge Checkout Container -->
 <div class="ecosmart-stripe-bridge my-8 p-6 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/40 rounded-xl text-white shadow-2xl" data-keyword="${localizedKeyword}">
@@ -104,11 +106,16 @@ export function renderStripeSurveyBridgeWidget(location: string, localizedKeywor
 /**
  * Executes the Programmatic Munster Local SEO Generation Campaign
  */
-export async function executeProgrammaticMunsterCampaign(options?: ProgrammaticGenerationOptions): Promise<{ generatedCount: number; files: string[] }> {
+export async function executeProgrammaticMunsterCampaign(
+  options?: ProgrammaticGenerationOptions,
+): Promise<{ generatedCount: number; files: string[] }> {
   console.log('🚀 Initializing Developer AI Studio Campaign Engine...');
 
   if (!fs.existsSync(MATRIX_PATH)) {
-    console.error('❌ Target keyword matrix file not found on disk:', MATRIX_PATH);
+    console.error(
+      '❌ Target keyword matrix file not found on disk:',
+      MATRIX_PATH,
+    );
     return { generatedCount: 0, files: [] };
   }
 
@@ -124,14 +131,20 @@ export async function executeProgrammaticMunsterCampaign(options?: ProgrammaticG
       continue;
     }
 
-    const locations = [...cluster.geographicModifiers.tier1Cities, ...cluster.geographicModifiers.tier2Towns];
+    const locations = [
+      ...cluster.geographicModifiers.tier1Cities,
+      ...cluster.geographicModifiers.tier2Towns,
+    ];
 
     for (const kwObj of cluster.keywords) {
       for (const loc of locations) {
         if (count >= maxLimit) break;
 
         const localizedKeyword = `${kwObj.phrase} ${loc}`;
-        const fileSlug = localizedKeyword.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        const fileSlug = localizedKeyword
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '');
         const targetFilePath = path.join(OUTPUT_DIR, `${fileSlug}.md`);
 
         if (fs.existsSync(targetFilePath)) {
@@ -139,7 +152,9 @@ export async function executeProgrammaticMunsterCampaign(options?: ProgrammaticG
           continue;
         }
 
-        console.log(`[Gemini Engine] 🧠 Structuring asset: "${localizedKeyword}"`);
+        console.log(
+          `[Gemini Engine] 🧠 Structuring asset: "${localizedKeyword}"`,
+        );
 
         const prompt = `You are the lead SEAI Technical Energy Advisor for EcoSmartHomes Ireland.
 Write a comprehensive, authoritative, locally grounded Home Energy Survey & Retrofit guide landing page targeting property owners in ${loc}, Ireland.
@@ -168,7 +183,9 @@ Keep tone professional, authoritative, actionable, and compliant with Irish Buil
               });
               content = response.text || '';
             } catch (modelErr: any) {
-              console.warn(`[Gemini Engine] Primary generation returned error: ${modelErr?.message || modelErr}. Falling back to structured local engine.`);
+              console.warn(
+                `[Gemini Engine] Primary generation returned error: ${modelErr?.message || modelErr}. Falling back to structured local engine.`,
+              );
             }
           }
 
@@ -197,8 +214,14 @@ Properties in ${loc} often face unique climatic and architectural factors:
           }
 
           // Inject Dynamic Interactive Calculator & Stripe Survey Bridge CTA
-          const grantCalculatorHtml = renderGrantCalculatorWidget(loc, cluster.coreTopic);
-          const stripeBridgeHtml = renderStripeSurveyBridgeWidget(loc, localizedKeyword);
+          const grantCalculatorHtml = renderGrantCalculatorWidget(
+            loc,
+            cluster.coreTopic,
+          );
+          const stripeBridgeHtml = renderStripeSurveyBridgeWidget(
+            loc,
+            localizedKeyword,
+          );
 
           const finalPageMarkdown = `${content.trim()}\n\n${grantCalculatorHtml}\n\n${stripeBridgeHtml}\n`;
 
@@ -215,4 +238,3 @@ Properties in ${loc} often face unique climatic and architectural factors:
 
   return { generatedCount: count, files: generatedFiles };
 }
->>>>>>> 4db0a330e215240e901521ca8c5f917725d70480

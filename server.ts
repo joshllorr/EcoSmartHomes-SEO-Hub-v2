@@ -3,9 +3,8 @@ import path from 'path';
 import dotenv from 'dotenv';
 import fs from 'fs';
 
-<<<<<<< HEAD
 dotenv.config();
-=======
+
 import { syncToHarbor } from './src/services/harborSync';
 import {
   requestWhatsAppApproval,
@@ -143,33 +142,10 @@ import {
   PhaseDriftReport,
   AutoRepairResult,
 } from './src/logic/phaseDriftDetector';
->>>>>>> 4db0a330e215240e901521ca8c5f917725d70480
 
 const app = express();
 const PORT = process.env.PORT || 5173;
 
-<<<<<<< HEAD
-app.use(express.json());
-
-// Serve static asset folders cleanly from your production asset structure
-app.use('/assets', express.static(path.join(process.cwd(), 'dist', 'assets')));
-
-// API Health Check Endpoint
-app.get('/api/health', (req, res) => {
-    res.json({ status: "healthy", timestamp: Date.now(), engine: "Gemini 3.7 Flash" });
-});
-
-// Primary campaign trigger function
-async function triggerMarlCampaign() {
-    console.log("🚀 Initializing standalone backend campaign sequence via Gemini 3.7 Engine...");
-    try {
-        // Target our newly isolated backend compiled file
-        const coordinatorPath = path.join(process.cwd(), 'dist', 'marlCoordinator.cjs');
-        
-        if (!fs.existsSync(coordinatorPath)) {
-            console.error("❌ Isolated backend compiled coordinator file could not be located.");
-            return;
-=======
 if (
   process.env.SENTRY_DSN &&
   (process.env.SENTRY_DSN.startsWith('http://') ||
@@ -1093,49 +1069,7 @@ app.get('/api/unified-analytics', async (_req, res) => {
           text: 'High SERP volatility detected.',
           action: 'queue_expansion',
           button: 'Queue Expansion',
->>>>>>> 4db0a330e215240e901521ca8c5f917725d70480
         }
-
-        const coordinator = await import(coordinatorPath);
-        if (coordinator && coordinator.executeProgrammaticMunsterCampaign) {
-            await coordinator.executeProgrammaticMunsterCampaign();
-            console.log("✅ Campaign batch pass completed successfully.");
-        } else {
-            console.error("❌ executeProgrammaticMunsterCampaign function not found inside the module.");
-        }
-<<<<<<< HEAD
-    } catch (err) {
-        console.error("❌ Critical runtime failure in campaign workflow thread:", err);
-    }
-}
-
-// Trigger route to manually execute campaign generation maps via HTTP calls
-app.post('/api/campaign/trigger', async (req, res) => {
-    await triggerMarlCampaign();
-    res.json({ success: true, message: "Campaign loop triggered." });
-});
-
-// Modern catch-all route parameters rule for single page web views
-app.get('/*splat', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
-});
-
-// CHECK FOR TERMINAL FLAGS: If --trigger-campaign is passed, run it directly without starting the web listener
-if (process.argv.includes('--trigger-campaign')) {
-    console.log("⚙️ Terminal override detected. Running direct campaign sweep...");
-    triggerMarlCampaign().then(() => process.exit(0)).catch(() => process.exit(1));
-} else {
-    // Standard PM2 Web Dashboard Server Boot
-    app.listen(PORT, async () => {
-        console.log(`\n==========================================================`);
-        console.log(`🚀 EcoSmartHomes Production Server running on port ${PORT}`);
-        console.log(`==========================================================\n`);
-        
-        // Auto-trigger an initial campaign pass on boot to verify health
-        await triggerMarlCampaign();
-    });
-}
-=======
       : null,
 
     harborMetrics.backlinksBuilt < 200
@@ -1183,7 +1117,7 @@ export function getGeminiClient(): GoogleGenAI | null {
     process.env.GOOGLE_GENAI_USE_ENTERPRISE === 'true';
   const isOAuthToken = Boolean(
     tokenOrKey &&
-      (tokenOrKey.startsWith('ya29.') || tokenOrKey.startsWith('Bearer ')),
+    (tokenOrKey.startsWith('ya29.') || tokenOrKey.startsWith('Bearer ')),
   );
 
   // If no valid key and not using explicit Vertex AI
@@ -2616,12 +2550,19 @@ app.get('/api/seo/serp-features/:keyword', (req, res) => {
 // Programmatic Munster Local SEO Hub Endpoints
 app.get('/api/seo/programmatic/munster-matrix', (req, res) => {
   try {
-    const matrixPath = path.join(process.cwd(), 'src', 'engines', 'munster-keywords-map.json');
+    const matrixPath = path.join(
+      process.cwd(),
+      'src',
+      'engines',
+      'munster-keywords-map.json',
+    );
     if (fs.existsSync(matrixPath)) {
       const data = JSON.parse(fs.readFileSync(matrixPath, 'utf-8'));
       return res.json({ success: true, matrix: data });
     }
-    return res.status(404).json({ success: false, error: 'Matrix file not found on disk' });
+    return res
+      .status(404)
+      .json({ success: false, error: 'Matrix file not found on disk' });
   } catch (err: any) {
     return res.status(500).json({ success: false, error: err.message });
   }
@@ -6219,13 +6160,12 @@ app.get('/api/coach/messages', async (req, res) => {
 
 app.get('/api/coach/all', async (_req, res) => {
   try {
-    const bundle = await getCoachMessages(
-      process.env,
-      'user_2026_08_03_1412',
-    );
+    const bundle = await getCoachMessages(process.env, 'user_2026_08_03_1412');
     return res.json({ success: true, bundle, activeHomeowners: 114 });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch coach data', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch coach data', details: String(err) });
   }
 });
 
@@ -6255,10 +6195,8 @@ app.post('/api/coach/site-visit-prep', async (req, res) => {
 
 // Phase 39 NZEB Standards Compliance Evaluation (LLM-Enhanced)
 app.post('/api/coach/nzeb-compliance', async (req, res) => {
-  const {
-    user_id = 'user_2026_08_03_1412',
-    propertyData = {},
-  } = req.body || {};
+  const { user_id = 'user_2026_08_03_1412', propertyData = {} } =
+    req.body || {};
 
   try {
     const report = await evaluateNZEBCompliance(
@@ -6319,7 +6257,12 @@ app.get('/api/journey/insights', async (_req, res) => {
       },
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch journey insights', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch journey insights',
+        details: String(err),
+      });
   }
 });
 
@@ -6329,7 +6272,9 @@ app.get('/api/journey', async (req, res) => {
     const record = await getJourneyTimeline(process.env, userId);
     return res.json({ success: true, record });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch journey', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch journey', details: String(err) });
   }
 });
 
@@ -6339,7 +6284,12 @@ app.get('/api/journey/:userId', async (req, res) => {
     const record = await getJourneyTimeline(process.env, userId);
     return res.json({ success: true, record });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch journey for user', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch journey for user',
+        details: String(err),
+      });
   }
 });
 
@@ -6349,10 +6299,17 @@ app.post('/api/journey/event', async (req, res) => {
     return res.status(400).json({ error: 'Missing event field' });
   }
   try {
-    const updated = await addTimelineEvent(process.env, user_id, String(event), notes ? String(notes) : undefined);
+    const updated = await addTimelineEvent(
+      process.env,
+      user_id,
+      String(event),
+      notes ? String(notes) : undefined,
+    );
     return res.json({ success: true, timeline: updated });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to record journey event', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to record journey event', details: String(err) });
   }
 });
 
@@ -6381,7 +6338,12 @@ app.get('/api/contractors/scores', async (_req, res) => {
     );
     return res.json(scores);
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch contractor scores', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch contractor scores',
+        details: String(err),
+      });
   }
 });
 
@@ -6400,7 +6362,12 @@ app.get('/api/contractors/scores/insights', async (_req, res) => {
       })),
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch contractor insights', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch contractor insights',
+        details: String(err),
+      });
   }
 });
 
@@ -6408,7 +6375,9 @@ app.get('/api/contractors', async (_req, res) => {
   try {
     return res.json({ success: true, contractors: SAMPLE_CONTRACTORS });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch contractors', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch contractors', details: String(err) });
   }
 });
 
@@ -6444,20 +6413,28 @@ app.get('/api/jobs', async (_req, res) => {
       ],
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch jobs', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch jobs', details: String(err) });
   }
 });
 
 // Phase 34 Home Upgrade Recommendations Endpoints
 app.get('/api/upgrades/all', async (_req, res) => {
   try {
-    const demoIds = ['user_2026_08_03_1412', 'user_limerick_88', 'user_cork_42'];
+    const demoIds = [
+      'user_2026_08_03_1412',
+      'user_limerick_88',
+      'user_cork_42',
+    ];
     const bundles = await Promise.all(
       demoIds.map((id) => getHomeUpgradeBundle(process.env, id)),
     );
     return res.json(bundles);
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch upgrades', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch upgrades', details: String(err) });
   }
 });
 
@@ -6467,7 +6444,9 @@ app.get('/api/upgrades/:userId', async (req, res) => {
     const bundle = await getHomeUpgradeBundle(process.env, userId);
     return res.json({ success: true, bundle });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch user upgrades', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch user upgrades', details: String(err) });
   }
 });
 
@@ -6477,7 +6456,9 @@ app.post('/api/upgrades/generate', async (req, res) => {
     const bundle = await generateHomeUpgradeBundle(process.env, user_id);
     return res.json({ success: true, bundle });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to generate upgrades', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to generate upgrades', details: String(err) });
   }
 });
 
@@ -6487,7 +6468,12 @@ app.get('/api/insights/national', async (_req, res) => {
     const insights = await getNationalInsights(process.env);
     return res.json(insights);
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch national insights', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch national insights',
+        details: String(err),
+      });
   }
 });
 
@@ -6496,7 +6482,12 @@ app.post('/api/insights/national/generate', async (_req, res) => {
     const insights = await generateNationalInsights(process.env);
     return res.json({ success: true, insights });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to generate national insights', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to generate national insights',
+        details: String(err),
+      });
   }
 });
 
@@ -6507,7 +6498,9 @@ app.get('/api/forecasting', async (req, res) => {
     const forecast = await getForecast(process.env, months);
     return res.json(forecast);
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch forecast', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch forecast', details: String(err) });
   }
 });
 
@@ -6517,7 +6510,9 @@ app.post('/api/forecasting/generate', async (req, res) => {
     const forecast = await generateAndStoreForecast(process.env, months);
     return res.json({ success: true, forecast });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to generate forecast', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to generate forecast', details: String(err) });
   }
 });
 
@@ -6557,7 +6552,12 @@ app.get('/api/advisor/sessions', async (_req, res) => {
       },
     ]);
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch advisor sessions', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch advisor sessions',
+        details: String(err),
+      });
   }
 });
 
@@ -6582,7 +6582,12 @@ app.get('/api/advisor/bookings', async (_req, res) => {
       ],
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch advisor bookings', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch advisor bookings',
+        details: String(err),
+      });
   }
 });
 
@@ -6599,22 +6604,42 @@ app.get('/api/advisor/calendar', async (_req, res) => {
       ],
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch advisor calendar', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch advisor calendar',
+        details: String(err),
+      });
   }
 });
 
 app.post('/api/advisor/chat', async (req, res) => {
-  const { user_id = 'user_2026_08_03_1412', messages = [], message } = req.body || {};
+  const {
+    user_id = 'user_2026_08_03_1412',
+    messages = [],
+    message,
+  } = req.body || {};
   try {
     const lastUserMsg =
       message ||
       (Array.isArray(messages) && messages.length > 0
-        ? messages[messages.length - 1]?.text || messages[messages.length - 1]?.content || ''
+        ? messages[messages.length - 1]?.text ||
+          messages[messages.length - 1]?.content ||
+          ''
         : 'What is my next step?');
-    const reply = await generateAdvisorReply(process.env, user_id, String(lastUserMsg));
+    const reply = await generateAdvisorReply(
+      process.env,
+      user_id,
+      String(lastUserMsg),
+    );
     return res.json({ success: true, reply });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to generate advisor reply', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to generate advisor reply',
+        details: String(err),
+      });
   }
 });
 
@@ -6630,10 +6655,25 @@ app.get('/api/sentiment/all', async (_req, res) => {
       sentimentTrend: '+4.2% this month',
       highRiskHomeowners: 2,
       homeownerBreakdown: [
-        { cohort: 'Pre-Grant Inquiry', confidence: 78, clarity: 80, stress: 32 },
+        {
+          cohort: 'Pre-Grant Inquiry',
+          confidence: 78,
+          clarity: 80,
+          stress: 32,
+        },
         { cohort: 'SEAI Submission', confidence: 84, clarity: 86, stress: 28 },
-        { cohort: 'Installation Underway', confidence: 91, clarity: 92, stress: 18 },
-        { cohort: 'Post-Install BER Verified', confidence: 98, clarity: 96, stress: 8 },
+        {
+          cohort: 'Installation Underway',
+          confidence: 91,
+          clarity: 92,
+          stress: 18,
+        },
+        {
+          cohort: 'Post-Install BER Verified',
+          confidence: 98,
+          clarity: 96,
+          stress: 8,
+        },
       ],
       correlations: [
         {
@@ -6659,7 +6699,12 @@ app.get('/api/sentiment/all', async (_req, res) => {
       ],
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch sentiment intelligence', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch sentiment intelligence',
+        details: String(err),
+      });
   }
 });
 
@@ -6669,7 +6714,9 @@ app.get('/api/sentiment/:userId', async (req, res) => {
     const sentiment = await getHomeownerSentiment(process.env, userId);
     return res.json({ success: true, sentiment });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch user sentiment', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch user sentiment', details: String(err) });
   }
 });
 
@@ -6702,7 +6749,12 @@ app.get('/api/grants/submissions', async (_req, res) => {
       ],
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch grant submissions', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch grant submissions',
+        details: String(err),
+      });
   }
 });
 
@@ -6717,7 +6769,12 @@ app.get('/api/grants/status/insights', async (_req, res) => {
       fastestCounty: 'Limerick (3.1 days)',
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch grant status insights', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch grant status insights',
+        details: String(err),
+      });
   }
 });
 
@@ -6728,10 +6785,17 @@ app.get('/api/grants/insights', async (_req, res) => {
       activeApplications: 88,
       disbursedFunding: 1420000,
       seaiPartnershipHealth: 'Optimal',
-      regionalAdoptionRate: { Limerick: '41%', Cork: '32%', Clare: '18%', Kerry: '9%' },
+      regionalAdoptionRate: {
+        Limerick: '41%',
+        Cork: '32%',
+        Clare: '18%',
+        Kerry: '9%',
+      },
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch grants insights', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch grants insights', details: String(err) });
   }
 });
 
@@ -6740,13 +6804,33 @@ app.get('/api/grants/history', async (_req, res) => {
     return res.json({
       success: true,
       history: [
-        { id: 'gh_1', action: 'Approved', amount: 24500, time: '2 hours ago', county: 'Limerick' },
-        { id: 'gh_2', action: 'Submitted', amount: 11000, time: '5 hours ago', county: 'Cork' },
-        { id: 'gh_3', action: 'Disbursed', amount: 8000, time: '1 day ago', county: 'Clare' },
+        {
+          id: 'gh_1',
+          action: 'Approved',
+          amount: 24500,
+          time: '2 hours ago',
+          county: 'Limerick',
+        },
+        {
+          id: 'gh_2',
+          action: 'Submitted',
+          amount: 11000,
+          time: '5 hours ago',
+          county: 'Cork',
+        },
+        {
+          id: 'gh_3',
+          action: 'Disbursed',
+          amount: 8000,
+          time: '1 day ago',
+          county: 'Clare',
+        },
       ],
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch grant history', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch grant history', details: String(err) });
   }
 });
 
@@ -6760,7 +6844,9 @@ app.get('/api/grants/pdf-insights', async (_req, res) => {
       validationPassRate: '100%',
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch PDF insights', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch PDF insights', details: String(err) });
   }
 });
 
@@ -6773,7 +6859,12 @@ app.get('/api/retrofit/pdf-insights', async (_req, res) => {
       homeownerShares: 96,
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch retrofit PDF insights', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch retrofit PDF insights',
+        details: String(err),
+      });
   }
 });
 
@@ -6787,7 +6878,12 @@ app.get('/api/retrofit/insights', async (_req, res) => {
       totalCo2OffsetTonnes: 214.8,
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch retrofit insights', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch retrofit insights',
+        details: String(err),
+      });
   }
 });
 
@@ -6801,7 +6897,12 @@ app.get('/api/postinstall', async (req, res) => {
     );
     return res.json({ success: true, record: postInstall });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch postinstall record', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch postinstall record',
+        details: String(err),
+      });
   }
 });
 
@@ -6815,7 +6916,12 @@ app.get('/api/homeowners/insights', async (_req, res) => {
       retentionRate: '99.1%',
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch homeowners insights', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch homeowners insights',
+        details: String(err),
+      });
   }
 });
 
@@ -6831,7 +6937,9 @@ app.get('/api/ecosystem/latest', async (_req, res) => {
       harborSync: 'connected',
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch ecosystem state', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch ecosystem state', details: String(err) });
   }
 });
 
@@ -6840,13 +6948,30 @@ app.get('/api/strategy/history', async (_req, res) => {
     return res.json({
       success: true,
       history: [
-        { cycle: 1, strategy: 'High-Intent Grant Capture', impact: '+38% conversion' },
-        { cycle: 2, strategy: 'Regional Geo-Clusters (Limerick/Cork)', impact: '+52% rankings' },
-        { cycle: 3, strategy: 'AI Overviews & LLM Citation Dominance', impact: '+64% visibility' },
+        {
+          cycle: 1,
+          strategy: 'High-Intent Grant Capture',
+          impact: '+38% conversion',
+        },
+        {
+          cycle: 2,
+          strategy: 'Regional Geo-Clusters (Limerick/Cork)',
+          impact: '+52% rankings',
+        },
+        {
+          cycle: 3,
+          strategy: 'AI Overviews & LLM Citation Dominance',
+          impact: '+64% visibility',
+        },
       ],
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch strategy history', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch strategy history',
+        details: String(err),
+      });
   }
 });
 
@@ -6860,7 +6985,12 @@ app.get('/api/budget/latest', async (_req, res) => {
       costPerAcquisitionEUR: 42.5,
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch budget telemetry', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch budget telemetry',
+        details: String(err),
+      });
   }
 });
 
@@ -6869,12 +6999,25 @@ app.get('/api/autonomy/history', async (_req, res) => {
     return res.json({
       success: true,
       events: [
-        { timestamp: Date.now() - 3600000, action: 'Auto-Optimized Meta Descriptions', outcome: 'CTR +14%' },
-        { timestamp: Date.now() - 7200000, action: 'Internal Link Mesh Rebalance', outcome: 'PageRank Flow +18%' },
+        {
+          timestamp: Date.now() - 3600000,
+          action: 'Auto-Optimized Meta Descriptions',
+          outcome: 'CTR +14%',
+        },
+        {
+          timestamp: Date.now() - 7200000,
+          action: 'Internal Link Mesh Rebalance',
+          outcome: 'PageRank Flow +18%',
+        },
       ],
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch autonomy history', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch autonomy history',
+        details: String(err),
+      });
   }
 });
 
@@ -6889,7 +7032,9 @@ app.get('/api/growth/history', async (_req, res) => {
       ],
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch growth history', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch growth history', details: String(err) });
   }
 });
 
@@ -6903,7 +7048,9 @@ app.get('/api/watchdog/latest', async (_req, res) => {
       lastCheck: Date.now(),
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch watchdog state', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch watchdog state', details: String(err) });
   }
 });
 
@@ -6916,7 +7063,9 @@ app.get('/api/conflict/latest', async (_req, res) => {
       resolutionRate: '100%',
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch conflict state', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch conflict state', details: String(err) });
   }
 });
 
@@ -6929,7 +7078,12 @@ app.get('/api/negotiation/latest', async (_req, res) => {
       avgRounds: 2.1,
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch negotiation state', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch negotiation state',
+        details: String(err),
+      });
   }
 });
 
@@ -6942,7 +7096,12 @@ app.get('/api/content/latest', async (_req, res) => {
       scheduledPublish: 4,
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch content pipeline stats', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch content pipeline stats',
+        details: String(err),
+      });
   }
 });
 
@@ -6955,7 +7114,9 @@ app.get('/api/landing/latest', async (_req, res) => {
       bounceRate: '24.1%',
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch landing stats', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch landing stats', details: String(err) });
   }
 });
 
@@ -6968,7 +7129,12 @@ app.get('/api/simulation/latest', async (_req, res) => {
       predictedLift: '+42%',
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch simulation stats', details: String(err) });
+    return res
+      .status(500)
+      .json({
+        error: 'Failed to fetch simulation stats',
+        details: String(err),
+      });
   }
 });
 
@@ -6981,7 +7147,9 @@ app.get('/api/fusion/history', async (_req, res) => {
       lastFusedAt: Date.now(),
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to fetch fusion history', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to fetch fusion history', details: String(err) });
   }
 });
 
@@ -7004,11 +7172,12 @@ app.get('/api/settings/hmr', (_req, res) => {
 app.post('/api/settings/hmr', (req, res) => {
   try {
     const { disableHmr, viteDisableHmr } = req.body;
-    const shouldDisable = typeof viteDisableHmr === 'boolean'
-      ? viteDisableHmr
-      : typeof disableHmr === 'boolean'
-        ? disableHmr
-        : true;
+    const shouldDisable =
+      typeof viteDisableHmr === 'boolean'
+        ? viteDisableHmr
+        : typeof disableHmr === 'boolean'
+          ? disableHmr
+          : true;
 
     process.env.VITE_DISABLE_HMR = shouldDisable ? 'true' : 'false';
     process.env.DISABLE_HMR = shouldDisable ? 'true' : 'false';
@@ -7019,12 +7188,18 @@ app.post('/api/settings/hmr', (req, res) => {
       if (fs.existsSync(envFilePath)) {
         let envContent = fs.readFileSync(envFilePath, 'utf8');
         if (/^VITE_DISABLE_HMR=/m.test(envContent)) {
-          envContent = envContent.replace(/^VITE_DISABLE_HMR=.*$/m, `VITE_DISABLE_HMR=${shouldDisable ? 'true' : 'false'}`);
+          envContent = envContent.replace(
+            /^VITE_DISABLE_HMR=.*$/m,
+            `VITE_DISABLE_HMR=${shouldDisable ? 'true' : 'false'}`,
+          );
         } else {
           envContent += `\nVITE_DISABLE_HMR=${shouldDisable ? 'true' : 'false'}`;
         }
         if (/^DISABLE_HMR=/m.test(envContent)) {
-          envContent = envContent.replace(/^DISABLE_HMR=.*$/m, `DISABLE_HMR=${shouldDisable ? 'true' : 'false'}`);
+          envContent = envContent.replace(
+            /^DISABLE_HMR=.*$/m,
+            `DISABLE_HMR=${shouldDisable ? 'true' : 'false'}`,
+          );
         } else {
           envContent += `\nDISABLE_HMR=${shouldDisable ? 'true' : 'false'}`;
         }
@@ -7044,7 +7219,9 @@ app.post('/api/settings/hmr', (req, res) => {
         : 'Vite HMR enabled (VITE_DISABLE_HMR=false). Live reload active.',
     });
   } catch (err: any) {
-    return res.status(500).json({ error: 'Failed to update HMR settings', details: String(err) });
+    return res
+      .status(500)
+      .json({ error: 'Failed to update HMR settings', details: String(err) });
   }
 });
 
@@ -7473,4 +7650,3 @@ if (!process.env.VITEST) {
 }
 
 export default app;
->>>>>>> 4db0a330e215240e901521ca8c5f917725d70480
