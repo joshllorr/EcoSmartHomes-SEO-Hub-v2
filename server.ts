@@ -1,3 +1,11 @@
+import { GoogleGenAI } from '@google/genai';
+import 'dotenv/config';
+import http from 'http';
+import { WebSocketServer } from 'ws';
+import * as Sentry from '@sentry/node';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import cors from 'cors';
 import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -245,6 +253,8 @@ app.use((req, _res, next) => {
 
 import commandRouter from './src/server/commands';
 app.use('/api', commandRouter);
+import { retrofitRouter } from './src/api/retrofitRouter';
+app.use('/api', retrofitRouter);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Article Serving & Publishing Endpoints (EcoSmartHomes Bridge Connection)
@@ -7249,7 +7259,7 @@ async function startServer() {
     });
   }
 
-  app.use(Sentry.expressErrorHandler() as any);
+  if (process.env.SENTRY_DSN) { try { if (process.env.SENTRY_DSN) { try { app.use(Sentry.expressErrorHandler() as any); } catch(e){} } } catch(e){} }
 
   const httpServer = http.createServer(app);
   const wss = new WebSocketServer({ server: httpServer });

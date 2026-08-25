@@ -10,3 +10,8 @@ server.js
 *.tsbuildinfo
 .sentryclirc
 scratch/
+
+send-alert.*
+stage-draft.*
+test-publish.*
+data/pending-drafts.json

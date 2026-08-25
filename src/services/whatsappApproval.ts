@@ -1,15 +1,23 @@
 import twilio from 'twilio';
+import fs from 'fs';
+import path from 'path';
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = accountSid && authToken ? twilio(accountSid, authToken) : null;
 
-const JOE_WHATSAPP_NUMBER =
-  process.env.JOE_WHATSAPP_NUMBER || 'whatsapp:+3538XXXXXXXX'; // User phone number
-const TWILIO_WHATSAPP_NUMBER =
-  process.env.TWILIO_WHATSAPP_NUMBER || 'whatsapp:+14155238886'; // Twilio WhatsApp number
+const JOE_WHATSAPP_NUMBER = process.env.JOE_WHATSAPP_NUMBER || process.env.JOE_PHONE_NUMBER || 'whatsapp:+353899590537';
+const TWILIO_WHATSAPP_NUMBER = process.env.TWILIO_WHATSAPP_NUMBER || 'whatsapp:+14155238886';
+
+const DRAFTS_FILE = path.join(process.cwd(), 'data', 'pending-drafts.json');
+
+function ensureDir() {
+  const dir = path.dirname(DRAFTS_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
 
 export interface DraftItem {
+  id?: string;
   title: string;
   slug: string;
   content: string;
@@ -17,145 +25,126 @@ export interface DraftItem {
   timestamp?: number;
 }
 
-// In-memory pending draft registry
-const pendingDrafts: Map<string, DraftItem> = new Map();
-
-export async function savePendingDraft(
-  slug: string,
-  draft: DraftItem,
-): Promise<void> {
-  pendingDrafts.set(slug, { ...draft, timestamp: Date.now() });
+export async function savePendingDraft(key: string, draft: DraftItem): Promise<void> {
+  ensureDir();
+  let drafts: Record<string, DraftItem> = {};
+  if (fs.existsSync(DRAFTS_FILE)) {
+    try { drafts = JSON.parse(fs.readFileSync(DRAFTS_FILE, 'utf8')); } catch (_) {}
+  }
+  const cleanKey = key.toLowerCase().trim();
+  drafts[cleanKey] = { ...draft, timestamp: Date.now() };
+  if (draft.slug) drafts[draft.slug.toLowerCase().trim()] = drafts[cleanKey];
+  if (draft.id) drafts[draft.id.toLowerCase().trim()] = drafts[cleanKey];
+  fs.writeFileSync(DRAFTS_FILE, JSON.stringify(drafts, null, 2));
 }
 
-export async function getPendingDraft(
-  slug: string,
-): Promise<DraftItem | undefined> {
-  return pendingDrafts.get(slug);
+export async function getPendingDraft(key: string): Promise<DraftItem | undefined> {
+  if (!fs.existsSync(DRAFTS_FILE)) return undefined;
+  try {
+    const drafts = JSON.parse(fs.readFileSync(DRAFTS_FILE, 'utf8'));
+    return drafts[key.toLowerCase().trim()];
+  } catch (_) {
+    return undefined;
+  }
 }
 
-export async function removePendingDraft(slug: string): Promise<boolean> {
-  return pendingDrafts.delete(slug);
+export async function removePendingDraft(key: string): Promise<void> {
+  if (!fs.existsSync(DRAFTS_FILE)) return;
+  try {
+    const drafts = JSON.parse(fs.readFileSync(DRAFTS_FILE, 'utf8'));
+    delete drafts[key.toLowerCase().trim()];
+    fs.writeFileSync(DRAFTS_FILE, JSON.stringify(drafts, null, 2));
+  } catch (_) {}
 }
 
 // 1. Send Draft to WhatsApp for Joe's Approval
 export async function requestWhatsAppApproval(draft: DraftItem): Promise<void> {
-  await savePendingDraft(draft.slug, draft);
+  const approvalKey = draft.id || draft.slug;
+  await savePendingDraft(approvalKey, draft);
 
   const messageText =
     `📰 *NEW SEO ARTICLE DRAFT GENERATED*\n\n` +
     `*Title*: ${draft.title}\n` +
-    `*Slug*: ${draft.slug}\n` +
+    `*Key*: ${approvalKey}\n` +
     `*Summary*: ${draft.description || 'No description provided.'}\n\n` +
-    `Reply *APPROVE ${draft.slug}* to publish immediately to www.ecosmarthomes.ie\n` +
-    `Reply *REJECT ${draft.slug}* to discard.`;
+    `👉 Reply *APPROVE ${approvalKey}* to publish immediately to www.ecosmarthomes.ie\n` +
+    `👉 Reply *REJECT ${approvalKey}* to discard.`;
 
   if (client) {
     try {
-      await client.messages.create({
+      const msg = await client.messages.create({
         from: TWILIO_WHATSAPP_NUMBER,
         to: JOE_WHATSAPP_NUMBER,
         body: messageText,
       });
-      console.log(`[WhatsApp] Approval requested for: ${draft.slug}`);
+      console.log(`[WhatsApp] Approval requested for: ${approvalKey}, SID: ${msg.sid}`);
     } catch (err: any) {
-      console.error(
-        `[WhatsApp Error] Failed to send approval message for ${draft.slug}:`,
-        err?.message || err,
-      );
+      console.error(`[WhatsApp Error] Failed to send approval message:`, err?.message || err);
     }
   } else {
-    console.log(
-      `[WhatsApp Mock] Approval requested for: ${draft.slug} (Configure TWILIO_ACCOUNT_SID & TWILIO_AUTH_TOKEN to send live WhatsApp messages)`,
-    );
+    console.log(`[WhatsApp Mock] Approval requested for: ${approvalKey}`);
   }
 }
 
 // 2. Incoming WhatsApp Webhook Handler (Express endpoint in SEO Hub)
 export async function handleWhatsAppWebhook(req: any, res: any): Promise<void> {
-  const incomingMsg = req.body?.Body?.trim();
+  const incomingMsg = req.body?.Body?.trim() || '';
   const fromNumber = req.body?.From;
 
-  console.log(
-    `[WhatsApp Webhook] Incoming message from ${fromNumber}: "${incomingMsg}"`,
-  );
+  console.log(`[WhatsApp Webhook] Incoming message from ${fromNumber}: "${incomingMsg}"`);
 
-  if (incomingMsg) {
-    const parts = incomingMsg.split(/\s+/);
-    const command = parts[0].toUpperCase();
-    const slug = parts[1];
-
-    if (command === 'APPROVE' && slug) {
-      const draft = await getPendingDraft(slug);
-      if (draft) {
-        try {
-          // Send approved article directly to Cloudflare Worker bridge / CMS publish endpoint
-          const publishUrl =
-            process.env.CMS_PUBLISH_URL ||
-            'https://www.ecosmarthomes.ie/api/publish';
-          const response = await fetch(publishUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: draft.title,
-              slug: draft.slug,
-              content: draft.content,
-              description: draft.description,
-            }),
-          });
-
-          const result = await response
-            .json()
-            .catch(() => ({ status: 'success' }));
-          await removePendingDraft(slug);
-
-          console.log(
-            `[WhatsApp] Published article ${slug} to ${publishUrl}:`,
-            result,
-          );
-
-          // Notify Joe on WhatsApp that it is live!
-          if (client) {
-            await client.messages.create({
-              from: TWILIO_WHATSAPP_NUMBER,
-              to: fromNumber || JOE_WHATSAPP_NUMBER,
-              body: `🚀 *ARTICLE LIVE ON ECOSMARTHOMES.IE!*\n\nURL: https://www.ecosmarthomes.ie/articles/${draft.slug}.html`,
-            });
-          }
-        } catch (err: any) {
-          console.error(
-            `[WhatsApp Publish Error] Failed to publish ${slug}:`,
-            err?.message || err,
-          );
-          if (client) {
-            await client.messages.create({
-              from: TWILIO_WHATSAPP_NUMBER,
-              to: fromNumber || JOE_WHATSAPP_NUMBER,
-              body: `❌ *PUBLISH FAILED for ${slug}*: ${err?.message || 'Network error'}`,
-            });
-          }
-        }
-      } else {
-        if (client) {
-          await client.messages.create({
-            from: TWILIO_WHATSAPP_NUMBER,
-            to: fromNumber || JOE_WHATSAPP_NUMBER,
-            body: `⚠️ *DRAFT NOT FOUND*: No pending draft found for slug "${slug}".`,
-          });
-        }
-      }
-    } else if (command === 'REJECT' && slug) {
-      await removePendingDraft(slug);
-      console.log(`[WhatsApp] Draft rejected: ${slug}`);
-      if (client) {
-        await client.messages.create({
-          from: TWILIO_WHATSAPP_NUMBER,
-          to: fromNumber || JOE_WHATSAPP_NUMBER,
-          body: `🗑️ *DRAFT REJECTED*: Article "${slug}" has been discarded.`,
-        });
-      }
-    }
+  if (!incomingMsg) {
+    res.setHeader('Content-Type', 'text/xml');
+    return res.send('<Response></Response>');
   }
 
-  res.set('Content-Type', 'text/xml');
-  res.send('<Response></Response>');
+  const parts = incomingMsg.split(/\s+/);
+  const command = parts[0].toUpperCase();
+  const key = parts[1];
+
+  let replyText = '';
+
+  if (command === 'APPROVE' && key) {
+    const draft = await getPendingDraft(key);
+    if (draft) {
+      try {
+        const publishUrl = process.env.CMS_PUBLISH_URL || 'https://www.ecosmarthomes.ie/api/publish';
+        console.log(`🚀 [Publishing] Sending "${draft.title}" to ${publishUrl}...`);
+
+        const response = await fetch(publishUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: draft.title,
+            slug: draft.slug,
+            content: draft.content,
+            description: draft.description,
+            tags: ['Retrofit', 'SEAI Grants', 'BER Rating']
+          }),
+        });
+
+        const data: any = await response.json().catch(() => ({}));
+
+        if (response.ok && (data.ok || data.success)) {
+          const liveUrl = data.url || `https://www.ecosmarthomes.ie/articles/${draft.slug}.html`;
+          replyText = `🎉 Article "${draft.title}" APPROVED and published live!\n\n🔗 View live: ${liveUrl}`;
+          await removePendingDraft(key);
+        } else {
+          replyText = `⚠️ Approved, but publication returned an error: ${data.error || response.statusText}`;
+        }
+      } catch (pubErr: any) {
+        replyText = `⚠️ Error connecting to publish API: ${pubErr.message}`;
+      }
+    } else {
+      replyText = `⚠️ Draft "${key}" not found or already published.`;
+    }
+  } else if (command === 'REJECT' && key) {
+    await removePendingDraft(key);
+    replyText = `🚫 Draft "${key}" has been rejected and discarded.`;
+  } else {
+    replyText = `🤖 EcoSmartHomes Bot: Send APPROVE <key> or REJECT <key>.`;
+  }
+
+  res.setHeader('Content-Type', 'text/xml');
+  return res.send(`<Response><Message>${replyText}</Message></Response>`);
 }
