@@ -7259,7 +7259,7 @@ async function startServer() {
     });
   }
 
-  if (process.env.SENTRY_DSN) { try { if (process.env.SENTRY_DSN) { try { app.use(Sentry.expressErrorHandler() as any); } catch(e){} } } catch(e){} }
+  if (process.env.SENTRY_DSN) { try { if (process.env.SENTRY_DSN) { try { app.use(Sentry.expressErrorHandler() as any); } catch (e) { /* ignore */ } } } catch (e) { /* ignore */ } }
 
   const httpServer = http.createServer(app);
   const wss = new WebSocketServer({ server: httpServer });
