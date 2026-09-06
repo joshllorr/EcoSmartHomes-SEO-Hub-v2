@@ -27,7 +27,10 @@ export default function HubStatus() {
 
   const checkHubStatus = useCallback(async () => {
     try {
-      const res = await fetch('/health', { cache: 'no-store' });
+      let res = await fetch('/health', { cache: 'no-store' });
+      if (!res.ok) {
+        res = await fetch('/api/health', { cache: 'no-store' });
+      }
       if (res.ok) {
         const data: HealthPayload = await res.json();
         setHealth(data);
@@ -36,6 +39,17 @@ export default function HubStatus() {
         setStatus('offline');
       }
     } catch {
+      try {
+        const fallbackRes = await fetch('/api/health', { cache: 'no-store' });
+        if (fallbackRes.ok) {
+          const data: HealthPayload = await fallbackRes.json();
+          setHealth(data);
+          setStatus('online');
+          return;
+        }
+      } catch {
+        // ignore fallback error
+      }
       setStatus('offline');
     }
   }, []);
