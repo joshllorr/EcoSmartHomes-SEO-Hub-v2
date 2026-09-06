@@ -20,7 +20,8 @@ export interface CoachMessage {
   tone: 'friendly' | 'urgent' | 'reassuring' | 'celebratory';
   createdAt: number;
   read: boolean;
-  category?: 'site_visit' | 'nzeb_compliance' | 'grant_status' | 'milestone' | 'general';
+  category?:
+    'site_visit' | 'nzeb_compliance' | 'grant_status' | 'milestone' | 'general';
 }
 
 export interface CoachMessageBundle {
@@ -44,7 +45,11 @@ export type SiteVisitType =
 
 export interface SiteVisitChecklistItem {
   id: string;
-  category: 'Access & Safety' | 'Documentation' | 'Structural & Fabric' | 'Heating & Electrical';
+  category:
+    | 'Access & Safety'
+    | 'Documentation'
+    | 'Structural & Fabric'
+    | 'Heating & Electrical';
   task: string;
   tip: string;
   completed: boolean;
@@ -169,7 +174,10 @@ function getAiClient(env?: any): GoogleGenAI | null {
       },
     });
   } catch (err) {
-    console.warn('[RetrofitCoachEngine] Failed to initialize GoogleGenAI client', err);
+    console.warn(
+      '[RetrofitCoachEngine] Failed to initialize GoogleGenAI client',
+      err,
+    );
     return null;
   }
 }
@@ -209,7 +217,8 @@ export async function generateSiteVisitPrepPlan(
     },
   };
 
-  const currentMeta = visitTitles[visitType] || visitTitles.technical_assessment;
+  const currentMeta =
+    visitTitles[visitType] || visitTitles.technical_assessment;
 
   const defaultChecklist: SiteVisitChecklistItem[] = [
     {
@@ -265,7 +274,8 @@ export async function generateSiteVisitPrepPlan(
   const defaultDocuments: RequiredDocument[] = [
     {
       name: 'Electricity Bill with MPRN',
-      description: 'Recent bill clearly displaying the 11-digit Meter Point Reference Number.',
+      description:
+        'Recent bill clearly displaying the 11-digit Meter Point Reference Number.',
       ready: true,
       whereToFind: 'Electricity utility online portal or physical statement',
     },
@@ -277,13 +287,15 @@ export async function generateSiteVisitPrepPlan(
     },
     {
       name: 'Existing BER Cert & Advisory Report',
-      description: 'Previous energy rating and recommendation schedule (if published post-2009).',
+      description:
+        'Previous energy rating and recommendation schedule (if published post-2009).',
       ready: false,
       whereToFind: 'National BER Register (ndber.seai.ie) using MPRN',
     },
     {
       name: 'Architectural Floor Plans / Extension Certs',
-      description: 'Dimensioned drawings showing wall construction and ceiling heights.',
+      description:
+        'Dimensioned drawings showing wall construction and ceiling heights.',
       ready: false,
       whereToFind: 'Property purchase documentation or planning portal',
     },
@@ -291,46 +303,62 @@ export async function generateSiteVisitPrepPlan(
 
   const defaultQuestions: CrucialQuestion[] = [
     {
-      question: 'What is my current calculated Heat Loss Indicator (HLI)? Is it ≤ 2.0 W/K/m² for the heat pump grant?',
-      reason: 'SEAI rules require an HLI ≤ 2.0 W/K/m² (or ≤ 2.3 with technical dispensation) before a heat pump grant can be sanctioned.',
-      expectedAnswerHint: 'The assessor will calculate this using DEAP software based on your fabric insulation and air permeability.',
+      question:
+        'What is my current calculated Heat Loss Indicator (HLI)? Is it ≤ 2.0 W/K/m² for the heat pump grant?',
+      reason:
+        'SEAI rules require an HLI ≤ 2.0 W/K/m² (or ≤ 2.3 with technical dispensation) before a heat pump grant can be sanctioned.',
+      expectedAnswerHint:
+        'The assessor will calculate this using DEAP software based on your fabric insulation and air permeability.',
     },
     {
-      question: 'Will our existing radiators need replacement or resizing to support a 45°C heat pump flow temperature?',
-      reason: 'Low-temperature heat pumps require larger emitter surface areas (often double or triple panel Type 22) to keep rooms at 21°C.',
-      expectedAnswerHint: 'Assessor will measure radiator dimensions in each room and compare with room-by-room heat loss.',
+      question:
+        'Will our existing radiators need replacement or resizing to support a 45°C heat pump flow temperature?',
+      reason:
+        'Low-temperature heat pumps require larger emitter surface areas (often double or triple panel Type 22) to keep rooms at 21°C.',
+      expectedAnswerHint:
+        'Assessor will measure radiator dimensions in each room and compare with room-by-room heat loss.',
     },
     {
-      question: 'What specific insulation upgrades are mandatory to reach NZEB A2 compliance?',
-      reason: 'To reach A2 (≤ 45 kWh/m²/yr), fabric upgrades must combine with renewable technologies.',
-      expectedAnswerHint: 'Attic top-up to 300mm mineral wool (U ≤ 0.16) and wall pumping or EWI (U ≤ 0.18).',
+      question:
+        'What specific insulation upgrades are mandatory to reach NZEB A2 compliance?',
+      reason:
+        'To reach A2 (≤ 45 kWh/m²/yr), fabric upgrades must combine with renewable technologies.',
+      expectedAnswerHint:
+        'Attic top-up to 300mm mineral wool (U ≤ 0.16) and wall pumping or EWI (U ≤ 0.18).',
     },
     {
-      question: 'Do we need a mechanical ventilation system (DCV or MVHR) once we seal air leaks?',
-      reason: 'Airtight homes below 5 m³/(hr·m²) must maintain adequate indoor air quality without draughts.',
-      expectedAnswerHint: 'Demand Controlled Ventilation (DCV) or Mechanical Ventilation with Heat Recovery (MVHR) is standard.',
+      question:
+        'Do we need a mechanical ventilation system (DCV or MVHR) once we seal air leaks?',
+      reason:
+        'Airtight homes below 5 m³/(hr·m²) must maintain adequate indoor air quality without draughts.',
+      expectedAnswerHint:
+        'Demand Controlled Ventilation (DCV) or Mechanical Ventilation with Heat Recovery (MVHR) is standard.',
     },
   ];
 
   const defaultAccessAreas: AccessArea[] = [
     {
       area: 'Attic / Loft Space',
-      instructions: 'Clear access under the hatch; ensure safe illumination or lighting in the roof void.',
+      instructions:
+        'Clear access under the hatch; ensure safe illumination or lighting in the roof void.',
       status: 'accessible',
     },
     {
       area: 'Hot Water Cylinder / Boiler Cupboard',
-      instructions: 'Remove laundry and storage from the airing cupboard so pipework is visible.',
+      instructions:
+        'Remove laundry and storage from the airing cupboard so pipework is visible.',
       status: 'attention_needed',
     },
     {
       area: 'ESB Meter Box (External or Hallway)',
-      instructions: 'Ensure the meter box key is available and no vegetation blocks the cabinet door.',
+      instructions:
+        'Ensure the meter box key is available and no vegetation blocks the cabinet door.',
       status: 'accessible',
     },
     {
       area: 'Windows & Trickle Vents',
-      instructions: 'Ensure window handles can be tested and trickle vents are unobstructed.',
+      instructions:
+        'Ensure window handles can be tested and trickle vents are unobstructed.',
       status: 'accessible',
     },
   ];
@@ -362,12 +390,17 @@ Provide a concise 3-paragraph executive coaching note explaining:
         llmGuidanceNotes = response.text.trim();
       }
     } catch (err) {
-      console.warn('[RetrofitCoachEngine] LLM site visit notes generation failed, using structured fallback', err);
+      console.warn(
+        '[RetrofitCoachEngine] LLM site visit notes generation failed, using structured fallback',
+        err,
+      );
     }
   }
 
   const completedCount = defaultChecklist.filter((c) => c.completed).length;
-  const readinessScore = Math.round((completedCount / defaultChecklist.length) * 100);
+  const readinessScore = Math.round(
+    (completedCount / defaultChecklist.length) * 100,
+  );
 
   const plan: SiteVisitPrepPlan = {
     user_id,
@@ -385,7 +418,10 @@ Provide a concise 3-paragraph executive coaching note explaining:
 
   if (env && env.RETROFIT_COACH_MESSAGES) {
     try {
-      await env.RETROFIT_COACH_MESSAGES.put(`site_visit_${user_id}`, JSON.stringify(plan));
+      await env.RETROFIT_COACH_MESSAGES.put(
+        `site_visit_${user_id}`,
+        JSON.stringify(plan),
+      );
     } catch (e) {
       /* ignore */
     }
@@ -416,10 +452,12 @@ export async function evaluateNZEBCompliance(
     floorUValue: propertyData?.floorUValue ?? 0.15, // Target <= 0.15
     windowUValue: propertyData?.windowUValue ?? 1.1, // Target <= 1.2
     airtightnessQ50: propertyData?.airtightnessQ50 ?? 3.8, // Target <= 5.0
-    heatingSystem: propertyData?.heatingSystem || 'Air-to-Water Heat Pump (A+++)',
+    heatingSystem:
+      propertyData?.heatingSystem || 'Air-to-Water Heat Pump (A+++)',
     heatPumpCOP: propertyData?.heatPumpCOP ?? 3.6, // Target >= 3.2
     solarPVKwp: propertyData?.solarPVKwp ?? 3.2, // Target >= 2.0 kWp
-    ventilationType: propertyData?.ventilationType || 'Demand Controlled Ventilation (DCV)',
+    ventilationType:
+      propertyData?.ventilationType || 'Demand Controlled Ventilation (DCV)',
     thermalBridgingYFactor: propertyData?.thermalBridgingYFactor ?? 0.08, // Target <= 0.08
   };
 
@@ -431,7 +469,11 @@ export async function evaluateNZEBCompliance(
     pillar: 'Roof & Attic Insulation',
     target: 'U-Value ≤ 0.16 W/m²K (300mm mineral wool / 150mm PIR)',
     currentValue: `${profile.roofUValue} W/m²K`,
-    status: roofPass ? 'pass' : (profile.roofUValue || 0) <= 0.22 ? 'warning' : 'fail',
+    status: roofPass
+      ? 'pass'
+      : (profile.roofUValue || 0) <= 0.22
+        ? 'warning'
+        : 'fail',
     complianceScore: roofPass ? 100 : 60,
     recommendation: roofPass
       ? 'Exceeds Part L requirements. Ensure cold-water tanks and pipework are insulated on top.'
@@ -443,14 +485,20 @@ export async function evaluateNZEBCompliance(
   const wallPass = (profile.wallUValue || 0.18) <= 0.18;
   pillars.push({
     pillar: 'External Wall Thermal Fabric',
-    target: 'U-Value ≤ 0.18 W/m²K (EWI 100mm EPS or Cavity Bonded Bead + Internal)',
+    target:
+      'U-Value ≤ 0.18 W/m²K (EWI 100mm EPS or Cavity Bonded Bead + Internal)',
     currentValue: `${profile.wallUValue} W/m²K`,
-    status: wallPass ? 'pass' : (profile.wallUValue || 0) <= 0.27 ? 'warning' : 'fail',
+    status: wallPass
+      ? 'pass'
+      : (profile.wallUValue || 0) <= 0.27
+        ? 'warning'
+        : 'fail',
     complianceScore: wallPass ? 95 : 50,
     recommendation: wallPass
       ? 'Fully compliant with major renovation Part L thresholds.'
       : 'Install External Wall Insulation (EWI) or high-density cavity bead insulation.',
-    nzeMandateReference: 'TGD Part L Section 1.3.2.3 (Major Renovation Fabric Requirement)',
+    nzeMandateReference:
+      'TGD Part L Section 1.3.2.3 (Major Renovation Fabric Requirement)',
   });
 
   // Pillar 3: Windows & Glazing (Target <= 1.2 W/m²K)
@@ -478,11 +526,14 @@ export async function evaluateNZEBCompliance(
     recommendation: airPass
       ? `Airtightness of ${profile.airtightnessQ50} is optimal when paired with ${profile.ventilationType}.`
       : 'Conduct smoke pencil test and seal floor perimeter, chimney dampers, and service penetrations.',
-    nzeMandateReference: 'TGD Part L 1.5.4 & TGD Part F (Ventilation Compatibility)',
+    nzeMandateReference:
+      'TGD Part L 1.5.4 & TGD Part F (Ventilation Compatibility)',
   });
 
   // Pillar 5: Renewable Energy Ratio (RER >= 20%)
-  const hasHeatPump = profile.heatingSystem?.toLowerCase().includes('heat pump');
+  const hasHeatPump = profile.heatingSystem
+    ?.toLowerCase()
+    .includes('heat pump');
   const solarSize = profile.solarPVKwp || 0;
   const rerEst = hasHeatPump ? 32 : solarSize > 2.0 ? 22 : 8;
   const rerPass = rerEst >= 20;
@@ -496,7 +547,8 @@ export async function evaluateNZEBCompliance(
     recommendation: rerPass
       ? `Heat Pump COP ${profile.heatPumpCOP} + Solar PV ${solarSize}kWp fully satisfies Part L renewable mandate.`
       : 'Install minimum 2.5 kWp Solar PV or an Air-to-Water Heat Pump to satisfy RER.',
-    nzeMandateReference: 'TGD Part L Regulation L3(b) (Renewable Energy Technologies)',
+    nzeMandateReference:
+      'TGD Part L Regulation L3(b) (Renewable Energy Technologies)',
   });
 
   // Calculate Overall Compliance
@@ -526,7 +578,10 @@ export async function evaluateNZEBCompliance(
   }
 
   // Estimated primary energy & performance coefficients
-  const estimatedPrimaryEnergy = Math.max(32, Math.round(180 - (totalScore / 100) * 145));
+  const estimatedPrimaryEnergy = Math.max(
+    32,
+    Math.round(180 - (totalScore / 100) * 145),
+  );
   const epc = parseFloat((0.15 + (1 - totalScore / 100) * 0.25).toFixed(2));
   const cpc = parseFloat((0.18 + (1 - totalScore / 100) * 0.28).toFixed(2));
 
@@ -562,7 +617,10 @@ Write a 2-paragraph technical executive summary for the homeowner explaining:
         llmExecutiveSummary = response.text.trim();
       }
     } catch (err) {
-      console.warn('[RetrofitCoachEngine] LLM NZEB summary generation failed, using fallback', err);
+      console.warn(
+        '[RetrofitCoachEngine] LLM NZEB summary generation failed, using fallback',
+        err,
+      );
     }
   }
 
@@ -584,7 +642,10 @@ Write a 2-paragraph technical executive summary for the homeowner explaining:
 
   if (env && env.RETROFIT_COACH_MESSAGES) {
     try {
-      await env.RETROFIT_COACH_MESSAGES.put(`nzeb_report_${user_id}`, JSON.stringify(report));
+      await env.RETROFIT_COACH_MESSAGES.put(
+        `nzeb_report_${user_id}`,
+        JSON.stringify(report),
+      );
     } catch (e) {
       /* ignore */
     }
@@ -612,20 +673,32 @@ export async function askRetrofitCoach(
   let defaultAnswer = `As your AI Retrofit Coach, I recommend focusing on two key items before your site visit: 1) Ensure clear attic hatch access for insulation depth measurement, and 2) Have your 11-digit MPRN and recent electricity bills ready. For NZEB Part L compliance, your primary energy must remain under 45 kWh/m²/yr with an air permeability under 5 m³/(hr·m²).`;
   let tone: 'friendly' | 'urgent' | 'reassuring' | 'celebratory' = 'friendly';
 
-  if (normalizedQuery.includes('nzeb') || normalizedQuery.includes('part l') || normalizedQuery.includes('a2')) {
+  if (
+    normalizedQuery.includes('nzeb') ||
+    normalizedQuery.includes('part l') ||
+    normalizedQuery.includes('a2')
+  ) {
     defaultAnswer = `To achieve NZEB compliance (A2 rating) in Ireland:
 1. **Primary Energy Consumption**: Must be ≤ 45 kWh/m²/yr with an EPC ≤ 0.30 and CPC ≤ 0.35.
 2. **Renewable Energy Ratio (RER)**: At least 20% of your energy demand must come from renewables (such as an Air-to-Water Heat Pump with COP ≥ 3.2 or Solar PV).
 3. **Airtightness**: Blower door test result q50 must be ≤ 5.0 m³/(hr·m²) paired with continuous mechanical or demand-controlled ventilation (DCV).
 4. **Elemental Fabric**: Roof U-value ≤ 0.16 W/m²K, Walls ≤ 0.18 W/m²K, Floor ≤ 0.15 W/m²K, and Windows ≤ 1.2 W/m²K.`;
     tone = 'reassuring';
-  } else if (normalizedQuery.includes('heat pump') || normalizedQuery.includes('radiator') || normalizedQuery.includes('flow temp')) {
+  } else if (
+    normalizedQuery.includes('heat pump') ||
+    normalizedQuery.includes('radiator') ||
+    normalizedQuery.includes('flow temp')
+  ) {
     defaultAnswer = `For your heat pump site visit:
-- **Heat Loss Indicator (HLI)**: The assessor will calculate your home's HLI. It must be ≤ 2.0 W/K/m² (or up to 2.3 with technical dispensation) to qualify for the €6,500 - €8,000 SEAI grant.
+- **Heat Loss Indicator (HLI)**: The assessor will calculate your home's HLI. It must be ≤ 2.0 W/K/m² (or up to 2.3 with technical dispensation) to qualify for the up to €12,500 SEAI grant bundle (€6,500 heat pump unit + €2,000 heating system/radiator upgrades + €4,000 renewable heat bonus).
 - **Radiator Sizing**: The assessor will inspect every room's radiator. Because heat pumps operate efficiently at low water temperatures (35°C–45°C vs 65°C for oil boilers), certain rooms may need double-convector (Type 22) or larger radiators to guarantee 21°C comfort.
 - **Cylinder & Pipework**: Check that the airing cupboard has room for a 180L–250L pre-plumbed heat pump cylinder with 28mm primary flow pipework.`;
     tone = 'friendly';
-  } else if (normalizedQuery.includes('attic') || normalizedQuery.includes('access') || normalizedQuery.includes('prepare')) {
+  } else if (
+    normalizedQuery.includes('attic') ||
+    normalizedQuery.includes('access') ||
+    normalizedQuery.includes('prepare')
+  ) {
     defaultAnswer = `Key site visit preparation steps:
 1. **Attic Access**: Remove boxes or obstructions underneath your loft hatch. The surveyor needs to inspect insulation depth, rafter ventilation, and water storage tanks.
 2. **Electrical Meter Box**: Ensure the external or internal ESB meter box is unlocked and accessible so the electrician can verify fuse ratings and main isolation switches.
@@ -673,12 +746,16 @@ Include actionable preparation steps for site visits and exact NZEB compliance t
           tone: 'friendly',
           siteVisitTips,
           nzebComplianceInsights,
-          suggestedNextAction: 'Review your site visit preparation checklist and confirm attic access.',
+          suggestedNextAction:
+            'Review your site visit preparation checklist and confirm attic access.',
           modelUsed: 'gemini-3.7-flash',
         };
       }
     } catch (err) {
-      console.warn('[RetrofitCoachEngine] LLM consultation failed, using expert fallback', err);
+      console.warn(
+        '[RetrofitCoachEngine] LLM consultation failed, using expert fallback',
+        err,
+      );
     }
   }
 
@@ -687,7 +764,8 @@ Include actionable preparation steps for site visits and exact NZEB compliance t
     tone,
     siteVisitTips,
     nzebComplianceInsights,
-    suggestedNextAction: 'Review your site visit preparation checklist and confirm attic access.',
+    suggestedNextAction:
+      'Review your site visit preparation checklist and confirm attic access.',
     modelUsed: 'deterministic-knowledge-base',
   };
 }
@@ -715,7 +793,10 @@ export async function generateCoachMessages(
       : 'grant_eligibility_complete';
 
   // 1. Site Visit Preparation Milestone Nudges
-  if (lastEvent === 'technical_assessment_scheduled' || lastEvent === 'grant_eligibility_complete') {
+  if (
+    lastEvent === 'technical_assessment_scheduled' ||
+    lastEvent === 'grant_eligibility_complete'
+  ) {
     messages.push({
       id: `coach_${now}_sitevisit`,
       user_id,
@@ -817,7 +898,10 @@ export async function generateCoachMessages(
   if (env && env.RETROFIT_COACH_MESSAGES) {
     try {
       await env.RETROFIT_COACH_MESSAGES.put(user_id, JSON.stringify(bundle));
-      await env.RETROFIT_COACH_MESSAGES.put('latest_coach_bundle', JSON.stringify(bundle));
+      await env.RETROFIT_COACH_MESSAGES.put(
+        'latest_coach_bundle',
+        JSON.stringify(bundle),
+      );
     } catch (e) {
       /* ignore */
     }
@@ -851,7 +935,10 @@ export class RetrofitCoachEngine {
     return getCoachMessages(env, user_id);
   }
 
-  async generateMessages(env: any, user_id: string): Promise<CoachMessageBundle> {
+  async generateMessages(
+    env: any,
+    user_id: string,
+  ): Promise<CoachMessageBundle> {
     return generateCoachMessages(env, user_id);
   }
 

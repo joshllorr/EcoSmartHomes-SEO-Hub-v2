@@ -96,8 +96,8 @@ describe('BER Jump Calculator (SEAI DEAP 4.2)', () => {
     );
 
     expect(jump.currentBER).toBe('F');
-    // Deep retrofit from F should reach A2 or A3
-    expect(['A1', 'A2', 'A3', 'B1']).toContain(jump.predictedBER);
+    // Deep retrofit from F on 8-step scale reaches A0, A, or B
+    expect(['A0', 'A', 'B']).toContain(jump.predictedBER);
     expect(jump.predictedPrimaryEnergyKWhM2).toBeLessThan(
       jump.currentPrimaryEnergyKWhM2,
     );
@@ -130,7 +130,8 @@ describe('SEAI Grants & Financial Modeling', () => {
       2200, // €2,200 annual energy savings
     );
 
-    expect(financials.totalGrantOffsetEUR).toBeGreaterThanOrEqual(10000); // 1300 + 1300 + 6500 + 200 + 2100 = 11400
+    // 2026 enhanced rates: 1500 (attic) + 1300 (cavity) + 12500 (heat pump bundle) + 350 (advisor) + 2100 (solar) = 17750
+    expect(financials.totalGrantOffsetEUR).toBeGreaterThanOrEqual(16000);
     expect(financials.netHomeownerCostEUR).toBeLessThan(
       financials.grossEstimatedCostEUR,
     );

@@ -3403,7 +3403,7 @@ app.post('/api/qa', (req, res) => {
   else if (q.includes('heat pump') || q.includes('air-to-water'))
     intent = 'heatPumps';
 
-  const sampleAnswer = `Based on EcoSmartHomes' verified Knowledge Graph and SEAI / BER datasets, ${question} is directly answered by our published guides. We recommend starting with heat pump grant eligibility (€6,500 SEAI subsidy) and BER rating assessments.`;
+  const sampleAnswer = `Based on EcoSmartHomes' verified Knowledge Graph and SEAI / BER datasets, ${question} is directly answered by our published guides. We recommend starting with heat pump grant eligibility (up to €12,500 SEAI bundle subsidy) and BER rating assessments.`;
 
   broadcastToAll({
     type: 'qa_query',
@@ -3671,7 +3671,7 @@ function generateFallbackArticle(params: {
 
     section1 = `## Getting Your Home Cozy: Insulation & Fabric First\n\nWhen we talk about upgrading your home, we always recommend a 'Fabric First' approach. There is no use in putting a brand new, highly efficient heating system into a house if the heat is just going to slip right out through the walls and the roof! Double or triple-glazed windows with low U-values, high-quality attic insulation, and cavity wall insulation are the absolute foundation of a warm home. By stopping heat loss, you keep that lovely warmth right where it belongs—inside with you.`;
 
-    section2 = `## Navigating SEAI Grants with Ease\n\nNow, you might be thinking, "This all sounds lovely, but how am am is going to pay for it?" Well, the good news is that the Sustainable Energy Authority of Ireland (SEAI) is offering some truly fantastic grants to help you along the way. Whether you are looking to do a deep retrofit through a One-Stop-Shop or take it step-by-step with individual grants, there is plenty of support. For example, you can get up to €6,500 towards a brand new air-to-water heat pump system!`;
+    section2 = `## Navigating SEAI Grants with Ease\n\nNow, you might be thinking, "This all sounds lovely, but how am I going to pay for it?" Well, the good news is that the Sustainable Energy Authority of Ireland (SEAI) is offering some truly fantastic grants to help you along the way. Whether you are looking to do a deep retrofit through a One-Stop-Shop or take it step-by-step with individual grants, there is plenty of support. For example, you can get up to €12,500 towards a brand new air-to-water heat pump system bundle!`;
 
     section3 = `## Practical Steps to Start Your Retrofit Journey\n\n1. **Book a Technical Assessment**: Get a certified BER assessor to visit your home and evaluate the Heat Loss Indicator (HLI).\n2. **Insulate Your Roof and Walls**: Lock in the baseline heat.\n3. **Switch to Heat Pump Technology**: Say goodbye to old, dirty oil boilers.\n4. **Claim Your SEAI Subsidies**: Keep track of all paperwork and certificates to secure your grant payments smoothly.`;
 
@@ -3681,7 +3681,7 @@ function generateFallbackArticle(params: {
 
     section1 = `## Advanced Building Envelope Optimization & U-Values\n\nTo establish a high-efficiency envelope, developers and surveyors must prioritize lowering overall thermal transmittance (U-values). This is achieved by specifying premium thermal insulating materials, such as polyisocyanurate (PIR) boards or high-density rockwool slabs for wall cavity and attic layouts. High-performance triple-glazed windows should be certified to a U-value of 0.8 W/m²K or lower, coupled with continuous internal airtightness membranes to eliminate convective heat loss pathways.`;
 
-    section2 = `## Mechanical Heating Integration & SEAI Grant Frameworks\n\nTransitioning from high-carbon fossil fuel boilers (gas or oil) to electric heat pumps requires meeting strict SEAI pre-requisites. The home's Heat Loss Indicator (HLI) must be certified by a Technical Assessor to be 2.0 W/m²K or less. Registered Air-to-Water heat pumps operate at a seasonal coefficient of performance (SCOP) exceeding 4.0, delivering 4 units of thermal energy for every 1 unit of electrical input. SEAI currently subsidizes this transition with grants of up to €6,500, greatly accelerating return on investment.`;
+    section2 = `## Mechanical Heating Integration & SEAI Grant Frameworks\n\nTransitioning from high-carbon fossil fuel boilers (gas or oil) to electric heat pumps requires meeting strict SEAI pre-requisites. The home's Heat Loss Indicator (HLI) must be certified by a Technical Assessor to be 2.0 W/m²K or less. Registered Air-to-Water heat pumps operate at a seasonal coefficient of performance (SCOP) exceeding 4.0, delivering 4 units of thermal energy for every 1 unit of electrical input. SEAI currently subsidizes this transition with grants of up to €12,500, greatly accelerating return on investment.`;
 
     section3 = `## Methodical Retrofitting Sequence\n\n1. **Airtightness & Thermal Imaging Scan**: Conduct a pressurization test to locate envelope defects.\n2. **Acoustic and Cavity insulation Injection**: Upgrade external wall partitions to maximize thermal resistance.\n3. **Heat Pump Commissioning**: Optimize low-temperature radiator circuits for balanced thermodynamic output.\n4. **Final Post-Works BER Survey**: Secure the official energy rating certificate showing compliant A-class status.`;
 
@@ -3691,7 +3691,7 @@ function generateFallbackArticle(params: {
 
     section1 = `## Stop Wasting Money: Lock In the Heat Today!\n\nDid you know that up to 30% of your home's heat is escaping right through your roof and walls? That is literally like throwing money out the window! By upgrading your insulation—including high-tech wall insulation and attic wool—you are wrapping your home in a warm, protective thermal blanket. Combined with state-of-the-art double or triple-glazed windows, you'll feel the immediate, life-changing difference the second you step inside!`;
 
-    section2 = `## Grab Your Share of €10,000+ in SEAI Grants!\n\nThe Irish Government is literally paying you to upgrade! Through the Sustainable Energy Authority of Ireland (SEAI), you can unlock incredible, direct grant subsidies to fund your home renovation. From up to €6,500 for a cutting-edge air-to-water heat pump to significant cavity insulation grants, the financial support is unprecedented. Don't leave free money on the table—let us help you secure your funding today!`;
+    section2 = `## Grab Your Share of €10,000+ in SEAI Grants!\n\nThe Irish Government is literally paying you to upgrade! Through the Sustainable Energy Authority of Ireland (SEAI), you can unlock incredible, direct grant subsidies to fund your home renovation. From up to €12,500 for a cutting-edge air-to-water heat pump bundle to significant cavity insulation grants, the financial support is unprecedented. Don't leave free money on the table—let us help you secure your funding today!`;
 
     section3 = `## 4 Simple Steps to Your Dream Retrofit\n\n1. **Get an Expert BER Assessment**: Know exactly where your home is losing energy.\n2. **Supercharge Your Insulation**: Maximize heat retention with premium insulation.\n3. **Ditch the Old Boiler**: Upgrade to an ultra-efficient, clean heat pump.\n4. **Enjoy Low Bills**: Relish in massive monthly savings and year-round comfort!`;
 
@@ -3701,7 +3701,7 @@ function generateFallbackArticle(params: {
 
     section1 = `## The Warm Blanket: High-Quality Attic & Wall Insulation\n\nThink of insulation like a big, cozy winter coat for your house. If you don't insulate properly, your heating system has to work twice as hard just to keep up. By upgrading your attic wool, pumping cavity walls, or upgrading single-glazed windows, you lock in the warmth and slash your heating bills right away. It's the most effective first step for any retrofit!`;
 
-    section2 = `## How to Save Big with SEAI Grants\n\nDid you know the Irish government offers huge grants to help you pay for your retrofit? Through the SEAI, you can get massive subsidies for insulation, solar panels, and heat pumps. In fact, you can receive up to €6,500 towards installing an ultra-efficient air-to-water heat pump! This makes green energy incredibly affordable and pays for itself in no time.`;
+    section2 = `## How to Save Big with SEAI Grants\n\nDid you know the Irish government offers huge grants to help you pay for your retrofit? Through the SEAI, you can get massive subsidies for insulation, solar panels, and heat pumps. In fact, you can receive up to €12,500 towards installing an ultra-efficient air-to-water heat pump system bundle! This makes green energy incredibly affordable and pays for itself in no time.`;
 
     section3 = `## Simple Action Steps for Homeowners\n\n1. **Get a BER Assessor**: Let a professional check your home's current energy rating.\n2. **Insulate attic and walls**: Lock in the baseline temperature.\n3. **Upgrade heating**: Swap old boilers for a modern, electric heat pump.\n4. **Apply for grants**: We'll help you file the paperwork to SEAI!`;
 
@@ -4919,7 +4919,7 @@ Always recommend registered contractors, sustainable materials, and accurate det
     const cleanWarning = formatGeminiErrorMessage(error);
     return res.json({
       success: true,
-      text: `### Advisor Insights (Offline Safe-Mode)\n\nWe encountered an issue connecting to live Google services (${cleanWarning}).\n\nHere is expert guidance related to your query on **"${prompt}"**:\n\n1. **Hire SEAI Registered Contractors**: Ensure any heat pump, insulation, or solar installer is registered with SEAI to receive grant funds (up to €6,500 for heat pumps).\n2. **BER Assessment**: A pre-works thermal calculation must be done by an independent assessor to secure a Technical Assessment report.\n3. **Heat Loss Indicator (HLI)**: To qualify for a heat pump grant, your home's HLI must be <= 2.0 W/m²K.\n\nBelow are standard certified contractors and suppliers for your project:`,
+      text: `### Advisor Insights (Offline Safe-Mode)\n\nWe encountered an issue connecting to live Google services (${cleanWarning}).\n\nHere is expert guidance related to your query on **"${prompt}"**:\n\n1. **Hire SEAI Registered Contractors**: Ensure any heat pump, insulation, or solar installer is registered with SEAI to receive grant funds (up to €12,500 for heat pump bundles).\n2. **BER Assessment**: A pre-works thermal calculation must be done by an independent assessor to secure a Technical Assessment report.\n3. **Heat Loss Indicator (HLI)**: To qualify for a heat pump grant, your home's HLI must be <= 2.0 W/m²K.\n\nBelow are standard certified contractors and suppliers for your project:`,
       sources: simulatedSuppliers,
       isMock: true,
       warning: `Offline backup activated: ${cleanWarning}`,

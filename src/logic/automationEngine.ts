@@ -113,7 +113,8 @@ export interface RefreshImpactRecord {
   preRefreshVolatility: number;
   postRefreshVolatility: number;
   measuredDaysAfter: number;
-  impactVerdict: 'significant_gain' | 'moderate_gain' | 'neutral' | 'needs_attention';
+  impactVerdict:
+    'significant_gain' | 'moderate_gain' | 'neutral' | 'needs_attention';
 }
 
 export class AutomationEngine {
@@ -164,12 +165,36 @@ export class AutomationEngine {
     customTargets?: InternalLinkTarget[],
   ): { content: string; linksAdded: number; addedLinks: InternalLinkTarget[] } {
     const defaultTargets: InternalLinkTarget[] = customTargets || [
-      { anchor: 'heat pump grants', url: '/grants/heat-pumps', category: 'Heat Pumps' },
-      { anchor: 'solar pv grants ireland', url: '/grants/solar-pv', category: 'Solar' },
-      { anchor: 'seai grants limerick', url: '/grants/limerick-v94', category: 'Local' },
-      { anchor: 'attic insulation cost', url: '/insulation/attic', category: 'Insulation' },
-      { anchor: 'ber rating upgrade', url: '/ber-rating-guide', category: 'BER' },
-      { anchor: 'one stop shop retrofit', url: '/one-stop-shop', category: 'General' },
+      {
+        anchor: 'heat pump grants',
+        url: '/grants/heat-pumps',
+        category: 'Heat Pumps',
+      },
+      {
+        anchor: 'solar pv grants ireland',
+        url: '/grants/solar-pv',
+        category: 'Solar',
+      },
+      {
+        anchor: 'seai grants limerick',
+        url: '/grants/limerick-v94',
+        category: 'Local',
+      },
+      {
+        anchor: 'attic insulation cost',
+        url: '/insulation/attic',
+        category: 'Insulation',
+      },
+      {
+        anchor: 'ber rating upgrade',
+        url: '/ber-rating-guide',
+        category: 'BER',
+      },
+      {
+        anchor: 'one stop shop retrofit',
+        url: '/one-stop-shop',
+        category: 'General',
+      },
     ];
 
     let content = htmlOrMarkdown;
@@ -178,7 +203,10 @@ export class AutomationEngine {
 
     defaultTargets.forEach((target) => {
       // Look for plain text occurrences not already inside a markdown link or HTML tag
-      const regex = new RegExp(`(?<!\\[)(?<!href=")(?<!>)\\b(${target.anchor})\\b(?!\\])(?!</a>)`, 'i');
+      const regex = new RegExp(
+        `(?<!\\[)(?<!href=")(?<!>)\\b(${target.anchor})\\b(?!\\])(?!</a>)`,
+        'i',
+      );
       if (regex.test(content)) {
         content = content.replace(regex, `[$1](${target.url})`);
         linksAdded++;
@@ -204,7 +232,11 @@ export class AutomationEngine {
   public boostSemanticEntities(
     content: string,
     topic: string,
-  ): { boostedContent: string; missingEntities: string[]; injectedEntities: string[] } {
+  ): {
+    boostedContent: string;
+    missingEntities: string[];
+    injectedEntities: string[];
+  } {
     const requiredEntities = [
       'SEAI (Sustainable Energy Authority of Ireland)',
       'Building Regulations Part L Compliance',
@@ -229,7 +261,10 @@ export class AutomationEngine {
 
     if (missingEntities.length > 0) {
       const entitySection = `\n\n### Key Regulatory & Energy Standards\nTo ensure full eligibility for Irish government retrofit schemes:\n${missingEntities
-        .map((e) => `- **${e}**: Essential criteria for maximum SEAI grant approval.`)
+        .map(
+          (e) =>
+            `- **${e}**: Essential criteria for maximum SEAI grant approval.`,
+        )
         .join('\n')}\n`;
       boostedContent += entitySection;
       injectedEntities.push(...missingEntities);
@@ -265,7 +300,11 @@ export class AutomationEngine {
 
     // Optimize title to 50-60 characters with CTR modifiers
     let optimizedTitle = currentTitle || '';
-    if (!optimizedTitle || optimizedTitle.length < 30 || !optimizedTitle.includes(cleanKw)) {
+    if (
+      !optimizedTitle ||
+      optimizedTitle.length < 30 ||
+      !optimizedTitle.includes(cleanKw)
+    ) {
       optimizedTitle = `${cleanKw} Guide (${currentYear}) | Grants & Costs Ireland`;
       if (optimizedTitle.length > 60) {
         optimizedTitle = `${cleanKw} (${currentYear}) | EcoSmartHomes IE`;
@@ -328,8 +367,13 @@ export class AutomationEngine {
     }
 
     // Check @context
-    if (!schemaObj['@context'] || !schemaObj['@context'].includes('schema.org')) {
-      errors.push("Missing or invalid '@context'. Expected 'https://schema.org'.");
+    if (
+      !schemaObj['@context'] ||
+      !schemaObj['@context'].includes('schema.org')
+    ) {
+      errors.push(
+        "Missing or invalid '@context'. Expected 'https://schema.org'.",
+      );
       missingRequiredFields.push('@context');
     }
 
@@ -350,31 +394,46 @@ export class AutomationEngine {
         warnings.push("Article schema recommends an 'author' object.");
       }
       if (!schemaObj.publisher) {
-        warnings.push("Article schema recommends a 'publisher' object with logo.");
+        warnings.push(
+          "Article schema recommends a 'publisher' object with logo.",
+        );
       }
       if (!schemaObj.datePublished) {
         errors.push("Article schema requires 'datePublished' in ISO format.");
         missingRequiredFields.push('datePublished');
       }
     } else if (schemaType === 'FAQPage') {
-      if (!schemaObj.mainEntity || !Array.isArray(schemaObj.mainEntity) || schemaObj.mainEntity.length === 0) {
-        errors.push("FAQPage schema requires 'mainEntity' array of Question objects.");
+      if (
+        !schemaObj.mainEntity ||
+        !Array.isArray(schemaObj.mainEntity) ||
+        schemaObj.mainEntity.length === 0
+      ) {
+        errors.push(
+          "FAQPage schema requires 'mainEntity' array of Question objects.",
+        );
         missingRequiredFields.push('mainEntity');
       } else {
         schemaObj.mainEntity.forEach((q: any, i: number) => {
           if (!q.name) errors.push(`FAQ Question #${i + 1} is missing 'name'.`);
           if (!q.acceptedAnswer || !q.acceptedAnswer.text) {
-            errors.push(`FAQ Question #${i + 1} is missing 'acceptedAnswer.text'.`);
+            errors.push(
+              `FAQ Question #${i + 1} is missing 'acceptedAnswer.text'.`,
+            );
           }
         });
       }
-    } else if (schemaType === 'LocalBusiness' || schemaType === 'HomeAndConstructionBusiness') {
+    } else if (
+      schemaType === 'LocalBusiness' ||
+      schemaType === 'HomeAndConstructionBusiness'
+    ) {
       if (!schemaObj.name) {
         errors.push("LocalBusiness schema requires 'name'.");
         missingRequiredFields.push('name');
       }
       if (!schemaObj.address) {
-        errors.push("LocalBusiness schema requires 'address' (including postalCode / Eircode).");
+        errors.push(
+          "LocalBusiness schema requires 'address' (including postalCode / Eircode).",
+        );
         missingRequiredFields.push('address');
       }
     }
@@ -398,7 +457,9 @@ export class AutomationEngine {
       errors,
       warnings,
       missingRequiredFields,
-      recommendations: valid ? ['Schema is ready for Google Rich Result indexing.'] : ['Fix missing required properties before publishing.'],
+      recommendations: valid
+        ? ['Schema is ready for Google Rich Result indexing.']
+        : ['Fix missing required properties before publishing.'],
     };
   }
 
@@ -441,7 +502,9 @@ export class AutomationEngine {
       volatility,
       zone,
       priority,
-      reason: item.reason || `Automated queue triggered by ${zone.toUpperCase()} Stability Zone (Slope: ${slope}, Vol: ${volatility}).`,
+      reason:
+        item.reason ||
+        `Automated queue triggered by ${zone.toUpperCase()} Stability Zone (Slope: ${slope}, Vol: ${volatility}).`,
       queuedAt: Date.now(),
       status: 'pending',
     };
@@ -584,7 +647,10 @@ export class AutomationEngine {
         name: 'SEAI Solar PV Electricity Grant',
         maxGrantAmount: 2100,
         propertyEligibility: 'Homes built and occupied before 2021',
-        requirements: ['Registered SEAI installer', 'BER assessment post-installation'],
+        requirements: [
+          'Registered SEAI installer',
+          'BER assessment post-installation',
+        ],
         measures: [
           { measure: 'Up to 2kWp solar panels', grantValue: 800 },
           { measure: '2kWp to 4kWp (€350/kWp extra)', grantValue: 1300 },
@@ -593,14 +659,19 @@ export class AutomationEngine {
       },
       {
         id: 'heat-pumps',
-        name: 'SEAI Heat Pump System Grant',
-        maxGrantAmount: 6500,
-        propertyEligibility: 'Homes built and occupied before 2021 with HLI <= 2.0 W/K/m²',
-        requirements: ['Technical assessment', 'Fabric-first insulation upgrade if HLI > 2.0'],
+        name: 'SEAI Heat Pump System Grant Bundle',
+        maxGrantAmount: 12500,
+        propertyEligibility:
+          'Homes built and occupied before 2021 with HLI <= 2.0 W/K/m²',
+        requirements: [
+          'Technical assessment',
+          'Fabric-first insulation upgrade if HLI > 2.0',
+        ],
         measures: [
-          { measure: 'Air to Water Heat Pump', grantValue: 6500 },
-          { measure: 'Ground Source to Water', grantValue: 6500 },
-          { measure: 'Technical Assessment Grant', grantValue: 200 },
+          { measure: 'Air to Water Heat Pump Unit', grantValue: 6500 },
+          { measure: 'Renewable Heat Bonus (Fossil Switch)', grantValue: 4000 },
+          { measure: 'Central Heating System Upgrade', grantValue: 2000 },
+          { measure: 'Technical Assessment Grant', grantValue: 350 },
         ],
       },
       {
@@ -608,17 +679,23 @@ export class AutomationEngine {
         name: 'SEAI Home Insulation Grants',
         maxGrantAmount: 8000,
         propertyEligibility: 'Homes built before 2011',
-        requirements: ['Certified NSAI insulation material', 'Registered installer'],
+        requirements: [
+          'Certified NSAI insulation material',
+          'Registered installer',
+        ],
         measures: [
-          { measure: 'Attic Insulation (Detached)', grantValue: 1500 },
-          { measure: 'Cavity Wall Insulation', grantValue: 1700 },
+          { measure: 'Attic Insulation (Detached)', grantValue: 2000 },
+          { measure: 'Cavity Wall Insulation (Detached)', grantValue: 1800 },
           { measure: 'External Wall Insulation (Detached)', grantValue: 8000 },
         ],
       },
     ];
   }
 
-  public calculateGrantDeduction(schemeId: string, grossCost: number): {
+  public calculateGrantDeduction(
+    schemeId: string,
+    grossCost: number,
+  ): {
     grossCost: number;
     grantAllowance: number;
     netHomeownerCost: number;
@@ -686,11 +763,16 @@ export class AutomationEngine {
   // ----------------------------------------------------
   // PHASE 25 — CRAWL SCHEDULER
   // ----------------------------------------------------
-  public scheduleCrawl(keyword: string, targetUrl: string, priority: 'critical' | 'high' | 'normal' = 'normal'): ScheduledCrawlJob {
+  public scheduleCrawl(
+    keyword: string,
+    targetUrl: string,
+    priority: 'critical' | 'high' | 'normal' = 'normal',
+  ): ScheduledCrawlJob {
     const cleanKw = keyword.trim().toLowerCase();
     const id = `crawl-${cleanKw.replace(/[^a-z0-9]+/g, '-')}`;
 
-    const intervalHours = priority === 'critical' ? 6 : priority === 'high' ? 12 : 24;
+    const intervalHours =
+      priority === 'critical' ? 6 : priority === 'high' ? 12 : 24;
     const nextRun = Date.now() + intervalHours * 3600 * 1000;
 
     const job: ScheduledCrawlJob = {
@@ -732,7 +814,8 @@ export class AutomationEngine {
     const statusCode = 200;
     const loadTimeMs = 380;
     const title = 'EcoSmartHomes Ireland | Sustainable Home Energy Retrofits';
-    const metaDescription = 'Ireland leading energy retrofit experts. SEAI grant assistance, heat pumps, solar PV, and insulation.';
+    const metaDescription =
+      'Ireland leading energy retrofit experts. SEAI grant assistance, heat pumps, solar PV, and insulation.';
     const h1Count = 1;
     const h2Count = 6;
     const internalLinksCount = 14;
@@ -856,9 +939,21 @@ export class AutomationEngine {
   }
 
   private seedDefaultScheduledJobs() {
-    this.scheduleCrawl('solar pv grants ireland', 'https://ecosmarthomes.ie/solar-pv', 'critical');
-    this.scheduleCrawl('heat pump costs ireland', 'https://ecosmarthomes.ie/heat-pumps', 'normal');
-    this.scheduleCrawl('seai grants limerick', 'https://ecosmarthomes.ie/grants/limerick-v94', 'high');
+    this.scheduleCrawl(
+      'solar pv grants ireland',
+      'https://ecosmarthomes.ie/solar-pv',
+      'critical',
+    );
+    this.scheduleCrawl(
+      'heat pump costs ireland',
+      'https://ecosmarthomes.ie/heat-pumps',
+      'normal',
+    );
+    this.scheduleCrawl(
+      'seai grants limerick',
+      'https://ecosmarthomes.ie/grants/limerick-v94',
+      'high',
+    );
   }
 }
 
@@ -893,13 +988,21 @@ export function getAutomationState(): AutomationEngineState {
   };
 }
 
-export function repairAutomationEngine(): { repaired: boolean; message: string } {
+export function repairAutomationEngine(): {
+  repaired: boolean;
+  message: string;
+} {
   const crawls = globalAutomationEngine.getScheduledJobs();
   if (crawls.length === 0) {
-    globalAutomationEngine.scheduleCrawl('solar pv grants ireland', 'https://ecosmarthomes.ie/solar-pv', 'critical');
+    globalAutomationEngine.scheduleCrawl(
+      'solar pv grants ireland',
+      'https://ecosmarthomes.ie/solar-pv',
+      'critical',
+    );
   }
   return {
     repaired: true,
-    message: 'Automation Queue, Crawl Scheduler, and Impact Tracker synchronized.',
+    message:
+      'Automation Queue, Crawl Scheduler, and Impact Tracker synchronized.',
   };
 }

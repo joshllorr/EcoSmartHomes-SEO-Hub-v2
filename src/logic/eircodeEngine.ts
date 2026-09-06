@@ -11,22 +11,7 @@
  * 5. Programmatic SEO schema generation for hyper-local county/Eircode pages.
  */
 
-export type BERBand =
-  | 'A1'
-  | 'A2'
-  | 'A3'
-  | 'B1'
-  | 'B2'
-  | 'B3'
-  | 'C1'
-  | 'C2'
-  | 'C3'
-  | 'D1'
-  | 'D2'
-  | 'E1'
-  | 'E2'
-  | 'F'
-  | 'G';
+export type BERBand = 'A0' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G';
 
 export interface BERBandDefinition {
   band: BERBand;
@@ -37,110 +22,76 @@ export interface BERBandDefinition {
   color: string;
 }
 
+/**
+ * Normalizes legacy 15-band ratings (e.g. A1, A2, B2, D1, E2) to the canonical 8-step scale (A0, A, B, C, D, E, F, G).
+ */
+export function normalizeBERBand(band: string): BERBand {
+  if (!band) return 'D';
+  const clean = band.toUpperCase().trim();
+  if (clean === 'A0') return 'A0';
+  if (clean === 'A1') return 'A0'; // A1 (≤ 25) maps to Zero-Emission / A0
+  if (['A2', 'A3', 'A'].includes(clean)) return 'A';
+  if (['B1', 'B2', 'B3', 'B'].includes(clean)) return 'B';
+  if (['C1', 'C2', 'C3', 'C'].includes(clean)) return 'C';
+  if (['D1', 'D2', 'D'].includes(clean)) return 'D';
+  if (['E1', 'E2', 'E'].includes(clean)) return 'E';
+  if (clean === 'F') return 'F';
+  if (clean === 'G') return 'G';
+  return 'D';
+}
+
+/**
+ * Official 2026 Recast EPBD / SEAI 8-Step Energy Performance Scale (A0 to G).
+ * A0: Zero-Emission Building (ZEB), no on-site fossil fuels, ≤ 42 kWh/m²/yr.
+ */
 export const BER_SCALE: Record<BERBand, BERBandDefinition> = {
-  A1: {
-    band: 'A1',
+  A0: {
+    band: 'A0',
     minEnergy: 0,
-    maxEnergy: 25,
-    medianEnergy: 15,
-    label: '≤ 25 kWh/m²/yr',
-    color: '#00843D',
+    maxEnergy: 42,
+    medianEnergy: 21,
+    label: '< 42 kWh/m²/yr (Zero-Emission)',
+    color: '#006837',
   },
-  A2: {
-    band: 'A2',
-    minEnergy: 25.01,
-    maxEnergy: 50,
-    medianEnergy: 37.5,
-    label: '26 - 50 kWh/m²/yr',
+  A: {
+    band: 'A',
+    minEnergy: 42.01,
+    maxEnergy: 75,
+    medianEnergy: 58.5,
+    label: '42 - 75 kWh/m²/yr',
     color: '#009639',
   },
-  A3: {
-    band: 'A3',
-    minEnergy: 50.01,
-    maxEnergy: 75,
-    medianEnergy: 62.5,
-    label: '51 - 75 kWh/m²/yr',
-    color: '#33A63B',
-  },
-  B1: {
-    band: 'B1',
+  B: {
+    band: 'B',
     minEnergy: 75.01,
-    maxEnergy: 100,
-    medianEnergy: 87.5,
-    label: '76 - 100 kWh/m²/yr',
+    maxEnergy: 150,
+    medianEnergy: 112.5,
+    label: '76 - 150 kWh/m²/yr (OSS Target)',
     color: '#66B63F',
   },
-  B2: {
-    band: 'B2',
-    minEnergy: 100.01,
-    maxEnergy: 125,
-    medianEnergy: 112.5,
-    label: '101 - 125 kWh/m²/yr',
-    color: '#99C643',
-  },
-  B3: {
-    band: 'B3',
-    minEnergy: 125.01,
-    maxEnergy: 150,
-    medianEnergy: 137.5,
-    label: '126 - 150 kWh/m²/yr',
-    color: '#CCD647',
-  },
-  C1: {
-    band: 'C1',
+  C: {
+    band: 'C',
     minEnergy: 150.01,
-    maxEnergy: 175,
-    medianEnergy: 162.5,
-    label: '151 - 175 kWh/m²/yr',
+    maxEnergy: 225,
+    medianEnergy: 187.5,
+    label: '151 - 225 kWh/m²/yr',
     color: '#FFF200',
   },
-  C2: {
-    band: 'C2',
-    minEnergy: 175.01,
-    maxEnergy: 200,
-    medianEnergy: 187.5,
-    label: '176 - 200 kWh/m²/yr',
-    color: '#FFD700',
-  },
-  C3: {
-    band: 'C3',
-    minEnergy: 200.01,
-    maxEnergy: 225,
-    medianEnergy: 212.5,
-    label: '201 - 225 kWh/m²/yr',
-    color: '#FFB800',
-  },
-  D1: {
-    band: 'D1',
+  D: {
+    band: 'D',
     minEnergy: 225.01,
-    maxEnergy: 260,
-    medianEnergy: 242.5,
-    label: '226 - 260 kWh/m²/yr',
-    color: '#FF9900',
-  },
-  D2: {
-    band: 'D2',
-    minEnergy: 260.01,
     maxEnergy: 300,
-    medianEnergy: 280,
-    label: '261 - 300 kWh/m²/yr',
+    medianEnergy: 262.5,
+    label: '226 - 300 kWh/m²/yr',
     color: '#FF7A00',
   },
-  E1: {
-    band: 'E1',
+  E: {
+    band: 'E',
     minEnergy: 300.01,
-    maxEnergy: 340,
-    medianEnergy: 320,
-    label: '301 - 340 kWh/m²/yr',
-    color: '#FF5C00',
-  },
-  E2: {
-    band: 'E2',
-    minEnergy: 340.01,
     maxEnergy: 380,
-    medianEnergy: 360,
-    label: '341 - 380 kWh/m²/yr',
-    color: '#FF3D00',
+    medianEnergy: 340,
+    label: '301 - 380 kWh/m²/yr',
+    color: '#FF5C00',
   },
   F: {
     band: 'F',
@@ -694,21 +645,25 @@ export function calculateSolarYield(
  * Calculates realistic BER jumps based on SEAI DEAP 4.2 methodology.
  */
 export function calculateBERJump(
-  currentBER: BERBand,
+  currentBER: BERBand | string,
   floorAreaM2: number,
   measures: RetrofitMeasuresSelection = {},
   solarKwpGenerated: number = 0,
 ): BERJumpResult {
-  const currentDef = BER_SCALE[currentBER] || BER_SCALE.D2;
+  const normBER = normalizeBERBand(currentBER);
+  const currentDef = BER_SCALE[normBER] || BER_SCALE.D;
   const currentEnergy = currentDef.medianEnergy;
 
-  // Initial baseline HLI approximation based on starting BER
+  // Initial baseline HLI approximation based on starting 8-step BER
   let baselineHLI = 3.8;
-  if (['A1', 'A2', 'A3'].includes(currentBER)) baselineHLI = 1.0;
-  else if (['B1', 'B2', 'B3'].includes(currentBER)) baselineHLI = 1.7;
-  else if (['C1', 'C2', 'C3'].includes(currentBER)) baselineHLI = 2.3;
-  else if (['D1', 'D2'].includes(currentBER)) baselineHLI = 3.0;
-  else if (['E1', 'E2'].includes(currentBER)) baselineHLI = 3.6;
+  if (normBER === 'A0') baselineHLI = 0.8;
+  else if (normBER === 'A') baselineHLI = 1.2;
+  else if (normBER === 'B') baselineHLI = 1.8;
+  else if (normBER === 'C') baselineHLI = 2.4;
+  else if (normBER === 'D') baselineHLI = 3.0;
+  else if (normBER === 'E') baselineHLI = 3.6;
+  else if (normBER === 'F') baselineHLI = 4.1;
+  else if (normBER === 'G') baselineHLI = 4.6;
 
   let predictedHLI = baselineHLI;
   let remainingEnergy = currentEnergy;
@@ -752,7 +707,7 @@ export function calculateBERJump(
   const predictedEnergy = Math.max(12, Number(remainingEnergy.toFixed(1)));
   predictedHLI = Math.max(0.7, Number(predictedHLI.toFixed(2)));
 
-  // Determine post-works BER band
+  // Determine post-works BER band in 8-step scale
   let predictedBER: BERBand = 'G';
   for (const band of Object.keys(BER_SCALE) as BERBand[]) {
     const def = BER_SCALE[band];
@@ -777,7 +732,7 @@ export function calculateBERJump(
   const annualCarbonReductionKg = Math.round(totalKWhSaved * 0.26);
 
   return {
-    currentBER,
+    currentBER: normBER,
     predictedBER,
     currentPrimaryEnergyKWhM2: currentEnergy,
     predictedPrimaryEnergyKWhM2: predictedEnergy,
@@ -793,7 +748,8 @@ export function calculateBERJump(
 }
 
 /**
- * 2026 SEAI Domestic Grant Schedule and Payback Calculator
+ * 2026 SEAI Domestic Grant Schedule and Payback Calculator (Enhanced Budget 2026 Rates).
+ * Heat Pump system bundle up to €12,500 (€6,500 unit + €2,000 heating system + €4,000 renewable heat bonus).
  */
 export function calculateSEAIFinancials(
   propertyType: PropertyType,
@@ -805,15 +761,15 @@ export function calculateSEAIFinancials(
   const grants: { measure: string; grantAmountEUR: number }[] = [];
 
   if (measures.atticInsulation) {
-    const cost = propertyType === 'detached' ? 2200 : 1700;
-    const grant = propertyType === 'detached' ? 1500 : 1300;
+    const cost = propertyType === 'detached' ? 2600 : 2000;
+    const grant = propertyType === 'detached' ? 2000 : 1500;
     grossCost += cost;
     grants.push({ measure: 'Attic Insulation (300mm)', grantAmountEUR: grant });
   }
 
   if (measures.cavityWallInsulation) {
-    const cost = propertyType === 'detached' ? 2400 : 1800;
-    const grant = propertyType === 'detached' ? 1700 : 1300;
+    const cost = propertyType === 'detached' ? 2600 : 2000;
+    const grant = propertyType === 'detached' ? 1800 : 1300;
     grossCost += cost;
     grants.push({ measure: 'Cavity Wall Pumping', grantAmountEUR: grant });
   } else if (measures.externalWallInsulation) {
@@ -828,29 +784,36 @@ export function calculateSEAIFinancials(
 
   if (measures.tripleGlazing) {
     const cost = propertyType === 'detached' ? 12000 : 8500;
+    const grant = propertyType === 'detached' ? 4000 : 3000;
     grossCost += cost;
-    // Window grants typically part of one-stop-shop or local council energy schemes
+    grants.push({
+      measure: 'High-Performance Windows & Glazing',
+      grantAmountEUR: grant,
+    });
   }
 
   if (measures.heatPumpAirToWater) {
-    const cost = 14500;
-    const grant = 6500; // SEAI Air-to-Water Grant
+    const isApartment = propertyType === 'apartment';
+    const cost = isApartment ? 12500 : 16500;
+    // 2026 enhanced bundle: up to €12,500 for houses (€6,500 unit + €2,000 heating system + €4,000 renewable bonus)
+    // or €9,500 for apartments
+    const grant = isApartment ? 9500 : 12500;
     grossCost += cost;
     grants.push({
-      measure: 'Air-to-Water Heat Pump & Controls',
+      measure: 'Air-to-Water Heat Pump & Renewable Heating Bundle',
       grantAmountEUR: grant,
     });
     grants.push({
       measure: 'SEAI Technical Advisor Assessment',
-      grantAmountEUR: 200,
+      grantAmountEUR: 350,
     });
-    grossCost += 500; // €500 advisor cost with €200 repayment
+    grossCost += 600; // €600 advisor cost with €350 repayment
   }
 
   if (measures.solarPV && solarKwp > 0) {
     // Standard Irish cost ~€1,600 / kWp
     const cost = Math.round(solarKwp * 1650);
-    // SEAI Solar PV Grant 2026: €800 for 1kWp up to max €2,100 for 4kWp+
+    // SEAI Solar PV Grant 2026: up to €1,800 - €2,100
     const grant = Math.min(2100, Math.round(solarKwp * 525));
     grossCost += cost;
     grants.push({
@@ -902,7 +865,7 @@ export function executeEircodeAudit(
   );
 
   const berJump = calculateBERJump(
-    input.currentBER || 'D1',
+    input.currentBER || 'D',
     input.floorAreaM2 || 125,
     measures,
     solarKwp,

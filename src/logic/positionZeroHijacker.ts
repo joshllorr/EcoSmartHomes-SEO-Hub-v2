@@ -436,10 +436,10 @@ function synthesizeConciseAnswer(
           'Value Added',
         ],
         rows: [
-          ['G to E1', '> 300 kWh/m²', '€3,400+', 'Baseline Valuation'],
-          ['C3 to B3', '150–225 kWh/m²', '€1,800–€2,400', '+5% Market Premium'],
+          ['G to E', '> 300 kWh/m²', '€3,400+', 'Baseline Valuation'],
+          ['C to B', '150–225 kWh/m²', '€1,800–€2,400', '+5% Market Premium'],
           [
-            'A1 to B2 (Green Mortgage)',
+            'A0 to B (Green Mortgage)',
             '< 125 kWh/m²',
             'Under €1,200',
             '+10% Value + Lower APR',

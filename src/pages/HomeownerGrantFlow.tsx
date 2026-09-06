@@ -110,12 +110,13 @@ export default function HomeownerGrantFlow() {
         goals,
         eligibleGrants: [
           {
-            name: 'Air-to-Water Heat Pump',
-            amount: 6500,
-            description: 'SEAI grant towards replacing fossil-fuel heating.',
+            name: 'Air-to-Water Heat Pump & Renewable Bundle',
+            amount: 12500,
+            description:
+              'SEAI grant bundle towards replacing fossil-fuel heating & radiator upgrades.',
           },
           {
-            name: 'Cavity & Internal Wall Insulation',
+            name: 'Cavity & Wall Insulation',
             amount: 3200,
             description: 'SEAI grant for wall thermal envelope insulation.',
           },
@@ -126,7 +127,7 @@ export default function HomeownerGrantFlow() {
           },
           {
             name: 'Attic Insulation',
-            amount: 1700,
+            amount: 2000,
             description:
               'SEAI grant coverage for high-retention ceiling insulation.',
           },
@@ -136,8 +137,8 @@ export default function HomeownerGrantFlow() {
             description: 'SEAI grant for multi-zone thermostat controls.',
           },
         ],
-        currentBER: 'D2',
-        projectedBER: 'A2',
+        currentBER: 'D',
+        projectedBER: 'A0',
         confidence: 'High',
         savingsEstimate: 685,
         paperwork: [

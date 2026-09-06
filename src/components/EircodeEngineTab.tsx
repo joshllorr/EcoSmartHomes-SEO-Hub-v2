@@ -44,7 +44,7 @@ export default function EircodeEngineTab() {
   const [propertyType, setPropertyType] =
     useState<PropertyType>('semi_detached');
   const [floorArea, setFloorArea] = useState<number>(125);
-  const [currentBER, setCurrentBER] = useState<BERBand>('E1');
+  const [currentBER, setCurrentBER] = useState<BERBand>('E');
   const [solarKwp, setSolarKwp] = useState<number>(4.3);
   const [roofOrientation, setRoofOrientation] =
     useState<RoofOrientation>('south');
@@ -140,23 +140,7 @@ export default function EircodeEngineTab() {
     setTimeout(() => setCopiedSchema(false), 2000);
   };
 
-  const berBands: BERBand[] = [
-    'A1',
-    'A2',
-    'A3',
-    'B1',
-    'B2',
-    'B3',
-    'C1',
-    'C2',
-    'C3',
-    'D1',
-    'D2',
-    'E1',
-    'E2',
-    'F',
-    'G',
-  ];
+  const berBands: BERBand[] = ['A0', 'A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
   return (
     <div className="space-y-6 text-left">
@@ -299,7 +283,7 @@ export default function EircodeEngineTab() {
                   {currentBER} ({BER_SCALE[currentBER]?.label})
                 </span>
               </div>
-              <div className="grid grid-cols-5 gap-1.5">
+              <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
                 {berBands.map((band) => (
                   <button
                     key={band}
