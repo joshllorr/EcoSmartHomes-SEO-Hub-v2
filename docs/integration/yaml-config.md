@@ -1,0 +1,42 @@
+# Antigravity YAML Config
+
+The router configuration is specified in both `antigravity.yaml` (root) and `config/ai.yaml`:
+
+```yaml
+ai:
+  provider: freellmapi
+  base_url: 'http://127.0.0.1:31415/v1'
+  api_key: 'freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc'
+
+  routing:
+    mode: adaptive
+    metrics: ['speed', 'reliability', 'intelligence']
+    default_strategy: fastest
+
+  model_selector:
+    code: 'gemini-3.5-flash'
+    generation: 'gemini-3.5-flash'
+    reasoning: 'claude-3-opus'
+    analysis: 'claude-3-opus'
+    fallback: 'gpt-4-turbo'
+
+  fallback_chain:
+    auto_fastest:
+      - 'gemini-3.5-flash'
+      - 'claude-3-opus'
+      - 'gpt-4-turbo'
+
+  default_model: 'auto_fastest'
+
+  request:
+    timeout_ms: 20000
+    retries: 2
+    retry_backoff_ms: 500
+
+  logging:
+    enabled: true
+    level: info
+    show_routing_decisions: true
+    show_latency: true
+    show_token_usage: true
+```
