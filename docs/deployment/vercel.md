@@ -8,7 +8,7 @@ Ensure the following variables are configured under **Project Settings → Envir
 
 - `AI_PROVIDER`: `freellmapi`
 - `AI_BASE_URL`: Production gateway URL or local tunnel
-- `AI_KEY`: `freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z`
+- `AI_KEY`: `freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc`
 - `GEMINI_API_KEY`: Fallback key
 - `APP_URL`: Canonical public deployment URL
 - `NODE_ENV`: `production`

@@ -7,7 +7,7 @@ All notable changes to this project are documented here.
 - Full integration of Antigravity with FreeLLMAPI unified router.
 - Adaptive routing strategy (speed, reliability, intelligence).
 - Fallback chain: `gemini-3.5-flash` → `claude-3-opus` → `gpt-4-turbo`.
-- Unified API key support (`freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z`).
+- Unified API key support (`freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc`).
 - Complete `/docs` folder structure and technical guides.
 - Vitest coverage for AI client, routing, and utilities.
 - Production-ready frontend build.

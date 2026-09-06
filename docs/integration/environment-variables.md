@@ -4,7 +4,7 @@
 
 - `AI_PROVIDER`: `freellmapi` (instructs AI clients to route via unified gateway)
 - `AI_BASE_URL`: `http://127.0.0.1:31415/v1` (local router URL)
-- `AI_KEY`: `freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z` (unified server-side key)
+- `AI_KEY`: `freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc` (unified server-side key)
 - `AI_ROUTING`: `adaptive` (fastest/adaptive model selection)
 
 ## Optional Variables

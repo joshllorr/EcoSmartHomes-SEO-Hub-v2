@@ -11,7 +11,7 @@ Run the installer `FreeLLMAPI.Setup.0.9.7.exe`. Verify the server is running on 
 Open `http://127.0.0.1:31415` and paste your key:
 
 ```
-freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z
+freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc
 ```
 
 ## Step 3: Add Provider Keys
@@ -23,7 +23,7 @@ Under **Models → Add keys**, enter your Gemini, Claude, or OpenAI keys.
 ```env
 AI_PROVIDER=freellmapi
 AI_BASE_URL=http://127.0.0.1:31415/v1
-AI_KEY=freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z
+AI_KEY=freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc
 AI_ROUTING=adaptive
 ```
 

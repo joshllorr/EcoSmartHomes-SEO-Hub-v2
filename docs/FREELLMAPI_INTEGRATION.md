@@ -53,7 +53,7 @@ Add these to `.env` or your deployment environment:
 ```env
 AI_PROVIDER=freellmapi
 AI_BASE_URL=http://127.0.0.1:31415/v1
-AI_KEY=freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z
+AI_KEY=freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc
 AI_ROUTING=adaptive
 ```
 
@@ -67,7 +67,7 @@ Configured in `antigravity.yaml` and `config/ai.yaml`:
 ai:
   provider: freellmapi
   base_url: 'http://127.0.0.1:31415/v1'
-  api_key: 'freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z'
+  api_key: 'freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc'
 
   routing:
     mode: adaptive
@@ -116,7 +116,7 @@ import requests
 class AntigravityAI:
     def __init__(self):
         self.base_url = os.getenv("AI_BASE_URL", "http://127.0.0.1:31415/v1")
-        self.api_key = os.getenv("AI_KEY", "freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z")
+        self.api_key = os.getenv("AI_KEY", "freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc")
 
         self.model_map = {
             "code": "gemini-3.5-flash",

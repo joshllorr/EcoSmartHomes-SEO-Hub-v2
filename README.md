@@ -315,7 +315,7 @@ Add these to `.env` or your deployment environment:
 ```env
 AI_PROVIDER=freellmapi
 AI_BASE_URL=http://127.0.0.1:31415/v1
-AI_KEY=freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z
+AI_KEY=freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc
 AI_ROUTING=adaptive
 ```
 
@@ -327,7 +327,7 @@ Create or update `antigravity.yaml` or `config/ai.yaml`:
 ai:
   provider: freellmapi
   base_url: 'http://127.0.0.1:31415/v1'
-  api_key: 'freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z'
+  api_key: 'freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc'
 
   routing:
     mode: adaptive
