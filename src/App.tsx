@@ -26,10 +26,15 @@ const LinkBuilderTab = lazy(() => import('./components/LinkBuilderTab'));
 const ContentLibraryTab = lazy(() => import('./components/ContentLibraryTab'));
 const ContentAuditTab = lazy(() => import('./components/ContentAuditTab'));
 const ContentMap = lazy(() => import('./pages/ContentMap'));
-const KeywordResearchTab = lazy(() => import('./components/KeywordResearchTab'));
+const KeywordResearchTab = lazy(
+  () => import('./components/KeywordResearchTab'),
+);
 const SERPAnalyzerTab = lazy(() => import('./components/SERPAnalyzerTab'));
 const SiteAuditTab = lazy(() => import('./components/SiteAuditTab'));
-const EnergyEstimatorTab = lazy(() => import('./components/EnergyEstimatorTab'));
+const EnergyEstimatorTab = lazy(
+  () => import('./components/EnergyEstimatorTab'),
+);
+const EircodeEngineTab = lazy(() => import('./components/EircodeEngineTab'));
 import AIVisibilityCard from './components/AIVisibilityCard';
 import RankingStabilityMap from './components/RankingStabilityMap';
 
@@ -56,20 +61,46 @@ const GrantPdfAnalytics = lazy(() => import('./dashboard/GrantPdfAnalytics'));
 const AdvisorDashboard = lazy(() => import('./dashboard/AdvisorDashboard'));
 const HomeownerAnalytics = lazy(() => import('./dashboard/HomeownerAnalytics'));
 const RetrofitAnalytics = lazy(() => import('./dashboard/RetrofitAnalytics'));
-const ContractorDashboard = lazy(() => import('./dashboard/ContractorDashboard'));
-const RetrofitPdfAnalytics = lazy(() => import('./dashboard/RetrofitPdfAnalytics'));
-const GrantSubmissionsDashboard = lazy(() => import('./dashboard/GrantSubmissionsDashboard'));
-const PostInstallDashboard = lazy(() => import('./dashboard/PostInstallDashboard'));
+const ContractorDashboard = lazy(
+  () => import('./dashboard/ContractorDashboard'),
+);
+const RetrofitPdfAnalytics = lazy(
+  () => import('./dashboard/RetrofitPdfAnalytics'),
+);
+const GrantSubmissionsDashboard = lazy(
+  () => import('./dashboard/GrantSubmissionsDashboard'),
+);
+const PostInstallDashboard = lazy(
+  () => import('./dashboard/PostInstallDashboard'),
+);
 const JourneyDashboard = lazy(() => import('./dashboard/JourneyDashboard'));
-const ContractorQualityDashboard = lazy(() => import('./dashboard/ContractorQualityDashboard'));
-const ContractorScoreInsightsDashboard = lazy(() => import('./dashboard/ContractorScoreInsightsDashboard'));
-const HomeUpgradeInsightsDashboard = lazy(() => import('./dashboard/HomeUpgradeInsightsDashboard'));
-const NationalInsightsDashboard = lazy(() => import('./dashboard/NationalInsightsDashboard'));
-const RetrofitForecastDashboard = lazy(() => import('./dashboard/RetrofitForecastDashboard'));
-const AdvisorSessionsDashboard = lazy(() => import('./dashboard/AdvisorSessionsDashboard'));
-const SentimentIntelligenceDashboard = lazy(() => import('./dashboard/SentimentIntelligenceDashboard'));
-const CoachIntelligenceDashboard = lazy(() => import('./dashboard/CoachIntelligenceDashboard'));
-const OrchestratorConsole = lazy(() => import('./dashboard/OrchestratorConsole'));
+const ContractorQualityDashboard = lazy(
+  () => import('./dashboard/ContractorQualityDashboard'),
+);
+const ContractorScoreInsightsDashboard = lazy(
+  () => import('./dashboard/ContractorScoreInsightsDashboard'),
+);
+const HomeUpgradeInsightsDashboard = lazy(
+  () => import('./dashboard/HomeUpgradeInsightsDashboard'),
+);
+const NationalInsightsDashboard = lazy(
+  () => import('./dashboard/NationalInsightsDashboard'),
+);
+const RetrofitForecastDashboard = lazy(
+  () => import('./dashboard/RetrofitForecastDashboard'),
+);
+const AdvisorSessionsDashboard = lazy(
+  () => import('./dashboard/AdvisorSessionsDashboard'),
+);
+const SentimentIntelligenceDashboard = lazy(
+  () => import('./dashboard/SentimentIntelligenceDashboard'),
+);
+const CoachIntelligenceDashboard = lazy(
+  () => import('./dashboard/CoachIntelligenceDashboard'),
+);
+const OrchestratorConsole = lazy(
+  () => import('./dashboard/OrchestratorConsole'),
+);
 const HomeownerGrantFlow = lazy(() => import('./pages/HomeownerGrantFlow'));
 const HomeownerPortal = lazy(() => import('./portal/HomeownerPortal'));
 
@@ -117,7 +148,8 @@ export default function App() {
       window.location.hash === '#/portal');
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] =
+    useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   const {
@@ -138,7 +170,9 @@ export default function App() {
   );
 
   const [currentSerp, setCurrentSerp] = useState<any | null>(null);
-  const [serpKeyword, setSerpKeyword] = useState<string>('SEAI grants Limerick V94');
+  const [serpKeyword, setSerpKeyword] = useState<string>(
+    'SEAI grants Limerick V94',
+  );
   const [discoveryCount, setDiscoveryCount] = useState<number>(1);
   const [isSiteScanned, setIsSiteScanned] = useState<boolean>(false);
 
@@ -283,7 +317,9 @@ export default function App() {
 
   if (isGrantRoute) {
     return (
-      <Suspense fallback={<TabLoadingSkeleton title="Loading SEAI Grant Flow..." />}>
+      <Suspense
+        fallback={<TabLoadingSkeleton title="Loading SEAI Grant Flow..." />}
+      >
         <HomeownerGrantFlow />
       </Suspense>
     );
@@ -291,7 +327,9 @@ export default function App() {
 
   if (isPortalRoute) {
     return (
-      <Suspense fallback={<TabLoadingSkeleton title="Loading Homeowner Portal..." />}>
+      <Suspense
+        fallback={<TabLoadingSkeleton title="Loading Homeowner Portal..." />}
+      >
         <HomeownerPortal />
       </Suspense>
     );
@@ -573,6 +611,9 @@ export default function App() {
       case 'estimator':
         return <EnergyEstimatorTab />;
 
+      case 'eircode':
+        return <EircodeEngineTab />;
+
       case 'visibility':
         return (
           <div className="p-8 text-left max-w-4xl">
@@ -661,7 +702,10 @@ export default function App() {
             <Command size={13} />
           </div>
           <div className="text-xs font-medium">
-            Switched to <span className="font-semibold text-emerald-300">{toastMessage.tabName}</span>
+            Switched to{' '}
+            <span className="font-semibold text-emerald-300">
+              {toastMessage.tabName}
+            </span>
           </div>
           <kbd className="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-slate-950 border border-slate-700 rounded text-emerald-400 ml-1">
             {toastMessage.shortcut}

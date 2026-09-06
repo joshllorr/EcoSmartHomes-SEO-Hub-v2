@@ -686,6 +686,47 @@ describe('Option A — Phase Drift Detector & Auto-Repair Endpoints', () => {
     expect(res.body).toHaveProperty('warRoomResult');
     expect(res.body.warRoomResult.totalPipelineValueAtRisk).toBeGreaterThan(0);
   });
+
+  it('GET /api/eircode/routing-keys returns all registered Irish routing keys', async () => {
+    const res = await request(app).get('/api/eircode/routing-keys');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(Array.isArray(res.body.routingKeys)).toBe(true);
+    expect(res.body.routingKeys.length).toBeGreaterThanOrEqual(20);
+    expect(res.body.routingKeys.some((k: any) => k.routingKey === 'V94')).toBe(
+      true,
+    );
+  });
+
+  it('GET /api/eircode/lookup/:code returns regional solar and geographic metadata', async () => {
+    const res = await request(app).get('/api/eircode/lookup/V94');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.routingInfo.county).toBe('Limerick');
+    expect(res.body.routingInfo.annualSolarIrradianceKWhM2).toBe(980);
+  });
+
+  it('POST /api/eircode/calculate executes full BER Jump & Solar Yield audit', async () => {
+    const res = await request(app).post('/api/eircode/calculate').send({
+      eircode: 'T12 Y7K9',
+      propertyType: 'semi_detached',
+      floorAreaM2: 135,
+      currentBER: 'E2',
+      solarKwp: 4.5,
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.audit).toBeDefined();
+    expect(res.body.audit.routingInfo.county).toBe('Cork');
+    expect(res.body.audit.berJump.energyReductionPercentage).toBeGreaterThan(
+      50,
+    );
+    expect(res.body.audit.solarYield.annualGenerationKWh).toBeGreaterThan(3000);
+    expect(res.body.audit.financials.totalGrantOffsetEUR).toBeGreaterThan(5000);
+    expect(res.body.audit.seoProgrammaticMetadata.suggestedPageTitle).toContain(
+      'Cork',
+    );
+  });
 });
 
 describe('Rate Limiting', () => {

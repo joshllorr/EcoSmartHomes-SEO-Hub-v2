@@ -141,6 +141,13 @@ import {
 } from './src/logic/competitorWarRoomEngine';
 
 import {
+  getEircodeRoutingInfo,
+  executeEircodeAudit,
+  EIRCODE_ROUTING_KEYS,
+  EircodeCalculationInput,
+} from './src/logic/eircodeEngine';
+
+import {
   globalAutomationEngine,
   AutomationLog,
   RefreshQueueItem,
@@ -7290,6 +7297,59 @@ app.get('/api/simulation/latest', async (_req, res) => {
   } catch (err: any) {
     return res.status(500).json({
       error: 'Failed to fetch simulation stats',
+      details: String(err),
+    });
+  }
+});
+
+// Hyper-Local Eircode Engine Endpoints
+app.get('/api/eircode/routing-keys', (_req, res) => {
+  try {
+    return res.json({
+      success: true,
+      routingKeys: Object.values(EIRCODE_ROUTING_KEYS),
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Failed to fetch Eircode routing keys',
+      details: String(err),
+    });
+  }
+});
+
+app.get('/api/eircode/lookup/:code', (req, res) => {
+  try {
+    const code = req.params.code || 'V94';
+    const routingInfo = getEircodeRoutingInfo(code);
+    return res.json({
+      success: true,
+      routingInfo,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Failed to lookup Eircode',
+      details: String(err),
+    });
+  }
+});
+
+app.post('/api/eircode/calculate', (req, res) => {
+  try {
+    const body: EircodeCalculationInput = req.body || {
+      eircode: 'V94 X2R8',
+      propertyType: 'semi_detached',
+      floorAreaM2: 125,
+      currentBER: 'D1',
+    };
+
+    const audit = executeEircodeAudit(body);
+    return res.json({
+      success: true,
+      audit,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Failed to calculate Eircode audit',
       details: String(err),
     });
   }

@@ -307,6 +307,11 @@ export default function Sidebar({
           icon: LucideIcons.Thermometer,
         },
         {
+          id: 'eircode',
+          name: 'Eircode Engine & BER Jump',
+          icon: LucideIcons.MapPin,
+        },
+        {
           id: 'visibility',
           name: 'AI Answer Visibility',
           icon: LucideIcons.Sparkles,
@@ -394,224 +399,228 @@ export default function Sidebar({
           </div>
         </div>
 
-      {!collapsed && (
-        <div className="p-3 border-b border-white/10 space-y-2 shrink-0 bg-black/20">
-          {/* Live Search Input */}
-          <div className="relative">
-            <LucideIcons.Search
-              size={14}
-              className="absolute left-2.5 top-2.5 text-slate-400"
-            />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search 40+ phases & engines..."
-              className="w-full bg-slate-900/90 text-xs text-white pl-8 pr-7 py-1.5 rounded-lg border border-white/10 focus:border-[#34d399] focus:outline-hidden font-sans placeholder:text-slate-500"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2 top-2 text-slate-400 hover:text-white"
-              >
-                <LucideIcons.X size={12} />
-              </button>
-            )}
-          </div>
-
-          {/* Category Quick Filter Pills */}
-          <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none text-[11px] font-medium">
-            <button
-              onClick={() => setActiveCategory('all')}
-              className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
-                activeCategory === 'all'
-                  ? 'bg-[#34d399]/20 text-[#34d399] border border-[#34d399]/40 font-bold'
-                  : 'bg-white/5 text-slate-400 hover:text-white'
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setActiveCategory('p29_40')}
-              className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
-                activeCategory === 'p29_40'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                  : 'bg-white/5 text-slate-400 hover:text-white'
-              }`}
-            >
-              Phases 29–40 🔥
-            </button>
-            <button
-              onClick={() => setActiveCategory('p15_28')}
-              className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
-                activeCategory === 'p15_28'
-                  ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold'
-                  : 'bg-white/5 text-slate-400 hover:text-white'
-              }`}
-            >
-              15–28
-            </button>
-            <button
-              onClick={() => setActiveCategory('p1_14')}
-              className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
-                activeCategory === 'p1_14'
-                  ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold'
-                  : 'bg-white/5 text-slate-400 hover:text-white'
-              }`}
-            >
-              1–14
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Nav Menu Items */}
-      <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
-        {menuSections
-          .filter(
-            (section) =>
-              activeCategory === 'all' || activeCategory === section.id,
-          )
-          .map((section) => {
-            const matchingItems = section.items.filter((item) =>
-              searchQuery === ''
-                ? true
-                : item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  item.id.toLowerCase().includes(searchQuery.toLowerCase()),
-            );
-
-            if (matchingItems.length === 0) return null;
-
-            return (
-              <div key={section.id} className="space-y-1">
-                {!collapsed && (
-                  <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-white/5 flex items-center justify-between">
-                    <span>{section.title}</span>
-                    <span className="bg-white/10 px-1.5 py-0.2 rounded-full text-[9px]">
-                      {matchingItems.length}
-                    </span>
-                  </div>
-                )}
-
-                {matchingItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = item.path
-                    ? location.pathname === item.path || activeTab === item.id
-                    : activeTab === item.id;
-                  const shortcutKey = SHORTCUT_MAP[item.id];
-
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleTabClick(item)}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition group cursor-pointer ${
-                        isActive
-                          ? 'bg-white/10 text-white border border-white/15 shadow-xs font-semibold'
-                          : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                      }`}
-                      id={`nav-${item.id}`}
-                      title={
-                        shortcutKey
-                          ? `${item.name} (Ctrl+${shortcutKey} / ⌘${shortcutKey})`
-                          : item.name
-                      }
-                    >
-                      <Icon
-                        size={16}
-                        className={`shrink-0 ${
-                          isActive
-                            ? 'text-[#34d399]'
-                            : 'text-slate-400 group-hover:text-[#34d399] transition'
-                        }`}
-                      />
-                      {!collapsed && (
-                        <span className="truncate text-left flex-1">
-                          {item.name}
-                        </span>
-                      )}
-                      {!collapsed && shortcutKey && (
-                        <kbd className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-white/5 group-hover:bg-white/10 text-slate-500 group-hover:text-slate-300 border border-white/10 shadow-2xs shrink-0">
-                          ^{shortcutKey}
-                        </kbd>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            );
-          })}
-      </nav>
-
-      {/* Footer Branding Info & Shortcut Trigger */}
-      <div className="p-3 border-t border-white/10 space-y-2 shrink-0 bg-black/30">
-        {/* Settings Button */}
-        {onOpenSettings && (
-          <button
-            onClick={onOpenSettings}
-            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs transition cursor-pointer ${
-              collapsed ? 'justify-center' : ''
-            }`}
-            title="Platform Settings & Vite HMR"
-            id="sidebar-settings-btn"
-          >
-            <div className="flex items-center gap-2">
-              <LucideIcons.Settings
-                size={14}
-                className="text-[#34d399] shrink-0"
-              />
-              {!collapsed && (
-                <span className="text-[11px] font-medium">Settings & HMR</span>
-              )}
-            </div>
-            {!collapsed && (
-              <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-bold">
-                Config
-              </span>
-            )}
-          </button>
-        )}
-
-        {onOpenShortcuts && (
-          <button
-            onClick={onOpenShortcuts}
-            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs transition cursor-pointer ${
-              collapsed ? 'justify-center' : ''
-            }`}
-            title="Keyboard Shortcuts (? or Ctrl+1..9)"
-            id="sidebar-shortcuts-btn"
-          >
-            <div className="flex items-center gap-2">
-              <LucideIcons.Keyboard
-                size={14}
-                className="text-emerald-400 shrink-0"
-              />
-              {!collapsed && (
-                <span className="text-[11px] font-medium">Shortcuts</span>
-              )}
-            </div>
-            {!collapsed && (
-              <kbd className="px-1.5 py-0.2 text-[10px] font-mono bg-black/40 border border-white/10 rounded text-slate-400">
-                ?
-              </kbd>
-            )}
-          </button>
-        )}
-
         {!collapsed && (
-          <div className="bg-white/5 p-2.5 rounded-lg border border-white/10 text-center">
-            <div className="flex items-center gap-1.5 justify-center mb-0.5 text-[#34d399]">
-              <LucideIcons.Zap size={13} className="fill-[#34d399]/20" />
-              <span className="text-[11px] font-bold uppercase tracking-wider">
-                Full 40-Phase Engine Active
-              </span>
+          <div className="p-3 border-b border-white/10 space-y-2 shrink-0 bg-black/20">
+            {/* Live Search Input */}
+            <div className="relative">
+              <LucideIcons.Search
+                size={14}
+                className="absolute left-2.5 top-2.5 text-slate-400"
+              />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search 40+ phases & engines..."
+                className="w-full bg-slate-900/90 text-xs text-white pl-8 pr-7 py-1.5 rounded-lg border border-white/10 focus:border-[#34d399] focus:outline-hidden font-sans placeholder:text-slate-500"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2 top-2 text-slate-400 hover:text-white"
+                >
+                  <LucideIcons.X size={12} />
+                </button>
+              )}
             </div>
-            <p className="text-[10px] text-slate-400 leading-tight">
-              Phases 1–40 SEO & Retrofit Suite
-            </p>
+
+            {/* Category Quick Filter Pills */}
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none text-[11px] font-medium">
+              <button
+                onClick={() => setActiveCategory('all')}
+                className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
+                  activeCategory === 'all'
+                    ? 'bg-[#34d399]/20 text-[#34d399] border border-[#34d399]/40 font-bold'
+                    : 'bg-white/5 text-slate-400 hover:text-white'
+                }`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setActiveCategory('p29_40')}
+                className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
+                  activeCategory === 'p29_40'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
+                    : 'bg-white/5 text-slate-400 hover:text-white'
+                }`}
+              >
+                Phases 29–40 🔥
+              </button>
+              <button
+                onClick={() => setActiveCategory('p15_28')}
+                className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
+                  activeCategory === 'p15_28'
+                    ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold'
+                    : 'bg-white/5 text-slate-400 hover:text-white'
+                }`}
+              >
+                15–28
+              </button>
+              <button
+                onClick={() => setActiveCategory('p1_14')}
+                className={`px-2 py-0.5 rounded-md transition shrink-0 cursor-pointer ${
+                  activeCategory === 'p1_14'
+                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold'
+                    : 'bg-white/5 text-slate-400 hover:text-white'
+                }`}
+              >
+                1–14
+              </button>
+            </div>
           </div>
         )}
-      </div>
-    </aside>
-  </>
-);
+
+        {/* Nav Menu Items */}
+        <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+          {menuSections
+            .filter(
+              (section) =>
+                activeCategory === 'all' || activeCategory === section.id,
+            )
+            .map((section) => {
+              const matchingItems = section.items.filter((item) =>
+                searchQuery === ''
+                  ? true
+                  : item.name
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase()) ||
+                    item.id.toLowerCase().includes(searchQuery.toLowerCase()),
+              );
+
+              if (matchingItems.length === 0) return null;
+
+              return (
+                <div key={section.id} className="space-y-1">
+                  {!collapsed && (
+                    <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-white/5 flex items-center justify-between">
+                      <span>{section.title}</span>
+                      <span className="bg-white/10 px-1.5 py-0.2 rounded-full text-[9px]">
+                        {matchingItems.length}
+                      </span>
+                    </div>
+                  )}
+
+                  {matchingItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = item.path
+                      ? location.pathname === item.path || activeTab === item.id
+                      : activeTab === item.id;
+                    const shortcutKey = SHORTCUT_MAP[item.id];
+
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => handleTabClick(item)}
+                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition group cursor-pointer ${
+                          isActive
+                            ? 'bg-white/10 text-white border border-white/15 shadow-xs font-semibold'
+                            : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                        }`}
+                        id={`nav-${item.id}`}
+                        title={
+                          shortcutKey
+                            ? `${item.name} (Ctrl+${shortcutKey} / ⌘${shortcutKey})`
+                            : item.name
+                        }
+                      >
+                        <Icon
+                          size={16}
+                          className={`shrink-0 ${
+                            isActive
+                              ? 'text-[#34d399]'
+                              : 'text-slate-400 group-hover:text-[#34d399] transition'
+                          }`}
+                        />
+                        {!collapsed && (
+                          <span className="truncate text-left flex-1">
+                            {item.name}
+                          </span>
+                        )}
+                        {!collapsed && shortcutKey && (
+                          <kbd className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-white/5 group-hover:bg-white/10 text-slate-500 group-hover:text-slate-300 border border-white/10 shadow-2xs shrink-0">
+                            ^{shortcutKey}
+                          </kbd>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })}
+        </nav>
+
+        {/* Footer Branding Info & Shortcut Trigger */}
+        <div className="p-3 border-t border-white/10 space-y-2 shrink-0 bg-black/30">
+          {/* Settings Button */}
+          {onOpenSettings && (
+            <button
+              onClick={onOpenSettings}
+              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs transition cursor-pointer ${
+                collapsed ? 'justify-center' : ''
+              }`}
+              title="Platform Settings & Vite HMR"
+              id="sidebar-settings-btn"
+            >
+              <div className="flex items-center gap-2">
+                <LucideIcons.Settings
+                  size={14}
+                  className="text-[#34d399] shrink-0"
+                />
+                {!collapsed && (
+                  <span className="text-[11px] font-medium">
+                    Settings & HMR
+                  </span>
+                )}
+              </div>
+              {!collapsed && (
+                <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-bold">
+                  Config
+                </span>
+              )}
+            </button>
+          )}
+
+          {onOpenShortcuts && (
+            <button
+              onClick={onOpenShortcuts}
+              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs transition cursor-pointer ${
+                collapsed ? 'justify-center' : ''
+              }`}
+              title="Keyboard Shortcuts (? or Ctrl+1..9)"
+              id="sidebar-shortcuts-btn"
+            >
+              <div className="flex items-center gap-2">
+                <LucideIcons.Keyboard
+                  size={14}
+                  className="text-emerald-400 shrink-0"
+                />
+                {!collapsed && (
+                  <span className="text-[11px] font-medium">Shortcuts</span>
+                )}
+              </div>
+              {!collapsed && (
+                <kbd className="px-1.5 py-0.2 text-[10px] font-mono bg-black/40 border border-white/10 rounded text-slate-400">
+                  ?
+                </kbd>
+              )}
+            </button>
+          )}
+
+          {!collapsed && (
+            <div className="bg-white/5 p-2.5 rounded-lg border border-white/10 text-center">
+              <div className="flex items-center gap-1.5 justify-center mb-0.5 text-[#34d399]">
+                <LucideIcons.Zap size={13} className="fill-[#34d399]/20" />
+                <span className="text-[11px] font-bold uppercase tracking-wider">
+                  Full 40-Phase Engine Active
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-400 leading-tight">
+                Phases 1–40 SEO & Retrofit Suite
+              </p>
+            </div>
+          )}
+        </div>
+      </aside>
+    </>
+  );
 }
