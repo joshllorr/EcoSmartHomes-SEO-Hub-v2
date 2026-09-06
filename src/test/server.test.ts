@@ -374,6 +374,23 @@ describe('Phase Group 1 — Keyword Intelligence Core Endpoints (Phases 1–7)',
     expect(res.body.keyword.currentRank).toBe(2);
     expect(res.body.keyword.history.length).toBeGreaterThan(1);
   });
+
+  it('DELETE /api/keywords/:id removes keyword from registry', async () => {
+    await request(app).post('/api/keywords').send({
+      keyword: 'temporary test keyword for deletion',
+      category: 'General',
+    });
+    const res = await request(app).delete(
+      '/api/keywords/temporary-test-keyword-for-deletion',
+    );
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+
+    const notFoundRes = await request(app).delete(
+      '/api/keywords/temporary-test-keyword-for-deletion',
+    );
+    expect(notFoundRes.status).toBe(404);
+  });
 });
 
 describe('Phase Group 2 — SERP Intelligence Endpoints (Phases 8–15)', () => {
@@ -412,6 +429,40 @@ describe('Phase Group 2 — SERP Intelligence Endpoints (Phases 8–15)', () => 
     expect(res.body.diff).toBeDefined();
     expect(res.body.volatilityIndex).toBeDefined();
     expect(res.body.volatilityCategory).toBeDefined();
+  });
+
+  it('GET /api/seo/serp-snapshots/:keyword returns snapshot list', async () => {
+    const res = await request(app).get(
+      '/api/seo/serp-snapshots/solar-pv-grants-ireland',
+    );
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(Array.isArray(res.body.snapshots)).toBe(true);
+  });
+
+  it('POST /api/seo/hijack-position-zero synthesizes Answer Card and Speakable schema', async () => {
+    const res = await request(app)
+      .post('/api/seo/hijack-position-zero')
+      .send({ keyword: 'solar pv grants ireland' });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.answerCard).toHaveProperty('conciseAnswer');
+    expect(res.body.answerCard).toHaveProperty('schemaJsonLd');
+    expect(res.body.answerCard).toHaveProperty('hijackScore');
+    expect(res.body.answerCard.hijackScore).toBeGreaterThanOrEqual(80);
+    expect(res.body.answerCard.schemaJsonLd['@context']).toBe(
+      'https://schema.org',
+    );
+  });
+
+  it('GET /api/seo/hijack-position-zero/preview/:keyword returns instant answer card', async () => {
+    const res = await request(app).get(
+      '/api/seo/hijack-position-zero/preview/heat-pump-cost-limerick',
+    );
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.answerCard.keyword).toBe('heat-pump-cost-limerick');
+    expect(res.body.answerCard.keyEntities.length).toBeGreaterThan(0);
   });
 });
 
@@ -596,6 +647,44 @@ describe('Option A — Phase Drift Detector & Auto-Repair Endpoints', () => {
     expect(postRes.status).toBe(200);
     expect(postRes.body.success).toBe(true);
     expect(postRes.body.snapshot).toHaveProperty('keyword');
+  });
+
+  it('GET /api/war-room/scenarios returns all preset wargame scenarios', async () => {
+    const res = await request(app).get('/api/war-room/scenarios');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(Array.isArray(res.body.scenarios)).toBe(true);
+    expect(res.body.scenarios.length).toBeGreaterThanOrEqual(4);
+    expect(
+      res.body.scenarios.some((s: any) => s.id === 'activ8_munster_offensive'),
+    ).toBe(true);
+  });
+
+  it('POST /api/war-room/simulate runs Monte Carlo stress test and returns VaR & Playbook', async () => {
+    const res = await request(app).post('/api/war-room/simulate').send({
+      scenarioId: 'activ8_munster_offensive',
+      iterations: 100,
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.result).toBeDefined();
+    expect(res.body.result.iterations).toBe(100);
+    expect(res.body.result.totalPipelineValueAtRisk).toBeGreaterThan(0);
+    expect(res.body.result.totalTrafficAtRisk).toBeGreaterThan(0);
+    expect(res.body.result.keywordResults.length).toBeGreaterThan(0);
+    expect(res.body.result.defensivePlaybook.length).toBeGreaterThan(0);
+  });
+
+  it('GET /api/simulation/latest returns enriched war-room simulation metrics', async () => {
+    const res = await request(app).get('/api/simulation/latest');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body).toHaveProperty('simulationRuns');
+    expect(res.body).toHaveProperty('convergenceConfidence');
+    expect(res.body).toHaveProperty('simState');
+    expect(res.body).toHaveProperty('plan');
+    expect(res.body).toHaveProperty('warRoomResult');
+    expect(res.body.warRoomResult.totalPipelineValueAtRisk).toBeGreaterThan(0);
   });
 });
 

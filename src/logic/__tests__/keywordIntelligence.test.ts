@@ -8,6 +8,9 @@ import {
   evaluateKeywordPriority,
   KeywordRegistry,
   RankSnapshot,
+  getKeywordState,
+  repairKeywordEngine,
+  globalKeywordRegistry,
 } from '../keywordIntelligence';
 
 describe('Phase Group 1 — Keyword Intelligence Core (Phases 1–7)', () => {
@@ -141,12 +144,16 @@ describe('Phase Group 1 — Keyword Intelligence Core (Phases 1–7)', () => {
     it('correctly classifies Green Zone', () => {
       expect(classifyStabilityZone(-0.5, 0.2)).toBe('green');
       expect(classifyStabilityZone(0, 0.3)).toBe('green');
-      expect(getStabilityZoneMessage('green')).toContain('Automation strengthening active');
+      expect(getStabilityZoneMessage('green')).toContain(
+        'Automation strengthening active',
+      );
     });
 
     it('correctly classifies Red Zone', () => {
       expect(classifyStabilityZone(0.8, 0.65)).toBe('red');
-      expect(getStabilityZoneMessage('red')).toContain('Manual SERP audit recommended');
+      expect(getStabilityZoneMessage('red')).toContain(
+        'Manual SERP audit recommended',
+      );
     });
 
     it('correctly classifies Yellow Zone', () => {
@@ -193,9 +200,24 @@ describe('Phase Group 1 — Keyword Intelligence Core (Phases 1–7)', () => {
   // ---------------------------------------------
   describe('Downstream Stability Map Aggregation', () => {
     it('produces structured summary with zone counts, percentages, and priorities', () => {
-      registry.register({ keyword: 'heat pump costs', currentRank: 2, slope: -0.8, volatility: 0.2 });
-      registry.register({ keyword: 'solar grants', currentRank: 4, slope: 0.6, volatility: 0.58 });
-      registry.register({ keyword: 'seai limerick', currentRank: 7, slope: 0.2, volatility: 0.41 });
+      registry.register({
+        keyword: 'heat pump costs',
+        currentRank: 2,
+        slope: -0.8,
+        volatility: 0.2,
+      });
+      registry.register({
+        keyword: 'solar grants',
+        currentRank: 4,
+        slope: 0.6,
+        volatility: 0.58,
+      });
+      registry.register({
+        keyword: 'seai limerick',
+        currentRank: 7,
+        slope: 0.2,
+        volatility: 0.41,
+      });
 
       const summary = registry.getStabilityMapSummary();
       expect(summary.totalKeywords).toBe(3);
@@ -204,6 +226,109 @@ describe('Phase Group 1 — Keyword Intelligence Core (Phases 1–7)', () => {
       expect(summary.zones.yellow.count).toBe(1);
       expect(summary.averageHealthScore).toBeGreaterThan(0);
       expect(summary.averageVolatility).toBeGreaterThan(0);
+    });
+  });
+
+  // ---------------------------------------------
+  // Comprehensive Edge Cases (Phases 1–7)
+  // ---------------------------------------------
+  describe('Phases 1–7 — Comprehensive Edge Cases', () => {
+    it('normalizes complex strings in slugify', () => {
+      expect(registry.slugify('  SEAI Solar Grants -- 2026!  ')).toBe(
+        'seai-solar-grants-2026',
+      );
+      expect(registry.slugify('Heat-Pump & PV Installers / Limerick')).toBe(
+        'heat-pump-pv-installers-limerick',
+      );
+    });
+
+    it('auto-registers on recordRank when keyword was not previously registered', () => {
+      const entry = registry.recordRank('new-untracked-term', 5);
+      expect(entry).not.toBeNull();
+      expect(entry?.currentRank).toBe(5);
+      expect(registry.get('new-untracked-term')).toBeDefined();
+    });
+
+    it('seeds default Irish retrofit keywords when initialized without arguments', () => {
+      const defaultRegistry = new KeywordRegistry();
+      const all = defaultRegistry.getAll();
+      expect(all.length).toBeGreaterThanOrEqual(5);
+      expect(
+        all.some(
+          (k) => k.keyword.includes('solar') || k.keyword.includes('heat pump'),
+        ),
+      ).toBe(true);
+    });
+
+    it('calculates slope accurately with exactly 2 points', () => {
+      const slope = calculateSlope([
+        { timestamp: 1, rank: 10 },
+        { timestamp: 2, rank: 5 },
+      ]);
+      expect(slope).toBe(-5);
+    });
+
+    it('uses a sliding window of up to 10 points for slope velocity', () => {
+      // 15 historical points: older points were dropping (#20 to #15), but last 10 points are steady (#2)
+      const history: RankSnapshot[] = [
+        ...Array.from({ length: 5 }, (_, i) => ({
+          timestamp: i + 1,
+          rank: 20 - i,
+        })),
+        ...Array.from({ length: 10 }, (_, i) => ({
+          timestamp: i + 6,
+          rank: 2,
+        })),
+      ];
+      const slope = calculateSlope(history);
+      expect(slope).toBe(0);
+    });
+
+    it('clamps volatility to minimum 0.05 when ranks are perfectly constant', () => {
+      const history = Array.from({ length: 8 }, (_, i) => ({
+        timestamp: i + 1,
+        rank: 3,
+      }));
+      const vol = calculateVolatility(history);
+      expect(vol).toBe(0.05);
+    });
+
+    it('clamps health score to 100 for top performing keywords and floor of 5 for failing keywords', () => {
+      const maxScore = calculateKeywordHealthScore(1, -2.5, 0.05);
+      expect(maxScore).toBe(100);
+
+      const minScore = calculateKeywordHealthScore(60, 5.0, 1.0);
+      expect(minScore).toBe(5);
+    });
+
+    it('evaluates priority for striking distance Page 2 keywords triggering internal link mesh', () => {
+      const strikingPage2 = evaluateKeywordPriority(
+        12,
+        -0.1,
+        0.25,
+        3000,
+        'green',
+      );
+      expect(strikingPage2.priority).toBe('high');
+      expect(strikingPage2.trigger).toBe('trigger_internal_link_mesh');
+    });
+
+    it('evaluates priority for deep ranking keywords as low priority', () => {
+      const deepKeyword = evaluateKeywordPriority(28, 0.4, 0.3, 800, 'green');
+      expect(deepKeyword.priority).toBe('low');
+      expect(deepKeyword.trigger).toBe('let_automation_run');
+    });
+
+    it('inspects Keyword Engine State and performs recalibration repair', () => {
+      const state = getKeywordState();
+      expect(state).toHaveProperty('totalKeywords');
+      expect(state).toHaveProperty('averageHealthScore');
+      expect(state).toHaveProperty('drift');
+      expect(state).toHaveProperty('status');
+
+      const repair = repairKeywordEngine();
+      expect(repair.repaired).toBe(true);
+      expect(repair.message).toContain('calibrated');
     });
   });
 });

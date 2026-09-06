@@ -27,6 +27,7 @@ import {
   HelpCircle,
   Video,
   Calculator,
+  RefreshCw,
 } from 'lucide-react';
 import {
   SERPFeatureItem,
@@ -38,6 +39,10 @@ import {
   classifySearchIntent,
   computeCompetitorDiff,
 } from '../../logic/serpIntelligence';
+import {
+  Position0AnswerCard,
+  generatePosition0AnswerCard,
+} from '../../logic/positionZeroHijacker';
 
 export interface SERPResult {
   keyword: string;
@@ -63,9 +68,48 @@ interface SERPViewerProps {
 
 export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'competitors' | 'diff' | 'features' | 'gaps' | 'outline' | 'alerts'
+    | 'overview'
+    | 'competitors'
+    | 'diff'
+    | 'features'
+    | 'gaps'
+    | 'outline'
+    | 'alerts'
+    | 'hijacker'
   >('overview');
   const [copiedOutline, setCopiedOutline] = useState(false);
+  const [positionZeroCard, setPositionZeroCard] =
+    useState<Position0AnswerCard | null>(null);
+  const [hijackLoading, setHijackLoading] = useState(false);
+  const [copiedSchema, setCopiedSchema] = useState(false);
+  const [copiedSnippet, setCopiedSnippet] = useState(false);
+
+  const handleHijackPositionZero = async () => {
+    if (!serp?.keyword) return;
+    setHijackLoading(true);
+    try {
+      const res = await fetch('/api/seo/hijack-position-zero', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          keyword: serp.keyword,
+          competitorSnippet: serp.top_results?.[0]?.meta_description,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.answerCard) {
+        setPositionZeroCard(data.answerCard);
+      } else {
+        const fallback = generatePosition0AnswerCard({ keyword: serp.keyword });
+        setPositionZeroCard(fallback);
+      }
+    } catch {
+      const fallback = generatePosition0AnswerCard({ keyword: serp.keyword });
+      setPositionZeroCard(fallback);
+    } finally {
+      setHijackLoading(false);
+    }
+  };
 
   if (!serp) {
     return (
@@ -80,16 +124,20 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
           No SERP analysis yet
         </h4>
         <p className="text-xs text-slate-400 max-w-sm mt-1 leading-normal">
-          Run a comprehensive SERP analysis from the search engine intelligence dashboard.
+          Run a comprehensive SERP analysis from the search engine intelligence
+          dashboard.
         </p>
       </div>
     );
   }
 
   // Derive dynamic fallback features/diff if not already compiled
-  const features = serp.features || detectSERPFeatures(serp.keyword, serp.top_results);
-  const diff = serp.diff || computeCompetitorDiff(null, serp.top_results, serp.keyword);
-  const volatility = serp.volatilityIndex ?? Math.round(diff.volatilityShift * 100);
+  const features =
+    serp.features || detectSERPFeatures(serp.keyword, serp.top_results);
+  const diff =
+    serp.diff || computeCompetitorDiff(null, serp.top_results, serp.keyword);
+  const volatility =
+    serp.volatilityIndex ?? Math.round(diff.volatilityShift * 100);
   const alerts = serp.alerts || [];
 
   // Determine difficulty color badges
@@ -152,7 +200,8 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
             </span>
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            Expanded competitor landscape, competitor diff engine, rich SERP features, and ranking gaps
+            Expanded competitor landscape, competitor diff engine, rich SERP
+            features, and ranking gaps
           </p>
         </div>
 
@@ -259,6 +308,21 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
           <Bell size={13} />
           <span>Change Alerts {alerts.length > 0 && `(${alerts.length})`}</span>
         </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('hijacker');
+            if (!positionZeroCard) handleHijackPositionZero();
+          }}
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            activeTab === 'hijacker'
+              ? 'bg-amber-400 text-slate-900 shadow-lg shadow-amber-500/20'
+              : 'bg-amber-500/10 text-amber-300 hover:text-white hover:bg-amber-500/20 border border-amber-500/30'
+          }`}
+        >
+          <Zap size={13} className="text-amber-400" />
+          <span>⚡ Position 0 Hijacker</span>
+        </button>
       </div>
 
       {/* TAB 1: OVERVIEW & INSIGHTS */}
@@ -280,7 +344,10 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <div className="glass-card p-5 space-y-3" id="serp-opportunities-card">
+            <div
+              className="glass-card p-5 space-y-3"
+              id="serp-opportunities-card"
+            >
               <h3 className="text-xs font-bold uppercase tracking-wider text-[#34d399] font-mono flex items-center gap-2 border-b border-white/10 pb-2">
                 <Zap size={13} className="text-[#34d399]" />
                 <span>Content Opportunities & Winning Angles</span>
@@ -300,7 +367,10 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
               </ul>
             </div>
 
-            <div className="glass-card p-5 space-y-3" id="serp-outline-preview-card">
+            <div
+              className="glass-card p-5 space-y-3"
+              id="serp-outline-preview-card"
+            >
               <div className="flex items-center justify-between border-b border-white/10 pb-2">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-sky-400 font-mono flex items-center gap-2">
                   <FileText size={13} className="text-sky-400" />
@@ -310,7 +380,11 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                   onClick={handleCopyOutline}
                   className="text-[10px] text-slate-300 hover:text-white bg-white/5 border border-white/10 px-2 py-1 rounded font-mono flex items-center gap-1 cursor-pointer"
                 >
-                  {copiedOutline ? <Check size={10} className="text-emerald-400" /> : <Copy size={10} />}
+                  {copiedOutline ? (
+                    <Check size={10} className="text-emerald-400" />
+                  ) : (
+                    <Copy size={10} />
+                  )}
                   <span>{copiedOutline ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>
@@ -338,7 +412,9 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-[#34d399] font-mono flex items-center gap-2">
               <Building2 size={14} />
-              <span>Google Ireland Top {serp.top_results.length} Ranking Domains</span>
+              <span>
+                Google Ireland Top {serp.top_results.length} Ranking Domains
+              </span>
             </h3>
             <span className="text-[10px] font-mono text-slate-400">
               Sorted by SERP Organic Rank #1 - #{serp.top_results.length}
@@ -402,8 +478,13 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                     </span>
                     <ul className="space-y-1 text-slate-300 text-xs">
                       {r.themes.map((t, i) => (
-                        <li key={i} className="flex items-start gap-1.5 leading-normal">
-                          <span className="text-[#34d399] font-bold shrink-0">·</span>
+                        <li
+                          key={i}
+                          className="flex items-start gap-1.5 leading-normal"
+                        >
+                          <span className="text-[#34d399] font-bold shrink-0">
+                            ·
+                          </span>
                           <span>{t}</span>
                         </li>
                       ))}
@@ -416,8 +497,13 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                     </span>
                     <ul className="space-y-1 text-slate-300 text-xs">
                       {r.strengths.map((t, i) => (
-                        <li key={i} className="flex items-start gap-1.5 leading-normal">
-                          <span className="text-[#34d399] font-bold shrink-0">✓</span>
+                        <li
+                          key={i}
+                          className="flex items-start gap-1.5 leading-normal"
+                        >
+                          <span className="text-[#34d399] font-bold shrink-0">
+                            ✓
+                          </span>
                           <span>{t}</span>
                         </li>
                       ))}
@@ -430,8 +516,13 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                     </span>
                     <ul className="space-y-1 text-slate-300 text-xs">
                       {r.weaknesses.map((t, i) => (
-                        <li key={i} className="flex items-start gap-1.5 leading-normal">
-                          <span className="text-rose-400 font-bold shrink-0">✗</span>
+                        <li
+                          key={i}
+                          className="flex items-start gap-1.5 leading-normal"
+                        >
+                          <span className="text-rose-400 font-bold shrink-0">
+                            ✗
+                          </span>
                           <span>{t}</span>
                         </li>
                       ))}
@@ -443,9 +534,19 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                       Content Gaps:
                     </span>
                     <ul className="space-y-1 text-slate-300 text-xs">
-                      {(r.ranking_gaps || ['No interactive tools', 'Complex jargon']).map((g, i) => (
-                        <li key={i} className="flex items-start gap-1.5 leading-normal">
-                          <span className="text-sky-400 font-bold shrink-0">⚡</span>
+                      {(
+                        r.ranking_gaps || [
+                          'No interactive tools',
+                          'Complex jargon',
+                        ]
+                      ).map((g, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-1.5 leading-normal"
+                        >
+                          <span className="text-sky-400 font-bold shrink-0">
+                            ⚡
+                          </span>
                           <span>{g}</span>
                         </li>
                       ))}
@@ -468,7 +569,8 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                 <span>Phase 9 — Competitor Diff Engine</span>
               </h3>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Tracks position changes (Δpos), new Page 1 entrants, and dropped domains between crawler snapshot passes.
+                Tracks position changes (Δpos), new Page 1 entrants, and dropped
+                domains between crawler snapshot passes.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -496,8 +598,12 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                 {diff.diffs.map((d, idx) => (
                   <tr key={idx} className="hover:bg-white/5 transition">
                     <td className="p-3">
-                      <div className="font-semibold text-white font-mono">{d.domain}</div>
-                      <div className="text-[10px] text-slate-400 truncate max-w-sm">{d.title}</div>
+                      <div className="font-semibold text-white font-mono">
+                        {d.domain}
+                      </div>
+                      <div className="text-[10px] text-slate-400 truncate max-w-sm">
+                        {d.title}
+                      </div>
                     </td>
                     <td className="p-3 text-center font-mono">
                       {d.oldPosition ? `#${d.oldPosition}` : '—'}
@@ -507,9 +613,13 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                     </td>
                     <td className="p-3 text-center font-mono font-bold">
                       {d.positionChange > 0 ? (
-                        <span className="text-emerald-400">+{d.positionChange} ↑</span>
+                        <span className="text-emerald-400">
+                          +{d.positionChange} ↑
+                        </span>
                       ) : d.positionChange < 0 ? (
-                        <span className="text-rose-400">{d.positionChange} ↓</span>
+                        <span className="text-rose-400">
+                          {d.positionChange} ↓
+                        </span>
                       ) : (
                         <span className="text-slate-400">0 →</span>
                       )}
@@ -543,31 +653,53 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
           <div className="border-b border-white/10 pb-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-emerald-400 font-mono flex items-center gap-2">
               <Sparkles size={14} />
-              <span>Phases 10 & 11 — Detected SERP Features & Search Intent</span>
+              <span>
+                Phases 10 & 11 — Detected SERP Features & Search Intent
+              </span>
             </h3>
             <p className="text-[11px] text-slate-400 mt-0.5">
-              Identifies Google Ireland rich snippets, People Also Ask accordions, local packs, and multi-intent query semantics.
+              Identifies Google Ireland rich snippets, People Also Ask
+              accordions, local packs, and multi-intent query semantics.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {features.map((feat, idx) => (
-              <div key={idx} className="glass-card p-4 space-y-2 border border-white/10">
+              <div
+                key={idx}
+                className="glass-card p-4 space-y-2 border border-white/10"
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    {feat.type === 'featured_snippet' && <Sparkles size={14} className="text-amber-400" />}
-                    {feat.type === 'people_also_ask' && <HelpCircle size={14} className="text-sky-400" />}
-                    {feat.type === 'local_pack' && <MapPin size={14} className="text-emerald-400" />}
-                    {feat.type === 'calculator_widget' && <Calculator size={14} className="text-purple-400" />}
-                    {feat.type === 'video_pack' && <Video size={14} className="text-rose-400" />}
-                    {feat.type === 'sitelinks' && <Layers size={14} className="text-blue-400" />}
-                    <h4 className="text-xs font-bold text-white font-mono">{feat.title}</h4>
+                    {feat.type === 'featured_snippet' && (
+                      <Sparkles size={14} className="text-amber-400" />
+                    )}
+                    {feat.type === 'people_also_ask' && (
+                      <HelpCircle size={14} className="text-sky-400" />
+                    )}
+                    {feat.type === 'local_pack' && (
+                      <MapPin size={14} className="text-emerald-400" />
+                    )}
+                    {feat.type === 'calculator_widget' && (
+                      <Calculator size={14} className="text-purple-400" />
+                    )}
+                    {feat.type === 'video_pack' && (
+                      <Video size={14} className="text-rose-400" />
+                    )}
+                    {feat.type === 'sitelinks' && (
+                      <Layers size={14} className="text-blue-400" />
+                    )}
+                    <h4 className="text-xs font-bold text-white font-mono">
+                      {feat.title}
+                    </h4>
                   </div>
                   <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-semibold">
                     Relevance: {feat.relevanceScore}%
                   </span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">{feat.description}</p>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  {feat.description}
+                </p>
                 {feat.sourceUrl && (
                   <a
                     href={feat.sourceUrl}
@@ -578,6 +710,18 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                     <span>{feat.sourceUrl}</span>
                     <ExternalLink size={10} />
                   </a>
+                )}
+                {feat.type === 'featured_snippet' && (
+                  <button
+                    onClick={() => {
+                      setActiveTab('hijacker');
+                      if (!positionZeroCard) handleHijackPositionZero();
+                    }}
+                    className="mt-2 text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 flex items-center gap-1.5 transition cursor-pointer"
+                  >
+                    <Zap size={11} className="text-amber-400" />
+                    <span>⚡ Hijack Position 0 / AI Overview</span>
+                  </button>
                 )}
               </div>
             ))}
@@ -592,10 +736,13 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-[#34d399] font-mono flex items-center gap-2">
                 <Target size={14} />
-                <span>Google Ireland Organic Ranking Gap Matrix (Phase 12)</span>
+                <span>
+                  Google Ireland Organic Ranking Gap Matrix (Phase 12)
+                </span>
               </h3>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                High-intent Irish keywords where competitors rank on Page 1 but lack depth or localized answers.
+                High-intent Irish keywords where competitors rank on Page 1 but
+                lack depth or localized answers.
               </p>
             </div>
           </div>
@@ -616,7 +763,9 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
               <tbody className="divide-y divide-white/5">
                 {(serp.ranking_gap_keywords || []).map((gap, idx) => (
                   <tr key={idx} className="hover:bg-white/5 transition">
-                    <td className="p-3 font-semibold text-white font-mono">{gap.keyword}</td>
+                    <td className="p-3 font-semibold text-white font-mono">
+                      {gap.keyword}
+                    </td>
                     <td className="p-3 text-slate-300">{gap.competitor}</td>
                     <td className="p-3 text-center font-mono">
                       <span className="bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[11px]">
@@ -638,7 +787,9 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                         {gap.opportunityScore}/100
                       </span>
                     </td>
-                    <td className="p-3 text-slate-300 leading-normal max-w-xs">{gap.suggestedAction}</td>
+                    <td className="p-3 text-slate-300 leading-normal max-w-xs">
+                      {gap.suggestedAction}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -657,7 +808,8 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                 <span>Recommended Article Content Outline</span>
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                Structured section-by-section outline engineered to outrank top competitors on Google Ireland.
+                Structured section-by-section outline engineered to outrank top
+                competitors on Google Ireland.
               </p>
             </div>
 
@@ -666,7 +818,11 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                 onClick={handleCopyOutline}
                 className="bg-white/5 hover:bg-white/10 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border border-white/10 transition flex items-center gap-1.5 cursor-pointer"
               >
-                {copiedOutline ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                {copiedOutline ? (
+                  <Check size={12} className="text-emerald-400" />
+                ) : (
+                  <Copy size={12} />
+                )}
                 <span>{copiedOutline ? 'Copied' : 'Copy Outline'}</span>
               </button>
 
@@ -702,9 +858,19 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                     Section {i + 1}: {o}
                   </h4>
                   <p className="text-[11px] text-slate-400 mt-1 leading-normal">
-                    Target focus keywords: <span className="text-slate-300 font-mono">{serp.keyword}</span>,{' '}
-                    <span className="text-slate-300 font-mono">BER upgrade Ireland</span>,{' '}
-                    <span className="text-slate-300 font-mono">SEAI grant steps</span>.
+                    Target focus keywords:{' '}
+                    <span className="text-slate-300 font-mono">
+                      {serp.keyword}
+                    </span>
+                    ,{' '}
+                    <span className="text-slate-300 font-mono">
+                      BER upgrade Ireland
+                    </span>
+                    ,{' '}
+                    <span className="text-slate-300 font-mono">
+                      SEAI grant steps
+                    </span>
+                    .
                   </p>
                 </div>
               </div>
@@ -719,10 +885,13 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
           <div className="border-b border-white/10 pb-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-rose-400 font-mono flex items-center gap-2">
               <Bell size={14} />
-              <span>Phases 13 & 14 — SERP Volatility Predictor & Change Alerts</span>
+              <span>
+                Phases 13 & 14 — SERP Volatility Predictor & Change Alerts
+              </span>
             </h3>
             <p className="text-[11px] text-slate-400 mt-0.5">
-              Live algorithmic turbulence monitoring and automated strategic change alerts.
+              Live algorithmic turbulence monitoring and automated strategic
+              change alerts.
             </p>
           </div>
 
@@ -732,12 +901,18 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
               <span className="text-xs font-bold font-mono text-slate-300 uppercase">
                 SERP Page 1 Turbulence Index:
               </span>
-              <span className="font-mono font-bold text-sm text-emerald-400">{volatility}%</span>
+              <span className="font-mono font-bold text-sm text-emerald-400">
+                {volatility}%
+              </span>
             </div>
             <div className="w-full bg-white/5 h-3 rounded-full overflow-hidden border border-white/10">
               <div
                 className={`h-full transition-all duration-500 ${
-                  volatility < 35 ? 'bg-emerald-400' : volatility < 65 ? 'bg-amber-400' : 'bg-rose-400'
+                  volatility < 35
+                    ? 'bg-emerald-400'
+                    : volatility < 65
+                      ? 'bg-amber-400'
+                      : 'bg-rose-400'
                 }`}
                 style={{ width: `${volatility}%` }}
               />
@@ -771,16 +946,307 @@ export default function SERPViewer({ serp, onSendToWriter }: SERPViewerProps) {
                 >
                   <AlertCircle size={16} className="shrink-0 mt-0.5" />
                   <div className="space-y-1 text-xs">
-                    <div className="font-bold font-mono uppercase">{al.type.replace(/_/g, ' ')}</div>
+                    <div className="font-bold font-mono uppercase">
+                      {al.type.replace(/_/g, ' ')}
+                    </div>
                     <div>{al.message}</div>
                     <div className="text-[11px] opacity-80 pt-1 font-mono">
                       <strong>Action:</strong> {al.actionRequired}
                     </div>
+                    {al.type === 'FEATURED_SNIPPET_OPPORTUNITY' && (
+                      <button
+                        onClick={() => {
+                          setActiveTab('hijacker');
+                          if (!positionZeroCard) handleHijackPositionZero();
+                        }}
+                        className="mt-2 text-[11px] font-semibold px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 flex items-center gap-1 cursor-pointer transition"
+                      >
+                        <Zap size={11} className="text-amber-400" />
+                        <span>⚡ Launch Position 0 Hijacker</span>
+                      </button>
+                    )}
                   </div>
                 </div>
               ))
             )}
           </div>
+        </div>
+      )}
+
+      {/* TAB 8: POSITION 0 & AI OVERVIEW HIJACKER */}
+      {activeTab === 'hijacker' && (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400 font-mono flex items-center gap-2">
+                <Zap size={15} className="text-amber-400" />
+                <span>
+                  Position 0 & AI Overview Hijacker (Autonomous Answer Engine)
+                </span>
+              </h3>
+              <p className="text-[11px] text-slate-400 mt-1">
+                Generates a 40–55 word authoritative answer card with W3C
+                SpeakableSpecification JSON-LD schema to capture Google Ireland
+                zero-click citations.
+              </p>
+            </div>
+            <button
+              onClick={handleHijackPositionZero}
+              disabled={hijackLoading}
+              className="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition flex items-center gap-1.5 self-start shrink-0 cursor-pointer disabled:opacity-50"
+            >
+              <RefreshCw
+                size={12}
+                className={hijackLoading ? 'animate-spin' : ''}
+              />
+              <span>
+                {hijackLoading ? 'Synthesizing...' : 'Regenerate Snippet'}
+              </span>
+            </button>
+          </div>
+
+          {hijackLoading && !positionZeroCard ? (
+            <div className="p-12 text-center text-xs font-mono text-slate-400 space-y-3">
+              <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin mx-auto" />
+              <div>
+                Reverse-engineering competitor Position 0 signals for "
+                {serp.keyword}"...
+              </div>
+            </div>
+          ) : positionZeroCard ? (
+            <div className="space-y-5">
+              {/* Score & Telemetry Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="glass-card p-3.5 space-y-1 border border-amber-500/20 bg-amber-500/5">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                    Hijack Probability
+                  </span>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-xl font-bold font-mono text-amber-400">
+                      {positionZeroCard.hijackScore}%
+                    </span>
+                    <span className="text-[10px] text-emerald-400 font-mono font-semibold">
+                      {positionZeroCard.hijackScore >= 85 ? 'HIGH' : 'MODERATE'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="glass-card p-3.5 space-y-1 border border-white/10">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                    Word Count
+                  </span>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-xl font-bold font-mono text-white">
+                      {positionZeroCard.wordCount}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      {positionZeroCard.wordCount >= 40 &&
+                      positionZeroCard.wordCount <= 55
+                        ? '✓ Optimal (40–55)'
+                        : 'Range 35–60'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="glass-card p-3.5 space-y-1 border border-white/10">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                    Snippet Format
+                  </span>
+                  <div className="text-sm font-bold font-mono text-sky-400 capitalize truncate">
+                    {positionZeroCard.snippetType.replace(/_/g, ' ')}
+                  </div>
+                </div>
+
+                <div className="glass-card p-3.5 space-y-1 border border-white/10">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                    Entity Coverage
+                  </span>
+                  <div className="text-sm font-bold font-mono text-emerald-400">
+                    {positionZeroCard.keyEntities.length} Verified
+                  </div>
+                </div>
+              </div>
+
+              {/* 45-Word Answer Box Card */}
+              <div className="glass-card p-5 space-y-3 border-2 border-amber-500/30 bg-gradient-to-b from-amber-500/10 to-transparent">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={14} className="text-amber-400" />
+                    <span className="text-xs font-bold font-mono text-white uppercase tracking-wider">
+                      Position 0 Featured Snippet & AI Overview Card
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        positionZeroCard.conciseAnswer,
+                      );
+                      setCopiedSnippet(true);
+                      setTimeout(() => setCopiedSnippet(false), 2000);
+                    }}
+                    className="text-[10px] font-mono px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-slate-200 flex items-center gap-1 cursor-pointer transition"
+                  >
+                    {copiedSnippet ? (
+                      <Check size={11} className="text-emerald-400" />
+                    ) : (
+                      <Copy size={11} />
+                    )}
+                    <span>
+                      {copiedSnippet ? 'Copied Snippet' : 'Copy Snippet'}
+                    </span>
+                  </button>
+                </div>
+
+                <blockquote className="text-sm text-slate-100 font-medium leading-relaxed bg-black/40 p-4 rounded-xl border border-amber-500/20 italic">
+                  "{positionZeroCard.conciseAnswer}"
+                </blockquote>
+
+                {/* Key Entities */}
+                <div className="space-y-1.5 pt-1">
+                  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+                    High-Density Irish Entities Recognized by Google:
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {positionZeroCard.keyEntities.map((ent, idx) => (
+                      <span
+                        key={idx}
+                        className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20"
+                      >
+                        {ent}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bullet Steps (if any) */}
+                {positionZeroCard.bulletSteps &&
+                  positionZeroCard.bulletSteps.length > 0 && (
+                    <div className="space-y-2 pt-2 border-t border-white/10">
+                      <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+                        Structured Step-by-Step Sequence (Captures Numbered List
+                        Snippets):
+                      </span>
+                      <ol className="space-y-1.5 text-xs text-slate-300 list-decimal list-inside bg-black/20 p-3 rounded-lg border border-white/5">
+                        {positionZeroCard.bulletSteps.map((step, idx) => (
+                          <li key={idx} className="leading-relaxed">
+                            <span className="font-medium text-slate-200">
+                              {step}
+                            </span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
+
+                {/* Comparison Table (if any) */}
+                {positionZeroCard.comparisonTable && (
+                  <div className="space-y-2 pt-2 border-t border-white/10">
+                    <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+                      Comparison Table (Captures Table Snippets):
+                    </span>
+                    <div className="overflow-x-auto rounded-lg border border-white/10 bg-black/30">
+                      <table className="w-full text-left text-xs text-slate-300">
+                        <thead className="bg-white/5 text-[10px] font-mono text-slate-400 uppercase">
+                          <tr>
+                            {positionZeroCard.comparisonTable.headers.map(
+                              (h, i) => (
+                                <th key={i} className="p-2.5">
+                                  {h}
+                                </th>
+                              ),
+                            )}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/5">
+                          {positionZeroCard.comparisonTable.rows.map(
+                            (row, rIdx) => (
+                              <tr key={rIdx} className="hover:bg-white/5">
+                                {row.map((cell, cIdx) => (
+                                  <td
+                                    key={cIdx}
+                                    className="p-2.5 font-mono text-xs"
+                                  >
+                                    {cell}
+                                  </td>
+                                ))}
+                              </tr>
+                            ),
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* JSON-LD Schema Card */}
+              <div className="glass-card p-5 space-y-3 border border-sky-500/20 bg-sky-500/5">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <Layers size={14} className="text-sky-400" />
+                    <span className="text-xs font-bold font-mono text-white uppercase tracking-wider">
+                      W3C SpeakableSpecification & FAQPage JSON-LD Schema
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        JSON.stringify(positionZeroCard.schemaJsonLd, null, 2),
+                      );
+                      setCopiedSchema(true);
+                      setTimeout(() => setCopiedSchema(false), 2000);
+                    }}
+                    className="text-[10px] font-mono px-2.5 py-1 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 flex items-center gap-1 cursor-pointer transition"
+                  >
+                    {copiedSchema ? (
+                      <Check size={11} className="text-emerald-400" />
+                    ) : (
+                      <Copy size={11} />
+                    )}
+                    <span>
+                      {copiedSchema ? 'Copied JSON-LD' : 'Copy JSON-LD'}
+                    </span>
+                  </button>
+                </div>
+
+                <pre className="text-[11px] font-mono text-sky-200/90 bg-black/60 p-3.5 rounded-xl border border-white/10 overflow-x-auto max-h-60 leading-normal">
+                  {JSON.stringify(positionZeroCard.schemaJsonLd, null, 2)}
+                </pre>
+                <div className="text-[11px] text-slate-400 font-mono flex items-center gap-2">
+                  <span className="text-amber-400">Target Selectors:</span>
+                  <span>
+                    {positionZeroCard.speakableCssSelectors.join(', ')}
+                  </span>
+                </div>
+              </div>
+
+              {/* Tactical Recommendations */}
+              <div className="glass-card p-4 space-y-2 border border-white/10 bg-white/5">
+                <h4 className="text-xs font-bold font-mono text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Shield size={13} />
+                  <span>Deployment Checklist for Position 0 Hijack</span>
+                </h4>
+                <ul className="space-y-1.5 text-xs text-slate-300">
+                  {positionZeroCard.recommendations.map((rec, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <CheckCircle2
+                        size={13}
+                        className="text-emerald-400 shrink-0 mt-0.5"
+                      />
+                      <span>{rec}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div className="p-8 text-center text-xs font-mono text-slate-400 border border-dashed border-white/10 rounded-xl space-y-2">
+              <p>
+                Click "Regenerate Snippet" to synthesize a Position 0 Answer
+                Card for "{serp.keyword}".
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

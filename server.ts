@@ -128,6 +128,19 @@ import {
 } from './src/logic/serpIntelligence';
 
 import {
+  generatePosition0AnswerCard,
+  Position0AnswerCard,
+} from './src/logic/positionZeroHijacker';
+
+import {
+  executeWarRoomStressTest,
+  PRESET_WAR_ROOM_SCENARIOS,
+  WarRoomScenarioId,
+  runMonteCarloSimulation,
+  MonteCarloSimulationResult,
+} from './src/logic/competitorWarRoomEngine';
+
+import {
   globalAutomationEngine,
   AutomationLog,
   RefreshQueueItem,
@@ -2564,6 +2577,97 @@ app.get('/api/seo/serp-features/:keyword', (req, res) => {
     intent,
     features,
     totalFeatures: features.length,
+  });
+});
+
+// Position 0 & AI Overview Hijacker Endpoints (Autonomous Generative Answer Engine)
+app.post('/api/seo/hijack-position-zero', async (req, res) => {
+  const { keyword, competitorSnippet, targetUrl, preferredType } =
+    req.body || {};
+  if (!keyword || !String(keyword).trim()) {
+    return res.status(400).json({ error: 'Keyword is required' });
+  }
+
+  const cleanKeyword = String(keyword).trim();
+  const ai = getGeminiClient();
+
+  if (!ai) {
+    const card = generatePosition0AnswerCard({
+      keyword: cleanKeyword,
+      targetUrl,
+      competitorSnippet,
+      preferredType,
+    });
+    return res.json({
+      success: true,
+      answerCard: card,
+      isAiGenerated: false,
+    });
+  }
+
+  try {
+    const prompt = `You are the Position 0 & AI Overview Hijacker for EcoSmartHomes Ireland, a specialized SEO engine for Irish domestic retrofit and SEAI grant topics.
+Target search query: "${cleanKeyword}"
+${competitorSnippet ? `Competitor snippet to outperform: "${competitorSnippet}"` : ''}
+
+Generate an optimal Featured Snippet definition strictly conforming to these rules:
+1. Length: Exactly between 42 and 50 words.
+2. Structure: Direct factual answer in the first sentence (e.g. "[Topic] provides / is / allows...").
+3. Entities: Must cite official Irish context (SEAI grants, Part L regulations, Building Energy Rating (BER), or Limerick V94).
+4. Tone: Authoritative, objective, homeowner-friendly.
+
+Return ONLY the 42-50 word answer paragraph without quotes or markdown preamble.`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.7-flash',
+      contents: prompt,
+    });
+
+    const aiText = (response.text || '').trim();
+    const words = aiText.split(/\s+/).filter(Boolean);
+
+    // If Gemini output is within 35-65 words, use it as customConciseAnswer
+    const customAnswer =
+      words.length >= 35 && words.length <= 65 ? aiText : undefined;
+
+    const card = generatePosition0AnswerCard({
+      keyword: cleanKeyword,
+      targetUrl,
+      competitorSnippet,
+      preferredType,
+      customConciseAnswer: customAnswer,
+    });
+
+    return res.json({
+      success: true,
+      answerCard: card,
+      isAiGenerated: !!customAnswer,
+    });
+  } catch (err: any) {
+    console.warn('Gemini Position 0 Hijacker fallback:', err.message || err);
+    const card = generatePosition0AnswerCard({
+      keyword: cleanKeyword,
+      targetUrl,
+      competitorSnippet,
+      preferredType,
+    });
+    return res.json({
+      success: true,
+      answerCard: card,
+      isAiGenerated: false,
+      warning: 'Offline Safe-Mode synthesized your Position 0 Answer Card.',
+    });
+  }
+});
+
+app.get('/api/seo/hijack-position-zero/preview/:keyword', (req, res) => {
+  const { keyword } = req.params;
+  const card = generatePosition0AnswerCard({
+    keyword: String(keyword).trim(),
+  });
+  res.json({
+    success: true,
+    answerCard: card,
   });
 });
 
@@ -7096,13 +7200,92 @@ app.get('/api/landing/latest', async (_req, res) => {
   }
 });
 
-app.get('/api/simulation/latest', async (_req, res) => {
+app.get('/api/war-room/scenarios', (_req, res) => {
   try {
     return res.json({
       success: true,
-      simulationRuns: 1200,
-      convergenceConfidence: '98.7%',
-      predictedLift: '+42%',
+      scenarios: Object.values(PRESET_WAR_ROOM_SCENARIOS),
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Failed to fetch war-room scenarios',
+      details: String(err),
+    });
+  }
+});
+
+app.post('/api/war-room/simulate', async (req, res) => {
+  try {
+    const { scenarioId, iterations } = req.body || {};
+    const validScenarioId: WarRoomScenarioId =
+      scenarioId && PRESET_WAR_ROOM_SCENARIOS[scenarioId as WarRoomScenarioId]
+        ? (scenarioId as WarRoomScenarioId)
+        : 'activ8_munster_offensive';
+
+    const numIterations = Math.max(
+      50,
+      Math.min(Number(iterations) || 500, 2000),
+    );
+    const result = executeWarRoomStressTest(validScenarioId, numIterations);
+
+    return res.json({
+      success: true,
+      result,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Failed to execute war-room simulation',
+      details: String(err),
+    });
+  }
+});
+
+app.get('/api/simulation/latest', async (_req, res) => {
+  try {
+    // Default baseline stress test run (Activ8 Munster Offensive)
+    const stressResult = executeWarRoomStressTest(
+      'activ8_munster_offensive',
+      500,
+    );
+
+    return res.json({
+      success: true,
+      simulationRuns: stressResult.iterations,
+      convergenceConfidence: stressResult.convergenceConfidence,
+      predictedLift: `-${(
+        (stressResult.totalTrafficAtRisk /
+          Math.max(
+            1,
+            stressResult.keywordResults.reduce(
+              (sum, k) => sum + k.baselineMonthlyTraffic,
+              0,
+            ),
+          )) *
+        100
+      ).toFixed(1)}%`,
+      // Full simulation state and plan for backwards compatibility with Simulation.tsx
+      simState: {
+        competitorAggression: stressResult.scenario.intensity,
+        cpcVolatility: -0.12,
+        backlinkGrowth: 8,
+        regionalDemandShock: 0.18,
+        serpTurbulence: Number(
+          (stressResult.scenario.volatilityMultiplier * 0.05).toFixed(2),
+        ),
+      },
+      plan: stressResult.defensivePlaybook.map((action) => ({
+        type: action.actionType,
+        reason: `${action.tacticalRecommendation} (Target: ${action.targetKeyword})`,
+      })),
+      longReward: 0.88,
+      simulatedReward: Math.max(
+        0.1,
+        Number(
+          (0.88 - stressResult.totalPipelineValueAtRisk / 50000).toFixed(2),
+        ),
+      ),
+      timestamp: stressResult.simulationTimestamp,
+      warRoomResult: stressResult,
     });
   } catch (err: any) {
     return res.status(500).json({
@@ -7223,7 +7406,19 @@ async function startServer() {
     });
   }
 
-  if (process.env.SENTRY_DSN) { try { if (process.env.SENTRY_DSN) { try { app.use(Sentry.expressErrorHandler() as any); } catch (e) { /* ignore */ } } } catch (e) { /* ignore */ } }
+  if (process.env.SENTRY_DSN) {
+    try {
+      if (process.env.SENTRY_DSN) {
+        try {
+          app.use(Sentry.expressErrorHandler() as any);
+        } catch (e) {
+          /* ignore */
+        }
+      }
+    } catch (e) {
+      /* ignore */
+    }
+  }
 
   const httpServer = http.createServer(app);
   const wss = new WebSocketServer({ server: httpServer });
