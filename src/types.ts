@@ -55,11 +55,7 @@ export interface FeaturedImageMeta {
 }
 
 export type FunnelStatus =
-  | 'Idea'
-  | 'Research'
-  | 'Drafted'
-  | 'Review'
-  | 'Published';
+  'Idea' | 'Research' | 'Drafted' | 'Review' | 'Published';
 
 export interface ArticleDraft {
   id: string;
@@ -81,6 +77,10 @@ export interface ArticleDraft {
   targetBER?: string;
   estimatedReadTime?: string;
   slug?: string;
+  grantTag?: string;
+  daysInStage?: number;
+  stageUpdatedAt?: number;
+  publishedAt?: number;
 }
 
 export interface DashboardState {

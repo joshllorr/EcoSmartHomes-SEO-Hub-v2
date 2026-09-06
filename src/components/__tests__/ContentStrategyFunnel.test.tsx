@@ -23,7 +23,8 @@ describe('ContentStrategyFunnel Component', () => {
       id: 'test-draft-1',
       title: 'Air-to-Water Heat Pump Efficiency in Irish Winter',
       topic: 'How defrost cycles and humidity impact COP in Ireland.',
-      content: 'Heating your home efficiently requires understanding seasonal COP...',
+      content:
+        'Heating your home efficiently requires understanding seasonal COP...',
       status: 'Drafted',
       date: '20/08/2026',
       wordCount: 820,
@@ -120,7 +121,9 @@ describe('ContentStrategyFunnel Component', () => {
 
     expect(screen.getByText('Add Content Strategy Item')).toBeInTheDocument();
 
-    const titleInput = screen.getByPlaceholderText(/e\.g\. SEAI Attic Insulation/i);
+    const titleInput = screen.getByPlaceholderText(
+      /e\.g\. SEAI Attic Insulation/i,
+    );
     fireEvent.change(titleInput, {
       target: { value: 'Complete BER Assessment Checklist Dublin' },
     });
@@ -147,7 +150,9 @@ describe('ContentStrategyFunnel Component', () => {
       />,
     );
 
-    const seedBtn = screen.getByRole('button', { name: /AI Auto-Seed Pipeline/i });
+    const seedBtn = screen.getByRole('button', {
+      name: /AI Auto-Seed Pipeline/i,
+    });
     fireEvent.click(seedBtn);
 
     await waitFor(() => {
@@ -167,7 +172,9 @@ describe('ContentStrategyFunnel Component', () => {
       />,
     );
 
-    const ideaCard = screen.getByText('Solar PV Grants Kerry V92: 2026 Price Breakdown');
+    const ideaCard = screen.getByText(
+      'Solar PV Grants Kerry V92: 2026 Price Breakdown',
+    );
     const publishedColumn = document.getElementById('funnel-column-published');
 
     expect(publishedColumn).toBeInTheDocument();
@@ -180,7 +187,9 @@ describe('ContentStrategyFunnel Component', () => {
       dropEffect: 'move',
     };
 
-    fireEvent.dragStart(ideaCard.closest('[draggable="true"]')!, { dataTransfer });
+    fireEvent.dragStart(ideaCard.closest('[draggable="true"]')!, {
+      dataTransfer,
+    });
     fireEvent.dragOver(publishedColumn!, { dataTransfer });
     fireEvent.drop(publishedColumn!, { dataTransfer });
 
@@ -188,5 +197,156 @@ describe('ContentStrategyFunnel Component', () => {
       expect(mockUpdateDrafts).toHaveBeenCalled();
       expect(mockXPUnlock).toHaveBeenCalledWith(25);
     });
+  });
+
+  it('displays 2026 EPBD 8-step target BER badges and SEAI grant tags', () => {
+    const grantDrafts: ArticleDraft[] = [
+      {
+        id: 'test-grant-1',
+        title: 'Heat Pump Grants in Cork',
+        topic: 'Grant breakdown',
+        content: '',
+        status: 'Drafted',
+        date: '22/08/2026',
+        wordCount: 150,
+        pillar: 'Heat Pumps',
+        targetBER: 'A0',
+        grantTag: '€12,500 Heat Pump',
+      },
+    ];
+
+    render(
+      <ContentStrategyFunnel
+        drafts={grantDrafts}
+        onOpenInWriter={mockOpenInWriter}
+      />,
+    );
+
+    expect(screen.getAllByText('€12,500 Heat Pump').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('A0').length).toBeGreaterThan(0);
+  });
+
+  it('detects velocity bottlenecks and displays stagnation warnings', () => {
+    const stagnantDrafts: ArticleDraft[] = [
+      {
+        id: 'stagnant-1',
+        title: 'Stuck in Review Article',
+        topic: 'This article has been waiting',
+        content: '',
+        status: 'Review',
+        date: '01/08/2026',
+        wordCount: 500,
+        pillar: 'SEAI Grants',
+        stageUpdatedAt: Date.now() - 10 * 86400000,
+      },
+    ];
+
+    render(
+      <ContentStrategyFunnel
+        drafts={stagnantDrafts}
+        onOpenInWriter={mockOpenInWriter}
+      />,
+    );
+
+    expect(screen.getByText(/Stagnant \(10d in Review\)/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Bottleneck/i).length).toBeGreaterThan(0);
+  });
+
+  it('supports in-place card editing inside the preview modal', async () => {
+    const drafts: ArticleDraft[] = [
+      {
+        id: 'edit-test-1',
+        title: 'Original Title To Edit',
+        topic: 'Original Topic',
+        content: '',
+        status: 'Drafted',
+        date: '20/08/2026',
+        wordCount: 100,
+        pillar: 'Solar PV',
+        targetBER: 'B',
+      },
+    ];
+
+    render(
+      <ContentStrategyFunnel
+        drafts={drafts}
+        onOpenInWriter={mockOpenInWriter}
+        onUpdateDraft={mockUpdateDraft}
+      />,
+    );
+
+    fireEvent.click(screen.getByText('Original Title To Edit'));
+
+    const editBtn = screen.getByRole('button', { name: /Edit Details/i });
+    fireEvent.click(editBtn);
+
+    const titleInput = screen.getByDisplayValue('Original Title To Edit');
+    fireEvent.change(titleInput, {
+      target: { value: 'Updated Title 2026 Edition' },
+    });
+
+    const saveBtn = screen.getByRole('button', { name: /Save Changes/i });
+    fireEvent.click(saveBtn);
+
+    await waitFor(() => {
+      expect(mockUpdateDraft).toHaveBeenCalledWith(
+        expect.objectContaining({ title: 'Updated Title 2026 Edition' }),
+      );
+    });
+  });
+
+  it('supports 1-click direct publishing to CMS from Review stage', async () => {
+    const reviewDrafts: ArticleDraft[] = [
+      {
+        id: 'pub-test-1',
+        title: 'Ready to Publish Guide',
+        topic: 'Publishing test',
+        content: '# Ready to Publish Guide\n\nFull content here.',
+        status: 'Review',
+        date: '20/08/2026',
+        wordCount: 800,
+        pillar: 'Heat Pumps',
+      },
+    ];
+
+    const originalFetch = global.fetch;
+    global.fetch = vi.fn().mockImplementation((url) => {
+      if (typeof url === 'string' && url.includes('/api/publish')) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              url: '/articles/ready-to-publish-guide',
+            }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      });
+    });
+
+    render(
+      <ContentStrategyFunnel
+        drafts={reviewDrafts}
+        onOpenInWriter={mockOpenInWriter}
+        onUpdateDraft={mockUpdateDraft}
+        onXPUnlock={mockXPUnlock}
+      />,
+    );
+
+    const publishBtns = screen.getAllByRole('button', { name: /Publish/i });
+    fireEvent.click(publishBtns[0]);
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/publish',
+        expect.objectContaining({ method: 'POST' }),
+      );
+      expect(mockXPUnlock).toHaveBeenCalledWith(50);
+    });
+
+    global.fetch = originalFetch;
   });
 });
