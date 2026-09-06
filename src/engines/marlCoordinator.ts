@@ -167,7 +167,7 @@ Structure your guide in clean Markdown format with:
 1. Clear H1 Title featuring the target keyword and ${loc}, County / Munster.
 2. Local Context & Housing Stock Analysis for ${loc} (typical builds, insulation gaps, cavity vs hollow block, heating fuel reliance on oil/gas).
 3. Detailed SEAI Grants breakdown & Technical Advisor fee repayment process.
-4. Step-by-step homeowner journey to achieve an A2 Building Energy Rating (BER) and NZEB Part L standard compliance.
+4. Step-by-step homeowner journey to achieve an A0 / Zero-Emission Building Energy Rating (BER) and NZEB Part L standard compliance.
 5. Frequently Asked Questions by ${loc} homeowners regarding surveyor visits, MPRN verification, and grant application timelines.
 
 Keep tone professional, authoritative, actionable, and compliant with Irish Building Regulations TGD Part L.`;

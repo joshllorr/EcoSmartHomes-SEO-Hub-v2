@@ -40,9 +40,9 @@ export default function RetrofitAnalytics() {
     averageGrantOffset: 11000,
     averageNetCost: 12000,
     berUpliftDistribution: [
-      { rating: 'D2 → A2', count: 48 },
-      { rating: 'E1 → B1', count: 24 },
-      { rating: 'C3 → A3', count: 14 },
+      { rating: 'D → A0', count: 48 },
+      { rating: 'E → B', count: 24 },
+      { rating: 'C → A0', count: 14 },
     ],
     upgradePopularity: [
       { measure: 'Attic Insulation', percentage: '95.3%' },

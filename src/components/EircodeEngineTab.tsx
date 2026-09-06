@@ -4,7 +4,7 @@
  * Hyper-Local "Eircode Engine" with Dynamic BER Jump & Solar Yield Calculators
  *
  * Allows Irish homeowners and retrofit contractors to input any Eircode or Routing Key (e.g. V94, T12, D04),
- * computes SEAI DEAP 4.2 compliant BER Jump (e.g. G -> A2), simulates Met Éireann localized solar irradiance
+ * computes SEAI DEAP 4.2 compliant BER Jump (e.g. G -> A0), simulates Met Éireann localized solar irradiance
  * and Clean Export Guarantee (CEG) revenues, and generates Programmatic SEO Schemas for Irish county hubs.
  */
 

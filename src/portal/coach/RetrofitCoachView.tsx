@@ -56,8 +56,9 @@ export default function RetrofitCoachView({
   const [refreshingGuidance, setRefreshingGuidance] = useState(false);
 
   // Site Visit Preparation State
-  const [selectedVisitType, setSelectedVisitType] =
-    useState<SiteVisitType>('technical_assessment');
+  const [selectedVisitType, setSelectedVisitType] = useState<SiteVisitType>(
+    'technical_assessment',
+  );
   const [siteVisitPlan, setSiteVisitPlan] = useState<SiteVisitPrepPlan | null>(
     null,
   );
@@ -74,8 +75,8 @@ export default function RetrofitCoachView({
   const [propertyProfile, setPropertyProfile] = useState<NZEBPropertyProfile>({
     propertyType: '3-Bed Semi-Detached',
     yearBuilt: 1988,
-    currentBER: 'D1',
-    targetBER: 'A2 (NZEB Standard)',
+    currentBER: 'D',
+    targetBER: 'A0 (NZEB / Zero-Emission Standard)',
     roofUValue: 0.14,
     wallUValue: 0.18,
     windowUValue: 1.1,
@@ -227,7 +228,7 @@ export default function RetrofitCoachView({
         ...prev,
         {
           role: 'coach',
-          text: 'For your site visit, prioritize clearing your attic hatch and ensuring your electricity meter is accessible. To meet NZEB (A2) compliance under Irish Part L, target an air permeability under 5 m³/(hr·m²) and a primary energy demand under 45 kWh/m²/yr.',
+          text: 'For your site visit, prioritize clearing your attic hatch and ensuring your electricity meter is accessible. To meet NZEB (A0) compliance under Irish Part L and 2026 EPBD standards, target an air permeability under 5 m³/(hr·m²) and a primary energy demand under 45 kWh/m²/yr.',
           tips: ['Ensure attic hatch is unobstructed', 'Have MPRN ready'],
           insights: ['Part L NZEB mandates RER >= 20%'],
           time: Date.now(),
@@ -288,7 +289,8 @@ export default function RetrofitCoachView({
             Site Visit Preparation & NZEB Standards Coach
           </h2>
           <p className="text-xs text-slate-400 font-mono mt-0.5">
-            LLM-driven preparation for technical assessments, SEAI grant audits, and Irish Part L NZEB compliance.
+            LLM-driven preparation for technical assessments, SEAI grant audits,
+            and Irish Part L NZEB compliance.
           </p>
         </div>
 
@@ -298,7 +300,10 @@ export default function RetrofitCoachView({
           disabled={refreshingGuidance}
           className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-bold rounded-xl transition flex items-center gap-2 shadow-lg cursor-pointer shrink-0"
         >
-          <RefreshCw size={14} className={refreshingGuidance ? 'animate-spin' : ''} />
+          <RefreshCw
+            size={14}
+            className={refreshingGuidance ? 'animate-spin' : ''}
+          />
           <span>Refresh AI Guidance</span>
         </button>
       </div>
@@ -373,8 +378,14 @@ export default function RetrofitCoachView({
               </label>
               <div className="flex flex-wrap gap-2">
                 {[
-                  { id: 'technical_assessment', label: 'SEAI Technical Assessment' },
-                  { id: 'heat_pump_sizing', label: 'Heat Pump & Radiator Sizing' },
+                  {
+                    id: 'technical_assessment',
+                    label: 'SEAI Technical Assessment',
+                  },
+                  {
+                    id: 'heat_pump_sizing',
+                    label: 'Heat Pump & Radiator Sizing',
+                  },
                   { id: 'airtightness_test', label: 'Blower Door Air Test' },
                   { id: 'pre_install_survey', label: 'Contractor Pre-Survey' },
                   { id: 'post_install_ber', label: 'Post-Works BER Sign-Off' },
@@ -445,7 +456,10 @@ export default function RetrofitCoachView({
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-white flex items-center gap-2">
                       <CheckCircle2 size={16} className="text-emerald-400" />
-                      Preparation Checklist ({siteVisitPlan.checklist.length} items)
+                      Preparation Checklist ({
+                        siteVisitPlan.checklist.length
+                      }{' '}
+                      items)
                     </h3>
                     <span className="text-[10px] font-mono text-slate-400">
                       Click to mark completed
@@ -467,7 +481,10 @@ export default function RetrofitCoachView({
                         >
                           <button className="mt-0.5 text-emerald-400 shrink-0">
                             {isDone ? (
-                              <CheckSquare size={18} className="text-emerald-400" />
+                              <CheckSquare
+                                size={18}
+                                className="text-emerald-400"
+                              />
                             ) : (
                               <Square size={18} className="text-slate-500" />
                             )}
@@ -476,7 +493,9 @@ export default function RetrofitCoachView({
                             <div className="flex items-center gap-2">
                               <span
                                 className={`text-xs font-bold ${
-                                  isDone ? 'line-through text-slate-400' : 'text-white'
+                                  isDone
+                                    ? 'line-through text-slate-400'
+                                    : 'text-white'
                                 }`}
                               >
                                 {task.task}
@@ -513,10 +532,13 @@ export default function RetrofitCoachView({
                           &ldquo;{q.question}&rdquo;
                         </span>
                         <p className="text-[11px] text-slate-400 font-mono">
-                          <strong className="text-slate-300">Why ask:</strong> {q.reason}
+                          <strong className="text-slate-300">Why ask:</strong>{' '}
+                          {q.reason}
                         </p>
                         <p className="text-[11px] text-emerald-400/90 font-mono">
-                          <strong className="text-emerald-300">Expected answer:</strong>{' '}
+                          <strong className="text-emerald-300">
+                            Expected answer:
+                          </strong>{' '}
                           {q.expectedAnswerHint}
                         </p>
                       </div>
@@ -553,7 +575,9 @@ export default function RetrofitCoachView({
                             {doc.ready ? 'Ready' : 'Gather'}
                           </span>
                         </div>
-                        <p className="text-[10px] text-slate-400">{doc.description}</p>
+                        <p className="text-[10px] text-slate-400">
+                          {doc.description}
+                        </p>
                         <span className="text-[9px] font-mono text-slate-500">
                           Source: {doc.whereToFind}
                         </span>
@@ -575,7 +599,9 @@ export default function RetrofitCoachView({
                         className="p-3 bg-slate-950/80 border border-white/5 rounded-xl flex flex-col gap-1"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-white">{area.area}</span>
+                          <span className="text-xs font-bold text-white">
+                            {area.area}
+                          </span>
                           <span
                             className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${
                               area.status === 'accessible'
@@ -583,7 +609,9 @@ export default function RetrofitCoachView({
                                 : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                             }`}
                           >
-                            {area.status === 'accessible' ? 'Clear' : 'Check Access'}
+                            {area.status === 'accessible'
+                              ? 'Clear'
+                              : 'Check Access'}
                           </span>
                         </div>
                         <p className="text-[10px] text-slate-400 leading-snug">
@@ -613,7 +641,8 @@ export default function RetrofitCoachView({
                   Building Envelope & Renewable Energy Parameters
                 </h3>
                 <p className="text-[11px] text-slate-400 font-mono">
-                  Irish Part L (Dwellings) NZEB Thresholds: EPC ≤ 0.30, Primary Energy ≤ 45 kWh/m²/yr, RER ≥ 20%.
+                  Irish Part L (Dwellings) NZEB Thresholds: EPC ≤ 0.30, Primary
+                  Energy ≤ 45 kWh/m²/yr, RER ≥ 20%.
                 </p>
               </div>
               <button
@@ -621,7 +650,10 @@ export default function RetrofitCoachView({
                 disabled={loadingNzeb}
                 className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-bold rounded-lg transition flex items-center gap-1.5 cursor-pointer"
               >
-                <RefreshCw size={12} className={loadingNzeb ? 'animate-spin' : ''} />
+                <RefreshCw
+                  size={12}
+                  className={loadingNzeb ? 'animate-spin' : ''}
+                />
                 <span>Re-Audit Compliance</span>
               </button>
             </div>
@@ -641,7 +673,9 @@ export default function RetrofitCoachView({
                   }
                   className="bg-slate-900 border border-white/10 rounded px-2 py-1 text-white font-bold"
                 />
-                <span className="text-[9px] text-emerald-400">Target ≤ 0.16</span>
+                <span className="text-[9px] text-emerald-400">
+                  Target ≤ 0.16
+                </span>
               </div>
 
               <div className="p-2.5 bg-slate-950 border border-white/10 rounded-xl flex flex-col gap-1">
@@ -658,11 +692,15 @@ export default function RetrofitCoachView({
                   }
                   className="bg-slate-900 border border-white/10 rounded px-2 py-1 text-white font-bold"
                 />
-                <span className="text-[9px] text-emerald-400">Target ≤ 0.18</span>
+                <span className="text-[9px] text-emerald-400">
+                  Target ≤ 0.18
+                </span>
               </div>
 
               <div className="p-2.5 bg-slate-950 border border-white/10 rounded-xl flex flex-col gap-1">
-                <span className="text-[10px] text-slate-400">Window U-Value</span>
+                <span className="text-[10px] text-slate-400">
+                  Window U-Value
+                </span>
                 <input
                   type="number"
                   step="0.1"
@@ -675,11 +713,15 @@ export default function RetrofitCoachView({
                   }
                   className="bg-slate-900 border border-white/10 rounded px-2 py-1 text-white font-bold"
                 />
-                <span className="text-[9px] text-emerald-400">Target ≤ 1.20</span>
+                <span className="text-[9px] text-emerald-400">
+                  Target ≤ 1.20
+                </span>
               </div>
 
               <div className="p-2.5 bg-slate-950 border border-white/10 rounded-xl flex flex-col gap-1">
-                <span className="text-[10px] text-slate-400">Airtightness (q50)</span>
+                <span className="text-[10px] text-slate-400">
+                  Airtightness (q50)
+                </span>
                 <input
                   type="number"
                   step="0.1"
@@ -692,11 +734,15 @@ export default function RetrofitCoachView({
                   }
                   className="bg-slate-900 border border-white/10 rounded px-2 py-1 text-white font-bold"
                 />
-                <span className="text-[9px] text-emerald-400">Target ≤ 5.0</span>
+                <span className="text-[9px] text-emerald-400">
+                  Target ≤ 5.0
+                </span>
               </div>
 
               <div className="p-2.5 bg-slate-950 border border-white/10 rounded-xl flex flex-col gap-1">
-                <span className="text-[10px] text-slate-400">Heat Pump COP</span>
+                <span className="text-[10px] text-slate-400">
+                  Heat Pump COP
+                </span>
                 <input
                   type="number"
                   step="0.1"
@@ -709,11 +755,15 @@ export default function RetrofitCoachView({
                   }
                   className="bg-slate-900 border border-white/10 rounded px-2 py-1 text-white font-bold"
                 />
-                <span className="text-[9px] text-emerald-400">Target ≥ 3.2</span>
+                <span className="text-[9px] text-emerald-400">
+                  Target ≥ 3.2
+                </span>
               </div>
 
               <div className="p-2.5 bg-slate-950 border border-white/10 rounded-xl flex flex-col gap-1">
-                <span className="text-[10px] text-slate-400">Solar PV (kWp)</span>
+                <span className="text-[10px] text-slate-400">
+                  Solar PV (kWp)
+                </span>
                 <input
                   type="number"
                   step="0.5"
@@ -726,7 +776,9 @@ export default function RetrofitCoachView({
                   }
                   className="bg-slate-900 border border-white/10 rounded px-2 py-1 text-white font-bold"
                 />
-                <span className="text-[9px] text-emerald-400">Target ≥ 2.5</span>
+                <span className="text-[9px] text-emerald-400">
+                  Target ≥ 2.5
+                </span>
               </div>
             </div>
           </div>
@@ -759,25 +811,37 @@ export default function RetrofitCoachView({
 
                 <div className="flex items-center gap-4 font-mono text-center shrink-0">
                   <div className="p-3 bg-slate-950/80 border border-white/10 rounded-xl">
-                    <span className="text-[10px] text-slate-400 block">Primary Energy</span>
+                    <span className="text-[10px] text-slate-400 block">
+                      Primary Energy
+                    </span>
                     <span className="text-lg font-bold text-emerald-400">
                       {nzebReport.estimatedPrimaryEnergyKWhM2}
                     </span>
-                    <span className="text-[9px] text-slate-500 block">kWh/m²/yr</span>
+                    <span className="text-[9px] text-slate-500 block">
+                      kWh/m²/yr
+                    </span>
                   </div>
                   <div className="p-3 bg-slate-950/80 border border-white/10 rounded-xl">
-                    <span className="text-[10px] text-slate-400 block">EPC</span>
+                    <span className="text-[10px] text-slate-400 block">
+                      EPC
+                    </span>
                     <span className="text-lg font-bold text-emerald-400">
                       {nzebReport.epc}
                     </span>
-                    <span className="text-[9px] text-slate-500 block">Limit ≤ 0.30</span>
+                    <span className="text-[9px] text-slate-500 block">
+                      Limit ≤ 0.30
+                    </span>
                   </div>
                   <div className="p-3 bg-slate-950/80 border border-white/10 rounded-xl">
-                    <span className="text-[10px] text-slate-400 block">RER</span>
+                    <span className="text-[10px] text-slate-400 block">
+                      RER
+                    </span>
                     <span className="text-lg font-bold text-emerald-400">
                       {nzebReport.rerPercentage}%
                     </span>
-                    <span className="text-[9px] text-slate-500 block">Min ≥ 20%</span>
+                    <span className="text-[9px] text-slate-500 block">
+                      Min ≥ 20%
+                    </span>
                   </div>
                 </div>
               </div>
@@ -866,7 +930,8 @@ export default function RetrofitCoachView({
               Live Consultation with AI Retrofit Coach
             </h3>
             <p className="text-xs text-slate-400 font-mono">
-              Ask about site visit logistics, required SEAI documents, heat pump radiator sizing, or NZEB regulations.
+              Ask about site visit logistics, required SEAI documents, heat pump
+              radiator sizing, or NZEB regulations.
             </p>
           </div>
 
@@ -876,7 +941,7 @@ export default function RetrofitCoachView({
               'What should I prepare for my heat pump site visit?',
               'How is my Heat Loss Indicator (HLI) calculated for the grant?',
               'What are the mandatory NZEB U-values for walls and roof?',
-              'Do I need mechanical ventilation (DCV) for my A2 retrofit?',
+              'Do I need mechanical ventilation (DCV) for my A0 retrofit?',
               'What questions should I ask my BER technical assessor?',
             ].map((q, idx) => (
               <button
@@ -902,9 +967,16 @@ export default function RetrofitCoachView({
               >
                 <div className="flex items-center gap-2 font-mono text-[10px] text-slate-400">
                   <span className="font-bold uppercase">
-                    {entry.role === 'user' ? 'You (Homeowner)' : 'AI Retrofit Coach'}
+                    {entry.role === 'user'
+                      ? 'You (Homeowner)'
+                      : 'AI Retrofit Coach'}
                   </span>
-                  <span>{new Date(entry.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <span>
+                    {new Date(entry.time).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
                 </div>
                 <p className="leading-relaxed whitespace-pre-line font-sans mt-0.5">
                   {entry.text}
@@ -929,7 +1001,9 @@ export default function RetrofitCoachView({
             {chatLoading && (
               <div className="flex items-center gap-2 p-3 bg-slate-900 border border-white/10 rounded-xl text-xs text-slate-400 font-mono mr-auto">
                 <Clock size={14} className="animate-spin text-emerald-400" />
-                <span>AI Retrofit Coach is synthesizing technical advice...</span>
+                <span>
+                  AI Retrofit Coach is synthesizing technical advice...
+                </span>
               </div>
             )}
           </div>

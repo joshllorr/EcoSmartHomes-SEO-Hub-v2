@@ -242,7 +242,7 @@ export class AutomationEngine {
       'Building Regulations Part L Compliance',
       'Clean Export Guarantee (CEG)',
       'Heat Loss Indicator (HLI < 2.0 W/K/m²)',
-      'BER A2 Energy Rating Target',
+      'BER A0 Energy Rating Target',
       'One-Stop-Shop Grant Scheme',
       'Registered Installer in Limerick V94',
     ];
@@ -571,7 +571,7 @@ export class AutomationEngine {
     } else if (isHeatPump) {
       outline = [
         'Introduction: Upgrading to Heat Pump Systems in Ireland',
-        'SEAI Heat Pump System Grants (Up to €6,500 Breakdown)',
+        'SEAI Heat Pump System Grants (Up to €12,500 Breakdown)',
         'Heat Loss Indicator (HLI) & Technical Assessment Requirements',
         'Air-to-Water vs. Ground Source Systems for Irish Homes',
         'Finding SEAI Registered Heat Pump Contractors in Limerick',
@@ -668,8 +668,8 @@ export class AutomationEngine {
           'Fabric-first insulation upgrade if HLI > 2.0',
         ],
         measures: [
-          { measure: 'Air to Water Heat Pump Unit', grantValue: 6500 },
-          { measure: 'Renewable Heat Bonus (Fossil Switch)', grantValue: 4000 },
+          { measure: 'Air to Water Heat Pump Unit', grantValue: 8000 },
+          { measure: 'Renewable Heat Bonus (Fossil Switch)', grantValue: 4500 },
           { measure: 'Central Heating System Upgrade', grantValue: 2000 },
           { measure: 'Technical Assessment Grant', grantValue: 350 },
         ],
@@ -689,6 +689,21 @@ export class AutomationEngine {
           { measure: 'External Wall Insulation (Detached)', grantValue: 8000 },
         ],
       },
+      {
+        id: 'one-stop-shop',
+        name: 'SEAI One-Stop-Shop Deep Retrofit Scheme',
+        maxGrantAmount: 26000,
+        propertyEligibility:
+          'Homes built before 2011 targeting minimum BER B2/B standard',
+        requirements: [
+          'Registered One-Stop-Shop provider',
+          'Comprehensive fabric-first home energy upgrade',
+          'Post-works BER assessment included',
+        ],
+        measures: [
+          { measure: 'Deep Retrofit Capital Grant Support', grantValue: 26000 },
+        ],
+      },
     ];
   }
 
@@ -701,9 +716,25 @@ export class AutomationEngine {
     netHomeownerCost: number;
     savingsPercentage: number;
   } {
+    const cleanId = (schemeId || '').toLowerCase().trim();
     const schemes = this.getGrantSchemes();
-    const scheme = schemes.find((s) => s.id === schemeId) || schemes[0];
-    const grantAllowance = Math.min(scheme.maxGrantAmount, grossCost * 0.5);
+    const scheme =
+      schemes.find(
+        (s) =>
+          s.id === cleanId ||
+          cleanId.includes(s.id) ||
+          s.id.includes(cleanId) ||
+          (cleanId.includes('heat') && s.id.includes('heat')) ||
+          (cleanId.includes('solar') && s.id.includes('solar')) ||
+          (cleanId.includes('attic') && s.id.includes('insulation')) ||
+          (cleanId.includes('stop') && s.id.includes('stop')),
+      ) || schemes[0];
+
+    let allowance = scheme.maxGrantAmount;
+    if (cleanId.includes('attic')) {
+      allowance = 2000;
+    }
+    const grantAllowance = Math.min(allowance, grossCost);
     const netHomeownerCost = Math.max(0, grossCost - grantAllowance);
     const savingsPercentage = Math.round((grantAllowance / grossCost) * 100);
 
@@ -740,7 +771,7 @@ export class AutomationEngine {
       compliance: [
         'Building Regulations Part L Standard (2026)',
         'SEAI Registered Installer Certified',
-        'Post-works BER A2 Assessment Included',
+        'Post-works BER A0 Assessment Included',
       ],
     };
 
