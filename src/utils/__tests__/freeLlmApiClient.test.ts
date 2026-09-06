@@ -11,7 +11,7 @@ describe('FreeLlmApiClient — Antigravity × FreeLLMAPI Integration', () => {
   it('initializes with default router url and unified API key', () => {
     expect(client.getBaseUrl()).toBe('http://127.0.0.1:31415/v1');
     expect(client.getApiKey()).toBe(
-      'freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc',
+      'freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z',
     );
   });
 
@@ -39,7 +39,7 @@ describe('FreeLlmApiClient — Antigravity × FreeLLMAPI Integration', () => {
       expect.objectContaining({
         headers: {
           Authorization:
-            'Bearer freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc',
+            'Bearer freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z',
         },
       }),
     );

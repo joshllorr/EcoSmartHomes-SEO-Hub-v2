@@ -6,7 +6,7 @@ The router configuration is specified in both `antigravity.yaml` (root) and `con
 ai:
   provider: freellmapi
   base_url: 'http://127.0.0.1:31415/v1'
-  api_key: 'freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc'
+  api_key: 'freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z'
 
   routing:
     mode: adaptive

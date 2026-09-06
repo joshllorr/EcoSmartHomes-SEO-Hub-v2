@@ -5,7 +5,7 @@ FreeLLMAPI uses a single server-side key that proxies and authenticates across a
 ## Format
 
 ```
-freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc
+freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z
 ```
 
 ## Supported Operations
@@ -18,5 +18,5 @@ freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc
 Pass this key via the `Authorization` header:
 
 ```http
-Authorization: Bearer freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc
+Authorization: Bearer freellmapi-fla_234WVYZ0HJ9NN59GZAE4XKNWZXR0DP2Z
 ```
