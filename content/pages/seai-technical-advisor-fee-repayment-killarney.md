@@ -1,6 +1,6 @@
 # SEAI Technical Advisor Fee Repayment Killarney: Complete Home Energy Assessment & Deep Retrofit Guide
 
-As an SEAI-registered Technical Energy Advisor with **EcoSmartHomes Ireland**, I guide property owners across Killarney, County Kerry, and the wider Munster region through the technical and financial roadmap of deep retrofitting. 
+As an SEAI-registered Technical Energy Advisor with **EcoSmartHomes Ireland**, I guide property owners across Killarney, County Kerry, and the wider Munster region through the technical and financial roadmap of deep retrofitting.
 
 Transitioning an older dwelling to an energy-efficient home requires precise engineering calculations, strict adherence to Irish Building Regulations (**TGD Part L**), and a clear understanding of the Sustainable Energy Authority of Ireland (SEAI) grant mechanisms.
 
@@ -35,9 +35,10 @@ Killarney’s residential architecture presents specific challenges governed by 
 ```
 
 ### Heating Fuel Profile & Moisture Management
-* **High Kerosene Dependency:** Most suburban and rural Killarney homes operate on aging, non-condensing oil boilers operating at real-world seasonal efficiencies below 70%.
-* **Solid Fuel Interventions:** Supplemental open fires and non-room-sealed stoves introduce significant uncontrolled infiltration (ventilation heat loss).
-* **Atmospheric Moisture Loads:** High relative humidity across County Kerry accelerates surface condensation and mould growth where internal surface temperatures drop below the dew point (frequently occurring around uninsulated reveals and wall-floor junctions).
+
+- **High Kerosene Dependency:** Most suburban and rural Killarney homes operate on aging, non-condensing oil boilers operating at real-world seasonal efficiencies below 70%.
+- **Solid Fuel Interventions:** Supplemental open fires and non-room-sealed stoves introduce significant uncontrolled infiltration (ventilation heat loss).
+- **Atmospheric Moisture Loads:** High relative humidity across County Kerry accelerates surface condensation and mould growth where internal surface temperatures drop below the dew point (frequently occurring around uninsulated reveals and wall-floor junctions).
 
 ---
 
@@ -47,7 +48,7 @@ Before an air-to-water heat pump grant can be sanctioned, the SEAI requires an i
 
 ```
                                 TECHNICAL ASSESSMENT WORKFLOW
-                                
+
   [ On-Site DEAP Survey ] ---> [ HLI Calculated ] ---> [ Grant Applied (SEAI Portal) ]
              |                        |                               |
              v                        v                               v
@@ -56,21 +57,22 @@ Before an air-to-water heat pump grant can be sanctioned, the SEAI requires an i
 ```
 
 ### The €350 Advisor Fee Repayment Structure
+
 1. **Initial Assessment:** You engage EcoSmartHomes Ireland to carry out the full technical assessment, dimension audit, and DEAP (Dwelling Energy Assessment Procedure) model. You pay the advisor fee upfront.
 2. **Roadmap Delivery:** We issue the published SEAI Technical Advisor Report, indicating your home's baseline BER, calculated Heat Loss Indicator (HLI), and required fabric upgrade roadmap.
 3. **Grant Activation:** You complete the recommended fabric upgrades and install a certified heat pump system.
-4. **Grant Drawdown & Repayment:** Upon successful installation and submission of the post-works BER and declaration forms, the **€350 Technical Advisor Grant** is paid directly into your bank account alongside the **€6,500 Heat Pump Grant**.
+4. **Grant Drawdown & Repayment:** Upon successful installation and submission of the post-works BER and declaration forms, the **€350 Technical Advisor Grant** is paid directly into your bank account alongside the **€12,500 Heat Pump Grant bundle**.
 
 ### Current SEAI Grant Values (Individual Energy Upgrades)
 
-* **Technical Advisor Assessment:** €350 (repaid at heat pump sign-off)
-* **Air-to-Water Heat Pump System:** €6,500 (Detached / Semi-Detached / Terraced)
-* **Attic Insulation:** Up to €1,500
-* **Cavity Wall Insulation:** Up to €1,700
-* **External Wall Insulation (EWI):** Up to €8,000 (Detached) / €6,000 (Semi-Detached)
-* **Internal Dry Lining:** Up to €4,500 (Detached) / €3,500 (Semi-Detached)
-* **Heating Controls Upgrade:** €700
-* **Solar PV:** Up to €2,100
+- **Technical Advisor Assessment:** €350 (repaid at heat pump sign-off)
+- **Air-to-Water Heat Pump System:** €6,500 (Detached / Semi-Detached / Terraced)
+- **Attic Insulation:** Up to €1,500
+- **Cavity Wall Insulation:** Up to €1,700
+- **External Wall Insulation (EWI):** Up to €8,000 (Detached) / €6,000 (Semi-Detached)
+- **Internal Dry Lining:** Up to €4,500 (Detached) / €3,500 (Semi-Detached)
+- **Heating Controls Upgrade:** €700
+- **Solar PV:** Up to €2,100
 
 ---
 
@@ -80,7 +82,7 @@ To qualify for an air-to-water heat pump and satisfy **Technical Guidance Docume
 
 ```
                            TGD PART L COMPLIANCE MATRIX
-                           
+
   +--------------------------+-----------------------+------------------------+
   | Building Element         | Target U-Value (W/m²K)| Typical Killarney Spec |
   +--------------------------+-----------------------+------------------------+
@@ -97,7 +99,7 @@ To qualify for an air-to-water heat pump and satisfy **Technical Guidance Docume
 
 ```
                        STEP-BY-STEP RETROFIT ROADWAY
-                       
+
    [ Step 1: Fabric First ]
    • Pump existing 100mm cavity with graphite-enhanced bonded bead.
    • Lay 300mm crossed mineral wool in loft; install insulated loft hatch and walkway.
@@ -106,13 +108,13 @@ To qualify for an air-to-water heat pump and satisfy **Technical Guidance Docume
              ▼
    [ Step 2: HLI Reduction & Ventilation ]
    • Calculate post-works HLI; verify target is ≤ 2.0 W/m²K.
-   • Install a continuous Mechanical Extract Ventilation (cMEV) or Demand Controlled 
+   • Install a continuous Mechanical Extract Ventilation (cMEV) or Demand Controlled
      Ventilation (DCV) system to manage indoor relative humidity without draft losses.
              │
              ▼
    [ Step 3: Low-Temperature Heat Pump Integration ]
    • Decommission legacy oil boiler and oil tank.
-   • Size and balance low-temperature hydronic circuits (radiator upgrades to Type 22/33 
+   • Size and balance low-temperature hydronic circuits (radiator upgrades to Type 22/33
      or underfloor heating) designed for 35°C–45°C flow temperatures.
    • Install certified Air-to-Water Monobloc/Split Heat Pump with smart controls.
              │
@@ -138,7 +140,8 @@ To qualify for an air-to-water heat pump and satisfy **Technical Guidance Docume
 ## 5. Frequently Asked Questions (Killarney Homeowners)
 
 ### How do I locate my MPRN, and why is it essential for the survey?
-Your **Meter Point Reference Number (MPRN)** is a unique 11-digit number located at the top right-hand corner of your domestic electricity bill (from any supplier: Electric Ireland, Bord Gáis, SSE Airtricity, etc.). It registers your specific physical connection to the ESB Network grid. 
+
+Your **Meter Point Reference Number (MPRN)** is a unique 11-digit number located at the top right-hand corner of your domestic electricity bill (from any supplier: Electric Ireland, Bord Gáis, SSE Airtricity, etc.). It registers your specific physical connection to the ESB Network grid.
 
 We cannot initiate an SEAI Technical Assessment or lodge an official DEAP file without a verified MPRN.
 
@@ -153,35 +156,39 @@ We cannot initiate an SEAI Technical Assessment or lodge an official DEAP file w
 ```
 
 ### What actually happens during the Technical Advisor home visit?
+
 Our on-site technical survey takes between **90 minutes and 2.5 hours**, depending on property size. During this time, our engineer will:
-* Map the complete external building envelope, wall thicknesses, extension joints, and structural elevations.
-* Inspect the attic space to assess joist/rafter depth, ventilation pathways, and existing insulation condition.
-* Gauge window and door specifications (frame profiles, air-gap depths, Low-E coatings).
-* Inspect the primary heating plant, cylinder capacity, pipework lagging, and emitter (radiator) sizing.
-* Conduct a full ventilation audit (extract fans, background wall vents, open chimneys).
+
+- Map the complete external building envelope, wall thicknesses, extension joints, and structural elevations.
+- Inspect the attic space to assess joist/rafter depth, ventilation pathways, and existing insulation condition.
+- Gauge window and door specifications (frame profiles, air-gap depths, Low-E coatings).
+- Inspect the primary heating plant, cylinder capacity, pipework lagging, and emitter (radiator) sizing.
+- Conduct a full ventilation audit (extract fans, background wall vents, open chimneys).
 
 ### My Killarney house was built in 1998 with a partial cavity. Can I install a heat pump immediately?
-In 95% of cases, **no**. A 1998 dwelling typically exhibits an HLI between **2.4 and 3.2 W/m²K**. Installing a heat pump without fabric upgrades will lead to high electricity bills, continuous compressor cycling, and insufficient indoor comfort. 
+
+In 95% of cases, **no**. A 1998 dwelling typically exhibits an HLI between **2.4 and 3.2 W/m²K**. Installing a heat pump without fabric upgrades will lead to high electricity bills, continuous compressor cycling, and insufficient indoor comfort.
 
 You must first bring the HLI down to $\le 2.0\text{ W/m}^2\text{K}$ (or $\le 2.3\text{ W/m}^2\text{K}$ with qualifying fabric measures) by:
+
 1. Pumping the residual cavity with bonded bead.
 2. Increasing attic insulation to 300mm.
 3. Upgrading external glazing and draft sealing doors.
 
 ### How long does the grant approval and fee repayment process take?
-* **Technical Assessment & Report Issue:** 5 to 7 working days post-survey.
-* **SEAI Portal Grant Approval:** Instantaneous to 48 hours for homeowner applications.
-* **Grant Validity Period:** 8 months from the date of the grant offer letter to complete all works.
-* **Drawdown & €350 Fee Repayment:** 4 to 6 weeks after your Technical Advisor and primary contractor submit the final post-works BER and completion documentation to the SEAI.
+
+- **Technical Assessment & Report Issue:** 5 to 7 working days post-survey.
+- **SEAI Portal Grant Approval:** Instantaneous to 48 hours for homeowner applications.
+- **Grant Validity Period:** 8 months from the date of the grant offer letter to complete all works.
+- **Drawdown & €350 Fee Repayment:** 4 to 6 weeks after your Technical Advisor and primary contractor submit the final post-works BER and completion documentation to the SEAI.
 
 ---
 
 ## Secure Your Technical Energy Assessment in Killarney
 
-Ensure your retrofit is structurally sound, cost-effective, and fully compliant with Irish Building Regulations. 
+Ensure your retrofit is structurally sound, cost-effective, and fully compliant with Irish Building Regulations.
 
 **Contact EcoSmartHomes Ireland today** to schedule your SEAI Technical Assessment in Killarney, claim your €350 fee repayment, and begin your journey to an A-Rated home.
-
 
 <!-- START: Interactive SEAI Grant Calculator Component -->
 <div class="ecosmart-grant-calculator my-8 p-6 bg-slate-900 text-white rounded-xl border border-emerald-500/30 shadow-2xl" data-location="Killarney">
@@ -220,8 +227,6 @@ Ensure your retrofit is structurally sound, cost-effective, and fully compliant 
 </div>
 <!-- END: Interactive SEAI Grant Calculator Component -->
 
-
-
 <!-- START: Stripe E-Commerce Survey Bridge Checkout Container -->
 <div class="ecosmart-stripe-bridge my-8 p-6 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/40 rounded-xl text-white shadow-2xl" data-keyword="seai technical advisor fee repayment Killarney">
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -247,4 +252,3 @@ Ensure your retrofit is structurally sound, cost-effective, and fully compliant 
   </div>
 </div>
 <!-- END: Stripe E-Commerce Survey Bridge Checkout Container -->
-

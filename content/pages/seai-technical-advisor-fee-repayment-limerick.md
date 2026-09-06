@@ -2,7 +2,7 @@
 
 As an SEAI Registered Technical Advisor with **EcoSmartHomes Ireland**, I guide homeowners across Limerick City and County through the technical, financial, and regulatory steps required to upgrade low-efficiency dwellings to high-performance **A2 Building Energy Rating (BER)** standards.
 
-If you plan to replace an ageing fossil-fuel boiler (oil or gas) with an energy-efficient heat pump, the Sustainable Energy Authority of Ireland (SEAI) mandates an independent **Technical Assessment**. 
+If you plan to replace an ageing fossil-fuel boiler (oil or gas) with an energy-efficient heat pump, the Sustainable Energy Authority of Ireland (SEAI) mandates an independent **Technical Assessment**.
 
 This comprehensive guide details the **SEAI technical advisor fee repayment process in Limerick**, breaks down local housing typologies, and maps the engineering roadmap to achieve compliance with **Irish Building Regulations TGD Part L (Conservation of Fuel and Energy)**.
 
@@ -41,11 +41,14 @@ Retrofitting in Limerick requires an understanding of localized construction era
 ```
 
 ### The Cavity Wall vs. Hollow Block Challenge
+
 A significant portion of Limerick’s suburban housing stock contains either **uninsulated cavity walls** or **215mm hollow concrete block** construction:
-* **Hollow block properties (common in mid-century developments):** Cannot be pumped with bonded bead cavity insulation. They require high-performance External Wall Insulation (EWI) or internal dry-lining (IWI) systems compliant with vapour control layers to eliminate interstitial condensation.
-* **Cavity wall constructions (1970s onwards):** Frequently suffer from degraded or non-existent insulation. Injecting NSAI-certified bonded EPS bead reduces the wall U-value from $\approx 1.50\text{ W/m}^2\text{K}$ down to $\le 0.27\text{ W/m}^2\text{K}$.
+
+- **Hollow block properties (common in mid-century developments):** Cannot be pumped with bonded bead cavity insulation. They require high-performance External Wall Insulation (EWI) or internal dry-lining (IWI) systems compliant with vapour control layers to eliminate interstitial condensation.
+- **Cavity wall constructions (1970s onwards):** Frequently suffer from degraded or non-existent insulation. Injecting NSAI-certified bonded EPS bead reduces the wall U-value from $\approx 1.50\text{ W/m}^2\text{K}$ down to $\le 0.27\text{ W/m}^2\text{K}$.
 
 ### Rural Limerick Heating Fuel Realities
+
 In West and South Limerick, mains natural gas infrastructure is absent. Detached dwellings rely almost exclusively on high-carbon kerosene boilers or solid fuel ranges. Transitioning these homes to low-temperature hydronic heat pumps requires reducing the home's **Heat Loss Indicator (HLI)** to ensure lower running costs and adequate seasonal efficiency.
 
 ---
@@ -69,28 +72,29 @@ Under the SEAI Better Energy Homes and Individual Energy Upgrade schemes, an ind
    [Heat Pump Installed by Registered Contractor]
                   │
                   ▼
-   [SEAI Releases €6,500 Heat Pump Grant + €200 Advisor Fee Repayment]
+   [SEAI Releases €12,500 Heat Pump Grant bundle + €350 Advisor Fee Repayment]
 ```
 
-### The €200 Technical Advisor Fee Repayment Structure
+### The €350 Technical Advisor Fee Repayment Structure
+
 1. **Initial Assessment:** You commission an SEAI Registered Technical Advisor to complete a comprehensive site audit and DEAP (Dwelling Energy Assessment Procedure) energy model. You pay the advisor directly for this professional service (market rates typically range from €500 to €850 + VAT, depending on dwelling scale and complexity).
 2. **Technical Assessment Report:** The advisor calculates your home’s baseline Heat Loss Indicator (HLI). To qualify for a heat pump, the property must achieve an **$\text{HLI} \le 2.0\text{ W/K/m}^2$** (or $\le 2.3\text{ W/K/m}^2$ with specific non-heat pump secondary heating verifications).
-3. **Grant Drawdown:** When the recommended fabric insulation and heat pump installation are completed by an SEAI-registered contractor, the **€200 Technical Advisor grant is repaid directly to you** by the SEAI alongside your main heat pump grant capital.
+3. **Grant Drawdown:** When the recommended fabric insulation and heat pump installation are completed by an SEAI-registered contractor, the **€350 Technical Advisor grant is repaid directly to you** by the SEAI alongside your main heat pump grant capital.
 
 ### SEAI Grant Values for Limerick Homeowners (Individual Upgrade Path)
 
-| Retrofit Measure | Grant Value |
-| :--- | :--- |
-| **Technical Advisor Fee Repayment (when Heat Pump is installed)** | **€200** |
-| **Air-to-Water Heat Pump System (Apartment / Mid-terrace)** | **€4,500** |
-| **Air-to-Water Heat Pump System (Semi-detached / Detached)** | **€6,500** |
-| **Ground-to-Water / Water-to-Water Heat Pump System** | **€6,500** |
-| **Cavity Wall Insulation** | Up to **€1,700** |
-| **External Wall Insulation (EWI)** | Up to **€8,000** |
-| **Internal Dry Lining (IWI)** | Up to **€4,500** |
-| **Attic / Rafter Insulation** | Up to **€1,500** |
-| **Solar PV Systems (Domestic)** | Up to **€2,100** |
-| **Solar Thermal Systems** | Up to **€1,200** |
+| Retrofit Measure                                                  | Grant Value      |
+| :---------------------------------------------------------------- | :--------------- |
+| **Technical Advisor Fee Repayment (when Heat Pump is installed)** | **€200**         |
+| **Air-to-Water Heat Pump System (Apartment / Mid-terrace)**       | **€4,500**       |
+| **Air-to-Water Heat Pump System (Semi-detached / Detached)**      | **€6,500**       |
+| **Ground-to-Water / Water-to-Water Heat Pump System**             | **€6,500**       |
+| **Cavity Wall Insulation**                                        | Up to **€1,700** |
+| **External Wall Insulation (EWI)**                                | Up to **€8,000** |
+| **Internal Dry Lining (IWI)**                                     | Up to **€4,500** |
+| **Attic / Rafter Insulation**                                     | Up to **€1,500** |
+| **Solar PV Systems (Domestic)**                                   | Up to **€2,100** |
+| **Solar Thermal Systems**                                         | Up to **€1,200** |
 
 ---
 
@@ -108,40 +112,51 @@ Upgrading a Limerick home from a low BER rating (e.g., E1, F, or G) to an **A2 e
 ```
 
 ### Step 1: Technical Audit & DEAP Energy Model
+
 The Technical Advisor visits your property to measure dimensions, calculate envelope surface areas, inspect structural assemblies, audit existing heating controls, and assess window performance. The advisor generates an official SEAI Technical Assessment report detailing current HLI and identifying required upgrade pathways.
 
 ### Step 2: Fabric-First Upgrades (Envelope Optimization)
+
 Before installing renewable systems, the building envelope must be insulated to lower heat loss rates:
-* **Attic / Cold Roof:** Upgraded to minimum 300mm mineral wool quilt or continuous PIR board targeting a U-value $\le 0.16\text{ W/m}^2\text{K}$.
-* **Walls:** Upgraded via pumped cavity bead, external insulation (EWI), or composite insulated plasterboard targeting U-values between $\le 0.18\text{ W/m}^2\text{K}$ and $\le 0.27\text{ W/m}^2\text{K}$.
-* **Windows & External Doors:** Upgraded to high-performance triple glazing (or high-efficiency double glazing) achieving whole-unit U-values $\le 1.2\text{ W/m}^2\text{K}$.
+
+- **Attic / Cold Roof:** Upgraded to minimum 300mm mineral wool quilt or continuous PIR board targeting a U-value $\le 0.16\text{ W/m}^2\text{K}$.
+- **Walls:** Upgraded via pumped cavity bead, external insulation (EWI), or composite insulated plasterboard targeting U-values between $\le 0.18\text{ W/m}^2\text{K}$ and $\le 0.27\text{ W/m}^2\text{K}$.
+- **Windows & External Doors:** Upgraded to high-performance triple glazing (or high-efficiency double glazing) achieving whole-unit U-values $\le 1.2\text{ W/m}^2\text{K}$.
 
 ### Step 3: Controlled Ventilation & Airtightness (TGD Part F)
+
 As building envelopes become more airtight ($\le 3.0\text{ m}^3/(\text{hr}\cdot\text{m}^2)$ at 50 Pa), controlled mechanical ventilation must be installed to manage indoor air quality, mitigate mould risks, and prevent interstitial condensation:
-* **Demand-Controlled Ventilation (DCV)** or **Mechanical Ventilation with Heat Recovery (MVHR)** calibrated to deliver necessary air change rates across habitable zones and wet rooms.
+
+- **Demand-Controlled Ventilation (DCV)** or **Mechanical Ventilation with Heat Recovery (MVHR)** calibrated to deliver necessary air change rates across habitable zones and wet rooms.
 
 ### Step 4: Heat Pump Sizing & Hydronic Design
+
 Once the HLI is certified at $\le 2.0\text{ W/K/m}^2$, an air-to-water heat pump is sized to match the property's design heat load at winter external temperatures:
-* **Emitter Optimization:** Radiators are checked for low-flow temperature operations ($35^\circ\text{C}$ to $45^\circ\text{C}$). Undersized single-panel radiators are replaced with high-output low-temperature models or integrated with underfloor heating loops.
-* **Control Systems:** Minimum two-zone heating controls (Space and Domestic Hot Water) with programmable thermostat interfaces and weather compensation curves.
+
+- **Emitter Optimization:** Radiators are checked for low-flow temperature operations ($35^\circ\text{C}$ to $45^\circ\text{C}$). Undersized single-panel radiators are replaced with high-output low-temperature models or integrated with underfloor heating loops.
+- **Control Systems:** Minimum two-zone heating controls (Space and Domestic Hot Water) with programmable thermostat interfaces and weather compensation curves.
 
 ### Step 5: Post-Works BER Publishing & Fee Drawdown
+
 Upon completion of all works:
+
 1. An independent final BER assessment is published on the national SEAI register.
 2. The SEAI Sign-off and Declaration of Works documentation is submitted.
-3. The SEAI credits the **€6,500 Heat Pump Grant** and the **€200 Technical Advisor Fee Repayment** directly to the homeowner’s designated bank account.
+3. The SEAI credits the **€12,500 Heat Pump Grant bundle** and the **€350 Technical Advisor Fee Repayment** directly to the homeowner’s designated bank account.
 
 ---
 
 ## 4. Frequently Asked Questions (Limerick Homeowners)
 
 ### How does the SEAI Technical Advisor fee repayment work in practice?
-You engage and pay an SEAI Registered Technical Advisor independently to conduct the initial survey, DEAP energy modelling, and Technical Assessment report. 
 
-When your registered installer completes the heat pump works, the contractor submits the Declaration of Works to the SEAI. The SEAI then adds the **€200 Technical Advisor grant repayment** directly onto the heat pump grant disbursement.
+You engage and pay an SEAI Registered Technical Advisor independently to conduct the initial survey, DEAP energy modelling, and Technical Assessment report.
+
+When your registered installer completes the heat pump works, the contractor submits the Declaration of Works to the SEAI. The SEAI then adds the **€350 Technical Advisor grant repayment** directly onto the heat pump grant disbursement.
 
 ### What happens if my Limerick home fails to achieve an HLI of $\le 2.0\text{ W/K/m}^2$?
-If your home’s baseline HLI exceeds the allowable threshold (e.g., scoring $2.8\text{ W/K/m}^2$), you cannot immediately proceed with a heat pump grant. 
+
+If your home’s baseline HLI exceeds the allowable threshold (e.g., scoring $2.8\text{ W/K/m}^2$), you cannot immediately proceed with a heat pump grant.
 
 The Technical Advisor report outlines the specific fabric upgrades (e.g., pumping cavities, upgrading attic insulation from 50mm to 300mm, or replacing single-glazed units) required to bring the property down to $\le 2.0\text{ W/K/m}^2$. Once these fabric improvements are factored in, the grant authorization is unlocked.
 
@@ -155,36 +170,39 @@ The Technical Advisor report outlines the specific fabric upgrades (e.g., pumpin
 ```
 
 ### Where do I find my MPRN and why is it needed for the survey?
-Your **Meter Point Reference Number (MPRN)** is an 11-digit number printed on the top right-hand corner of your domestic electricity bill (from any retail supplier, e.g., Electric Ireland, Bord Gáis, Energia). 
+
+Your **Meter Point Reference Number (MPRN)** is an 11-digit number printed on the top right-hand corner of your domestic electricity bill (from any retail supplier, e.g., Electric Ireland, Bord Gáis, Energia).
 
 The Technical Advisor requires the MPRN to access the national SEAI National DEAP database and register the survey directly to your property’s Meter Point Connection with ESB Networks.
 
 ### How long does an on-site Technical Assessment take?
-For an average 3- to 4-bedroom semi-detached or detached home in Limerick (e.g., in Castletroy, Raheen, or Newcastle West), an on-site audit takes between **1.5 to 3 hours**. 
+
+For an average 3- to 4-bedroom semi-detached or detached home in Limerick (e.g., in Castletroy, Raheen, or Newcastle West), an on-site audit takes between **1.5 to 3 hours**.
 
 The surveyor requires unobstructed access to:
-* The attic space (to inspect insulation depth, joist spacing, and roof structures).
-* The electricity meter box and heating boiler/cylinder.
-* All external wall perimeters and habitable rooms (to measure window dimensions and take structural wall samples where required).
+
+- The attic space (to inspect insulation depth, joist spacing, and roof structures).
+- The electricity meter box and heating boiler/cylinder.
+- All external wall perimeters and habitable rooms (to measure window dimensions and take structural wall samples where required).
 
 ### What are the typical timelines from Technical Assessment to grant approval in Munster?
+
 1. **On-Site Survey to Report Issuance:** 3 to 7 working days.
 2. **SEAI Online Grant Application:** Instant approval online via the SEAI Homeowner Portal using the Technical Advisor’s report reference number.
 3. **Contractor Works Execution:** Typically 4 to 8 weeks depending on contractor schedules.
-4. **Post-Works BER & SEAI Grant Payment:** Once post-works documentation and the final BER are submitted, grant funds (including the €200 Technical Advisor fee balance) are typically disbursed by SEAI via EFT within 4 to 6 weeks.
+4. **Post-Works BER & SEAI Grant Payment:** Once post-works documentation and the final BER are submitted, grant funds (including the €350 Technical Advisor fee balance) are typically disbursed by SEAI via EFT within 4 to 6 weeks.
 
 ---
 
 ## Take the Next Step Toward an Energy-Efficient Home
 
-Retrofitting an older property reduces carbon emissions, eliminates draughts, and lowers ongoing heating bills. 
+Retrofitting an older property reduces carbon emissions, eliminates draughts, and lowers ongoing heating bills.
 
 Contact an **EcoSmartHomes Ireland** SEAI Registered Technical Advisor today to book your on-site survey in Limerick City, Castletroy, Raheen, Dooradoyle, or anywhere across County Limerick.
 
-* **Email:** surveys@ecosmarthomes.ie
-* **Phone:** (061) 000 000
-* **Office:** Limerick Enterprise & Energy Centre, National Technology Park, Castletroy, Limerick
-
+- **Email:** surveys@ecosmarthomes.ie
+- **Phone:** (061) 000 000
+- **Office:** Limerick Enterprise & Energy Centre, National Technology Park, Castletroy, Limerick
 
 <!-- START: Interactive SEAI Grant Calculator Component -->
 <div class="ecosmart-grant-calculator my-8 p-6 bg-slate-900 text-white rounded-xl border border-emerald-500/30 shadow-2xl" data-location="Limerick">
@@ -223,8 +241,6 @@ Contact an **EcoSmartHomes Ireland** SEAI Registered Technical Advisor today to 
 </div>
 <!-- END: Interactive SEAI Grant Calculator Component -->
 
-
-
 <!-- START: Stripe E-Commerce Survey Bridge Checkout Container -->
 <div class="ecosmart-stripe-bridge my-8 p-6 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/40 rounded-xl text-white shadow-2xl" data-keyword="seai technical advisor fee repayment Limerick">
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -250,4 +266,3 @@ Contact an **EcoSmartHomes Ireland** SEAI Registered Technical Advisor today to 
   </div>
 </div>
 <!-- END: Stripe E-Commerce Survey Bridge Checkout Container -->
-

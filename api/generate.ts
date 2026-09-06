@@ -1,4 +1,4 @@
-﻿import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -42,7 +42,7 @@ export default async function handler(
     let articleText = '';
     let authMethod = 'none';
 
-    const promptText = `Write a comprehensive, high-authority Irish SEO article for EcoSmartHomes Ireland about: "${keyword}". Include official SEAI grant deductions (€2,100 Solar PV, €6,500 Heat Pump, up to €25,000 One-Stop-Shop), ROI payback calculations, BER rating impact, and vetted contractor guidelines. Format in clean markdown with H1, H2, and H3 headings.`;
+    const promptText = `Write a comprehensive, high-authority Irish SEO article for EcoSmartHomes Ireland about: "${keyword}". Include official 2026 SEAI grant deductions (€2,100 Solar PV, up to €12,500 Heat Pump bundle, up to €50,000 One-Stop-Shop), ROI payback calculations, the new 8-tier BER rating impact (A0 to G), and vetted contractor guidelines. Format in clean markdown with H1, H2, and H3 headings.`;
 
     // 1. Authenticate with Vertex AI Enterprise via OAuth2 Bearer Header (Fixes 401)
     if (accessToken) {
@@ -105,8 +105,8 @@ Homeowners across Ireland can significantly lower electricity bills and improve 
 
 ## SEAI Grant Deductions Available in 2026
 - **Solar PV Grant**: Up to **€2,100** deducted directly from your installer's invoice.
-- **Heat Pump Grant**: Up to **€6,500** for upgrading old fossil fuel boilers to renewable heat pumps.
-- **Deep Retrofit One-Stop-Shop**: Up to **€25,000** for comprehensive whole-home retrofits.
+- **Heat Pump Bundle Grant**: Up to **€12,500** for upgrading old fossil fuel boilers to renewable heat pumps with radiator upgrades.
+- **Deep Retrofit One-Stop-Shop**: Up to **€50,000** for comprehensive whole-home retrofits.
 
 ## Estimated Payback & ROI
 With current Irish residential electricity tariffs and the Clean Export Guarantee (CEG) feed-in tariff, an average 4kWp Solar PV system delivers **€750 to €1,200** in annual savings, achieving complete payback within **5 to 7 years**.

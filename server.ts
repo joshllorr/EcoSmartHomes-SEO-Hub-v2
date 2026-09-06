@@ -5276,7 +5276,7 @@ const handlePillarIdeas = async (req: any, res: any) => {
           difficultyScore: 32,
           subtopicClusters: [
             'Smart Meter Night-Rate Tariff Savings with Heat Pumps',
-            'SEAI Heat Pump Grant (€6,500) Application Rules',
+            'SEAI Heat Pump Grant Bundle (Up to €12,500) Application Rules',
             'Coefficient of Performance (COP) in Irish Winter Temps',
             'Underfloor Heating vs Low-Temperature Radiator Retrofits',
           ],
@@ -5782,13 +5782,13 @@ app.post('/api/seo/build-link-bait-page', async (req, res) => {
   <section className="bg-slate-900/80 p-6 rounded-xl border border-white/10 space-y-4">
     <h2 className="text-xl font-bold text-[#34d399]">Interactive 2026 SEAI Grant Breakdown (${area})</h2>
     <p className="text-slate-300 text-xs leading-relaxed">
-      Homeowners in ${area} upgrading their BER rating from G to A2 can access up to €25,000 in SEAI One-Stop-Shop grant subsidies. Below is the localized cost breakdown:
+      Homeowners in ${area} upgrading their BER rating from G to A0 under the new 8-step EPBD scale can access up to €50,000 in SEAI One-Stop-Shop grant subsidies. Below is the localized cost breakdown:
     </p>
     
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono pt-2">
       <div className="bg-black/40 p-3 rounded border border-white/10">
         <span className="text-slate-400 block">Heat Pump Subsidies</span>
-        <span className="text-emerald-400 font-bold text-base">Up to €6,500</span>
+        <span className="text-emerald-400 font-bold text-base">Up to €12,500</span>
       </div>
       <div className="bg-black/40 p-3 rounded border border-white/10">
         <span className="text-slate-400 block">External Insulation</span>
@@ -5989,7 +5989,7 @@ Achieving a high Building Energy Rating (BER) in Ireland requires a systematic a
 
 ## 1. Understanding BER Ratings & Irish Housing Stock Archetypes
 
-Most homes built before 2011 in County Limerick fall within the D1 to G BER bands. Improving a home from a D1 rating to an A2 rating yields an average 65% reduction in annual home heating bills while significantly boosting market resale value.
+Most homes built before 2011 in County Limerick fall within the D1 to G BER bands. Improving a home from a D rating to an A0/A rating yields an average 65% reduction in annual home heating bills while significantly boosting market resale value.
 
 ### Key Retrofit Pillars
 1. **Fabric First (Insulation)**: Cavity wall pumping, external wall insulation (EWI), and R-30 roof insulation.
@@ -6002,9 +6002,9 @@ Most homes built before 2011 in County Limerick fall within the D1 to G BER band
 
 Homeowners can proceed via the **One-Stop-Shop** fully managed route or claim individual grant measures through registered contractors.
 
-- **Air-to-Water Heat Pump Grant**: Up to €6,500
+- **Air-to-Water Heat Pump Grant Bundle**: Up to €12,500
 - **External Wall Insulation Grant**: Up to €8,000
-- **Attic Insulation Grant**: Up to €1,500
+- **Attic Insulation Grant**: Up to €2,000
 - **Solar PV Panel Grant**: Up to €2,100
 
 ---

@@ -41,8 +41,8 @@ export function renderGrantCalculatorWidget(
   <div class="space-y-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
       <div class="bg-slate-800/80 p-3.5 rounded-lg border border-slate-700/60">
-        <span class="text-slate-400 text-xs block">Heat Pump Grant (Air-to-Water)</span>
-        <span class="text-lg font-bold text-white">€6,500</span>
+        <span class="text-slate-400 text-xs block">Heat Pump Grant Bundle</span>
+        <span class="text-lg font-bold text-white">Up to €12,500</span>
         <span class="text-xs text-emerald-400 block mt-1">+ €350 Technical Assessment Subsidy</span>
       </div>
       <div class="bg-slate-800/80 p-3.5 rounded-lg border border-slate-700/60">
@@ -57,7 +57,7 @@ export function renderGrantCalculatorWidget(
       </div>
       <div class="bg-slate-800/80 p-3.5 rounded-lg border border-slate-700/60">
         <span class="text-slate-400 text-xs block">Attic & Roof Insulation</span>
-        <span class="text-lg font-bold text-white">Up to €1,500</span>
+        <span class="text-lg font-bold text-white">Up to €2,000</span>
         <span class="text-xs text-emerald-400 block mt-1">Immediate U-Value Compliance (&le; 0.16 W/m²K)</span>
       </div>
     </div>

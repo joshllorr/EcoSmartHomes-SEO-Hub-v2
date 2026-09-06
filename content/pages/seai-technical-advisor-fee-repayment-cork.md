@@ -1,6 +1,6 @@
 # Complete Guide to SEAI Technical Advisor Fee Repayment in Cork & Munster
 
-Welcome to the definitive Cork homeowner’s roadmap for deep energy retrofits, Heat Pump System Grants, and the **SEAI technical advisor fee repayment in Cork**. 
+Welcome to the definitive Cork homeowner’s roadmap for deep energy retrofits, Heat Pump System Grants, and the **SEAI technical advisor fee repayment in Cork**.
 
 As an SEAI-registered Technical Energy Advisor with EcoSmartHomes Ireland, my objective is to help you navigate the transition from a cold, high-emission dwelling to a comfortable, future-proofed **A2-rated or Nearly Zero Energy Building (NZEB)** compliant home.
 
@@ -24,19 +24,22 @@ Cork City and County present a distinct cross-section of Irish domestic architec
 ```
 
 ### Urban & Period Properties (Montenotte, St. Luke’s, Victorian Quarter)
-* **Wall Construction:** Solid stone (sandstone/limestone) and uninsulated solid brick.
-* **Thermal Performance:** U-values routinely exceed $2.10\,\text{W/m}^2\text{K}$.
-* **Moisture Risks:** High risk of interstitial condensation. Retrofits here require breathable Internal Wall Insulation (IWI) using cork-lime or wood-fibre systems rather than standard vapour-closed PIR boards to protect structural integrity.
+
+- **Wall Construction:** Solid stone (sandstone/limestone) and uninsulated solid brick.
+- **Thermal Performance:** U-values routinely exceed $2.10\,\text{W/m}^2\text{K}$.
+- **Moisture Risks:** High risk of interstitial condensation. Retrofits here require breathable Internal Wall Insulation (IWI) using cork-lime or wood-fibre systems rather than standard vapour-closed PIR boards to protect structural integrity.
 
 ### Suburban Estates (Douglas, Ballincollig, Glanmire, Carrigaline)
-* **Wall Construction:** Predominantly 1970s–1980s 275mm–300mm cavity walls (often uninsulated or with degraded 25mm aeroboard) or 215mm hollow concrete block.
-* **Space Heating Profile:** Heavy reliance on aging natural gas networks or direct electric storage heating.
-* **Thermal Bridging:** Severe linear thermal bridges at reveal, lintel, and wall-to-floor junctions ($y\text{-factor} > 0.15\,\text{W/m}^2\text{K}$).
+
+- **Wall Construction:** Predominantly 1970s–1980s 275mm–300mm cavity walls (often uninsulated or with degraded 25mm aeroboard) or 215mm hollow concrete block.
+- **Space Heating Profile:** Heavy reliance on aging natural gas networks or direct electric storage heating.
+- **Thermal Bridging:** Severe linear thermal bridges at reveal, lintel, and wall-to-floor junctions ($y\text{-factor} > 0.15\,\text{W/m}^2\text{K}$).
 
 ### Rural & Coastal Dwellings (West Cork, Midleton, Mallow, Kinsale)
-* **Wall Construction:** 215mm hollow block, mass concrete, or early timber frame.
-* **Space Heating Profile:** High reliance on kerosene (oil boilers), open fires, and solid fuel ranges.
-* **Environmental Exposure:** High driving-rain index along the Munster coastline demands robust External Wall Insulation (EWI) systems with hydrophobic silicone renders to prevent moisture penetration.
+
+- **Wall Construction:** 215mm hollow block, mass concrete, or early timber frame.
+- **Space Heating Profile:** High reliance on kerosene (oil boilers), open fires, and solid fuel ranges.
+- **Environmental Exposure:** High driving-rain index along the Munster coastline demands robust External Wall Insulation (EWI) systems with hydrophobic silicone renders to prevent moisture penetration.
 
 ---
 
@@ -67,19 +70,19 @@ Before installing a Heat Pump under the SEAI Better Energy Homes scheme, an **in
 
 ### Current SEAI Grant Value Schedule
 
-| Measure / Upgrade | Grant Value (Detached) | Grant Value (Semi-D / End Terrace) | Grant Value (Mid-Terrace / Apt) |
-| :--- | :--- | :--- | :--- |
-| **SEAI Technical Assessment Repayment** | **€350** | **€350** | **€350** |
-| Air-to-Water Heat Pump System | €6,500 | €6,500 | €4,500 |
-| Ground-to-Water / Water-to-Water Heat Pump | €6,500 | €6,500 | €4,500 |
-| Central Heating System Upgrade (with HP) | €2,000 | €2,000 | €2,000 |
-| External Wall Insulation (EWI) | €8,000 | €6,000 | €3,000 |
-| Cavity Wall Pump Insulation | €1,700 | €1,200 | €800 |
-| Internal Wall Dry-Lining (IWI) | €4,500 | €3,500 | €1,500 |
-| Attic Insulation (Rafter/Ceiling) | €1,500 | €1,300 | €1,200 |
-| Solar PV (Up to 4kWp standard) | Up to €2,100 | Up to €2,100 | Up to €2,100 |
+| Measure / Upgrade                          | Grant Value (Detached) | Grant Value (Semi-D / End Terrace) | Grant Value (Mid-Terrace / Apt) |
+| :----------------------------------------- | :--------------------- | :--------------------------------- | :------------------------------ |
+| **SEAI Technical Assessment Repayment**    | **€350**               | **€350**                           | **€350**                        |
+| Air-to-Water Heat Pump System Bundle       | Up to €12,500          | Up to €12,500                      | €9,500                          |
+| Ground-to-Water / Water-to-Water Heat Pump | Up to €12,500          | Up to €12,500                      | €9,500                          |
+| Central Heating System Upgrade (with HP)   | €2,000                 | €2,000                             | €2,000                          |
+| External Wall Insulation (EWI)             | €8,000                 | €6,000                             | €3,000                          |
+| Cavity Wall Pump Insulation                | €1,700                 | €1,200                             | €800                            |
+| Internal Wall Dry-Lining (IWI)             | €4,500                 | €3,500                             | €1,500                          |
+| Attic Insulation (Rafter/Ceiling)          | €1,500                 | €1,300                             | €1,200                          |
+| Solar PV (Up to 4kWp standard)             | Up to €2,100           | Up to €2,100                       | Up to €2,100                    |
 
-*Note: Grant values reflect current Better Energy Homes and National Home Energy Upgrade schemes.*
+_Note: Grant values reflect current Better Energy Homes and National Home Energy Upgrade schemes._
 
 ---
 
@@ -99,20 +102,24 @@ To qualify for heat pump integration and ensure low running costs, your home mus
 ```
 
 ### Step 1: Fabric-First Interventions
-* **Roof/Attic:** Minimum 300mm crossed fiberglass or mineral wool to achieve a U-value $\le 0.16\,\text{W/m}^2\text{K}$. Insulated walkway and tank jackets installed to standard.
-* **Wall Upgrades:** 
-  * *Cavity walls:* Bead pumped with bonded platinum bead ($\lambda = 0.033\,\text{W/mK}$).
-  * *Hollow block / Solid walls:* High-density EPS External Wall Insulation ($\ge 120\text{mm}$) to hit target U-value $\le 0.21\,\text{W/m}^2\text{K}$.
-* **Glazing & Openings:** Replace single/degraded double glazing with triple-glazed, argon-filled, warm-edge spacer units (Overall window $U_w \le 1.2\,\text{W/m}^2\text{K}$).
+
+- **Roof/Attic:** Minimum 300mm crossed fiberglass or mineral wool to achieve a U-value $\le 0.16\,\text{W/m}^2\text{K}$. Insulated walkway and tank jackets installed to standard.
+- **Wall Upgrades:**
+  - _Cavity walls:_ Bead pumped with bonded platinum bead ($\lambda = 0.033\,\text{W/mK}$).
+  - _Hollow block / Solid walls:_ High-density EPS External Wall Insulation ($\ge 120\text{mm}$) to hit target U-value $\le 0.21\,\text{W/m}^2\text{K}$.
+- **Glazing & Openings:** Replace single/degraded double glazing with triple-glazed, argon-filled, warm-edge spacer units (Overall window $U_w \le 1.2\,\text{W/m}^2\text{K}$).
 
 ### Step 2: Airtightness & Ventilation Strategy
+
 Sealing air leaks without controlled ventilation leads to poor indoor air quality (IAQ) and condensation.
-* Seal service penetrations, floor-to-wall junctions, and install airtight attic hatches to bring air permeability down to $\le 3.0\,\text{m}^3/(\text{h}\cdot\text{m}^2)\text{ at }50\,\text{Pa}$.
-* Implement **Demand-Controlled Mechanical Ventilation (DCV)** or **Mechanical Ventilation with Heat Recovery (MVHR)** compliant with TGD Part F.
+
+- Seal service penetrations, floor-to-wall junctions, and install airtight attic hatches to bring air permeability down to $\le 3.0\,\text{m}^3/(\text{h}\cdot\text{m}^2)\text{ at }50\,\text{Pa}$.
+- Implement **Demand-Controlled Mechanical Ventilation (DCV)** or **Mechanical Ventilation with Heat Recovery (MVHR)** compliant with TGD Part F.
 
 ### Step 3: Low-Temperature Heating Design
-* Replace undersized single-panel radiators with high-output double or triple-panel (Type 22/33) radiators, or install hydronic underfloor heating designed for low flow temperatures ($35^\circ\text{C} - 45^\circ\text{C}$).
-* Install an inverter-driven Air-to-Water Heat Pump with a Seasonal Coefficient of Performance ($\text{SCOP}$) $\ge 4.2$.
+
+- Replace undersized single-panel radiators with high-output double or triple-panel (Type 22/33) radiators, or install hydronic underfloor heating designed for low flow temperatures ($35^\circ\text{C} - 45^\circ\text{C}$).
+- Install an inverter-driven Air-to-Water Heat Pump with a Seasonal Coefficient of Performance ($\text{SCOP}$) $\ge 4.2$.
 
 ---
 
@@ -143,23 +150,28 @@ Sealing air leaks without controlled ventilation leads to poor indoor air qualit
 ## 5. Frequently Asked Questions (Cork Retrofits)
 
 ### How do I locate my MPRN, and why is it critical for the survey?
+
 Your Meter Point Reference Number (MPRN) is an 11-digit number located at the top-right corner of your electricity bill (starts with "10..."). It identifies your home on the national grid and links your DEAP file directly to the SEAI grant database. Without an active, valid MPRN, a Pre-BER cannot be published.
 
 ### How long does an on-site Technical Assessment visit take?
+
 A thorough survey of an average 3- to 4-bedroom Cork home takes **2 to 3.5 hours**. The advisor must measure all window/door openings, inspect wall thicknesses, access attic spaces, check the hot water cylinder setup, and verify the main electrical distribution board.
 
 ### What happens if my Cork home fails to hit the HLI $\le 2.0$ requirement?
-If your home’s HLI is greater than $2.0\,\text{W/K/m}^2$, you cannot proceed directly with a heat pump installation under the SEAI grant scheme. Your Technical Assessment report will clearly outline the necessary fabric upgrades (such as attic insulation, cavity pumping, or external insulation) required to bring the home below the threshold. 
+
+If your home’s HLI is greater than $2.0\,\text{W/K/m}^2$, you cannot proceed directly with a heat pump installation under the SEAI grant scheme. Your Technical Assessment report will clearly outline the necessary fabric upgrades (such as attic insulation, cavity pumping, or external insulation) required to bring the home below the threshold.
 
 Once those fabric measures are completed, the heat pump grant and your **€350 Technical Advisor fee repayment** become fully accessible.
 
 ### Can I claim the €350 repayment if I only install insulation and no heat pump?
+
 No. The SEAI Technical Advisor €350 repayment is tied to the completion of an SEAI-supported Heat Pump installation. If you carry out individual fabric upgrades (such as attic or cavity wall insulation only) without installing a heat pump, you can still claim the respective individual grants, but the advisor fee is not reimbursed.
 
 ### What are the typical lead times for grant processing in County Cork?
-* **SEAI Online Grant Approval:** 24 to 48 hours for automated application approval.
-* **Advisor Survey & Report Delivery:** 5 to 10 working days from the site visit.
-* **Grant Payment Processing:** 4 to 6 weeks after your contractor submits post-works sign-off documentation and the final post-BER is published.
+
+- **SEAI Online Grant Approval:** 24 to 48 hours for automated application approval.
+- **Advisor Survey & Report Delivery:** 5 to 10 working days from the site visit.
+- **Grant Payment Processing:** 4 to 6 weeks after your contractor submits post-works sign-off documentation and the final post-BER is published.
 
 ---
 
@@ -167,10 +179,9 @@ No. The SEAI Technical Advisor €350 repayment is tied to the completion of an 
 
 Ensure your deep retrofit is engineered accurately from day one. Contact our Cork energy design team to book your home energy assessment and start your pathway to an A-Rated, NZEB-compliant home.
 
-* **Service Area:** Cork City, Douglas, Ballincollig, Midleton, Kinsale, Clonakilty, Mallow, Fermoy, and surrounding Munster regions.
-* **Accreditation:** Fully registered SEAI Technical Energy Advisors & Domestic BER Assessors.
-* **Compliance:** TGD Part L (Dwellings), TGD Part F, and NSAI S.R. 54:2014 Code of Practice.
-
+- **Service Area:** Cork City, Douglas, Ballincollig, Midleton, Kinsale, Clonakilty, Mallow, Fermoy, and surrounding Munster regions.
+- **Accreditation:** Fully registered SEAI Technical Energy Advisors & Domestic BER Assessors.
+- **Compliance:** TGD Part L (Dwellings), TGD Part F, and NSAI S.R. 54:2014 Code of Practice.
 
 <!-- START: Interactive SEAI Grant Calculator Component -->
 <div class="ecosmart-grant-calculator my-8 p-6 bg-slate-900 text-white rounded-xl border border-emerald-500/30 shadow-2xl" data-location="Cork">
@@ -209,8 +220,6 @@ Ensure your deep retrofit is engineered accurately from day one. Contact our Cor
 </div>
 <!-- END: Interactive SEAI Grant Calculator Component -->
 
-
-
 <!-- START: Stripe E-Commerce Survey Bridge Checkout Container -->
 <div class="ecosmart-stripe-bridge my-8 p-6 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/40 rounded-xl text-white shadow-2xl" data-keyword="seai technical advisor fee repayment Cork">
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -236,4 +245,3 @@ Ensure your deep retrofit is engineered accurately from day one. Contact our Cor
   </div>
 </div>
 <!-- END: Stripe E-Commerce Survey Bridge Checkout Container -->
-

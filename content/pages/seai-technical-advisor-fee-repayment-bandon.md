@@ -1,6 +1,6 @@
 # SEAI Technical Advisor Fee Repayment Bandon: Complete Home Energy Retrofit Guide
 
-As the Lead SEAI Technical Energy Advisor for **EcoSmartHomes Ireland**, I have assessed hundreds of properties across West Cork and the greater Munster region. 
+As the Lead SEAI Technical Energy Advisor for **EcoSmartHomes Ireland**, I have assessed hundreds of properties across West Cork and the greater Munster region.
 
 If you are planning to upgrade your heating system to a high-efficiency heat pump or embark on a deep retrofit in Bandon, an official SEAI Technical Assessment is your mandatory first step.
 
@@ -31,14 +31,14 @@ Bandon presents a distinct cross-section of Irish domestic architecture. Situate
 ### Key Architectural Challenges in Bandon
 
 1. **Town Centre & Historic Suburbs (North & South Main Street, Shannon Street):**
-   * **Typology:** Solid stone, rubble, and early mass-concrete walls without damp-proof courses (DPC).
-   * **Retrofit Approach:** External Wall Insulation (EWI) is often restricted due to architectural conservation overlays. We specify vapour-permeable internal insulation (such as wood-fibre or cork-lime composite systems) to eliminate condensation risks while preserving the historic streetscape.
+   - **Typology:** Solid stone, rubble, and early mass-concrete walls without damp-proof courses (DPC).
+   - **Retrofit Approach:** External Wall Insulation (EWI) is often restricted due to architectural conservation overlays. We specify vapour-permeable internal insulation (such as wood-fibre or cork-lime composite systems) to eliminate condensation risks while preserving the historic streetscape.
 2. **1970s–1980s Suburban Developments (e.g., Laurel Walk, Old Cork Road, Innishannon fringe):**
-   * **Typology:** Predominantly 215mm hollow concrete block or uninsulated cavity brick/block construction with suspended timber floors or uninsulated concrete slab foundations.
-   * **Retrofit Approach:** Hollow block walls cannot be pumped with cavity bead; they require a certified external wall insulation system (minimum 100mm–150mm EPS/Phenolic system) to lower wall U-values from $\sim 2.10\,\text{W/m}^2\text{K}$ down to $\le 0.18\,\text{W/m}^2\text{K}$.
+   - **Typology:** Predominantly 215mm hollow concrete block or uninsulated cavity brick/block construction with suspended timber floors or uninsulated concrete slab foundations.
+   - **Retrofit Approach:** Hollow block walls cannot be pumped with cavity bead; they require a certified external wall insulation system (minimum 100mm–150mm EPS/Phenolic system) to lower wall U-values from $\sim 2.10\,\text{W/m}^2\text{K}$ down to $\le 0.18\,\text{W/m}^2\text{K}$.
 3. **Heating Fuel Legacy:**
-   * Most rural and suburban properties surrounding Bandon rely heavily on bulk kerosene (oil-fired boilers) or solid fuels (coal, turf, timber stoves). 
-   * Moving to a low-temperature hydronic system (Air-to-Water Heat Pump) requires strict reduction of the **Heat Loss Indicator (HLI)** to ensure running costs remain lower than existing kerosene systems.
+   - Most rural and suburban properties surrounding Bandon rely heavily on bulk kerosene (oil-fired boilers) or solid fuels (coal, turf, timber stoves).
+   - Moving to a low-temperature hydronic system (Air-to-Water Heat Pump) requires strict reduction of the **Heat Loss Indicator (HLI)** to ensure running costs remain lower than existing kerosene systems.
 
 ---
 
@@ -58,25 +58,25 @@ The standard professional fee for a comprehensive SEAI Technical Assessment gene
   2. Advisor executes DEAP survey, fabric specification, and HLI Report
   3. Homeowner pays Advisor invoice directly
   4. Advisor submits Technical Report to SEAI Portal
-  5. Homeowner applies for Heat Pump Grant (€3,800 - €6,500)
+  5. Homeowner applies for Heat Pump Grant (up to €12,500)
   6. On installation completion & final BER sign-off:
-     👉 SEAI releases Heat Pump Grant + €200 Technical Assessment Repayment
+     👉 SEAI releases Heat Pump Grant + €350 Technical Assessment Repayment
 ```
 
-* **Repayment Amount:** **€200** flat grant credited directly back to the homeowner upon the successful installation and grant drawdown of an eligible SEAI Heat Pump system.
-* **Prerequisite:** The assessment must be completed by an **SEAI-Registered Technical Advisor** using the official **DEAP (Dwelling Energy Assessment Procedure)** software version 4.2.2 (or latest).
+- **Repayment Amount:** **€350** flat grant credited directly back to the homeowner upon the successful installation and grant drawdown of an eligible SEAI Heat Pump system.
+- **Prerequisite:** The assessment must be completed by an **SEAI-Registered Technical Advisor** using the official **DEAP (Dwelling Energy Assessment Procedure)** software version 4.2.2 (or latest).
 
-### Current SEAI Individual Grant Values (2024/2025)
+### Official 2026 SEAI Domestic Grant Values
 
-| Measure | Grant Value (Detached) | Grant Value (Semi-Detached) | Grant Value (Terraced/Apt) |
-| :--- | :--- | :--- | :--- |
-| **Technical Assessment** | **€200** *(on heat pump completion)* | **€200** *(on heat pump completion)* | **€200** *(on heat pump completion)* |
-| **Air-to-Water Heat Pump** | €6,500 | €6,500 | €4,500 (Apartment) |
-| **Ground-to-Water Heat Pump**| €6,500 | €6,500 | €4,500 (Apartment) |
-| **Cavity Wall Insulation** | €1,700 | €1,200 | €800 |
-| **External Wall Insulation (EWI)**| €8,000 | €6,000 | €3,500 |
-| **Attic Insulation** | €1,500 | €1,300 | €1,200 |
-| **Solar PV Systems** | Up to €1,800 | Up to €1,800 | Up to €1,800 |
+| Measure                              | Grant Value (Detached)               | Grant Value (Semi-Detached)          | Grant Value (Terraced/Apt)           |
+| :----------------------------------- | :----------------------------------- | :----------------------------------- | :----------------------------------- |
+| **Technical Assessment**             | **€350** _(on heat pump completion)_ | **€350** _(on heat pump completion)_ | **€350** _(on heat pump completion)_ |
+| **Air-to-Water Heat Pump Bundle**    | Up to €12,500                        | Up to €12,500                        | €9,500 (Apartment)                   |
+| **Ground-to-Water Heat Pump Bundle** | Up to €12,500                        | Up to €12,500                        | €9,500 (Apartment)                   |
+| **Cavity Wall Insulation**           | €1,800                               | €1,300                               | €800                                 |
+| **External Wall Insulation (EWI)**   | €8,000                               | €6,000                               | €3,500                               |
+| **Attic Insulation**                 | €2,000                               | €1,500                               | €1,200                               |
+| **Solar PV Systems**                 | Up to €2,100                         | Up to €2,100                         | Up to €2,100                         |
 
 ---
 
@@ -86,7 +86,7 @@ To qualify for an SEAI Heat Pump Grant, your property must achieve a **Heat Loss
 
 ```
                       HEAT LOSS INDICATOR (HLI) TARGETS
-  
+
   [ Un-Retrofitted 1970s Bandon Home ] ────► HLI: 3.5 - 5.0 W/K/m²  (UNQUALIFIED)
                       │
                       ▼ (Fabric Upgrades: EWI, Attic, Triple Glazing)
@@ -97,6 +97,7 @@ To qualify for an SEAI Heat Pump Grant, your property must achieve a **Heat Loss
 ```
 
 The Technical Advisor calculates this metric by modeling:
+
 1. **Total Heat Transmission Losses ($H_T$):** Walls, roof, ground floor, windows, and external doors calculated via precise surface areas and individual $U$-values.
 2. **Ventilation Losses ($H_V$):** Uncontrolled infiltration through chimneys, wall vents, floor voids, and fabric permeability.
 3. **Total Floor Area ($A_f$):** Internal usable floor space according to DEAP dimensioning conventions.
@@ -119,45 +120,55 @@ If the initial assessment results in an $\text{HLI} > 2.0\text{ W/K/m}^2$, your 
 ```
 
 ### Step 1: On-Site Technical Audit (Bandon Survey)
-* High-precision dimensional audit, window/door orientation mapping, and wall core identification.
-* Inspection of existing heating distribution (pipe bore sizes, single vs. twin-pipe systems, radiator surface areas).
-* Thermal imaging to detect structural thermal bridges around lintels, sills, and wall-to-floor junctions.
+
+- High-precision dimensional audit, window/door orientation mapping, and wall core identification.
+- Inspection of existing heating distribution (pipe bore sizes, single vs. twin-pipe systems, radiator surface areas).
+- Thermal imaging to detect structural thermal bridges around lintels, sills, and wall-to-floor junctions.
 
 ### Step 2: Fabric-First Optimization
-* **Attic/Roof:** Install minimum 300mm mineral wool quilt ($U \le 0.16\,\text{W/m}^2\text{K}$) with insulated loft hatch and sealed downlight covers.
-* **Walls:** Apply external wall insulation or bond-injected cavity wall bead to drive $U$-values to $\le 0.18\,\text{W/m}^2\text{K}$.
-* **Glazing:** Replace old double-glazing with argon-filled triple-glazed units ($U_w \le 0.80\,\text{W/m}^2\text{K}$, $g\text{-value} \approx 0.50$).
+
+- **Attic/Roof:** Install minimum 300mm mineral wool quilt ($U \le 0.16\,\text{W/m}^2\text{K}$) with insulated loft hatch and sealed downlight covers.
+- **Walls:** Apply external wall insulation or bond-injected cavity wall bead to drive $U$-values to $\le 0.18\,\text{W/m}^2\text{K}$.
+- **Glazing:** Replace old double-glazing with argon-filled triple-glazed units ($U_w \le 0.80\,\text{W/m}^2\text{K}$, $g\text{-value} \approx 0.50$).
 
 ### Step 3: Hydronic Heat Distribution Sizing
-* Low-temperature heat pumps operate at flow temperatures of $35^\circ\text{C}$ to $45^\circ\text{C}$ (compared to $65^\circ\text{C}+$ for legacy kerosene boilers).
-* We calculate room-by-room heat losses ($\text{Watts}$) to verify if existing radiators require upgrading to high-output low-temperature steel panels or if floor heating manifolds are necessary.
+
+- Low-temperature heat pumps operate at flow temperatures of $35^\circ\text{C}$ to $45^\circ\text{C}$ (compared to $65^\circ\text{C}+$ for legacy kerosene boilers).
+- We calculate room-by-room heat losses ($\text{Watts}$) to verify if existing radiators require upgrading to high-output low-temperature steel panels or if floor heating manifolds are necessary.
 
 ### Step 4: Ventilation & Airtightness Strategy (TGD Part F Compliance)
-* As air permeability ($q_{50}$) is tightened below $5.0\,\text{m}^3/(\text{h}\cdot\text{m}^2)\text{ at }50\,\text{Pa}$, mechanical ventilation becomes mandatory to prevent mould formation and indoor CO₂ accumulation.
-* We specify **Demand-Controlled Mechanical Extract Ventilation (dMEV)** or **Mechanical Ventilation with Heat Recovery (MVHR)**.
+
+- As air permeability ($q_{50}$) is tightened below $5.0\,\text{m}^3/(\text{h}\cdot\text{m}^2)\text{ at }50\,\text{Pa}$, mechanical ventilation becomes mandatory to prevent mould formation and indoor CO₂ accumulation.
+- We specify **Demand-Controlled Mechanical Extract Ventilation (dMEV)** or **Mechanical Ventilation with Heat Recovery (MVHR)**.
 
 ### Step 5: Commissioning, BER Publication & Grant Repayment
-* A final, post-works BER assessment is carried out by the certified assessor.
-* The published BER certificate, Heat Pump Sign-Off form, and Technical Advisor compliance certificates are submitted to the SEAI portal.
-* The **€200 Technical Advisor fee repayment** is cleared alongside your major grant sum directly into your nominated Irish bank account.
+
+- A final, post-works BER assessment is carried out by the certified assessor.
+- The published BER certificate, Heat Pump Sign-Off form, and Technical Advisor compliance certificates are submitted to the SEAI portal.
+- The **€350 Technical Advisor fee repayment** is cleared alongside your major grant sum directly into your nominated Irish bank account.
 
 ---
 
 ## 5. Frequently Asked Questions by Bandon Homeowners
 
 ### Where do I find my MPRN, and why is it needed before the survey?
+
 Your **Meter Point Reference Number (MPRN)** is a unique 11-digit number located at the top right-hand side of your electricity bill (issued by ESB Networks). We require this number to access the National BER Database to check previous energy ratings, verify property eligibility, and bind your Technical Assessment directly to the SEAI grant system.
 
 ### How long does an SEAI Technical Assessment take at my property?
+
 For a typical 3-to-4 bedroom home in Bandon estates like Castle Park or Laurel Walk, an on-site structural audit takes approximately **1.5 to 2.5 hours**. This requires complete access to all habitable rooms, the hot press, attic spaces, consumer units, and the outdoor boiler/utility areas. The subsequent computational modeling in DEAP takes 2–3 business days.
 
 ### My property is in an older, flood-remediated or damp area near the Bandon River. Can I still install a heat pump?
+
 Yes. However, properties near the river valley require specialized attention to sub-floor moisture levels and airtightness membranes. We ensure that our recommended insulation materials are hydrophobic and that ground moisture barriers comply strictly with **TGD Part C** (Site Preparation and Resistance to Moisture) before any low-temperature heating infrastructure is installed.
 
 ### Can I claim the €200 advisor repayment if I choose not to install a heat pump?
-No. The SEAI rules state that the €200 technical advisor fee repayment is only remitted upon the successful installation, sign-off, and grant drawdown of an approved heat pump system. If you only proceed with insulation or solar PV, you can still claim the standalone grants for those individual measures, but the €200 advisor fee cannot be drawn down.
+
+No. The SEAI rules state that the €350 Technical Advisor fee repayment is only remitted upon the successful installation, sign-off, and grant drawdown of an approved heat pump system. If you only proceed with insulation or solar PV, you can still claim the standalone grants for those individual measures, but the €350 Advisor Fee cannot be drawn down.
 
 ### How long do I have to complete the works once the Technical Report is issued?
+
 Once your SEAI grant application is formally approved, you have an **8-month grant offer window** to complete the retrofit works, have the final BER assessment completed, and submit the documentation for full grant payment and fee repayment.
 
 ---
@@ -166,12 +177,11 @@ Once your SEAI grant application is formally approved, you have an **8-month gra
 
 EcoSmartHomes Ireland delivers certified, fully compliant SEAI Technical Assessments across Bandon, Innishannon, Kilbrittain, and the surrounding West Cork region.
 
-* **Assessor:** Lead Technical Energy Advisor (SEAI Registered)
-* **Coverage:** Bandon Town, Castle Park, Laurel Walk, Knockbrogan, Curravreeda, and surrounding areas.
-* **Compliance:** DEAP 4.2.2 / TGD Part L (NZEB) Standard Certified.
+- **Assessor:** Lead Technical Energy Advisor (SEAI Registered)
+- **Coverage:** Bandon Town, Castle Park, Laurel Walk, Knockbrogan, Curravreeda, and surrounding areas.
+- **Compliance:** DEAP 4.2.2 / TGD Part L (NZEB) Standard Certified.
 
 **Schedule your on-site assessment today to claim your €200 SEAI fee repayment and map your home's direct route to an A2 Energy Rating.**
-
 
 <!-- START: Interactive SEAI Grant Calculator Component -->
 <div class="ecosmart-grant-calculator my-8 p-6 bg-slate-900 text-white rounded-xl border border-emerald-500/30 shadow-2xl" data-location="Bandon">
@@ -210,8 +220,6 @@ EcoSmartHomes Ireland delivers certified, fully compliant SEAI Technical Assessm
 </div>
 <!-- END: Interactive SEAI Grant Calculator Component -->
 
-
-
 <!-- START: Stripe E-Commerce Survey Bridge Checkout Container -->
 <div class="ecosmart-stripe-bridge my-8 p-6 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/40 rounded-xl text-white shadow-2xl" data-keyword="seai technical advisor fee repayment Bandon">
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -237,4 +245,3 @@ EcoSmartHomes Ireland delivers certified, fully compliant SEAI Technical Assessm
   </div>
 </div>
 <!-- END: Stripe E-Commerce Survey Bridge Checkout Container -->
-

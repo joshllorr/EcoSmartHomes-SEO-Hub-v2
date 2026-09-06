@@ -1,4 +1,4 @@
-﻿import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -55,7 +55,7 @@ export default async function handler(
         const prompt = `You are the Lead Energy Consultant for EcoSmartHomes Ireland.
 Search Query: "${query}".
 Provide:
-1. Expert technical advice on selecting SEAI-registered contractors, typical installation costs, BER A-rating impact, and SEAI grant subsidies (€6,500 Heat Pump, €2,100 Solar PV, €25,000 One-Stop-Shop).
+1. Expert technical advice on selecting SEAI-registered contractors, typical installation costs, BER A0/A-rating impact, and 2026 SEAI grant subsidies (up to €12,500 Heat Pump bundle, €2,100 Solar PV, up to €50,000 One-Stop-Shop deep retrofit).
 2. A list of 4-5 verified, authentic contractors/suppliers in or near the requested Irish location (e.g. Limerick/Munster).
 Format strictly as JSON with keys:
 - "advice": string (markdown format with clear headings)
@@ -94,7 +94,7 @@ Format strictly as JSON with keys:
     }
 
     if (suppliers.length === 0) {
-      aiAdvice = `### SEAI Registered Retrofit Guidance for ${query}\n\nWhen upgrading energy efficiency in Limerick (V94) and Munster:\n- **Technical Assessment**: Mandatory pre-grant assessment verifies heat loss indicator (HLI ≤ 2.0 W/K·m²).\n- **SEAI Grants**: Up to **€6,500** for Heat Pumps, **€2,100** for Solar PV, and up to **€25,000** for One-Stop-Shop deep retrofits.\n- **BER Uplift**: Upgrades typical homes from C/D ratings to **A2 / A3** standard.`;
+      aiAdvice = `### SEAI Registered Retrofit Guidance for ${query}\n\nWhen upgrading energy efficiency in Limerick (V94) and Munster:\n- **Technical Assessment**: Mandatory pre-grant assessment verifies heat loss indicator (HLI ≤ 2.0 W/K·m²).\n- **SEAI Grants**: Up to **€12,500** for Heat Pump systems, **€2,100** for Solar PV, and up to **€50,000** for One-Stop-Shop deep retrofits.\n- **BER Uplift**: Upgrades typical homes from C/D ratings to **A0 / A** standard under the new 8-tier EPBD scale.`;
 
       suppliers = [
         {

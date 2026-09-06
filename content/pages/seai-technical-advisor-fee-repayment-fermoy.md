@@ -8,7 +8,7 @@ This guide outlines the local housing stock characteristics of Fermoy, breaks do
 
 ## 1. Local Housing Stock Analysis: Fermoy, Co. Cork
 
-Fermoy presents a diverse mix of architectural archetypes, from heritage urban builds along the River Blackwater to mid-to-late 20th-century housing estates and rural one-off ribbon developments in the surrounding agricultural hinterland. 
+Fermoy presents a diverse mix of architectural archetypes, from heritage urban builds along the River Blackwater to mid-to-late 20th-century housing estates and rural one-off ribbon developments in the surrounding agricultural hinterland.
 
 Achieving an efficient, heat-pump-ready home in this region requires an understanding of your specific construction type:
 
@@ -33,10 +33,12 @@ Achieving an efficient, heat-pump-ready home in this region requires an understa
 ```
 
 ### Heating Fuel Dynamics in Fermoy
+
 Unlike major metropolitan areas, significant portions of residential Fermoy—particularly suburban perimeters and rural townlands (such as Grange, Castlelyons, and Rathcormac)—have no direct access to the mains natural gas grid. Properties rely heavily on:
-* **Kerosene/home heating oil (35-second gas oil):** Subject to carbon tax escalations and seasonal price shocks.
-* **Liquid Petroleum Gas (LPG) bulk tanks.**
-* **Solid fuel stoves and open hearths:** Contributing to uncontrolled air permeability and localised particulate emissions.
+
+- **Kerosene/home heating oil (35-second gas oil):** Subject to carbon tax escalations and seasonal price shocks.
+- **Liquid Petroleum Gas (LPG) bulk tanks.**
+- **Solid fuel stoves and open hearths:** Contributing to uncontrolled air permeability and localised particulate emissions.
 
 To transition these homes to an air-to-water heat pump, the property’s structural fabric must be brought below an SEAI-mandated **Heat Loss Indicator (HLI)** threshold of **$\le 2.0 \text{ W/K/m}^2$** (or $\le 2.3 \text{ W/K/m}^2$ where technical justification is provided under SR:54 guidelines).
 
@@ -44,7 +46,7 @@ To transition these homes to an air-to-water heat pump, the property’s structu
 
 ## 2. SEAI Technical Assessment & The Advisor Fee Repayment Explained
 
-When applying for the **SEAI Heat Pump System Grant (€6,500 for houses / €4,500 for apartments)**, the SEAI requires an upfront, comprehensive survey executed by a certified **SEAI Registered Technical Advisor**.
+When applying for the **SEAI Heat Pump System Grant (up to €12,500 for houses / €4,500 for apartments)**, the SEAI requires an upfront, comprehensive survey executed by a certified **SEAI Registered Technical Advisor**.
 
 ```
    [ Step 1: €500–€700 Upfront ]
@@ -62,27 +64,28 @@ When applying for the **SEAI Heat Pump System Grant (€6,500 for houses / €4,
                   │
                   ▼
    [ Step 4: €200 Fee Repayment Claim ]
-   SEAI issues €200 Technical Advisor rebate alongside €6,500 Heat Pump Grant
+   SEAI issues €350 Technical Advisor rebate alongside €12,500 Heat Pump Grant bundle
 ```
 
 ### How the Repayment Works
+
 1. **Initial Fee:** You commission a registered Technical Advisor from EcoSmartHomes Ireland to carry out the on-site dimensional and fabric audit of your Fermoy property.
 2. **Assessment Execution:** The advisor completes full U-value calculations, air-permeability estimates, ventilation audits, and Dwelling Energy Assessment Procedure (DEAP) modelling to calculate the property’s HLI.
-3. **Grant Drawdown:** Once you implement the required insulation upgrades and complete the commissioned installation of your Heat Pump system through an SEAI-registered installer, the **€200 Technical Advisor Fee Repayment** is credited directly to your bank account alongside your capital grant payment.
+3. **Grant Drawdown:** Once you implement the required insulation upgrades and complete the commissioned installation of your Heat Pump system through an SEAI-registered installer, the **€350 Technical Advisor Fee Repayment** is credited directly to your bank account alongside your capital grant payment.
 
 ### Current Individual Energy Upgrade Grants (SEAI Better Energy Homes)
 
-| Measure | Property Archetype | Grant Value |
-| :--- | :--- | :--- |
-| **Technical Advisor Fee Repayment** | All qualifying dwellings | **€200** |
-| **Air-to-Water Heat Pump System** | Detached / Semi-Detached / Terraced | **€6,500** |
-| **Ground-to-Water Heat Pump** | Detached / Semi-Detached / Terraced | **€6,500** |
-| **Attic Insulation** | Detached (€1,500) / Semi-Detached (€1,300) / Mid-Terrace | **€1,200–€1,500** |
-| **Cavity Wall Insulation** | Detached (€1,700) / Semi-Detached (€1,200) / Mid-Terrace | **€800–€1,700** |
-| **External Wall Insulation (EWI)**| Detached (€8,000) / Semi-Detached (€6,000) / Mid-Terrace | **€3,000–€8,000** |
-| **Solar Photovoltaic (PV)** | Up to 4kWp generation installations | **Up to €2,100** |
+| Measure                             | Property Archetype                                       | Grant Value       |
+| :---------------------------------- | :------------------------------------------------------- | :---------------- |
+| **Technical Advisor Fee Repayment** | All qualifying dwellings                                 | **€200**          |
+| **Air-to-Water Heat Pump System**   | Detached / Semi-Detached / Terraced                      | **€6,500**        |
+| **Ground-to-Water Heat Pump**       | Detached / Semi-Detached / Terraced                      | **€6,500**        |
+| **Attic Insulation**                | Detached (€1,500) / Semi-Detached (€1,300) / Mid-Terrace | **€1,200–€1,500** |
+| **Cavity Wall Insulation**          | Detached (€1,700) / Semi-Detached (€1,200) / Mid-Terrace | **€800–€1,700**   |
+| **External Wall Insulation (EWI)**  | Detached (€8,000) / Semi-Detached (€6,000) / Mid-Terrace | **€3,000–€8,000** |
+| **Solar Photovoltaic (PV)**         | Up to 4kWp generation installations                      | **Up to €2,100**  |
 
-*Note: Dwellings built before 2021 are eligible for insulation and heat pump measures. For Solar PV and Heat Pump systems, the property must be built and occupied prior to 2011 to qualify under certain grant streams.*
+_Note: Dwellings built before 2021 are eligible for insulation and heat pump measures. For Solar PV and Heat Pump systems, the property must be built and occupied prior to 2011 to qualify under certain grant streams._
 
 ---
 
@@ -102,34 +105,43 @@ Transforming a typical D- or E-rated Fermoy home to an A2 rating requires a syst
 ```
 
 ### Phase 1: Fabric Optimisation & Thermal Envelope Integrity
+
 Before deploying heat pump technology, heat loss through the external envelope must be mitigated:
-* **Attic Voids:** Install 300mm of cross-layered mineral wool insulation ($U \le 0.16 \text{ W/m}^2\text{K}$), accompanied by raised storage boarding, eaves ventilation trays to prevent condensation, and an insulated, draft-sealed attic hatch.
-* **Wall Treatments:**
-  * *1970s–1990s Cavity Walls:* Pump bonded polyurethane bead ($U \approx 0.28 \text{ W/m}^2\text{K}$).
-  * *Solid/Mass Concrete Walls (e.g., Fermoy town centre):* Apply 100mm–120mm external wall insulation (EPS system with silicone render finish, $U \le 0.18 \text{ W/m}^2\text{K}$) where site lines permit, or internal insulated dry-lining systems incorporating continuous vapour control layers (VCL).
-* **High-Performance Fenestration:** Replace failing single/double glazing with certified triple-glazed, argon-filled units ($U_w \le 1.2 \text{ W/m}^2\text{K}$, warm-edge spacer bars).
+
+- **Attic Voids:** Install 300mm of cross-layered mineral wool insulation ($U \le 0.16 \text{ W/m}^2\text{K}$), accompanied by raised storage boarding, eaves ventilation trays to prevent condensation, and an insulated, draft-sealed attic hatch.
+- **Wall Treatments:**
+  - _1970s–1990s Cavity Walls:_ Pump bonded polyurethane bead ($U \approx 0.28 \text{ W/m}^2\text{K}$).
+  - _Solid/Mass Concrete Walls (e.g., Fermoy town centre):_ Apply 100mm–120mm external wall insulation (EPS system with silicone render finish, $U \le 0.18 \text{ W/m}^2\text{K}$) where site lines permit, or internal insulated dry-lining systems incorporating continuous vapour control layers (VCL).
+- **High-Performance Fenestration:** Replace failing single/double glazing with certified triple-glazed, argon-filled units ($U_w \le 1.2 \text{ W/m}^2\text{K}$, warm-edge spacer bars).
 
 ### Phase 2: Airtightness & Mechanical Ventilation
+
 Airtight retrofits prevent uncontrolled air infiltration but require dedicated ventilation management:
-* **Airtightness Sealing:** Seal pipe penetrations, intermediate floor junctions, and window-to-masonry reveals to hit an air permeability rate of **$\le 3.0 \text{ m}^3/(\text{hr}\cdot\text{m}^2) \text{ at } 50\text{ Pa}$**.
-* **Ventilation Strategy:** Install a **Demand Controlled Ventilation (DCV)** system or **Mechanical Ventilation with Heat Recovery (MVHR)** to ensure balanced indoor air quality, mitigate moisture accumulation, and satisfy TGD Part F compliance.
+
+- **Airtightness Sealing:** Seal pipe penetrations, intermediate floor junctions, and window-to-masonry reveals to hit an air permeability rate of **$\le 3.0 \text{ m}^3/(\text{hr}\cdot\text{m}^2) \text{ at } 50\text{ Pa}$**.
+- **Ventilation Strategy:** Install a **Demand Controlled Ventilation (DCV)** system or **Mechanical Ventilation with Heat Recovery (MVHR)** to ensure balanced indoor air quality, mitigate moisture accumulation, and satisfy TGD Part F compliance.
 
 ### Phase 3: Low-Temperature Hydronic Heating Integration
-* **Heat Source:** Install an inverter-driven Air-to-Water Monobloc or Split Heat Pump with a Minimum Seasonal Coefficient of Performance (**SCOP**) of $\ge 3.5$.
-* **Emitter Upgrades:** Replace undersized single-panel steel radiators with high-output double or triple convector radiators (Type 22/33) or wet underfloor heating systems, designed for a maximum mean water flow temperature of **$35^\circ\text{C} - 45^\circ\text{C}$**.
+
+- **Heat Source:** Install an inverter-driven Air-to-Water Monobloc or Split Heat Pump with a Minimum Seasonal Coefficient of Performance (**SCOP**) of $\ge 3.5$.
+- **Emitter Upgrades:** Replace undersized single-panel steel radiators with high-output double or triple convector radiators (Type 22/33) or wet underfloor heating systems, designed for a maximum mean water flow temperature of **$35^\circ\text{C} - 45^\circ\text{C}$**.
 
 ### Phase 4: Renewable Microgeneration
-* Install a rooftop **Solar PV Array (3.5kWp to 4.5kWp)** with high-efficiency tier-1 monocrystalline panels, configured to supply household baseline power and divert excess generation to the domestic hot water (DHW) cylinder immersion heater via an intelligent solar power diverter.
+
+- Install a rooftop **Solar PV Array (3.5kWp to 4.5kWp)** with high-efficiency tier-1 monocrystalline panels, configured to supply household baseline power and divert excess generation to the domestic hot water (DHW) cylinder immersion heater via an intelligent solar power diverter.
 
 ---
 
 ## 4. Frequently Asked Questions (Fermoy Homeowners)
 
 ### How do I locate and verify my MPRN before the Technical Assessment?
+
 Your **Meter Point Reference Number (MPRN)** is an 11-digit number printed at the top-right corner of your domestic electricity bill (issued by your energy supplier) starting with `10...`. It is not the serial number stamped on your physical meter box. The MPRN identifies your home on the ESB Networks national grid database and is required by our Technical Advisor to access SEAI's portal and register your Pre-Works DEAP file.
 
 ### What occurs during the on-site Technical Advisor survey in Fermoy?
+
 The EcoSmartHomes Technical Advisor visits your home for approximately **2 to 3.5 hours**. The surveyor will:
+
 1. Conduct a full dimensional laser measurement of all internal/external floors, ceilings, wall areas, and window/door reveals.
 2. Measure insulation depths in attic spaces and check eaves ventilation clearance.
 3. Inspect wall construction type via borescopic examination or wall depth measurement.
@@ -137,24 +149,25 @@ The EcoSmartHomes Technical Advisor visits your home for approximately **2 to 3.
 5. Review existing construction drawings or planning documentation where available.
 
 ### What are the SEAI grant approval and processing timelines in County Cork?
-* **Technical Assessment Submission:** 3–5 working days following the site survey.
-* **SEAI Grant Application Approval:** Once submitted online via the SEAI portal, individual grant approvals are typically issued **instantly or within 24–48 hours**. 
-* **Installation Window:** From the date of your Letter of Offer, you have **8 months** to complete the capital works with registered contractors.
-* **Grant & Fee Repayment Payout:** Once works are complete, the Post-Works BER is published, and paperwork is signed off, SEAI processes direct-to-bank electronic fund transfers within **4 to 6 weeks**.
+
+- **Technical Assessment Submission:** 3–5 working days following the site survey.
+- **SEAI Grant Application Approval:** Once submitted online via the SEAI portal, individual grant approvals are typically issued **instantly or within 24–48 hours**.
+- **Installation Window:** From the date of your Letter of Offer, you have **8 months** to complete the capital works with registered contractors.
+- **Grant & Fee Repayment Payout:** Once works are complete, the Post-Works BER is published, and paperwork is signed off, SEAI processes direct-to-bank electronic fund transfers within **4 to 6 weeks**.
 
 ### My home was built in the 1970s in Fermoy with hollow block walls. Can I install a Heat Pump?
+
 Yes, but hollow block structures (often found in 1970s and 1980s construction) cannot be cavity-pumped because they lack a continuous cavity. To bring the HLI to $\le 2.0 \text{ W/K/m}^2$, you must apply an **External Wall Insulation (EWI)** system or comprehensive internal insulated dry lining paired with an attic upgrade and high-performance glazing. The Technical Assessment will model the exact combination of measures required.
 
 ---
 
 ## Book Your SEAI Technical Assessment in Fermoy
 
-Ensure your property is engineered to meet SEAI grant eligibility and modern NZEB performance standards. 
+Ensure your property is engineered to meet SEAI grant eligibility and modern NZEB performance standards.
 
-* **Provider:** EcoSmartHomes Ireland — Certified SEAI Technical Advisors & BER Assessors
-* **Service Area:** Fermoy, Rathcormac, Castlelyons, Kilworth, Ballyhooly, Watergrasshill, and the wider County Cork region.
-* **Output:** Official SEAI Technical Assessment Documentation, Pre-Works BER Certificate, Investment Cost Breakdown, and Roadmap for the **€200 SEAI technical advisor fee repayment**.
-
+- **Provider:** EcoSmartHomes Ireland — Certified SEAI Technical Advisors & BER Assessors
+- **Service Area:** Fermoy, Rathcormac, Castlelyons, Kilworth, Ballyhooly, Watergrasshill, and the wider County Cork region.
+- **Output:** Official SEAI Technical Assessment Documentation, Pre-Works BER Certificate, Investment Cost Breakdown, and Roadmap for the **€200 SEAI technical advisor fee repayment**.
 
 <!-- START: Interactive SEAI Grant Calculator Component -->
 <div class="ecosmart-grant-calculator my-8 p-6 bg-slate-900 text-white rounded-xl border border-emerald-500/30 shadow-2xl" data-location="Fermoy">
@@ -193,8 +206,6 @@ Ensure your property is engineered to meet SEAI grant eligibility and modern NZE
 </div>
 <!-- END: Interactive SEAI Grant Calculator Component -->
 
-
-
 <!-- START: Stripe E-Commerce Survey Bridge Checkout Container -->
 <div class="ecosmart-stripe-bridge my-8 p-6 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/40 rounded-xl text-white shadow-2xl" data-keyword="seai technical advisor fee repayment Fermoy">
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -220,4 +231,3 @@ Ensure your property is engineered to meet SEAI grant eligibility and modern NZE
   </div>
 </div>
 <!-- END: Stripe E-Commerce Survey Bridge Checkout Container -->
-

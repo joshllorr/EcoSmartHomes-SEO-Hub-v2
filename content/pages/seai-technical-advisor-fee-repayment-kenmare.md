@@ -6,7 +6,7 @@ Welcome to the definitive retrofit guide for property owners in Kenmare and the 
 
 ## 1. Local Context & Housing Stock Analysis: Kenmare, Co. Kerry
 
-Kenmare’s unique geographic position—nestled between the Ring of Kerry and the Beara Peninsula along Kenmare Bay—exposes residential properties to severe Atlantic weather conditions: driving rain, high relative humidity, and persistent south-westerly maritime winds. 
+Kenmare’s unique geographic position—nestled between the Ring of Kerry and the Beara Peninsula along Kenmare Bay—exposes residential properties to severe Atlantic weather conditions: driving rain, high relative humidity, and persistent south-westerly maritime winds.
 
 Achieving a durable deep retrofit in Kenmare requires an engineering approach tailored to the specific construction typologies across the town and its rural hinterlands (such as Bonane, Tuosist, Templenoe, and Kilgarvan).
 
@@ -55,24 +55,25 @@ Before installing a heat pump funded by the Sustainable Energy Authority of Irel
 |  [Step 4: Heat Pump Installed & Commissioned]                                                     |
 |       │                                                                                           |
 |       ▼                                                                                           |
-|  [Step 5: SEAI Grant Drawdown Processed] ──► €350 Advisor Fee Repaid + €6,500 Heat Pump Grant     |
+|  [Step 5: SEAI Grant Drawdown Processed] ──► €350 Advisor Fee Repaid + €12,500 Heat Pump Grant bundle     |
 +---------------------------------------------------------------------------------------------------+
 ```
 
 ### The €350 Advisor Fee Repayment Mechanism
+
 1. **Upfront Payment:** The homeowner engages EcoSmartHomes Ireland to carry out the comprehensive pre-works Technical Assessment (DEAP calculations, air permeability check, thermal fabric evaluation). The standard professional fee is paid directly to the Technical Advisor.
 2. **Grant Lock-In:** The Advisor submits the formal Technical Assessment to the SEAI portal, generating your unique application validation.
 3. **Automatic Reimbursement:** When your chosen registered contractor completes the heat pump installation and the final paperwork (Declaration of Works) is submitted, the **€350 SEAI Technical Advisor Grant is repaid directly into your bank account** alongside your heat pump capital grant.
 
 ### Core Individual Grant Support Values (SEAI Better Energy Homes)
 
-* **Technical Advisor Assessment Fee Repayment:** **€350**
-* **Air-to-Water Heat Pump System (Detached/Semi-Detached):** **€6,500**
-* **External Wall Insulation (EWI - Detached):** **€8,000**
-* **Cavity Wall Insulation (Detached):** **€1,700**
-* **Internal Drylining (Detached):** **€4,500**
-* **Attic / Ceiling Insulation:** Up to **€1,500**
-* **Solar PV Systems:** Up to **€2,100** (Max 4kWp)
+- **Technical Advisor Assessment Fee Repayment:** **€350**
+- **Air-to-Water Heat Pump System (Detached/Semi-Detached):** **€6,500**
+- **External Wall Insulation (EWI - Detached):** **€8,000**
+- **Cavity Wall Insulation (Detached):** **€1,700**
+- **Internal Drylining (Detached):** **€4,500**
+- **Attic / Ceiling Insulation:** Up to **€1,500**
+- **Solar PV Systems:** Up to **€2,100** (Max 4kWp)
 
 ---
 
@@ -111,29 +112,39 @@ To achieve the **Nearly Zero Energy Building (NZEB)** standard mandated under Ir
 ```
 
 ### Stage 1: Technical Assessment & HLI Benchmark
-Your Technical Advisor executes a full dimensional and dimensional survey using **DEAP 4.2.2**. We calculate the property’s **Heat Loss Indicator (HLI)**. 
-* *Rule:* For an SEAI Heat Pump grant, your home’s HLI must be **$\le 2.0 \text{ W/m}^2\text{K}$** (or $\le 2.3 \text{ W/m}^2\text{K}$ with specific secondary verification metrics).
+
+Your Technical Advisor executes a full dimensional and dimensional survey using **DEAP 4.2.2**. We calculate the property’s **Heat Loss Indicator (HLI)**.
+
+- _Rule:_ For an SEAI Heat Pump grant, your home’s HLI must be **$\le 2.0 \text{ W/m}^2\text{K}$** (or $\le 2.3 \text{ W/m}^2\text{K}$ with specific secondary verification metrics).
 
 ### Stage 2: Fabric-First Envelope Upgrades
+
 Before spending capital on a heat pump, the building envelope must be sealed against heat loss:
-* **Roof/Attic:** Minimum 300mm mineral wool cross-laid quilt ($\text{Target } U \le 0.16 \text{ W/m}^2\text{K}$), accompanied by insulated walk-boards, draft-sealed hatch, and pipe lagging.
-* **External Walls:** External insulation system with 100mm–150mm Graphite EPS or open-cell cavity injection ($\text{Target } U \le 0.18 - 0.21 \text{ W/m}^2\text{K}$).
-* **Glazing & External Doors:** High-performance triple glazing ($\text{Whole-window } U_w \le 1.2 \text{ W/m}^2\text{K}$) with warm-edge spacer bars to prevent condensation in coastal environments.
+
+- **Roof/Attic:** Minimum 300mm mineral wool cross-laid quilt ($\text{Target } U \le 0.16 \text{ W/m}^2\text{K}$), accompanied by insulated walk-boards, draft-sealed hatch, and pipe lagging.
+- **External Walls:** External insulation system with 100mm–150mm Graphite EPS or open-cell cavity injection ($\text{Target } U \le 0.18 - 0.21 \text{ W/m}^2\text{K}$).
+- **Glazing & External Doors:** High-performance triple glazing ($\text{Whole-window } U_w \le 1.2 \text{ W/m}^2\text{K}$) with warm-edge spacer bars to prevent condensation in coastal environments.
 
 ### Stage 3: Airtightness & Continuous Mechanical Ventilation
-Eliminating uncontrolled drafts is essential for heat pump efficiency. 
-* Seal service penetrations, floor-to-wall junctions, and chimney flues to achieve an air permeability target of **$\le 3.0 \text{ m}^3\text{/(hr}\cdot\text{m}^2)\text{ @ 50Pa}$**.
-* Install **Demand Controlled Mechanical Extract Ventilation (DCV)** or **Mechanical Ventilation with Heat Recovery (MVHR)** compliant with TGD Part F to maintain clean indoor air quality and protect the structure against interstitial condensation.
+
+Eliminating uncontrolled drafts is essential for heat pump efficiency.
+
+- Seal service penetrations, floor-to-wall junctions, and chimney flues to achieve an air permeability target of **$\le 3.0 \text{ m}^3\text{/(hr}\cdot\text{m}^2)\text{ @ 50Pa}$**.
+- Install **Demand Controlled Mechanical Extract Ventilation (DCV)** or **Mechanical Ventilation with Heat Recovery (MVHR)** compliant with TGD Part F to maintain clean indoor air quality and protect the structure against interstitial condensation.
 
 ### Stage 4: Low-Temperature Heat Pump Commissioning
+
 An Air-to-Water heat pump functions most efficiently at low flow temperatures ($35^\circ\text{C} - 45^\circ\text{C}$).
-* Emitters (radiators/underfloor loops) are re-sized via room-by-room heat loss calculations to ensure the target design load is met during freezing Kerry winter conditions without triggering auxiliary electric immersion elements.
+
+- Emitters (radiators/underfloor loops) are re-sized via room-by-room heat loss calculations to ensure the target design load is met during freezing Kerry winter conditions without triggering auxiliary electric immersion elements.
 
 ### Stage 5: Post-Works BER Publication & Grant Sign-off
+
 Upon completion:
+
 1. The Final BER assessor inspects all works, records NSAI Agrément certificates, and issues the official **A-Rated BER Certificate and Advisory Report**.
 2. All documentation is uploaded to the SEAI portal.
-3. The homeowner receives the **Heat Pump Grant (€6,500) + Technical Advisor Fee Repayment (€350)** directly into their bank account.
+3. The homeowner receives the **Heat Pump Grant (up to €12,500 bundle) + Technical Advisor Fee Repayment (€350)** directly into their bank account.
 
 ---
 
@@ -156,23 +167,29 @@ Upon completion:
 ```
 
 ### How long does the on-site Technical Advisor survey take, and what is inspected?
+
 A standard residential survey takes between **2 to 3.5 hours** on-site in Kenmare. The advisor performs a non-invasive, forensic survey measuring:
-* Exact floor, wall, window, and ceiling dimensions.
-* Construction types (cavity, hollow block, stone, timber frame).
-* Insulation depths and quality in attics and walls.
-* Glazing unit specifications (gas fill, coating, spacer types).
-* Hot water cylinder efficiency and pipe insulation levels.
-* Ventilation pathways and secondary heating appliances.
+
+- Exact floor, wall, window, and ceiling dimensions.
+- Construction types (cavity, hollow block, stone, timber frame).
+- Insulation depths and quality in attics and walls.
+- Glazing unit specifications (gas fill, coating, spacer types).
+- Hot water cylinder efficiency and pipe insulation levels.
+- Ventilation pathways and secondary heating appliances.
 
 ### Where do I find my MPRN, and why is it critical for the grant process?
+
 Your **Meter Point Reference Number (MPRN)** is a unique 11-digit number located at the top of your standard electricity bill (starting with `10...`). It links your physical dwelling to the ESB Networks national database. To qualify for SEAI retrofit grants in Kenmare:
-* Your home must have been built and occupied **prior to 2011** for insulation and heating controls.
-* For Heat Pump and Solar PV grants, the property must have been built and connected to the grid **prior to 2021**.
+
+- Your home must have been built and occupied **prior to 2011** for insulation and heating controls.
+- For Heat Pump and Solar PV grants, the property must have been built and connected to the grid **prior to 2021**.
 
 ### What happens if my home fails the initial HLI target of 2.0 W/m²K?
+
 If your baseline HLI is calculated at $3.2 \text{ W/m}^2\text{K}$, you **cannot** install an SEAI-subsidised heat pump immediately. The Technical Advisor provides a step-by-step **Fabric Upgrade Report** outlining the exact combinations of insulation, window replacements, and draft-proofing needed to hit $\le 2.0 \text{ W/m}^2\text{K}$. Once those fabric works are carried out, the heat pump installation is authorized, and the **€350 fee repayment** is secured.
 
 ### How long does the entire grant reimbursement process take in Co. Kerry?
+
 From the date your registered installer and Final BER Assessor submit the completed Declaration of Works through the SEAI portal, processing and electronic fund transfer (EFT) to your account typically takes **4 to 6 weeks**, subject to standard SEAI quality audits.
 
 ---
@@ -183,9 +200,8 @@ Transitioning your property from an oil-reliant D, E, or F-rated build to an air
 
 Contact **EcoSmartHomes Ireland** today to book your on-site survey and initiate your **SEAI technical advisor fee repayment in Kenmare**.
 
-* **Service Area:** Kenmare Town, Templenoe, Bonane, Tuosist, Kilgarvan, Blackwater, Sneem, and wider South Kerry.
-* **Accreditation:** SEAI Registered Technical Energy Advisors | SEAI Registered BER Assessors | TGD Part L / S.R. 54 Compliant Engineers.
-
+- **Service Area:** Kenmare Town, Templenoe, Bonane, Tuosist, Kilgarvan, Blackwater, Sneem, and wider South Kerry.
+- **Accreditation:** SEAI Registered Technical Energy Advisors | SEAI Registered BER Assessors | TGD Part L / S.R. 54 Compliant Engineers.
 
 <!-- START: Interactive SEAI Grant Calculator Component -->
 <div class="ecosmart-grant-calculator my-8 p-6 bg-slate-900 text-white rounded-xl border border-emerald-500/30 shadow-2xl" data-location="Kenmare">
@@ -224,8 +240,6 @@ Contact **EcoSmartHomes Ireland** today to book your on-site survey and initiate
 </div>
 <!-- END: Interactive SEAI Grant Calculator Component -->
 
-
-
 <!-- START: Stripe E-Commerce Survey Bridge Checkout Container -->
 <div class="ecosmart-stripe-bridge my-8 p-6 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/40 rounded-xl text-white shadow-2xl" data-keyword="seai technical advisor fee repayment Kenmare">
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -251,4 +265,3 @@ Contact **EcoSmartHomes Ireland** today to book your on-site survey and initiate
   </div>
 </div>
 <!-- END: Stripe E-Commerce Survey Bridge Checkout Container -->
-

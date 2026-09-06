@@ -1,4 +1,4 @@
-﻿import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -61,8 +61,9 @@ Write an in-depth, authoritative Irish home energy SEO article for: "${targetKey
 Context: ${context}.
 Include:
 - High-intent H2/H3 headings targeting Irish homeowner queries
-- Official SEAI grant deductions (€2,100 Solar PV, €6,500 Heat Pump, up to €25,000 One-Stop-Shop)
+- Official 2026 SEAI grant deductions (€2,100 Solar PV, up to €12,500 Heat Pump bundle, up to €8,000 External Wall Insulation, up to €50,000 One-Stop-Shop)
 - Payback calculations and ROI timelines
+- The new 8-tier BER rating impact (A0 to G)
 - Vetted contractor recommendation callouts
 - FAQ schema section
 Format strictly as JSON with keys: title, slug, metaDescription, outline (array of strings), content (pure markdown string), tags (array of strings).`;
@@ -140,7 +141,7 @@ Format strictly as JSON with keys: title, slug, metaDescription, outline (array 
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
-      const markdown = `## Complete Guide to ${targetKeyword}\n\nHomeowners across Ireland can take advantage of updated 2026 SEAI grant subsidies to upgrade their homes to BER A-ratings.\n\n### Grant Breakdown\n- **Solar PV Grant**: Up to €2,100 deducted at source\n- **Heat Pump Grant**: Up to €6,500 with technical assessment\n- **Insulation Subsidies**: Up to €4,000 for external wall insulation\n\n### Annual Savings\nAverage Irish homes achieve between €800 and €1,450 in annual electricity and heating bill reductions.\n\n### How to Apply\n1. Review your current BER assessment\n2. Select a registered SEAI contractor\n3. Submit your application before commencing work.`;
+      const markdown = `## Complete Guide to ${targetKeyword}\n\nHomeowners across Ireland can take advantage of updated 2026 SEAI grant subsidies to upgrade their homes to the new 8-tier BER A0/A ratings.\n\n### Grant Breakdown\n- **Solar PV Grant**: Up to €2,100 deducted at source\n- **Heat Pump Grant**: Up to €12,500 with technical assessment & renewable bonus bundle\n- **Insulation Subsidies**: Up to €8,000 for external wall insulation, €2,000 for attic\n\n### Annual Savings\nAverage Irish homes achieve between €800 and €1,450 in annual electricity and heating bill reductions.\n\n### How to Apply\n1. Review your current BER assessment\n2. Select a registered SEAI contractor\n3. Submit your application before commencing work.`;
 
       generatedArticle = {
         title: `Comprehensive Guide to ${targetKeyword.charAt(0).toUpperCase() + targetKeyword.slice(1)} (2026)`,

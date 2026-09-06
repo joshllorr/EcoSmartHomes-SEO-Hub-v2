@@ -1,6 +1,6 @@
 # Complete Guide to SEAI Technical Advisor Fee Repayment in Waterford & Munster Retrofits
 
-Welcome to **EcoSmartHomes Ireland**. As an SEAI-registered Technical Energy Advisor, I have prepared this definitive engineering and grant roadmap for residential property owners across Waterford City and County. 
+Welcome to **EcoSmartHomes Ireland**. As an SEAI-registered Technical Energy Advisor, I have prepared this definitive engineering and grant roadmap for residential property owners across Waterford City and County.
 
 Navigating the transition from an energy-inefficient home to an **A2 Building Energy Rating (BER)** or **Nearly Zero Energy Building (NZEB)** standard requires precise technical planning. Understanding how to unlock your **SEAI technical advisor fee repayment in Waterford**, alongside capital grants for fabric upgrades and heat pump installations, is the critical first step to de-risking your retrofit investment.
 
@@ -25,19 +25,22 @@ Retrofitting in County Waterford presents unique microclimatic and structural ch
 ```
 
 ### A. Waterford City Centre & Historic Quarters (Pre-1940s)
-* **Typology:** Solid stone, mass masonry, and early brick terraced/semi-detached homes (e.g., Ballybricken, Newtown, St. John’s Park).
-* **Thermal Deficits:** Uninsulated solid walls yielding U-values in excess of $2.10\ \text{W/m}^2\text{K}$. Lack of damp-proof membranes (DPM) and uninsulated suspended timber ground floors.
-* **Retrofit Approach:** Internal drylining (IWI) using vapour-permeable, capillary-active materials (wood fibre or aerated calcium silicate) compliant with **I.S. EN 15026** to prevent interstitial condensation. Preserves external streetscapes without falling foul of local planning conservation overlays.
+
+- **Typology:** Solid stone, mass masonry, and early brick terraced/semi-detached homes (e.g., Ballybricken, Newtown, St. John’s Park).
+- **Thermal Deficits:** Uninsulated solid walls yielding U-values in excess of $2.10\ \text{W/m}^2\text{K}$. Lack of damp-proof membranes (DPM) and uninsulated suspended timber ground floors.
+- **Retrofit Approach:** Internal drylining (IWI) using vapour-permeable, capillary-active materials (wood fibre or aerated calcium silicate) compliant with **I.S. EN 15026** to prevent interstitial condensation. Preserves external streetscapes without falling foul of local planning conservation overlays.
 
 ### B. Suburban Expansions (1960s–1990s)
-* **Typology:** 215mm hollow concrete block and early 100mm cavity block construction (e.g., Ardkeen, Williamstown, Lisduggan, Cleaboy, Abbeyside in Dungarvan).
-* **Thermal Deficits:** Hollow block walls create severe vertical air convection loops, causing heat loss rates up to $1.30\text{–}1.70\ \text{W/m}^2\text{K}$. Attic spaces often have degraded mineral wool insulation ($\le 50\text{mm}$).
-* **Retrofit Approach:** External Wall Insulation (EWI) systems with minimum 150mm EPS/phenolic boards (targeting $\le 0.18\ \text{W/m}^2\text{K}$), cavity bead injection (where verified cavities exist), and attic rollouts to 300mm crossed layers ($0.16\ \text{W/m}^2\text{K}$).
+
+- **Typology:** 215mm hollow concrete block and early 100mm cavity block construction (e.g., Ardkeen, Williamstown, Lisduggan, Cleaboy, Abbeyside in Dungarvan).
+- **Thermal Deficits:** Hollow block walls create severe vertical air convection loops, causing heat loss rates up to $1.30\text{–}1.70\ \text{W/m}^2\text{K}$. Attic spaces often have degraded mineral wool insulation ($\le 50\text{mm}$).
+- **Retrofit Approach:** External Wall Insulation (EWI) systems with minimum 150mm EPS/phenolic boards (targeting $\le 0.18\ \text{W/m}^2\text{K}$), cavity bead injection (where verified cavities exist), and attic rollouts to 300mm crossed layers ($0.16\ \text{W/m}^2\text{K}$).
 
 ### C. Coastal and Rural Dwellings (Tramore, Dunmore East, Ring, Passage East)
-* **Typology:** 1970s–2000s detached bungalows and two-storey dwellings with uninsulated cavity walls or aerated blockwork.
-* **Thermal Deficits:** Heavy exposure to marine wind-driven rain (driving rain index $>100\ \text{litres/m}^2\text{ per annum}$). Complete reliance on bulk kerosene oil heating systems (seasonal efficiency often $<75\%$) with legacy open fireplaces.
-* **Retrofit Approach:** Marine-grade, high-durability external render systems, mechanical extract ventilation (damp mitigation), and total decommission of fossil-fuel boilers in favour of Monobloc Air-to-Water Heat Pumps.
+
+- **Typology:** 1970s–2000s detached bungalows and two-storey dwellings with uninsulated cavity walls or aerated blockwork.
+- **Thermal Deficits:** Heavy exposure to marine wind-driven rain (driving rain index $>100\ \text{litres/m}^2\text{ per annum}$). Complete reliance on bulk kerosene oil heating systems (seasonal efficiency often $<75\%$) with legacy open fireplaces.
+- **Retrofit Approach:** Marine-grade, high-durability external render systems, mechanical extract ventilation (damp mitigation), and total decommission of fossil-fuel boilers in favour of Monobloc Air-to-Water Heat Pumps.
 
 ---
 
@@ -74,6 +77,7 @@ A **Technical Assessment** is mandatory before receiving an SEAI grant for a Hea
 ```
 
 ### The €350 Technical Advisor Fee Repayment Mechanism
+
 1. **Initial Outlay:** You engage an independent, SEAI-registered Technical Advisor (such as EcoSmartHomes) to conduct a full DEAP (Dwelling Energy Assessment Procedure) survey and Heat Loss Indicator (HLI) assessment. The typical market fee ranges between €500 and €750 + VAT depending on dwelling complexity.
 2. **Grant Claim Trigger:** Under the SEAI Individual Energy Upgrades scheme, a **fixed €350 grant** is allocated directly against the Technical Advisor fee.
 3. **Repayment Release:** The €350 advisor fee repayment is paid out to you by SEAI once your heat pump installation is fully commissioned, your post-works BER is registered with the SEAI database, and the Technical Assessment sign-off paperwork is submitted.
@@ -81,18 +85,18 @@ A **Technical Assessment** is mandatory before receiving an SEAI grant for a Hea
 
 ### Key SEAI Residential Grant Values for Waterford Homeowners
 
-| Measure / Upgrade Component | Grant Value (Detached) | Grant Value (Semi-D / End Terrace) | Grant Value (Mid-Terrace / Apt) |
-| :--- | :--- | :--- | :--- |
-| **SEAI Technical Advisor Fee Repayment** | **€350** | **€350** | **€350** |
-| **Air-to-Water Heat Pump System** | €6,500 | €6,500 | €4,500 (Apt) / €6,500 |
-| **Central Heating System Upgrade (with HP)** | €2,000 | €2,000 | €2,000 |
-| **External Wall Insulation (EWI)** | €8,000 | €6,000 | €3,500 |
-| **Cavity Wall Insulation** | €1,700 | €1,200 | €800 |
-| **Internal Drylining (IWI)** | €4,500 | €3,500 | €1,500 |
-| **Attic Insulation (300mm)** | €1,500 | €1,300 | €1,200 |
-| **Solar PV System (up to 4kWp)** | Up to €2,100 | Up to €2,100 | Up to €2,100 |
+| Measure / Upgrade Component                  | Grant Value (Detached) | Grant Value (Semi-D / End Terrace) | Grant Value (Mid-Terrace / Apt) |
+| :------------------------------------------- | :--------------------- | :--------------------------------- | :------------------------------ |
+| **SEAI Technical Advisor Fee Repayment**     | **€350**               | **€350**                           | **€350**                        |
+| **Air-to-Water Heat Pump System**            | €6,500                 | €6,500                             | €4,500 (Apt) / €6,500           |
+| **Central Heating System Upgrade (with HP)** | €2,000                 | €2,000                             | €2,000                          |
+| **External Wall Insulation (EWI)**           | €8,000                 | €6,000                             | €3,500                          |
+| **Cavity Wall Insulation**                   | €1,800                 | €1,300                             | €800                            |
+| **Internal Drylining (IWI)**                 | €4,500                 | €3,500                             | €1,500                          |
+| **Attic Insulation (300mm)**                 | €1,500                 | €1,300                             | €1,200                          |
+| **Solar PV System (up to 4kWp)**             | Up to €2,100           | Up to €2,100                       | Up to €2,100                    |
 
-*Note: Grant values are accurate per current SEAI National Retrofit Scheme provisions and subject to property build date thresholds (e.g., built before 2011 for fabric/heat pump; built before 2021 for Solar PV).*
+_Note: Grant values are accurate per current SEAI National Retrofit Scheme provisions and subject to property build date thresholds (e.g., built before 2011 for fabric/heat pump; built before 2021 for Solar PV)._
 
 ---
 
@@ -102,7 +106,7 @@ To qualify for an SEAI Heat Pump grant, your home’s **Heat Loss Indicator (HLI
 
 $$\text{HLI} \le 2.0\ \text{W/K/m}^2$$
 
-*In select circumstances where complex legacy constraints exist, an HLI of up to **$2.3\ \text{W/K/m}^2$** is permissible provided that specific technical upgrade criteria are completed.*
+_In select circumstances where complex legacy constraints exist, an HLI of up to **$2.3\ \text{W/K/m}^2$** is permissible provided that specific technical upgrade criteria are completed._
 
 ```
                  HLI SCALE & HEAT PUMP FEASIBILITY
@@ -140,51 +144,61 @@ To align your home with **Building Regulations Technical Guidance Document (TGD)
 ```
 
 ### Stage 1: The On-Site SEAI Technical Assessment
-* Full dimensional survey, window sizing/orientation, and envelope U-value calculations.
-* Pressure envelope inspection and air permeability assessment ($q_{50}$ estimation).
-* Full production of the SEAI Technical Advisor Assessment Report detailing baseline HLI and post-upgrade investment pathways.
+
+- Full dimensional survey, window sizing/orientation, and envelope U-value calculations.
+- Pressure envelope inspection and air permeability assessment ($q_{50}$ estimation).
+- Full production of the SEAI Technical Advisor Assessment Report detailing baseline HLI and post-upgrade investment pathways.
 
 ### Stage 2: Fabric First Envelope Remediation
-* **Attic:** Install 300mm mineral wool cross-layered with a minimum thermal resistance ($R$-value) of $6.25\ \text{m}^2\text{K/W}$. Ensure ventilated eaves with baffle trays.
-* **Walls:** Apply external insulation (150mm Graphite EPS) with an aggregate silicone render to withstand Waterford's driving rain zones, or internal drylining with complete vapour barriers.
-* **Glazing:** Replace inefficient single/double glazing with high-performance, argon-filled triple-glazed units ($U_w \le 0.8\ \text{W/m}^2\text{K}$, $g\text{-value} \approx 0.50\text{–}0.60$).
+
+- **Attic:** Install 300mm mineral wool cross-layered with a minimum thermal resistance ($R$-value) of $6.25\ \text{m}^2\text{K/W}$. Ensure ventilated eaves with baffle trays.
+- **Walls:** Apply external insulation (150mm Graphite EPS) with an aggregate silicone render to withstand Waterford's driving rain zones, or internal drylining with complete vapour barriers.
+- **Glazing:** Replace inefficient single/double glazing with high-performance, argon-filled triple-glazed units ($U_w \le 0.8\ \text{W/m}^2\text{K}$, $g\text{-value} \approx 0.50\text{–}0.60$).
 
 ### Stage 3: Controlled Ventilation Strategy (TGD Part F Compliance)
-* As homes reach low air-permeability ($\le 3.0\ \text{m}^3/(\text{h}\cdot\text{m}^2)$ at 50 Pa), passive wall vents become insufficient and risk localized mould growth.
-* Install a **Demand Controlled Mechanical Extract Ventilation (dMEV)** system or a **Mechanical Ventilation with Heat Recovery (MVHR)** system (minimum 85% thermal efficiency) to ensure continuous indoor air quality without thermal penalties.
+
+- As homes reach low air-permeability ($\le 3.0\ \text{m}^3/(\text{h}\cdot\text{m}^2)$ at 50 Pa), passive wall vents become insufficient and risk localized mould growth.
+- Install a **Demand Controlled Mechanical Extract Ventilation (dMEV)** system or a **Mechanical Ventilation with Heat Recovery (MVHR)** system (minimum 85% thermal efficiency) to ensure continuous indoor air quality without thermal penalties.
 
 ### Stage 4: Low-Temperature Hydronic Heating Design
-* Decommission oil/gas boilers and remove solid fuel open fires (or seal with high-efficiency room-sealed stoves).
-* Size the **Air-to-Water Monobloc Heat Pump** based on room-by-room heat loss calculations (**I.S. EN 12831**).
-* Upgrade selected radiators to low-water-content, high-surface-area steel panels or underfloor heating to support a design flow temperature of $\le 35\text{–}45^\circ\text{C}$ (Seasonal Coefficient of Performance $\text{SCOP} \ge 4.2$).
+
+- Decommission oil/gas boilers and remove solid fuel open fires (or seal with high-efficiency room-sealed stoves).
+- Size the **Air-to-Water Monobloc Heat Pump** based on room-by-room heat loss calculations (**I.S. EN 12831**).
+- Upgrade selected radiators to low-water-content, high-surface-area steel panels or underfloor heating to support a design flow temperature of $\le 35\text{–}45^\circ\text{C}$ (Seasonal Coefficient of Performance $\text{SCOP} \ge 4.2$).
 
 ### Stage 5: Post-Works BER Publication & Grant Drawdown
-* Complete the independent Post-Works BER assessment.
-* Verify compliance with TGD Part L (Primary Energy Consumption $<45\ \text{kWh/m}^2/\text{yr}$, Carbon Performance Coefficient $\le 0.35$).
-* Technical Advisor signs off the SEAI validation documentation to release the **€350 Advisor Fee Repayment** and all corresponding fabric and heat pump grants.
+
+- Complete the independent Post-Works BER assessment.
+- Verify compliance with TGD Part L (Primary Energy Consumption $<45\ \text{kWh/m}^2/\text{yr}$, Carbon Performance Coefficient $\le 0.35$).
+- Technical Advisor signs off the SEAI validation documentation to release the **€350 Advisor Fee Repayment** and all corresponding fabric and heat pump grants.
 
 ---
 
 ## 5. Frequently Asked Questions by Waterford Homeowners
 
 ### How do I locate and verify my MPRN before the Technical Assessment?
+
 Your **Meter Point Reference Number (MPRN)** is an 11-digit number located at the top right-hand corner of your standard electricity bill (issued by your electricity supplier). It uniquely identifies your connection to the ESB Networks grid in Waterford. It must start with the digits `10` and be assigned to the physical domestic address matching the National Land Registry / Eircode records. If your meter box is located externally and has been upgraded to a Smart Meter by ESB Networks, verify that the digital serial code matches your bill documentation prior to the surveyor's arrival.
 
 ### What occurs during the Technical Advisor's physical survey of my property?
+
 The on-site assessment requires unobstructed access to every room, the attic space, the heating distribution board, the hot water cylinder, and external elevations:
-* **Attic Inspection:** Depth, condition, and continuity of attic insulation; verification of pipe lagging and cold-water tank insulation.
-* **Wall Thickness & Cavity Measurement:** Optical gauge or physical depth measurements across window reveals and wall junctions to verify construction type (solid stone vs. 215mm hollow block vs. 100mm cavity).
-* **Heating System Inspection:** Cylinder capacity, coil type (standard vs. high-efficiency rapid recovery), pipework insulation levels, and heating control zones.
-* **Window/Door Survey:** Frame composition (PVC, timber, thermally broken aluminium) and glazing gap widths.
-The survey takes between 1.5 to 3 hours depending on your home's size and complexity.
+
+- **Attic Inspection:** Depth, condition, and continuity of attic insulation; verification of pipe lagging and cold-water tank insulation.
+- **Wall Thickness & Cavity Measurement:** Optical gauge or physical depth measurements across window reveals and wall junctions to verify construction type (solid stone vs. 215mm hollow block vs. 100mm cavity).
+- **Heating System Inspection:** Cylinder capacity, coil type (standard vs. high-efficiency rapid recovery), pipework insulation levels, and heating control zones.
+- **Window/Door Survey:** Frame composition (PVC, timber, thermally broken aluminium) and glazing gap widths.
+  The survey takes between 1.5 to 3 hours depending on your home's size and complexity.
 
 ### What is the exact timeline between completing works and receiving the advisor fee repayment?
+
 1. **Completion of Works:** Contractor commissions heat pump and fabric measures (Week 0).
 2. **Post-Works BER Survey:** The Advisor conducts the final site audit within 5–7 working days of notification (Week 1).
 3. **SEAI Submission:** The Post-Works BER and Technical Advisor sign-off form are published to the SEAI National Register (Week 2).
 4. **SEAI Audit & Payout:** SEAI processes the final documentation and completes any random quality-assurance desktop audits. The **€350 fee repayment**, alongside your main capital grants, is wired directly to your designated bank account within **4 to 6 weeks** post-submission.
 
 ### Are older properties in Waterford City's Architectural Conservation Areas (ACAs) eligible for the advisor fee repayment?
+
 **Yes.** Dwellings located in ACAs (such as parts of Newtown, South Parade, or Dunmore East village) can receive the €350 Technical Advisor Fee Repayment and SEAI grants. However, because external wall insulation is often restricted on protected facades, your Technical Advisor will calculate an alternative compliance path focused on high-performance internal drylining, advanced roof insulation, airtightness membranes, and specialized heritage-grade slimline double or secondary glazing.
 
 ---
@@ -193,9 +207,8 @@ The survey takes between 1.5 to 3 hours depending on your home's size and comple
 
 Take the first step toward an energy-efficient home and an **A2 BER rating**. Our local, registered Technical Advisors provide rigorous, fully compliant surveys designed to maximize your SEAI grant yield while ensuring full Part L regulatory compliance.
 
-* **Contact EcoSmartHomes Waterford:** `info@ecosmarthomes.ie` | Direct Desk: `051 898 321`
-* **Coverage Area:** Waterford City, Tramore, Dungarvan, Dunmore East, Portlaw, Lismore, Kilmacthomas, and surrounding Munster regions.
-
+- **Contact EcoSmartHomes Waterford:** `info@ecosmarthomes.ie` | Direct Desk: `051 898 321`
+- **Coverage Area:** Waterford City, Tramore, Dungarvan, Dunmore East, Portlaw, Lismore, Kilmacthomas, and surrounding Munster regions.
 
 <!-- START: Interactive SEAI Grant Calculator Component -->
 <div class="ecosmart-grant-calculator my-8 p-6 bg-slate-900 text-white rounded-xl border border-emerald-500/30 shadow-2xl" data-location="Waterford">
@@ -234,8 +247,6 @@ Take the first step toward an energy-efficient home and an **A2 BER rating**. Ou
 </div>
 <!-- END: Interactive SEAI Grant Calculator Component -->
 
-
-
 <!-- START: Stripe E-Commerce Survey Bridge Checkout Container -->
 <div class="ecosmart-stripe-bridge my-8 p-6 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/40 rounded-xl text-white shadow-2xl" data-keyword="seai technical advisor fee repayment Waterford">
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -261,4 +272,3 @@ Take the first step toward an energy-efficient home and an **A2 BER rating**. Ou
   </div>
 </div>
 <!-- END: Stripe E-Commerce Survey Bridge Checkout Container -->
-

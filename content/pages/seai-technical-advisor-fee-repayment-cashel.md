@@ -1,6 +1,6 @@
 # Complete Guide: SEAI Technical Advisor Fee Repayment Cashel & Home Energy Retrofit
 
-As the lead SEAI Technical Energy Advisor for **EcoSmartHomes Ireland**, our primary focus is transitioning homes across County Tipperary and the wider Munster region from fossil-fuel-dependent, high-heat-loss properties into high-performance, **A2 Building Energy Rating (BER)** assets. 
+As the lead SEAI Technical Energy Advisor for **EcoSmartHomes Ireland**, our primary focus is transitioning homes across County Tipperary and the wider Munster region from fossil-fuel-dependent, high-heat-loss properties into high-performance, **A2 Building Energy Rating (BER)** assets.
 
 If you are planning to install a heat pump or undertake a deep energy retrofit in Cashel, an **SEAI Technical Assessment** is your mandatory first step. Below is your definitive guide to understanding the **SEAI technical advisor fee repayment Cashel** process, unlocking grant support, navigating local housing archetypes, and achieving compliance with **Irish Building Regulations Technical Guidance Document (TGD) Part L (Conservation of Fuel and Energy – Dwellings)**.
 
@@ -28,11 +28,12 @@ Cashel’s housing landscape is diverse, presenting unique thermodynamic and str
 ```
 
 ### Key Thermodynamic Challenges in Cashel:
-* **High Reliance on Kerosene (Home Heating Oil):** A significant portion of semi-detached and detached homes in Cashel rely on legacy oil boilers operating at seasonal efficiencies below 75%. Transitioning to an air-to-water heat pump eliminates on-site carbon combustion.
-* **Hollow Block vs. Cavity Wall Nuances:** 
-  * *Hollow Block (found in 1970s builds):* Cannot be pumped with bead insulation. Requires an **External Wall Insulation (EWI)** system (target U-value $\le 0.27\ \text{W/m}^2\text{K}$) or internal drylining systems with comprehensive vapour control membranes.
-  * *Cavity Walls:* Require boroscope inspection to check if legacy aeroboard has slumped or degraded. Pumping with bonded EPS beads alongside an airtightness strategy yields rapid gains.
-* **Suspended Timber Floors & Thermal Bridging:** Homes built near the low-lying plains beneath the Rock of Cashel often experience high perimeter air infiltration and thermal bridging at the wall-to-floor junctions.
+
+- **High Reliance on Kerosene (Home Heating Oil):** A significant portion of semi-detached and detached homes in Cashel rely on legacy oil boilers operating at seasonal efficiencies below 75%. Transitioning to an air-to-water heat pump eliminates on-site carbon combustion.
+- **Hollow Block vs. Cavity Wall Nuances:**
+  - _Hollow Block (found in 1970s builds):_ Cannot be pumped with bead insulation. Requires an **External Wall Insulation (EWI)** system (target U-value $\le 0.27\ \text{W/m}^2\text{K}$) or internal drylining systems with comprehensive vapour control membranes.
+  - _Cavity Walls:_ Require boroscope inspection to check if legacy aeroboard has slumped or degraded. Pumping with bonded EPS beads alongside an airtightness strategy yields rapid gains.
+- **Suspended Timber Floors & Thermal Bridging:** Homes built near the low-lying plains beneath the Rock of Cashel often experience high perimeter air infiltration and thermal bridging at the wall-to-floor junctions.
 
 ---
 
@@ -42,8 +43,8 @@ Under the **SEAI Individual Energy Upgrade Grants** and **One-Stop-Shop Deep Ret
 
 ```
                       TECHNICAL ADVISOR GRANT & REPAYMENT FLOW
-                      
-   [ Step 1: Upfront Assessment ] 
+
+   [ Step 1: Upfront Assessment ]
    Homeowner engages SEAI Advisor -> Completes Full Dwelling Survey & HLI Calculation
                |
                v
@@ -56,21 +57,23 @@ Under the **SEAI Individual Energy Upgrade Grants** and **One-Stop-Shop Deep Ret
                |
                v
    [ Step 4: Drawdown & Repayment ]
-   SEAI releases Heat Pump Grant + €200 Technical Advisor Fee Repayment to Homeowner
+   SEAI releases Heat Pump Grant + €350 Technical Advisor Fee Repayment to Homeowner
 ```
 
 ### The €200 Fee Repayment Structure
+
 1. **Initial Assessment Fee:** The homeowner pays the Technical Advisor for the comprehensive dwelling survey, DEAP calculation, and bespoke Retrofit Roadmap.
 2. **Eligibility Requirement:** The home's **Heat Loss Indicator (HLI)** must achieve **$\le 2.0\ \text{W/K/m}^2$** (or $\le 2.3\ \text{W/K/m}^2$ under specific technical concession criteria with appropriate base-temperature zoning).
 3. **Grant Drawdown:** Once the heat pump installation is completed, commissioned, and verified by an SEAI Project Completion Form, the **SEAI technical advisor fee repayment of €200** is paid directly into your bank account alongside your heat pump capital grant.
 
 ### Core Grant Values (Single Measure Route)
-* **Heat Pump System (Air-to-Water / Ground-to-Water):** €4,500 – €6,500 (Dwelling type dependent)
-* **SEAI Technical Advisor Fee Repayment:** €200 (Paid upon completion of Heat Pump install)
-* **External Wall Insulation (Detached):** Up to €8,000
-* **Cavity Wall Insulation:** Up to €1,700
-* **Attic Insulation:** Up to €1,500
-* **Solar PV:** Up to €2,100
+
+- **Heat Pump System (Air-to-Water / Ground-to-Water):** up to €12,500 (€9,500 for apartments) (Dwelling type dependent)
+- **SEAI Technical Advisor Fee Repayment:** €200 (Paid upon completion of Heat Pump install)
+- **External Wall Insulation (Detached):** Up to €8,000
+- **Cavity Wall Insulation:** Up to €1,700
+- **Attic Insulation:** Up to €1,500
+- **Solar PV:** Up to €2,100
 
 ---
 
@@ -91,41 +94,50 @@ To bring your Cashel property to an **A2 energy standard** and comply with **Nea
 ```
 
 ### Stage 1: Pre-Assessment & MPRN Verification
-* Confirm your property was built and occupied before **2021** (for Heat Pump/Solar PV grants) or before **2011** (for Insulation grants).
-* Locate your **Meter Point Reference Number (MPRN)** from your electricity bill and ensure the address matches the National Property Reference database exactly.
+
+- Confirm your property was built and occupied before **2021** (for Heat Pump/Solar PV grants) or before **2011** (for Insulation grants).
+- Locate your **Meter Point Reference Number (MPRN)** from your electricity bill and ensure the address matches the National Property Reference database exactly.
 
 ### Stage 2: The On-Site SEAI Technical Assessment
-* The advisor measures all external envelopes, assesses thermal bypasses, inspects glazing specs, logs ventilation types (natural vs mechanical), and audits heating controls.
-* The data is entered into the SEAI **DEAP (Dwelling Energy Assessment Procedure)** software engine to extract the baseline BER and exact HLI.
+
+- The advisor measures all external envelopes, assesses thermal bypasses, inspects glazing specs, logs ventilation types (natural vs mechanical), and audits heating controls.
+- The data is entered into the SEAI **DEAP (Dwelling Energy Assessment Procedure)** software engine to extract the baseline BER and exact HLI.
 
 ### Stage 3: Fabric Upgrades to Meet HLI $\le 2.0\ \text{W/K/m}^2$
-* Before sizing the heat pump, insulation upgrades must bridge the structural heat loss gap:
-  * **Attic Insulation:** Minimum 300mm mineral wool quilt, with insulated water tanks and pipe lagging (target U-value $\le 0.16\ \text{W/m}^2\text{K}$).
-  * **Wall Systems:** Pumped EPS beads with graphite additives for cavities ($0.27\ \text{W/m}^2\text{K}$) or 100mm–120mm external graphite-enhanced EPS.
-  * **Glazing & Airtightness:** Upgrading to triple-glazed units with warm-edge spacer bars ($U_w \le 0.8\ \text{W/m}^2\text{K}$) and sealing chimney flues/skirting boards to bring air permeability below $3.0\ \text{m}^3/(\text{h}\cdot\text{m}^2) @ 50\text{Pa}$.
+
+- Before sizing the heat pump, insulation upgrades must bridge the structural heat loss gap:
+  - **Attic Insulation:** Minimum 300mm mineral wool quilt, with insulated water tanks and pipe lagging (target U-value $\le 0.16\ \text{W/m}^2\text{K}$).
+  - **Wall Systems:** Pumped EPS beads with graphite additives for cavities ($0.27\ \text{W/m}^2\text{K}$) or 100mm–120mm external graphite-enhanced EPS.
+  - **Glazing & Airtightness:** Upgrading to triple-glazed units with warm-edge spacer bars ($U_w \le 0.8\ \text{W/m}^2\text{K}$) and sealing chimney flues/skirting boards to bring air permeability below $3.0\ \text{m}^3/(\text{h}\cdot\text{m}^2) @ 50\text{Pa}$.
 
 ### Stage 4: Heat Pump Sizing & Hydronic Balancing
-* System selection: Inverter-driven variable capacity air-to-water heat pump with a **Seasonal Coefficient of Performance (SCOP) $\ge 3.5$**.
-* Low-temperature design: Radiator emitters are upgraded to oversized Type 22 or Type 33 steel panels, calculated for an operating flow temperature of $35^\circ\text{C}$–$45^\circ\text{C}$.
+
+- System selection: Inverter-driven variable capacity air-to-water heat pump with a **Seasonal Coefficient of Performance (SCOP) $\ge 3.5$**.
+- Low-temperature design: Radiator emitters are upgraded to oversized Type 22 or Type 33 steel panels, calculated for an operating flow temperature of $35^\circ\text{C}$–$45^\circ\text{C}$.
 
 ### Stage 5: Post-Works BER Publishing & Grant Reconciliation
-* A final, independent survey generates your published **A-Rated BER Certificate** and Advisory Report.
-* EcoSmartHomes Ireland submits the sign-off documentation to the SEAI, triggering the release of your capital grants and the **€200 Technical Advisor fee repayment**.
+
+- A final, independent survey generates your published **A-Rated BER Certificate** and Advisory Report.
+- EcoSmartHomes Ireland submits the sign-off documentation to the SEAI, triggering the release of your capital grants and the **€350 Technical Advisor fee repayment**.
 
 ---
 
 ## 4. Frequently Asked Questions by Cashel Homeowners
 
 ### How long does an SEAI Technical Advisor site visit take?
+
 A standard on-site survey for a typical 3-to-4-bedroom home in Cashel takes **2 to 3.5 hours**. The advisor requires unrestricted access to the attic void, primary heating plant, hot press, all window/door reveals, and electricity meter box.
 
 ### Why is my MPRN address format critical for my grant?
-The SEAI grant processing system automatically cross-references your application data against the ESB Networks database. If the address tied to your **MPRN** (e.g., *"Rockfield, Cashel"*) differs by a single character from your grant submission (e.g., *"Rockfield Estate, Cashel, Co. Tipperary"*), it will trigger an automated validation hold, delaying grant approval by up to four weeks.
+
+The SEAI grant processing system automatically cross-references your application data against the ESB Networks database. If the address tied to your **MPRN** (e.g., _"Rockfield, Cashel"_) differs by a single character from your grant submission (e.g., _"Rockfield Estate, Cashel, Co. Tipperary"_), it will trigger an automated validation hold, delaying grant approval by up to four weeks.
 
 ### What happens if my home fails to meet the 2.0 HLI threshold?
+
 If the preliminary DEAP assessment reveals an HLI greater than $2.0\ \text{W/K/m}^2$, your advisor will generate a specific **Fabric Upgrade Roadmap**. You cannot claim the heat pump grant until the necessary fabric upgrades (e.g., additional wall or roof insulation) are scheduled to run concurrently, ensuring your home's total heat loss is within limits.
 
 ### Can I choose my own installer for the heat pump and fabric works?
+
 Yes. You can work with any contractor, provided they are **actively registered with the SEAI** under the relevant grant measure scheme and possess up-to-date tax clearance and insurance certification.
 
 ---
@@ -134,10 +146,9 @@ Yes. You can work with any contractor, provided they are **actively registered w
 
 Maximise your home's thermal efficiency, eliminate expensive heating bills, and secure your full grant allocation.
 
-* **Contact:** EcoSmartHomes Technical Advisory Desk (Munster Division)
-* **Coverage:** Cashel, Golden, New Inn, Rosegreen, Boherlahan, and surrounding Tipperary districts
-* **Service:** Full Technical Assessment, DEAP Energy Modelling, Part L Sign-Off & SEAI Grant Repayment Management
-
+- **Contact:** EcoSmartHomes Technical Advisory Desk (Munster Division)
+- **Coverage:** Cashel, Golden, New Inn, Rosegreen, Boherlahan, and surrounding Tipperary districts
+- **Service:** Full Technical Assessment, DEAP Energy Modelling, Part L Sign-Off & SEAI Grant Repayment Management
 
 <!-- START: Interactive SEAI Grant Calculator Component -->
 <div class="ecosmart-grant-calculator my-8 p-6 bg-slate-900 text-white rounded-xl border border-emerald-500/30 shadow-2xl" data-location="Cashel">
@@ -176,8 +187,6 @@ Maximise your home's thermal efficiency, eliminate expensive heating bills, and 
 </div>
 <!-- END: Interactive SEAI Grant Calculator Component -->
 
-
-
 <!-- START: Stripe E-Commerce Survey Bridge Checkout Container -->
 <div class="ecosmart-stripe-bridge my-8 p-6 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/40 rounded-xl text-white shadow-2xl" data-keyword="seai technical advisor fee repayment Cashel">
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -203,4 +212,3 @@ Maximise your home's thermal efficiency, eliminate expensive heating bills, and 
   </div>
 </div>
 <!-- END: Stripe E-Commerce Survey Bridge Checkout Container -->
-
