@@ -42,7 +42,7 @@
     "jspdf": "^4.2.1",
     "lucide-react": "^0.475.0",
     "motion": "^12.23.24",
-    "multer": "^2.2.0",
+    "multer": "^2.3.0",
     "node-schedule": "^2.1.1",
     "performance-now": "^2.1.0",
     "react": "^19.0.1",
