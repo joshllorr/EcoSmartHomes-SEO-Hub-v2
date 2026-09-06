@@ -58,14 +58,14 @@ describe('getGeminiClient', () => {
     expect(client).toBeNull();
   });
 
-  it('returns null when GEMINI_API_KEY is AQ. prefixed token and not in explicit Vertex mode', () => {
+  it('initializes GoogleGenAI client when a valid Google Cloud API key (AQ...) is provided', () => {
     delete (process.env as any).GEMINI_ACCESS_TOKEN;
     delete (process.env as any).GOOGLE_CLOUD_PROJECT;
     delete (process.env as any).GOOGLE_GENAI_USE_VERTEXAI;
-    process.env.GEMINI_API_KEY = 'AQ.mock_test_token_not_valid_for_ai_studio';
+    process.env.GEMINI_API_KEY = 'AQ.mock_valid_google_cloud_api_key';
 
     const client = getGeminiClient();
-    expect(client).toBeNull();
+    expect(client).not.toBeNull();
   });
 
   it('initializes Vertex AI client when GOOGLE_CLOUD_PROJECT is set', () => {

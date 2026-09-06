@@ -1204,29 +1204,19 @@ export function getGeminiClient(): GoogleGenAI | null {
     (tokenOrKey.startsWith('ya29.') || tokenOrKey.startsWith('Bearer ')),
   );
 
-  // If in AI Studio mode (not Vertex), keys starting with 'AQ.' or not matching expected format are invalid tokens
-  const isMalformedAIStudioKey =
-    !useVertexExplicit &&
-    !isOAuthToken &&
-    Boolean(tokenOrKey && tokenOrKey.startsWith('AQ.'));
-
-  // If no valid key and not using explicit Vertex AI
-  if (
-    (isInvalidPlaceholder || isMalformedAIStudioKey) &&
-    !isOAuthToken &&
-    !useVertexExplicit
-  ) {
+  // Recognize valid Google Cloud (AQ...) and Google AI Studio (AIzaSy...) API keys
+  // Only filter out unconfigured or dummy placeholder templates
+  if (isInvalidPlaceholder && !isOAuthToken && !useVertexExplicit) {
     aiClient = null;
     cachedConfigKey = null;
     return null;
   }
 
-  const effectiveKey =
-    isInvalidPlaceholder || isMalformedAIStudioKey ? '' : tokenOrKey;
+  const effectiveKey = isInvalidPlaceholder ? '' : tokenOrKey;
   const project =
     process.env.GOOGLE_CLOUD_PROJECT ||
     process.env.GCP_PROJECT ||
-    'gen-lang-client-0607449072';
+    'gen-lang-client-0040028075';
   const location =
     process.env.GOOGLE_CLOUD_LOCATION ||
     process.env.GCP_LOCATION ||
