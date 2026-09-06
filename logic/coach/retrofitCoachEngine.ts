@@ -8,6 +8,7 @@
  */
 
 import { GoogleGenAI } from '@google/genai';
+import { globalFreeLlmApiClient } from '../../src/utils/freeLlmApiClient';
 import { getJourneyTimeline } from '../journey/journeyEngine';
 import { getHomeUpgradeBundle } from '../upgrades/homeUpgradeEngine';
 import { getHomeownerSentiment } from '../sentiment/homeownerSentimentEngine';
@@ -391,9 +392,31 @@ Provide a concise 3-paragraph executive coaching note explaining:
       }
     } catch (err) {
       console.warn(
-        '[RetrofitCoachEngine] LLM site visit notes generation failed, using structured fallback',
+        '[RetrofitCoachEngine] LLM site visit notes generation failed, checking FreeLLMAPI router fallback',
         err,
       );
+    }
+  }
+
+  if (!ai || llmGuidanceNotes.startsWith('Preparing for your')) {
+    try {
+      const freeLlmPrompt = `You are the AI Retrofit Coach for EcoSmartHomes, an expert in Irish SEAI Domestic Retrofits, SR 54:2014 Code of Practice, and Irish Building Regulations Technical Guidance Document (TGD) Part L (Dwellings / NZEB).
+Generate practical, authoritative site visit preparation instructions for a homeowner preparing for a "${currentMeta.title}".
+Home context: Property type: ${propertyContext?.propertyType || 'Semi-Detached'}, Year built: ${propertyContext?.yearBuilt || 1985}, Target BER: ${propertyContext?.targetBER || 'A0 (Zero-Emission)'}, Heating: ${propertyContext?.heatingSystem || 'Oil boiler converting to Air-to-Water Heat Pump'}.
+
+Provide a concise 3-paragraph executive coaching note explaining:
+1. What the assessor/surveyor will inspect physically during this specific visit.
+2. The exact NZEB / SEAI pass criteria (e.g. HLI <= 2.0 W/K/m2, U-values, ventilation adequacy).
+3. The top 2 mistakes homeowners make before site visits that cause costly delays.`;
+
+      const freeLlmRes = await globalFreeLlmApiClient.chat(freeLlmPrompt, {
+        taskType: 'generation',
+      });
+      if (freeLlmRes && freeLlmRes.trim().length > 50) {
+        llmGuidanceNotes = freeLlmRes.trim();
+      }
+    } catch {
+      // Keep structured fallback
     }
   }
 
@@ -618,9 +641,39 @@ Write a 2-paragraph technical executive summary for the homeowner explaining:
       }
     } catch (err) {
       console.warn(
-        '[RetrofitCoachEngine] LLM NZEB summary generation failed, using fallback',
+        '[RetrofitCoachEngine] LLM NZEB summary generation failed, checking FreeLLMAPI router fallback',
         err,
       );
+    }
+  }
+
+  if (
+    !ai ||
+    llmExecutiveSummary.startsWith('Based on our preliminary calculation')
+  ) {
+    try {
+      const freeLlmPrompt = `You are the Lead NZEB Energy Compliance Engineer for EcoSmartHomes Ireland.
+Evaluate this domestic retrofit specification:
+- Property: ${profile.propertyType} (${profile.yearBuilt})
+- Primary Energy: ${estimatedPrimaryEnergy} kWh/m²/yr (Part L NZEB Target <= 45 kWh/m2)
+- EPC: ${epc} (Limit <= 0.30) | CPC: ${cpc} (Limit <= 0.35)
+- RER: ${rerEst}% (Mandate >= 20%)
+- Airtightness: ${profile.airtightnessQ50} m3/(hr.m2) @ 50Pa
+- Heating: ${profile.heatingSystem} with Heat Pump COP ${profile.heatPumpCOP}
+- Roof U: ${profile.roofUValue} | Wall U: ${profile.wallUValue} | Window U: ${profile.windowUValue}
+
+Write a 2-paragraph technical executive summary for the homeowner explaining:
+1. Their compliance status against Part L NZEB criteria and eligibility for the SEAI One-Stop-Shop grant.
+2. Precise operational advice for maintaining optimal heat pump COP (e.g. weather compensation curves, continuous low-temperature cycling).`;
+
+      const freeLlmRes = await globalFreeLlmApiClient.chat(freeLlmPrompt, {
+        taskType: 'analysis',
+      });
+      if (freeLlmRes && freeLlmRes.trim().length > 40) {
+        llmExecutiveSummary = freeLlmRes.trim();
+      }
+    } catch {
+      // Keep fallback
     }
   }
 
@@ -753,10 +806,40 @@ Include actionable preparation steps for site visits and exact NZEB compliance t
       }
     } catch (err) {
       console.warn(
-        '[RetrofitCoachEngine] LLM consultation failed, using expert fallback',
+        '[RetrofitCoachEngine] LLM consultation failed, checking FreeLLMAPI router fallback',
         err,
       );
     }
+  }
+
+  // Try FreeLLMAPI Unified Router fallback before deterministic knowledge base
+  try {
+    const freeLlmPrompt = `You are the AI Retrofit Coach on EcoSmartHomes, advising Irish homeowners on domestic retrofits, SEAI grant criteria, site visit inspections, and NZEB (Nearly Zero Energy Building) Building Regulations Part L.
+
+Homeowner Query: "${query}"
+Context:
+- Selected Site Visit: ${context?.visitType || 'Technical Assessment & Heat Loss Survey'}
+- Property Profile: Type: ${context?.propertyProfile?.propertyType || 'Semi-Detached'}, Target BER: ${context?.propertyProfile?.targetBER || 'A0 (Zero-Emission)'}.
+
+Provide a clear, reassuring, and technically accurate answer referencing Irish standards (SEAI Domestic Technical Standards, TGD Part L 2019, SR 54:2014).
+Include actionable preparation steps for site visits and exact NZEB compliance thresholds where relevant.`;
+
+    const freeLlmRes = await globalFreeLlmApiClient.chat(freeLlmPrompt, {
+      taskType: 'reasoning',
+    });
+    if (freeLlmRes && freeLlmRes.trim().length > 30) {
+      return {
+        answer: freeLlmRes.trim(),
+        tone: 'friendly',
+        siteVisitTips,
+        nzebComplianceInsights,
+        suggestedNextAction:
+          'Review your site visit preparation checklist and confirm attic access.',
+        modelUsed: 'freellmapi-router',
+      };
+    }
+  } catch {
+    // Proceed to deterministic fallback
   }
 
   return {
