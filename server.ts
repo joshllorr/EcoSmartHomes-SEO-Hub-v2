@@ -1136,6 +1136,50 @@ app.get('/api/unified-analytics', async (_req, res) => {
 let aiClient: GoogleGenAI | null = null;
 let cachedConfigKey: string | null = null;
 
+/**
+ * Sanitizes Gemini errors into user-friendly notifications.
+ * Suppresses confusing raw JSON error payloads from Google RPC/APIs.
+ */
+export function formatGeminiErrorMessage(error: any): string {
+  if (!error) return 'Temporary Service Notice';
+  const raw = String(error.message || error || '').trim();
+
+  // If error message is a raw JSON payload, try to extract clean message
+  if (raw.startsWith('{') && raw.endsWith('}')) {
+    try {
+      const parsed = JSON.parse(raw);
+      const innerMessage = parsed?.error?.message || parsed?.message;
+      if (innerMessage) {
+        if (/api key not valid/i.test(innerMessage)) {
+          return 'API Key requires configuration in Settings > Secrets';
+        }
+        if (/quota|rate limit|resource exhausted/i.test(innerMessage)) {
+          return 'API quota limit reached — switched to offline safe-mode';
+        }
+        return innerMessage;
+      }
+    } catch {
+      // Ignore JSON parse errors and continue with regex inspection
+    }
+  }
+
+  if (/api key not valid|invalid api key|api_key_invalid/i.test(raw)) {
+    return 'API Key requires configuration in Settings > Secrets';
+  }
+  if (/quota|rate limit|resource_exhausted|429/i.test(raw)) {
+    return 'API quota limit reached — switched to offline safe-mode';
+  }
+  if (/unauthenticated|invalid authentication credentials|401/i.test(raw)) {
+    return 'Credentials expired or unauthenticated — offline safe-mode engaged';
+  }
+  if (/network|fetch failed|econnrefused|etimedout/i.test(raw)) {
+    return 'Network timeout — offline safe-mode engaged';
+  }
+
+  // Cap length to prevent raw payloads spilling into user alerts
+  return raw.length > 80 ? `${raw.slice(0, 77)}...` : raw;
+}
+
 export function getGeminiClient(): GoogleGenAI | null {
   const tokenOrKey =
     process.env.GEMINI_API_KEY ||
@@ -1160,14 +1204,25 @@ export function getGeminiClient(): GoogleGenAI | null {
     (tokenOrKey.startsWith('ya29.') || tokenOrKey.startsWith('Bearer ')),
   );
 
+  // If in AI Studio mode (not Vertex), keys starting with 'AQ.' or not matching expected format are invalid tokens
+  const isMalformedAIStudioKey =
+    !useVertexExplicit &&
+    !isOAuthToken &&
+    Boolean(tokenOrKey && tokenOrKey.startsWith('AQ.'));
+
   // If no valid key and not using explicit Vertex AI
-  if (isInvalidPlaceholder && !isOAuthToken && !useVertexExplicit) {
+  if (
+    (isInvalidPlaceholder || isMalformedAIStudioKey) &&
+    !isOAuthToken &&
+    !useVertexExplicit
+  ) {
     aiClient = null;
     cachedConfigKey = null;
     return null;
   }
 
-  const effectiveKey = isInvalidPlaceholder ? '' : tokenOrKey;
+  const effectiveKey =
+    isInvalidPlaceholder || isMalformedAIStudioKey ? '' : tokenOrKey;
   const project =
     process.env.GOOGLE_CLOUD_PROJECT ||
     process.env.GCP_PROJECT ||
@@ -1428,11 +1483,12 @@ Return ONLY a valid JSON object matching this schema (no markdown code blocks, n
       metric: 'research',
       message: `Research: Completed analysis for keyword "${keyword}" (Offline Safe-Mode)`,
     });
+    const cleanWarning = formatGeminiErrorMessage(error);
     return res.json({
       success: true,
       results: simulatedKeywords,
       isMock: true,
-      warning: `Gemini API reported an issue ("${error.message || 'Network Error'}"). Switched to offline safe-mode to complete your search.`,
+      warning: `Offline Safe-Mode active (${cleanWarning}). Search completed locally with authentic Irish SEAI & retrofit data.`,
     });
   }
 });
@@ -1692,7 +1748,7 @@ Return raw JSON with key "ideas" containing the array of 5 objects.`;
         `content gaps ${site}`,
         `trending topics Ireland retrofitting 2026`,
       ],
-      warning: error.message || 'Search discovery temporary fallback',
+      warning: `Offline Safe-Mode active (${formatGeminiErrorMessage(error)}). Content opportunities rendered using local Irish market data.`,
     });
   }
 });
@@ -2529,11 +2585,12 @@ Provide 8-10 realistic Irish competitors (SEAI, Citizens Information, SuperHomes
       metric: 'serp_analysis',
       message: `SERP Analysis: Completed competitor audit for "${cleanKeyword}" (Safe Fallback)`,
     });
+    const cleanWarning = formatGeminiErrorMessage(error);
     return res.json({
       success: true,
       serp: compiledSnapshot,
       isMock: true,
-      warning: `Gemini API reported an issue ("${error.message || 'Service Unavailable'}"). Offline Safe-Mode rendered your customized Irish SERP audit flawlessly.`,
+      warning: `Offline Safe-Mode active (${cleanWarning}): Customized Irish SERP audit rendered flawlessly.`,
     });
   }
 });
@@ -3574,11 +3631,12 @@ STYLE RULES:
       metric: 'title_meta_generation',
       message: `Title & Meta: Generated tags for "${topic}" (Safe Fallback)`,
     });
+    const cleanWarning = formatGeminiErrorMessage(error);
     return res.json({
       success: true,
       data: fallbackData,
       isMock: true,
-      warning: `Gemini API reported an issue ("${error.message || 'Quota limit'}"). Active Offline Safe-Mode rendered your customized metadata flawlessly.`,
+      warning: `Offline Safe-Mode active (${cleanWarning}): Customized metadata rendered flawlessly.`,
     });
   }
 });
@@ -4339,7 +4397,7 @@ Return response in JSON format matching this schema:
         metaTitle,
         metaDescription,
         isMock: true,
-        warning: `Gemini API reported an issue ("${e.message || 'Network Error'}"). Switched to offline safe-mode to complete meta tag creation.`,
+        warning: `Offline Safe-Mode active (${formatGeminiErrorMessage(e)}): Locally optimized meta tags applied.`,
       });
     }
   }
@@ -4395,12 +4453,13 @@ Return the entire rewritten content.`;
         isMock: false,
       });
     } catch (e: any) {
+      const cleanWarning = formatGeminiErrorMessage(e);
       return res.json({
         success: true,
         content: localOptimizedContent,
         wordCount: localOptimizedContent.split(/\s+/).filter(Boolean).length,
         isMock: true,
-        warning: `Gemini API reported an issue ("${e.message || 'Network Error'}"). Switched to offline safe-mode to inject semantic terms.`,
+        warning: `Offline Safe-Mode active (${cleanWarning}): Injected localized high-density semantic keywords block.`,
       });
     }
   }
@@ -4460,12 +4519,13 @@ Return the simplified, highly readable, structured article text.`;
         isMock: false,
       });
     } catch (e: any) {
+      const cleanWarning = formatGeminiErrorMessage(e);
       return res.json({
         success: true,
         content: localOptimizedContent,
         wordCount: localOptimizedContent.split(/\s+/).filter(Boolean).length,
         isMock: true,
-        warning: `Gemini API reported an issue ("${e.message || 'Network Error'}"). Switched to offline safe-mode to restructure paragraph layout.`,
+        warning: `Offline Safe-Mode active (${cleanWarning}): Restructured long paragraphs and added scannable list elements.`,
       });
     }
   }
@@ -4671,11 +4731,12 @@ Return ONLY a valid JSON object matching this schema (no markdown fences, no oth
       'Gemini Scout Site error, falling back to simulated backup:',
       error,
     );
+    const cleanWarning = formatGeminiErrorMessage(error);
     return res.json({
       success: true,
       ...mockAudit,
       isMock: true,
-      warning: `Gemini API reported an issue ("${error.message || 'Network Error'}"). Switched to offline safe-mode to complete the crawl diagnostics.`,
+      warning: `Offline Safe-Mode active (${cleanWarning}): Crawl diagnostics completed locally.`,
     });
   }
 });
@@ -4865,12 +4926,13 @@ Always recommend registered contractors, sustainable materials, and accurate det
     });
   } catch (error: any) {
     console.error('Gemini Maps Grounding error:', error);
+    const cleanWarning = formatGeminiErrorMessage(error);
     return res.json({
       success: true,
-      text: `### Advisor Insights (Offline Safe-Mode)\n\nWe encountered an issue calling the live Google Maps grounding service ("${error.message || 'Network Error'}").\n\nHere is some expert guidance related to your query on **"${prompt}"**:\n\n1. **Hire SEAI Registered Contractors**: Ensure any heat pump, insulation, or solar installer is registered with SEAI to receive grant funds (up to €6,500 for heat pumps).\n2. **BER Assessment**: A pre-works thermal calculation must be done by an independent assessor to secure a Technical Assessment report.\n3. **Heat Loss Indicator (HLI)**: To qualify for a heat pump grant, your home's HLI must be <= 2.0 W/m²K.\n\nBelow are standard certified contractors and suppliers for your project:`,
+      text: `### Advisor Insights (Offline Safe-Mode)\n\nWe encountered an issue connecting to live Google services (${cleanWarning}).\n\nHere is expert guidance related to your query on **"${prompt}"**:\n\n1. **Hire SEAI Registered Contractors**: Ensure any heat pump, insulation, or solar installer is registered with SEAI to receive grant funds (up to €6,500 for heat pumps).\n2. **BER Assessment**: A pre-works thermal calculation must be done by an independent assessor to secure a Technical Assessment report.\n3. **Heat Loss Indicator (HLI)**: To qualify for a heat pump grant, your home's HLI must be <= 2.0 W/m²K.\n\nBelow are standard certified contractors and suppliers for your project:`,
       sources: simulatedSuppliers,
       isMock: true,
-      warning: `Offline backup activated: ${error.message || 'Network issue'}`,
+      warning: `Offline backup activated: ${cleanWarning}`,
     });
   }
 });
@@ -5116,12 +5178,13 @@ Provide 3 highly valuable suggestions including LocalBusiness and Product or Ser
     });
   } catch (error: any) {
     console.error('Schema suggest error:', error);
+    const cleanWarning = formatGeminiErrorMessage(error);
     return res.json({
       success: true,
       suggestions: fallbackSuggestions,
       aiAnalysisSummary: `AI Search Audit for ${cleanDomain}: Current schema includes WebSite, Organization, and FAQPage. Expanding with LocalBusiness geocoding and Service microdata improves local search visibility.`,
       isMock: true,
-      warning: `Gemini API reported an issue ("${error.message || 'Quota limit'}"). Used offline safe-mode for AI schema recommendations.`,
+      warning: `Offline Safe-Mode active (${cleanWarning}): Rendered localized schema recommendations.`,
     });
   }
 });

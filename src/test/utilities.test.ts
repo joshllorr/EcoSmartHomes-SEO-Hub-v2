@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getGeminiClient, callGeminiRESTApi } from './server-test-helper';
+import {
+  getGeminiClient,
+  callGeminiRESTApi,
+  formatGeminiErrorMessage,
+} from './server-test-helper';
 
 const savedEnv = { ...process.env };
 
@@ -54,6 +58,16 @@ describe('getGeminiClient', () => {
     expect(client).toBeNull();
   });
 
+  it('returns null when GEMINI_API_KEY is AQ. prefixed token and not in explicit Vertex mode', () => {
+    delete (process.env as any).GEMINI_ACCESS_TOKEN;
+    delete (process.env as any).GOOGLE_CLOUD_PROJECT;
+    delete (process.env as any).GOOGLE_GENAI_USE_VERTEXAI;
+    process.env.GEMINI_API_KEY = 'AQ.mock_test_token_not_valid_for_ai_studio';
+
+    const client = getGeminiClient();
+    expect(client).toBeNull();
+  });
+
   it('initializes Vertex AI client when GOOGLE_CLOUD_PROJECT is set', () => {
     process.env.GOOGLE_CLOUD_PROJECT = 'gen-lang-client-0607449072';
     process.env.GOOGLE_CLOUD_LOCATION = 'us-central1';
@@ -61,6 +75,44 @@ describe('getGeminiClient', () => {
 
     const client = getGeminiClient();
     expect(client).not.toBeNull();
+  });
+});
+
+describe('formatGeminiErrorMessage', () => {
+  it('suppresses raw Google JSON error payloads into user-friendly message', () => {
+    const rawGoogleJsonError = JSON.stringify({
+      error: {
+        code: 400,
+        message: 'API key not valid. Please pass a valid API key.',
+        status: 'INVALID_ARGUMENT',
+      },
+    });
+
+    const formatted = formatGeminiErrorMessage(new Error(rawGoogleJsonError));
+    expect(formatted).toBe(
+      'API Key requires configuration in Settings > Secrets',
+    );
+  });
+
+  it('handles standard invalid api key strings cleanly', () => {
+    const formatted = formatGeminiErrorMessage(new Error('API key not valid'));
+    expect(formatted).toBe(
+      'API Key requires configuration in Settings > Secrets',
+    );
+  });
+
+  it('handles quota / rate limit errors gracefully', () => {
+    const formatted = formatGeminiErrorMessage(
+      new Error('Resource exhausted: Quota exceeded for model'),
+    );
+    expect(formatted).toBe(
+      'API quota limit reached — switched to offline safe-mode',
+    );
+  });
+
+  it('handles network errors gracefully', () => {
+    const formatted = formatGeminiErrorMessage(new Error('fetch failed'));
+    expect(formatted).toBe('Network timeout — offline safe-mode engaged');
   });
 });
 
