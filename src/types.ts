@@ -54,6 +54,17 @@ export interface ArticleDraft {
   metaDescription?: string;
   keywords?: string[];
   tone?: string;
+  isWarRoom?: boolean;
+  certificationReport?: {
+    grantAccuracyScore: number;
+    seoStructureScore: number;
+    voiceNaturalnessScore: number;
+    complianceCertified: boolean;
+    verifiedBudget2026Caps: string[];
+    executionTimeMs: number;
+    modelsUsed: string[];
+  };
+  jsonLdSchema?: Record<string, any>;
 }
 
 export interface DashboardState {

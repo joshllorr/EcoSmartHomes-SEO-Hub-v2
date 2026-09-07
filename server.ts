@@ -16,6 +16,7 @@ import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI, Type } from '@google/genai';
+import { globalFreeLlmApiClient } from './src/utils/freeLlmApiClient';
 
 import { syncToHarbor } from './src/services/harborSync';
 import {
@@ -61,6 +62,8 @@ import {
   saveMARLGenomes,
   runPersonalityShapingCycle,
 } from './src/server/marlGenome';
+
+import { globalEditorialWarRoomEngine } from './src/logic/editorialWarRoomEngine';
 
 import { publishToCMS } from './src/server/cmsPublisher';
 import { runBacklinkDiscoveryAgent } from './src/server/backlinkAgent';
@@ -179,7 +182,9 @@ app.use(
     crossOriginOpenerPolicy: false,
     crossOriginResourcePolicy: false,
     xFrameOptions: isTestEnv ? { action: 'deny' } : false,
-    referrerPolicy: isTestEnv ? { policy: 'strict-origin-when-cross-origin' } : undefined,
+    referrerPolicy: isTestEnv
+      ? { policy: 'strict-origin-when-cross-origin' }
+      : undefined,
   }),
 );
 
@@ -191,7 +196,10 @@ app.use((req, res, next) => {
   }
   res.setHeader('Access-Control-Allow-Origin', '*');
   if (req.path === '/' || req.path === '/index.html') {
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    res.setHeader(
+      'Cache-Control',
+      'no-store, no-cache, must-revalidate, max-age=0',
+    );
     res.setHeader('Pragma', 'no-cache');
   }
   next();
@@ -227,11 +235,18 @@ app.use('/api/', apiLimiter);
 
 app.use((req, _res, next) => {
   // Log API endpoints and primary routes; skip internal Vite dev source transformations
-  if (req.url.startsWith('/api') || req.url === '/' || req.url === '/health' || req.url === '/ready') {
+  if (
+    req.url.startsWith('/api') ||
+    req.url === '/' ||
+    req.url === '/health' ||
+    req.url === '/ready'
+  ) {
     const start = Date.now();
     _res.on('finish', () => {
       const duration = Date.now() - start;
-      console.log(`[${req.method}] ${req.url} ${_res.statusCode} ${duration}ms`);
+      console.log(
+        `[${req.method}] ${req.url} ${_res.statusCode} ${duration}ms`,
+      );
     });
   }
   next();
@@ -986,6 +1001,7 @@ app.get(['/health', '/api/health'], (_req, res) => {
     dependencies: {
       gemini: Boolean(process.env.GEMINI_API_KEY),
       sentry: Boolean(process.env.SENTRY_DSN),
+      freellmapi: Boolean(process.env.AI_KEY || process.env.AI_BASE_URL),
     },
   };
   res.status(200).json(healthPayload);
@@ -1285,6 +1301,77 @@ export async function callGeminiRESTApi(
   }
 }
 
+/**
+ * Unified AI Router Helper: FreeLLMAPI First, Graceful Fallback to Gemini
+ */
+export async function callUnifiedAI(
+  prompt: string,
+  options: {
+    taskType?:
+      | 'seo-keyword'
+      | 'seo-serp'
+      | 'seo-article'
+      | 'title-meta'
+      | 'code'
+      | 'reasoning'
+      | 'general';
+    model?: string;
+    jsonSchema?: any;
+    timeoutMs?: number;
+    preferGemini?: boolean;
+  } = {},
+): Promise<{
+  text: string | null;
+  provider: 'freellmapi' | 'gemini' | 'mock';
+  modelUsed?: string;
+}> {
+  const isVitest = Boolean(
+    process.env.VITEST || process.env.NODE_ENV === 'test',
+  );
+  const allowLiveAiInTest = process.env.ENABLE_TEST_AI === 'true';
+
+  // 1. Try FreeLLMAPI first if configured and not isolated unit tests
+  if (!options.preferGemini && (!isVitest || allowLiveAiInTest)) {
+    try {
+      const freeLlmRes = await globalFreeLlmApiClient.chat(prompt, {
+        taskType: options.taskType || 'general',
+        model: options.model,
+        timeoutMs: options.timeoutMs || 15000,
+      });
+
+      if (freeLlmRes.content && freeLlmRes.content.trim()) {
+        return {
+          text: freeLlmRes.content.trim(),
+          provider: 'freellmapi',
+          modelUsed: freeLlmRes.modelUsed,
+        };
+      }
+    } catch (err: any) {
+      console.warn(
+        '[AI Router] FreeLLMAPI attempt failed, falling back to Gemini:',
+        err.message || err,
+      );
+    }
+  }
+
+  // 2. Fall back to Gemini
+  const geminiText = await callGeminiRESTApi(
+    prompt,
+    options.model || 'gemini-2.5-flash',
+    options.jsonSchema,
+  );
+  if (geminiText) {
+    return {
+      text: geminiText,
+      provider: 'gemini',
+      modelUsed: options.model || 'gemini-2.5-flash',
+    };
+  }
+
+  // 3. Fallback to offline mock
+  return { text: null, provider: 'mock' };
+}
+
 // 1. API: Keyword Research Endpoint
 app.post('/api/seo/keyword-research', async (req, res) => {
   const { keyword, site } = req.body;
@@ -1331,7 +1418,15 @@ app.post('/api/seo/keyword-research', async (req, res) => {
   ];
 
   const ai = getGeminiClient();
-  if (!ai) {
+  const isFreeLlmConfigured = Boolean(
+    process.env.AI_KEY || process.env.AI_BASE_URL,
+  );
+  const isVitest = Boolean(
+    process.env.VITEST || process.env.NODE_ENV === 'test',
+  );
+  const allowLiveAiInTest = process.env.ENABLE_TEST_AI === 'true';
+
+  if (!ai && (!isFreeLlmConfigured || (isVitest && !allowLiveAiInTest))) {
     broadcastToAll({
       type: 'metric_update',
       metric: 'research',
@@ -1362,15 +1457,57 @@ Return ONLY a valid JSON object matching this schema (no markdown code blocks, n
   ]
 }`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        tools: [{ googleSearch: {} }],
-      },
-    });
+    let responseText: string | null = null;
+    let sources: any[] = [];
+    let providerUsed = 'gemini';
 
-    const parsedData = extractJsonFromText<{ results: any[] }>(response.text);
+    // 1. Try FreeLLMAPI first
+    if (!isVitest || allowLiveAiInTest) {
+      try {
+        const freeLlmRes = await globalFreeLlmApiClient.chat(prompt, {
+          taskType: 'seo-keyword',
+          timeoutMs: 12000,
+        });
+        if (freeLlmRes.content) {
+          responseText = freeLlmRes.content;
+          providerUsed = `FreeLLMAPI (${freeLlmRes.modelUsed || 'free-router'})`;
+        }
+      } catch (err: any) {
+        console.warn(
+          '[AI Router] FreeLLMAPI keyword research error, falling back to Gemini:',
+          err.message || err,
+        );
+      }
+    }
+
+    // 2. Fall back to Gemini if FreeLLMAPI didn't produce a response
+    if (!responseText && ai) {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          tools: [{ googleSearch: {} }],
+        },
+      });
+      responseText = response.text || '';
+      const chunks =
+        response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+      sources = chunks
+        ? chunks
+            .map((c: any) => ({
+              title: c.web?.title || 'Search Grounding Source',
+              uri: c.web?.uri || '',
+            }))
+            .filter((s: any) => s.uri)
+        : [];
+      providerUsed = 'Google Gemini 2.5 Flash';
+    }
+
+    if (!responseText) {
+      throw new Error('All AI providers returned empty responses');
+    }
+
+    const parsedData = extractJsonFromText<{ results: any[] }>(responseText);
     const results =
       parsedData?.results &&
       Array.isArray(parsedData.results) &&
@@ -1378,27 +1515,17 @@ Return ONLY a valid JSON object matching this schema (no markdown code blocks, n
         ? parsedData.results
         : simulatedKeywords;
 
-    // Extract grounding URLs/citations if available from Google Search
-    const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
-    const sources = chunks
-      ? chunks
-          .map((c: any) => ({
-            title: c.web?.title || 'Search Grounding Source',
-            uri: c.web?.uri || '',
-          }))
-          .filter((s: any) => s.uri)
-      : [];
-
     broadcastToAll({
       type: 'metric_update',
       metric: 'research',
-      message: `Research: Completed analysis for keyword "${keyword}"`,
+      message: `Research: Completed analysis for keyword "${keyword}" (${providerUsed})`,
     });
     return res.json({
       success: true,
       results,
       sources,
       isMock: false,
+      provider: providerUsed,
     });
   } catch (error: any) {
     console.error(
@@ -1546,8 +1673,15 @@ app.post('/api/seo/discover-content-ideas', async (req, res) => {
   ];
 
   const ai = getGeminiClient();
+  const isFreeLlmConfigured = Boolean(
+    process.env.AI_KEY || process.env.AI_BASE_URL,
+  );
+  const isVitest = Boolean(
+    process.env.VITEST || process.env.NODE_ENV === 'test',
+  );
+  const allowLiveAiInTest = process.env.ENABLE_TEST_AI === 'true';
 
-  if (!ai) {
+  if (!ai && (!isFreeLlmConfigured || (isVitest && !allowLiveAiInTest))) {
     broadcastToAll({
       type: 'metric_update',
       metric: 'research',
@@ -1599,15 +1733,50 @@ For EACH content idea, provide:
 
 Return raw JSON with key "ideas" containing the array of 5 objects.`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        tools: [{ googleSearch: {} }],
-      },
-    });
+    let responseText: string | null = null;
+    let chunks: any[] = [];
+    let webSearchQueries: string[] | undefined;
+    let providerUsed = 'gemini';
 
-    const parsed = extractJsonFromText<{ ideas: any[] }>(response.text) || {
+    // 1. Try FreeLLMAPI first
+    if (!isVitest || allowLiveAiInTest) {
+      try {
+        const freeLlmRes = await globalFreeLlmApiClient.chat(prompt, {
+          taskType: 'seo-keyword',
+          timeoutMs: 14000,
+        });
+        if (freeLlmRes.content) {
+          responseText = freeLlmRes.content;
+          providerUsed = `FreeLLMAPI (${freeLlmRes.modelUsed || 'free-router'})`;
+        }
+      } catch (err: any) {
+        console.warn(
+          '[AI Router] FreeLLMAPI content ideas error, falling back to Gemini:',
+          err.message || err,
+        );
+      }
+    }
+
+    // 2. Fall back to Gemini
+    if (!responseText && ai) {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          tools: [{ googleSearch: {} }],
+        },
+      });
+      responseText = response.text || '';
+      chunks =
+        response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+      webSearchQueries =
+        response.candidates?.[0]?.groundingMetadata?.webSearchQueries;
+      providerUsed = 'Google Gemini 2.5 Flash';
+    }
+
+    const parsed = extractJsonFromText<{ ideas: any[] }>(
+      responseText || '',
+    ) || {
       ideas: [],
     };
     const rawIdeas =
@@ -1615,14 +1784,11 @@ Return raw JSON with key "ideas" containing the array of 5 objects.`;
         ? parsed.ideas
         : mockIdeas;
 
-    // Extract grounding search metadata & sources
-    const groundingMetadata = response.candidates?.[0]?.groundingMetadata;
-    const groundingQueries = groundingMetadata?.webSearchQueries || [
+    const groundingQueries = webSearchQueries || [
       `site:${site}`,
       `${guidance} trends 2026`,
       `top search terms ${site}`,
     ];
-    const chunks = groundingMetadata?.groundingChunks;
     const sources = chunks
       ? chunks
           .map((c: any) => ({
@@ -1648,7 +1814,7 @@ Return raw JSON with key "ideas" containing the array of 5 objects.`;
     broadcastToAll({
       type: 'metric_update',
       metric: 'research',
-      message: `Content Ideas: Discovered ${formattedIdeas.length} Google-grounded opportunities for "${site}"`,
+      message: `Content Ideas: Discovered ${formattedIdeas.length} opportunities for "${site}" (${providerUsed})`,
     });
 
     return res.json({
@@ -1658,6 +1824,7 @@ Return raw JSON with key "ideas" containing the array of 5 objects.`;
       site,
       groundingQueries,
       sources,
+      provider: providerUsed,
     });
   } catch (error: any) {
     console.error(
@@ -2377,7 +2544,15 @@ app.post('/api/seo/serp-analysis', async (req, res) => {
   const fallbackSERP = generateTopicAwareSERP(cleanKeyword);
 
   const ai = getGeminiClient();
-  if (!ai) {
+  const isFreeLlmConfigured = Boolean(
+    process.env.AI_KEY || process.env.AI_BASE_URL,
+  );
+  const isVitest = Boolean(
+    process.env.VITEST || process.env.NODE_ENV === 'test',
+  );
+  const allowLiveAiInTest = process.env.ENABLE_TEST_AI === 'true';
+
+  if (!ai && (!isFreeLlmConfigured || (isVitest && !allowLiveAiInTest))) {
     const compiledSnapshot =
       globalSERPIntelligenceEngine.compileSnapshot(fallbackSERP);
 
@@ -2450,13 +2625,39 @@ Required JSON Structure:
 
 Provide 8-10 realistic Irish competitors (SEAI, Citizens Information, SuperHomes, Electric Ireland, Energlaze, Activ8, PV Gen, Bord Gáis) with authentic content gaps.`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-    });
+    let responseText: string | null = null;
+    let providerUsed = 'gemini';
 
-    const responseText = response.text || '';
-    const parsedData = extractJsonFromText(responseText);
+    // 1. Try FreeLLMAPI first
+    if (!isVitest || allowLiveAiInTest) {
+      try {
+        const freeLlmRes = await globalFreeLlmApiClient.chat(prompt, {
+          taskType: 'seo-serp',
+          timeoutMs: 14000,
+        });
+        if (freeLlmRes.content) {
+          responseText = freeLlmRes.content;
+          providerUsed = `FreeLLMAPI (${freeLlmRes.modelUsed || 'free-router'})`;
+        }
+      } catch (err: any) {
+        console.warn(
+          '[AI Router] FreeLLMAPI SERP analysis error, falling back to Gemini:',
+          err.message || err,
+        );
+      }
+    }
+
+    // 2. Fall back to Gemini
+    if (!responseText && ai) {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+      });
+      responseText = response.text || '';
+      providerUsed = 'Google Gemini 2.5 Flash';
+    }
+
+    const parsedData = extractJsonFromText(responseText || '');
 
     if (
       parsedData &&
@@ -2479,13 +2680,14 @@ Provide 8-10 realistic Irish competitors (SEAI, Citizens Information, SuperHomes
       broadcastToAll({
         type: 'metric_update',
         metric: 'serp_analysis',
-        message: `SERP Analysis: Completed competitor audit for "${cleanKeyword}"`,
+        message: `SERP Analysis: Completed competitor audit for "${cleanKeyword}" (${providerUsed})`,
       });
 
       return res.json({
         success: true,
         serp: compiledSnapshot,
         isMock: false,
+        provider: providerUsed,
       });
     } else {
       throw new Error(
@@ -3325,7 +3527,15 @@ app.post('/api/seo/generate-title-meta', async (req, res) => {
   const fallbackData = generateFallbackTitleMeta(topic, defaultTone);
 
   const ai = getGeminiClient();
-  if (!ai) {
+  const isFreeLlmConfigured = Boolean(
+    process.env.AI_KEY || process.env.AI_BASE_URL,
+  );
+  const isVitest = Boolean(
+    process.env.VITEST || process.env.NODE_ENV === 'test',
+  );
+  const allowLiveAiInTest = process.env.ENABLE_TEST_AI === 'true';
+
+  if (!ai && (!isFreeLlmConfigured || (isVitest && !allowLiveAiInTest))) {
     broadcastToAll({
       type: 'metric_update',
       metric: 'title_meta_generation',
@@ -3372,18 +3582,46 @@ STYLE RULES:
 - Use Irish retrofit context (BER, SEAI, insulation, heat pumps, airtightness, grants).
 - Ensure the meta_description is exactly between 150 and 160 characters long.`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-    });
+    let rawText = '';
+    let providerUsed = 'gemini';
 
-    const text = (response.text || '').trim();
-    const cleanText = text
+    // 1. Try FreeLLMAPI first
+    if (!isVitest || allowLiveAiInTest) {
+      try {
+        const freeLlmRes = await globalFreeLlmApiClient.chat(prompt, {
+          taskType: 'title-meta',
+          timeoutMs: 12000,
+        });
+        if (freeLlmRes.content) {
+          rawText = freeLlmRes.content;
+          providerUsed = `FreeLLMAPI (${freeLlmRes.modelUsed || 'free-router'})`;
+        }
+      } catch (err: any) {
+        console.warn(
+          '[AI Router] FreeLLMAPI title & meta error, falling back to Gemini:',
+          err.message || err,
+        );
+      }
+    }
+
+    // 2. Fall back to Gemini
+    if (!rawText && ai) {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+      });
+      rawText = response.text || '';
+      providerUsed = 'Google Gemini 2.5 Flash';
+    }
+
+    const cleanText = rawText
+      .trim()
       .replace(/^```json/, '')
       .replace(/```$/, '')
       .trim();
 
-    const parsedData = JSON.parse(cleanText);
+    const parsedData =
+      extractJsonFromText<any>(cleanText) || JSON.parse(cleanText);
 
     // Validate meta description length and enforce 150-160 chars if model didn't hit it precisely
     if (
@@ -3573,8 +3811,68 @@ app.post('/api/seo/generate-article', async (req, res) => {
     length: selectedLength,
   });
 
+  if (req.body?.useWarRoom) {
+    try {
+      const warRoomResult = await globalEditorialWarRoomEngine.executePipeline({
+        title: articleTitle,
+        topic: topic || '',
+        pillar: pillar || 'SEAI Grants 2026',
+        keywords: keywords || [],
+        tone: selectedTone,
+        audience: selectedAudience,
+        length: selectedLength,
+        region: req.body?.region || 'Limerick V94 & Munster',
+        onPhaseUpdate: (stage) => {
+          broadcastToAll({
+            type: 'war_room_phase_update',
+            ...stage,
+          });
+        },
+      });
+
+      broadcastToAll({
+        type: 'article_generated',
+        title: articleTitle,
+        wordCount: warRoomResult.jsonMetadata.word_count,
+        xpGains: 50,
+        message: `War Room: Certified 4-agent draft “${articleTitle}” successfully generated`,
+      });
+      syncToHarbor({
+        type: 'draft_created',
+        slug: warRoomResult.jsonMetadata.slug,
+        title: articleTitle,
+        wordCount: warRoomResult.jsonMetadata.word_count,
+        message: `War Room Draft created: "${articleTitle}" (${warRoomResult.jsonMetadata.slug}) [${warRoomResult.provider}]`,
+      });
+
+      return res.json({
+        success: true,
+        content: warRoomResult.content,
+        articleBody: warRoomResult.articleBody,
+        jsonMetadata: warRoomResult.jsonMetadata,
+        jsonLdSchema: warRoomResult.jsonLdSchema,
+        certificationReport: warRoomResult.certificationReport,
+        wordCount: warRoomResult.jsonMetadata.word_count,
+        isMock: false,
+        isWarRoom: true,
+        provider: warRoomResult.provider,
+      });
+    } catch (err: any) {
+      console.warn('War Room invocation fallback:', err.message || err);
+      // continue to standard generate-article below
+    }
+  }
+
   const ai = getGeminiClient();
-  if (!ai) {
+  const isFreeLlmConfigured = Boolean(
+    process.env.AI_KEY || process.env.AI_BASE_URL,
+  );
+  const isVitest = Boolean(
+    process.env.VITEST || process.env.NODE_ENV === 'test',
+  );
+  const allowLiveAiInTest = process.env.ENABLE_TEST_AI === 'true';
+
+  if (!ai && (!isFreeLlmConfigured || (isVitest && !allowLiveAiInTest))) {
     broadcastToAll({
       type: 'article_generated',
       title: articleTitle,
@@ -3668,7 +3966,15 @@ Apply this tone consistently across:
 - Do not embed images.
 - No external links unless they are official Irish government resources (like seai.ie, gov.ie).`;
 
-    const articleText = await callGeminiRESTApi(prompt, 'gemini-2.5-flash');
+    const aiResult = await callUnifiedAI(prompt, {
+      taskType: 'seo-article',
+      timeoutMs: 20000,
+    });
+    const articleText = aiResult.text;
+    const providerUsed =
+      aiResult.provider === 'freellmapi'
+        ? `FreeLLMAPI (${aiResult.modelUsed || 'free-router'})`
+        : 'Google Gemini 2.5 Flash';
 
     if (!articleText) {
       broadcastToAll({
@@ -3684,7 +3990,7 @@ Apply this tone consistently across:
         wordCount: fallbackResult.wordCount,
         isMock: true,
         warning:
-          'Gemini API key operating in safe fallback mode. Generated custom high-fidelity article.',
+          'AI providers operating in safe fallback mode. Generated custom high-fidelity article.',
       });
     }
 
@@ -3695,20 +4001,21 @@ Apply this tone consistently across:
       title: title,
       wordCount: approximateWords,
       xpGains: 30,
-      message: `Draft: “${title}” successfully written`,
+      message: `Draft: “${title}” successfully written (${providerUsed})`,
     });
     syncToHarbor({
       type: 'draft_created',
       slug,
       title,
       wordCount: approximateWords,
-      message: `Draft created: "${title}" (${slug})`,
+      message: `Draft created: "${title}" (${slug}) [${providerUsed}]`,
     });
     return res.json({
       success: true,
       content: articleText,
       wordCount: approximateWords,
       isMock: false,
+      provider: providerUsed,
     });
   } catch (error: any) {
     console.warn(
@@ -3730,6 +4037,76 @@ Apply this tone consistently across:
       wordCount: fallbackResult.wordCount,
       isMock: true,
       warning: `Active Offline Safe-Mode generated your customized structured article flawlessly.`,
+    });
+  }
+});
+
+// 2.1 API: Autonomous Multi-Agent Editorial War Room Endpoint
+app.post('/api/seo/war-room-generate', async (req, res) => {
+  const { title, topic, pillar, keywords, tone, audience, length, region } =
+    req.body || {};
+  const articleTitle = title || topic || 'SEAI Home Energy Upgrade Grants 2026';
+
+  broadcastToAll({
+    type: 'war_room_started',
+    title: articleTitle,
+    message: `Editorial War Room activated: Deploying 4 autonomous agents for "${articleTitle}"`,
+    timestamp: Date.now(),
+  });
+
+  try {
+    const result = await globalEditorialWarRoomEngine.executePipeline({
+      title: articleTitle,
+      topic: topic || '',
+      pillar: pillar || 'SEAI Grants 2026',
+      keywords: keywords || [],
+      tone: tone || 'Authoritative, Reassuring & Clear',
+      audience: audience || 'Irish homeowners',
+      length: length || 'medium',
+      region: region || 'Limerick V94 & Munster',
+      onPhaseUpdate: (stage) => {
+        broadcastToAll({
+          type: 'war_room_phase_update',
+          ...stage,
+        });
+      },
+    });
+
+    const slug = result.jsonMetadata.slug;
+    broadcastToAll({
+      type: 'article_generated',
+      title: articleTitle,
+      wordCount: result.jsonMetadata.word_count,
+      xpGains: 50,
+      message: `War Room: Certified 4-agent draft “${articleTitle}” successfully produced`,
+      isWarRoom: true,
+    });
+
+    syncToHarbor({
+      type: 'draft_created',
+      slug,
+      title: articleTitle,
+      wordCount: result.jsonMetadata.word_count,
+      message: `War Room Draft created: "${articleTitle}" (${slug}) [${result.provider}]`,
+    });
+
+    return res.json({
+      success: true,
+      content: result.content,
+      articleBody: result.articleBody,
+      jsonMetadata: result.jsonMetadata,
+      jsonLdSchema: result.jsonLdSchema,
+      certificationReport: result.certificationReport,
+      wordCount: result.jsonMetadata.word_count,
+      isMock: false,
+      isWarRoom: true,
+      provider: result.provider,
+    });
+  } catch (error: any) {
+    console.error('Editorial War Room pipeline error:', error.message || error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || 'War room pipeline execution error',
     });
   }
 });
@@ -5897,7 +6274,8 @@ async function startServer() {
     const vite = await createViteServer({
       server: {
         middlewareMode: true,
-        hmr: process.env.DISABLE_HMR === 'true' ? false : { server: httpServer },
+        hmr:
+          process.env.DISABLE_HMR === 'true' ? false : { server: httpServer },
       },
       appType: 'spa',
     });
@@ -5910,7 +6288,10 @@ async function startServer() {
     });
   }
 
-  if (process.env.SENTRY_DSN && !process.env.SENTRY_DSN.includes('MY_SENTRY_DSN')) {
+  if (
+    process.env.SENTRY_DSN &&
+    !process.env.SENTRY_DSN.includes('MY_SENTRY_DSN')
+  ) {
     app.use(Sentry.expressErrorHandler() as any);
   }
 
