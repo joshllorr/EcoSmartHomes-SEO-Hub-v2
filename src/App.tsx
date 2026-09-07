@@ -8,6 +8,8 @@ import { INITIAL_DASHBOARD_DATA } from './data';
 import { ArticleDraft, DashboardState } from './types';
 import { useDashboardStore } from './store/useDashboardStore';
 import LiveVersion from './components/LiveVersion';
+import GlobalSearchModal from './components/GlobalSearchModal';
+import { GlobalSearchResult } from './services/globalSearchIndex';
 import { checkDeploymentDrift } from './utils/deploymentCheck';
 
 // Code-split / Lazy-loaded Secondary Dashboards & Sub-tabs
@@ -125,6 +127,45 @@ export default function App() {
   const [serpKeyword, setSerpKeyword] = useState<string>('SEAI grants Limerick V94');
   const [discoveryCount, setDiscoveryCount] = useState<number>(1);
   const [isSiteScanned, setIsSiteScanned] = useState<boolean>(false);
+  const [isGlobalSearchOpen, setIsGlobalSearchOpen] = useState<boolean>(false);
+
+  // Global Keyboard Shortcuts for Search: Ctrl+K / Cmd+K and '/'
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd+K or Ctrl+K
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsGlobalSearchOpen((prev) => !prev);
+      }
+      // '/' hotkey when not actively typing in an input, textarea, or contentEditable element
+      if (
+        e.key === '/' &&
+        !['INPUT', 'TEXTAREA', 'SELECT'].includes(
+          (document.activeElement?.tagName || '').toUpperCase(),
+        ) &&
+        !(document.activeElement as HTMLElement)?.isContentEditable
+      ) {
+        e.preventDefault();
+        setIsGlobalSearchOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleGlobalSearchResultNavigate = (result: GlobalSearchResult) => {
+    if (result.actionPayload?.topic) {
+      setWriterSuggestion(result.actionPayload.topic);
+    }
+    if (result.actionPayload?.keyword) {
+      setSerpKeyword(result.actionPayload.keyword);
+    }
+    if (result.targetTab) {
+      setActiveTab(result.targetTab);
+    }
+    setIsMobileSidebarOpen(false);
+  };
 
   const handleNavigateToSERP = (keyword: string) => {
     if (keyword && keyword.trim()) {
@@ -592,6 +633,7 @@ export default function App() {
             setIsMobileSidebarOpen(false);
           }}
           onToggleMobileMenu={() => setIsMobileSidebarOpen((prev) => !prev)}
+          onOpenSearch={() => setIsGlobalSearchOpen(true)}
         />
 
         {/* Dynamic Tab Body with Suspense & ErrorBoundary */}
@@ -603,6 +645,14 @@ export default function App() {
           </ErrorBoundary>
         </main>
       </div>
+
+      {/* Global Command Palette & Unified Index Search Modal */}
+      <GlobalSearchModal
+        isOpen={isGlobalSearchOpen}
+        onClose={() => setIsGlobalSearchOpen(false)}
+        onNavigate={handleGlobalSearchResultNavigate}
+        drafts={dashboardState.drafts}
+      />
 
       {/* Live Version Fingerprint Badge */}
       <LiveVersion />

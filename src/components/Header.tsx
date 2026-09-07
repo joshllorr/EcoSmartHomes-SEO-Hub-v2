@@ -15,6 +15,7 @@ import {
   ExternalLink,
   CheckCheck,
   MapPin,
+  Search,
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useDashboardStore } from '../store/useDashboardStore';
@@ -75,6 +76,7 @@ interface HeaderProps {
   level: number;
   onNavigateToTab: (tab: string) => void;
   onToggleMobileMenu?: () => void;
+  onOpenSearch?: () => void;
 }
 
 export default function Header({
@@ -82,6 +84,7 @@ export default function Header({
   level,
   onNavigateToTab,
   onToggleMobileMenu,
+  onOpenSearch,
 }: HeaderProps) {
   const targetDomain = useDashboardStore((s) => s.targetDomain);
   const setTargetDomain = useDashboardStore((s) => s.setTargetDomain);
@@ -305,6 +308,30 @@ export default function Header({
           )}
         </div>
       </div>
+
+      {/* Global Search Quick Trigger */}
+      {onOpenSearch && (
+        <button
+          onClick={onOpenSearch}
+          className="flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 hover:border-emerald-500/40 transition cursor-pointer text-xs group"
+          title="Open Global Search (Ctrl+K or ⌘K)"
+          id="global-search-header-trigger"
+        >
+          <Search
+            size={14}
+            className="text-slate-400 group-hover:text-emerald-400 transition shrink-0"
+          />
+          <span className="hidden sm:inline text-slate-400 group-hover:text-slate-200">
+            Search drafts, keywords, audit logs...
+          </span>
+          <span className="sm:hidden text-slate-400 group-hover:text-slate-200">
+            Search...
+          </span>
+          <kbd className="hidden md:inline-flex items-center gap-0.5 font-mono text-[10px] bg-black/40 border border-white/10 px-1.5 py-0.5 rounded text-slate-400 group-hover:text-slate-200">
+            <span>⌘</span>K
+          </kbd>
+        </button>
+      )}
 
       {/* Right User Actions */}
       <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0 justify-end">
