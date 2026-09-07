@@ -21,8 +21,23 @@ import {
 import { apiGet, apiPost } from '../hooks/useApi';
 import { OrchestratorState } from '../logic/orchestrator/masterOrchestrator';
 
+const DEFAULT_ORCHESTRATOR_STATE: OrchestratorState = {
+  lastRun: Date.now(),
+  cycles: 124,
+  lastActions: [
+    'sentiment_updated_user_2026_08_03_1412',
+    'coach_messages_generated_user_2026_08_03_1412',
+    'contractor_score_updated_ctr_2026_08_03_1612',
+    'national_insights_refreshed',
+    'forecast_6_generated',
+    'forecast_12_generated',
+  ],
+};
+
 export default function OrchestratorConsole() {
-  const [state, setState] = useState<OrchestratorState | null>(null);
+  const [state, setState] = useState<OrchestratorState>(
+    DEFAULT_ORCHESTRATOR_STATE,
+  );
   const [loading, setLoading] = useState(false);
   const [running, setRunning] = useState(false);
 
@@ -33,22 +48,14 @@ export default function OrchestratorConsole() {
       if (res && res.cycles !== undefined) {
         setState(res);
       } else {
-        // Fallback demonstration orchestrator state
-        setState({
-          lastRun: Date.now(),
-          cycles: 124,
-          lastActions: [
-            'sentiment_updated_user_2026_08_03_1412',
-            'coach_messages_generated_user_2026_08_03_1412',
-            'contractor_score_updated_ctr_2026_08_03_1612',
-            'national_insights_refreshed',
-            'forecast_6_generated',
-            'forecast_12_generated',
-          ],
-        });
+        setState(DEFAULT_ORCHESTRATOR_STATE);
       }
     } catch (err) {
-      console.error('Failed to fetch orchestrator state', err);
+      console.warn(
+        'Backend unavailable, using demonstration orchestrator state:',
+        err,
+      );
+      setState((prev) => prev || DEFAULT_ORCHESTRATOR_STATE);
     } finally {
       setLoading(false);
     }

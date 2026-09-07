@@ -55,6 +55,14 @@ import {
   generateCoachMessages,
   getCoachMessages,
 } from './src/logic/coach/retrofitCoachEngine';
+import {
+  getNationalInsights,
+  generateNationalInsights,
+} from './src/logic/insights/nationalInsightsEngine';
+import {
+  getForecast,
+  generateAndStoreForecast,
+} from './src/logic/forecasting/retrofitForecastEngine';
 
 import {
   getAllAgentGenomes,
@@ -6403,6 +6411,58 @@ app.get('/api/coach/messages', async (req, res) => {
     return res
       .status(500)
       .json({ error: 'Failed to fetch coach messages', details: String(err) });
+  }
+});
+
+// Phase 35 National Market Insights Express Endpoints
+app.get('/api/insights/national', async (_req, res) => {
+  try {
+    const insights = await getNationalInsights(process.env);
+    return res.json(insights);
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Failed to fetch national insights',
+      details: String(err),
+    });
+  }
+});
+
+app.post('/api/insights/national/generate', async (_req, res) => {
+  try {
+    const insights = await generateNationalInsights(process.env);
+    return res.json(insights);
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Failed to generate national insights',
+      details: String(err),
+    });
+  }
+});
+
+// Phase 36 Predictive Forecasting Express Endpoints
+app.get('/api/forecasting', async (req, res) => {
+  try {
+    const months = parseInt((req.query.months as string) || '6', 10);
+    const forecast = await getForecast(process.env, months);
+    return res.json(forecast);
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Failed to fetch predictive forecast',
+      details: String(err),
+    });
+  }
+});
+
+app.post('/api/forecasting/generate', async (req, res) => {
+  try {
+    const months = parseInt((req.body?.months as string) || '6', 10);
+    const forecast = await generateAndStoreForecast(process.env, months);
+    return res.json(forecast);
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Failed to generate predictive forecast',
+      details: String(err),
+    });
   }
 });
 

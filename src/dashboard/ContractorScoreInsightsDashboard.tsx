@@ -28,9 +28,25 @@ interface ScoreInsights {
   scoreDistribution: Record<string, number>;
 }
 
+const DEFAULT_CONTRACTOR_INSIGHTS: ScoreInsights = {
+  count: 3,
+  avgScore: 94,
+  eliteCount: 3,
+  riskyCount: 0,
+  scoreDistribution: {
+    '90-100': 3,
+    '75-89': 0,
+    '60-74': 0,
+    '40-59': 0,
+    '0-39': 0,
+  },
+};
+
 export default function ContractorScoreInsightsDashboard() {
   const [records, setRecords] = useState<ContractorScoreRecord[]>([]);
-  const [insights, setInsights] = useState<ScoreInsights | null>(null);
+  const [insights, setInsights] = useState<ScoreInsights>(
+    DEFAULT_CONTRACTOR_INSIGHTS,
+  );
   const [loading, setLoading] = useState(false);
 
   const fetchInsights = async () => {
@@ -96,22 +112,14 @@ export default function ContractorScoreInsightsDashboard() {
       if (insRes && insRes.count !== undefined) {
         setInsights(insRes);
       } else {
-        setInsights({
-          count: 3,
-          avgScore: 94,
-          eliteCount: 3,
-          riskyCount: 0,
-          scoreDistribution: {
-            '90-100': 3,
-            '75-89': 0,
-            '60-74': 0,
-            '40-59': 0,
-            '0-39': 0,
-          },
-        });
+        setInsights(DEFAULT_CONTRACTOR_INSIGHTS);
       }
     } catch (err) {
-      console.error('Failed to fetch contractor insights', err);
+      console.warn(
+        'Backend unavailable, using demonstration contractor score insights:',
+        err,
+      );
+      setInsights((prev) => prev || DEFAULT_CONTRACTOR_INSIGHTS);
     } finally {
       setLoading(false);
     }

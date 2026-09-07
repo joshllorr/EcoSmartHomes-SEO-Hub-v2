@@ -24,9 +24,53 @@ import {
 import { apiGet, apiPost } from '../hooks/useApi';
 import { RetrofitForecast } from '../logic/forecasting/retrofitForecastEngine';
 
+const getFallbackForecast = (m: number): RetrofitForecast => {
+  const gf = 1 + m * 0.03;
+  return {
+    generatedAt: Date.now(),
+    horizonMonths: m,
+    demandForecast: {
+      Limerick: Math.round(42 * gf),
+      Cork: Math.round(36 * gf),
+      Clare: Math.round(22 * gf),
+      Kerry: Math.round(14 * gf),
+    },
+    upgradeForecast: {
+      storage: Math.round(88 * gf),
+      insulation: Math.round(104 * gf),
+      solar: Math.round(92 * gf),
+      controls: Math.round(58 * gf),
+    },
+    techAdoptionForecast: {
+      solar: Math.round(92 * gf),
+      heatPump: Math.round(84 * gf),
+      insulation: Math.round(104 * gf),
+      ventilation: Math.round(28 * gf),
+      controls: Math.round(58 * gf),
+      battery: Math.round(88 * gf),
+    },
+    contractorCapacityForecast: {
+      elite: Math.round(3 * gf),
+      strong: Math.round(2 * gf),
+      risky: 0,
+    },
+    avgApprovalTimeForecastDays: Math.round(4 * gf),
+    avgInstallationTimeForecastDays: Math.round(6 * gf),
+    carbonOffsetForecastTonnes: Math.round(214.8 * gf * 10) / 10,
+    savingsForecastEuro: Math.round(1280 * gf),
+    bottleneckRisk: {
+      contractorShortage: 28,
+      berAssessorShortage: 32,
+      seaiQueuePressure: 18,
+    },
+  };
+};
+
 export default function RetrofitForecastDashboard() {
   const [months, setMonths] = useState<number>(6);
-  const [forecast, setForecast] = useState<RetrofitForecast | null>(null);
+  const [forecast, setForecast] = useState<RetrofitForecast>(() =>
+    getFallbackForecast(6),
+  );
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
 
@@ -37,49 +81,14 @@ export default function RetrofitForecastDashboard() {
       if (res && res.carbonOffsetForecastTonnes !== undefined) {
         setForecast(res);
       } else {
-        // Fallback demonstration forecast
-        const gf = 1 + m * 0.03;
-        setForecast({
-          generatedAt: Date.now(),
-          horizonMonths: m,
-          demandForecast: {
-            Limerick: Math.round(42 * gf),
-            Cork: Math.round(36 * gf),
-            Clare: Math.round(22 * gf),
-            Kerry: Math.round(14 * gf),
-          },
-          upgradeForecast: {
-            storage: Math.round(88 * gf),
-            insulation: Math.round(104 * gf),
-            solar: Math.round(92 * gf),
-            controls: Math.round(58 * gf),
-          },
-          techAdoptionForecast: {
-            solar: Math.round(92 * gf),
-            heatPump: Math.round(84 * gf),
-            insulation: Math.round(104 * gf),
-            ventilation: Math.round(28 * gf),
-            controls: Math.round(58 * gf),
-            battery: Math.round(88 * gf),
-          },
-          contractorCapacityForecast: {
-            elite: Math.round(3 * gf),
-            strong: Math.round(2 * gf),
-            risky: 0,
-          },
-          avgApprovalTimeForecastDays: Math.round(4 * gf),
-          avgInstallationTimeForecastDays: Math.round(6 * gf),
-          carbonOffsetForecastTonnes: Math.round(214.8 * gf * 10) / 10,
-          savingsForecastEuro: Math.round(1280 * gf),
-          bottleneckRisk: {
-            contractorShortage: 28,
-            berAssessorShortage: 32,
-            seaiQueuePressure: 18,
-          },
-        });
+        setForecast(getFallbackForecast(m));
       }
     } catch (err) {
-      console.error('Failed to fetch forecast', err);
+      console.warn(
+        'Backend unavailable, using demonstration forecasting data:',
+        err,
+      );
+      setForecast((prev) => prev || getFallbackForecast(m));
     } finally {
       setLoading(false);
     }

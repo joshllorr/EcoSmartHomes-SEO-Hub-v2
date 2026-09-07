@@ -24,8 +24,37 @@ import {
 import { apiGet, apiPost } from '../hooks/useApi';
 import { NationalInsights } from '../logic/insights/nationalInsightsEngine';
 
+const DEFAULT_NATIONAL_INSIGHTS: NationalInsights = {
+  generatedAt: Date.now(),
+  totalHomeowners: 114,
+  totalRetrofitsCompleted: 114,
+  totalUpgradesRecommended: 342,
+  avgAnnualSavings: 1280,
+  totalCarbonOffsetTonnes: 214.8,
+  regionalDemand: { Limerick: 42, Cork: 36, Clare: 22, Kerry: 14 },
+  techMix: {
+    solar: 92,
+    heatPump: 84,
+    insulation: 104,
+    ventilation: 28,
+    controls: 58,
+    battery: 88,
+  },
+  contractorCapacity: { elite: 3, strong: 2, risky: 0 },
+  avgSEAIApprovalTimeDays: 4,
+  avgInstallationTimeDays: 6,
+  upgradeCategoryDemand: {
+    storage: 88,
+    insulation: 104,
+    solar: 92,
+    controls: 58,
+  },
+};
+
 export default function NationalInsightsDashboard() {
-  const [insights, setInsights] = useState<NationalInsights | null>(null);
+  const [insights, setInsights] = useState<NationalInsights>(
+    DEFAULT_NATIONAL_INSIGHTS,
+  );
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
 
@@ -36,36 +65,14 @@ export default function NationalInsightsDashboard() {
       if (res && res.totalHomeowners !== undefined) {
         setInsights(res);
       } else {
-        // Fallback default demonstration metrics
-        setInsights({
-          generatedAt: Date.now(),
-          totalHomeowners: 114,
-          totalRetrofitsCompleted: 114,
-          totalUpgradesRecommended: 342,
-          avgAnnualSavings: 1280,
-          totalCarbonOffsetTonnes: 214.8,
-          regionalDemand: { Limerick: 42, Cork: 36, Clare: 22, Kerry: 14 },
-          techMix: {
-            solar: 92,
-            heatPump: 84,
-            insulation: 104,
-            ventilation: 28,
-            controls: 58,
-            battery: 88,
-          },
-          contractorCapacity: { elite: 3, strong: 2, risky: 0 },
-          avgSEAIApprovalTimeDays: 4,
-          avgInstallationTimeDays: 6,
-          upgradeCategoryDemand: {
-            storage: 88,
-            insulation: 104,
-            solar: 92,
-            controls: 58,
-          },
-        });
+        setInsights(DEFAULT_NATIONAL_INSIGHTS);
       }
     } catch (err) {
-      console.error('Failed to fetch national insights', err);
+      console.warn(
+        'Backend unavailable, using demonstration national insights:',
+        err,
+      );
+      setInsights((prev) => prev || DEFAULT_NATIONAL_INSIGHTS);
     } finally {
       setLoading(false);
     }

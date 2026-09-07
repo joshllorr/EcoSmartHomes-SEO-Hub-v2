@@ -128,7 +128,7 @@ export default function SystemStatus() {
           // ignore body parse failure
         }
 
-        const errorMsg = !isJson
+        const errorMsg = finalIsHtml
           ? `Server returned non-JSON response from ${usedEndpoint} (${res.status} ${res.statusText || 'OK'})`
           : errorBody
             ? `HTTP ${res.status} (${res.statusText}): ${errorBody.slice(0, 120)}`
