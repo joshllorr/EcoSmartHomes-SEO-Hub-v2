@@ -22,6 +22,10 @@
       "destination": "/api/pdf-insights?type=retrofit"
     },
     {
+      "source": "/api/agents/:match*",
+      "destination": "/api/agents/dispatch"
+    },
+    {
       "source": "/((?!api|articles|assets|favicon.ico).*)",
       "destination": "/index.html"
     }

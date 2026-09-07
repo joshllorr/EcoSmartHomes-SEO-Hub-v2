@@ -73,6 +73,11 @@ import {
 } from './src/server/marlGenome';
 
 import { globalEditorialWarRoomEngine } from './src/logic/editorialWarRoomEngine';
+import { globalAgentDispatchEngine } from './src/logic/agents/agentDispatchEngine';
+import {
+  AGENT_JOB_PRESETS,
+  triggerAgentPreset,
+} from './src/logic/agents/agentJobPresets';
 import { globalRegionalSeoMoatEngine } from './src/logic/regionalSeoMoatEngine';
 import {
   IRISH_COUNTIES_DATA,
@@ -6527,6 +6532,91 @@ app.get('/api/retrofit/pdf-insights', (_req, res) => {
       ],
     },
   });
+});
+
+// Autonomous Multi-Agent Dispatch Engine & Job Allocation Endpoints
+app.get('/api/agents/squad', (_req, res) => {
+  try {
+    const squad = globalAgentDispatchEngine.getSquadStatus();
+    return res.json({ ok: true, squad });
+  } catch (err: any) {
+    return res.status(500).json({ ok: false, error: err.message || err });
+  }
+});
+
+app.get('/api/agents/jobs', (req, res) => {
+  try {
+    const type = req.query.type as any;
+    const status = req.query.status as any;
+    const jobs = globalAgentDispatchEngine.getJobs({ type, status });
+    return res.json({ ok: true, jobs, count: jobs.length });
+  } catch (err: any) {
+    return res.status(500).json({ ok: false, error: err.message || err });
+  }
+});
+
+app.get('/api/agents/jobs/:id', (req, res) => {
+  try {
+    const job = globalAgentDispatchEngine.getJobById(String(req.params.id));
+    if (!job) {
+      return res.status(404).json({ ok: false, error: 'Job not found' });
+    }
+    return res.json({ ok: true, job });
+  } catch (err: any) {
+    return res.status(500).json({ ok: false, error: err.message || err });
+  }
+});
+
+app.get('/api/agents/presets', (_req, res) => {
+  return res.json({ ok: true, presets: AGENT_JOB_PRESETS });
+});
+
+app.post('/api/agents/dispatch', async (req, res) => {
+  try {
+    const { type, payload, title, priority } = req.body || {};
+    if (!type) {
+      return res.status(400).json({ ok: false, error: 'Missing agent type' });
+    }
+    const job = await globalAgentDispatchEngine.dispatchJob(
+      type,
+      payload || {},
+      {
+        title,
+        priority,
+      },
+    );
+    return res.json({ ok: true, job });
+  } catch (err: any) {
+    return res.status(500).json({ ok: false, error: err.message || err });
+  }
+});
+
+app.post('/api/agents/preset', async (req, res) => {
+  try {
+    const { presetId, customTitle, overridePayload } = req.body || {};
+    if (!presetId) {
+      return res.status(400).json({ ok: false, error: 'Missing presetId' });
+    }
+    const job = await triggerAgentPreset(presetId, {
+      customTitle,
+      overridePayload,
+    });
+    return res.json({ ok: true, job });
+  } catch (err: any) {
+    return res.status(500).json({ ok: false, error: err.message || err });
+  }
+});
+
+app.post('/api/marl/consensus-vote', (req, res) => {
+  try {
+    const { job } = req.body || {};
+    const consensus = globalAgentDispatchEngine.evaluateConsensus(
+      job || { type: 'editorial' },
+    );
+    return res.json({ ok: true, consensus });
+  } catch (err: any) {
+    return res.status(500).json({ ok: false, error: err.message || err });
+  }
 });
 
 // Vite & Static file setup
