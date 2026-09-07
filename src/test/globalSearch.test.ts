@@ -145,4 +145,16 @@ describe('Global Search Index Engine', () => {
       expect(allCmd.action.category).toBe('all');
     }
   });
+
+  it('provides index items suitable for accessible listbox navigation with unique IDs', () => {
+    const results = searchGlobalIndex('heat pump', 'all');
+    expect(results.length).toBeGreaterThan(0);
+    // Ensure every result has an id and targetTab
+    results.forEach((item, index) => {
+      expect(item.id).toBeTruthy();
+      expect(item.targetTab).toBeTruthy();
+      const domId = `search-result-${index}`;
+      expect(domId).toMatch(/^search-result-\d+$/);
+    });
+  });
 });

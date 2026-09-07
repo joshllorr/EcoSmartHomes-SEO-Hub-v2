@@ -415,6 +415,9 @@ export default function GlobalSearchModal({
       id="global-search-modal-backdrop"
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Global Search and Quick Navigation"
         className="w-full max-w-3xl bg-[#0f172a] border border-white/15 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] text-left relative animate-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
         id="global-search-modal"
@@ -428,6 +431,16 @@ export default function GlobalSearchModal({
           <input
             ref={inputRef}
             type="text"
+            role="combobox"
+            aria-expanded={searchResults.length > 0}
+            aria-haspopup="listbox"
+            aria-controls="global-search-results-list"
+            aria-autocomplete="list"
+            aria-activedescendant={
+              searchResults.length > 0 && selectedIndex >= 0
+                ? `search-result-${selectedIndex}`
+                : undefined
+            }
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search content drafts, keywords, audit logs, views..."
@@ -670,7 +683,9 @@ export default function GlobalSearchModal({
         {/* Results Container */}
         <div
           ref={resultsContainerRef}
-          className="flex-1 overflow-y-auto p-2 sm:p-3 divide-y divide-white/5 scrollbar-thin scrollbar-thumb-white/10 min-h-[220px]"
+          role="listbox"
+          aria-label="Search results"
+          className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-1.5 scrollbar-thin scrollbar-thumb-white/10 min-h-[220px]"
           id="global-search-results-list"
         >
           {/* Recent Searches Pills (when query is empty) */}
@@ -810,22 +825,26 @@ export default function GlobalSearchModal({
                   )}
 
                   <div
+                    id={`search-result-${index}`}
+                    role="option"
+                    aria-selected={isSelected}
+                    tabIndex={isSelected ? 0 : -1}
                     data-result-index={index}
                     onClick={() => handleSelectResult(item)}
                     onMouseEnter={() => setSelectedIndex(index)}
-                    className={`p-3 rounded-xl transition cursor-pointer flex items-start gap-3 my-0.5 group ${
+                    className={`p-3 rounded-xl transition-all duration-100 cursor-pointer flex items-start gap-3 my-0.5 group relative outline-hidden select-none ${
                       isSelected
-                        ? 'bg-emerald-500/10 border border-emerald-500/30'
+                        ? 'bg-blue-500/15 border-2 border-blue-500 ring-2 ring-blue-500 ring-offset-2 ring-offset-[#0f172a] shadow-lg shadow-blue-500/20'
                         : item.isSuggested
-                          ? 'bg-white/[0.02] hover:bg-white/5 border border-white/5'
-                          : 'hover:bg-white/5 border border-transparent'
+                          ? 'bg-white/[0.02] hover:bg-white/5 border-2 border-white/5'
+                          : 'hover:bg-white/5 border-2 border-transparent'
                     }`}
                   >
                     {/* Category Icon Container */}
                     <div
-                      className={`p-2 rounded-xl border shrink-0 mt-0.5 ${
+                      className={`p-2 rounded-xl border shrink-0 mt-0.5 transition ${
                         isSelected
-                          ? 'bg-black/50 border-emerald-500/40 shadow-xs'
+                          ? 'bg-blue-500/25 border-blue-400/60 text-blue-300 shadow-xs'
                           : 'bg-black/30 border-white/10'
                       }`}
                     >
@@ -837,7 +856,7 @@ export default function GlobalSearchModal({
                       <div className="flex items-center gap-2 flex-wrap">
                         <span
                           className={`text-xs sm:text-sm font-semibold truncate ${
-                            isSelected ? 'text-emerald-300' : 'text-white'
+                            isSelected ? 'text-blue-100 font-bold' : 'text-white'
                           }`}
                         >
                           {item.title}
@@ -896,15 +915,22 @@ export default function GlobalSearchModal({
                       <div
                         className={`p-1.5 rounded-lg border transition ${
                           isSelected
-                            ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-sm'
+                            ? 'bg-blue-500 text-white border-blue-400 shadow-sm ring-1 ring-blue-400/50'
                             : 'bg-white/5 text-slate-400 border-white/10 opacity-60 group-hover:opacity-100'
                         }`}
+                        title={isSelected ? 'Press Enter to open this result' : undefined}
                       >
                         <CornerDownLeft size={13} />
                       </div>
-                      <span className="text-[9px] font-mono text-slate-500 hidden sm:inline">
-                        {item.targetTab}
-                      </span>
+                      {isSelected ? (
+                        <span className="text-[9px] font-mono text-blue-300 font-semibold bg-blue-500/20 px-1.5 py-0.5 rounded border border-blue-400/30 hidden sm:inline-flex items-center gap-1">
+                          <span>Enter ↵</span>
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-mono text-slate-500 hidden sm:inline">
+                          {item.targetTab}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </React.Fragment>
@@ -1067,18 +1093,18 @@ export default function GlobalSearchModal({
 
             <span className="hidden md:inline-flex text-white/20">|</span>
 
-            <span className="hidden md:inline-flex items-center gap-1" title="Navigate results with Up/Down arrows">
-              <kbd className="px-1.5 py-0.5 bg-white/10 rounded border border-white/15 text-slate-300 font-mono text-[10px]">
+            <span className="hidden md:inline-flex items-center gap-1" title="Navigate results with Up/Down arrows (shows blue focus ring)">
+              <kbd className="px-1.5 py-0.5 bg-blue-500/15 rounded border border-blue-400/30 text-blue-300 font-mono text-[10px]">
                 ↑↓
               </kbd>
-              <span className="text-slate-400 text-[10px] font-sans">navigate</span>
+              <span className="text-slate-300 text-[10px] font-sans">navigate</span>
             </span>
 
-            <span className="hidden md:inline-flex items-center gap-1" title="Press Enter to open result">
-              <kbd className="px-1.5 py-0.5 bg-white/10 rounded border border-white/15 text-slate-300 font-mono text-[10px]">
+            <span className="hidden md:inline-flex items-center gap-1" title="Press Enter to open focused result">
+              <kbd className="px-1.5 py-0.5 bg-blue-500/15 rounded border border-blue-400/30 text-blue-300 font-mono text-[10px]">
                 ↵
               </kbd>
-              <span className="text-slate-400 text-[10px] font-sans">open</span>
+              <span className="text-slate-300 text-[10px] font-sans">select</span>
             </span>
 
             {isVoiceSupported && (
