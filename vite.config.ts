@@ -5,7 +5,26 @@ import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
   return {
+    define: {
+      'process.env': {},
+    },
     plugins: [react(), tailwindcss()],
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-dom/client',
+        'react-router-dom',
+        'lucide-react',
+        '@sentry/react',
+        'motion/react',
+        'recharts',
+        'd3',
+        'jspdf',
+        'react-markdown',
+        'zustand',
+      ],
+    },
     resolve: {
       alias: {
         '@': path.resolve(import.meta.dirname, '.'),

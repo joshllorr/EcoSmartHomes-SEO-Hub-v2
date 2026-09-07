@@ -18,7 +18,7 @@ import {
   Euro,
 } from 'lucide-react';
 import { AgentId, AgentPerformance } from './RLPolicyDashboard';
-import { PersonalityGenome, EmergentIdentity } from '../server/marlGenome';
+import type { PersonalityGenome, EmergentIdentity } from '../types/marlGenome';
 
 export interface AgentProfile {
   agentId: AgentId;

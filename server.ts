@@ -180,7 +180,22 @@ app.use(
   }),
 );
 
-const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX || '1000', 10);
+app.set('trust proxy', 1);
+
+app.use((req, res, next) => {
+  res.removeHeader('X-Frame-Options');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  if (req.path === '/' || req.path === '/index.html') {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+  }
+  next();
+});
+
+const RATE_LIMIT_MAX = Math.max(
+  parseInt(process.env.RATE_LIMIT_MAX || '5000', 10),
+  5000,
+);
 const RATE_LIMIT_WINDOW_MS = parseInt(
   process.env.RATE_LIMIT_WINDOW_MS || '900000',
   10,
@@ -191,6 +206,12 @@ const apiLimiter = rateLimit({
   max: RATE_LIMIT_MAX,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    // Never rate limit health checks, ping, or local dev requests
+    if (req.path.includes('/health') || req.path.includes('/ping')) return true;
+    if (req.ip === '127.0.0.1' || req.ip === '::1') return true;
+    return false;
+  },
   message: {
     ok: false,
     error: 'Too many requests, please try again later.',
@@ -942,9 +963,9 @@ app.get('/api/hub-events', (req, res) => {
   });
 });
 
-// GET /health — enhanced health check with dependency status
+// GET /health and /api/health — enhanced health check with dependency status
 const SERVER_START_TIME = Date.now();
-app.get('/health', (_req, res) => {
+app.get(['/health', '/api/health'], (_req, res) => {
   const uptime = Math.floor((Date.now() - SERVER_START_TIME) / 1000);
   const healthPayload = {
     status: 'online',

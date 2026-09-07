@@ -245,14 +245,21 @@ const serverStartTime = Date.now();
 
 export function generateDeploymentHealthReport(): DeploymentHealthReport {
   const uptimeSeconds = Math.floor((Date.now() - serverStartTime) / 1000);
-  const memUsage = process.memoryUsage ? Math.round(process.memoryUsage().heapUsed / 1024 / 1024) : 48;
+  const memUsage =
+    typeof process !== 'undefined' && typeof process.memoryUsage === 'function'
+      ? Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
+      : 48;
 
   return {
     status: 'healthy',
     uptimeSeconds,
     timestamp: Date.now(),
     buildVersion: '0.0.0-phase49-unified',
-    environment: process.env.NODE_ENV || 'development',
+    environment:
+      (typeof process !== 'undefined' &&
+        process.env &&
+        process.env.NODE_ENV) ||
+      'development',
     kvStoreStatus: 'online',
     registeredKeywordsCount: 15,
     activeAutomationJobs: 3,

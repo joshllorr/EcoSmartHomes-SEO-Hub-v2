@@ -9,7 +9,7 @@
  * local express server (localhost:3000/api/command).
  */
 
-import { type CommandAction } from '../server/commands';
+import type { CommandAction } from '../types/commands';
 
 export async function sendHubCommand(
   action: CommandAction,
