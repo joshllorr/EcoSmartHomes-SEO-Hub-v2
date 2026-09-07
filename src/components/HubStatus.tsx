@@ -27,8 +27,22 @@ export default function HubStatus() {
 
   const checkHubStatus = useCallback(async () => {
     try {
-      const res = await fetch('/health', { cache: 'no-store' });
-      if (res.ok) {
+      let res = await fetch('/health', {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      });
+      const contentType = res.headers?.get?.('content-type') || '';
+      const isHtml = contentType.includes('text/html');
+      if (!res.ok || isHtml) {
+        res = await fetch('/api/health', {
+          headers: { Accept: 'application/json' },
+          cache: 'no-store',
+        });
+      }
+
+      const finalContentType = res.headers?.get?.('content-type') || '';
+      const finalIsHtml = finalContentType.includes('text/html');
+      if (res.ok && !finalIsHtml) {
         const data: HealthPayload = await res.json();
         setHealth(data);
         setStatus('online');

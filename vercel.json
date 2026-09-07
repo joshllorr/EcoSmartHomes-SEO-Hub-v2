@@ -2,6 +2,10 @@
   "buildCommand": "npm run build",
   "rewrites": [
     {
+      "source": "/health",
+      "destination": "/api/health"
+    },
+    {
       "source": "/((?!api|articles|assets|favicon.ico).*)",
       "destination": "/index.html"
     }

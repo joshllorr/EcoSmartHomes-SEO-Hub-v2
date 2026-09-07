@@ -40,7 +40,9 @@ export interface ConnectionAttempt {
 }
 
 export default function SystemStatus() {
-  const [status, setStatus] = useState<'online' | 'offline' | 'checking'>('checking');
+  const [status, setStatus] = useState<'online' | 'offline' | 'checking'>(
+    'checking',
+  );
   const [latency, setLatency] = useState<number | null>(null);
   const [healthData, setHealthData] = useState<HealthData | null>(null);
   const [lastChecked, setLastChecked] = useState<Date | null>(null);
@@ -58,19 +60,47 @@ export default function SystemStatus() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      const res = await fetch('/health', {
-        method: 'GET',
-        headers: { Accept: 'application/json' },
-        signal: controller.signal,
-        cache: 'no-cache',
-      });
+      // Attempt /health first, fallback to /api/health if HTML/error returned
+      let res: Response;
+      let usedEndpoint = '/health';
+      try {
+        res = await fetch('/health', {
+          method: 'GET',
+          headers: { Accept: 'application/json' },
+          signal: controller.signal,
+          cache: 'no-cache',
+        });
+        const contentType = res.headers?.get?.('content-type') || '';
+        const isHtml = contentType.includes('text/html');
+        // If /health returned HTML (SPA fallback) or error, try /api/health
+        if (!res.ok || isHtml) {
+          usedEndpoint = '/api/health';
+          res = await fetch('/api/health', {
+            method: 'GET',
+            headers: { Accept: 'application/json' },
+            signal: controller.signal,
+            cache: 'no-cache',
+          });
+        }
+      } catch {
+        usedEndpoint = '/api/health';
+        res = await fetch('/api/health', {
+          method: 'GET',
+          headers: { Accept: 'application/json' },
+          signal: controller.signal,
+          cache: 'no-cache',
+        });
+      }
       clearTimeout(timeoutId);
 
       const roundTrip = Math.round(performance.now() - startTime);
       setLatency(roundTrip);
       setLastChecked(attemptTime);
 
-      if (res.ok) {
+      const finalContentType = res.headers?.get?.('content-type') || '';
+      const finalIsHtml = finalContentType.includes('text/html');
+
+      if (res.ok && !finalIsHtml) {
         const data: HealthData = await res.json();
         setHealthData(data);
         const isOnline = data.status === 'online' || res.status === 200;
@@ -83,7 +113,9 @@ export default function SystemStatus() {
           httpStatus: res.status,
           statusText: res.statusText || 'OK',
           latency: roundTrip,
-          errorMessage: isOnline ? null : `API returned status: "${data.status}"`,
+          errorMessage: isOnline
+            ? null
+            : `API returned status: "${data.status}"`,
           healthData: data,
         };
 
@@ -96,9 +128,11 @@ export default function SystemStatus() {
           // ignore body parse failure
         }
 
-        const errorMsg = errorBody
-          ? `HTTP ${res.status} (${res.statusText}): ${errorBody.slice(0, 120)}`
-          : `HTTP ${res.status} (${res.statusText || 'Error'}) from /health`;
+        const errorMsg = !isJson
+          ? `Server returned non-JSON response from ${usedEndpoint} (${res.status} ${res.statusText || 'OK'})`
+          : errorBody
+            ? `HTTP ${res.status} (${res.statusText}): ${errorBody.slice(0, 120)}`
+            : `HTTP ${res.status} (${res.statusText || 'Error'}) from ${usedEndpoint}`;
 
         setStatus('offline');
         setHealthData(null);
@@ -177,7 +211,10 @@ export default function SystemStatus() {
   };
 
   const formatRelativeTime = (date: Date) => {
-    const diffSecs = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+    const diffSecs = Math.max(
+      0,
+      Math.floor((Date.now() - date.getTime()) / 1000),
+    );
     if (diffSecs < 5) return 'Just now';
     if (diffSecs < 60) return `${diffSecs}s ago`;
     const diffMins = Math.floor(diffSecs / 60);
@@ -185,12 +222,17 @@ export default function SystemStatus() {
   };
 
   // Diagnostic Stats
-  const successfulAttemptsCount = attempts.filter((a) => a.status === 'online').length;
+  const successfulAttemptsCount = attempts.filter(
+    (a) => a.status === 'online',
+  ).length;
   const recentErrors = attempts.filter((a) => a.errorMessage);
 
   return (
     <>
-      <div className="relative inline-flex items-center" id="system-status-container">
+      <div
+        className="relative inline-flex items-center"
+        id="system-status-container"
+      >
         <button
           id="system-status-indicator-btn"
           onClick={() => setShowModal(true)}
@@ -225,7 +267,11 @@ export default function SystemStatus() {
           </span>
 
           <span className="hidden sm:inline font-semibold">
-            {status === 'online' ? 'API Online' : status === 'offline' ? 'API Offline' : 'Connecting'}
+            {status === 'online'
+              ? 'API Online'
+              : status === 'offline'
+                ? 'API Offline'
+                : 'Connecting'}
           </span>
 
           {status === 'online' && latency !== null && (
@@ -265,11 +311,15 @@ export default function SystemStatus() {
                   <Server size={18} />
                 </div>
                 <div>
-                  <h3 id="diagnostic-modal-title" className="font-semibold text-white text-sm">
+                  <h3
+                    id="diagnostic-modal-title"
+                    className="font-semibold text-white text-sm"
+                  >
                     System Health Diagnostics
                   </h3>
                   <p className="text-[11px] text-slate-400">
-                    Live connection status & recent attempt history for <span className="font-mono text-slate-300">/health</span>
+                    Live connection status & recent attempt history for{' '}
+                    <span className="font-mono text-slate-300">/health</span>
                   </p>
                 </div>
               </div>
@@ -282,7 +332,12 @@ export default function SystemStatus() {
                   className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg text-slate-300 bg-white/5 hover:bg-white/10 border border-white/10 transition cursor-pointer disabled:opacity-50"
                   title="Run ping check now"
                 >
-                  <RefreshCw size={13} className={isRefreshing ? 'animate-spin text-emerald-400' : ''} />
+                  <RefreshCw
+                    size={13}
+                    className={
+                      isRefreshing ? 'animate-spin text-emerald-400' : ''
+                    }
+                  />
                   <span>Ping</span>
                 </button>
 
@@ -302,11 +357,17 @@ export default function SystemStatus() {
               {/* Primary Status Card */}
               <div className="p-3.5 rounded-xl bg-slate-900/80 border border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                 <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-black/30 border border-white/5">
-                  <span className="text-[10px] uppercase tracking-wider text-slate-400 mb-1">State</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-400 mb-1">
+                    State
+                  </span>
                   <div className="flex items-center gap-1.5 font-bold">
                     <span
                       className={`h-2 w-2 rounded-full ${
-                        status === 'online' ? 'bg-emerald-400' : status === 'offline' ? 'bg-rose-400' : 'bg-amber-400'
+                        status === 'online'
+                          ? 'bg-emerald-400'
+                          : status === 'offline'
+                            ? 'bg-rose-400'
+                            : 'bg-amber-400'
                       }`}
                     />
                     <span
@@ -324,14 +385,18 @@ export default function SystemStatus() {
                 </div>
 
                 <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-black/30 border border-white/5">
-                  <span className="text-[10px] uppercase tracking-wider text-slate-400 mb-1">Latency</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-400 mb-1">
+                    Latency
+                  </span>
                   <span className="font-mono font-bold text-slate-200">
                     {latency !== null ? `${latency} ms` : 'N/A'}
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-black/30 border border-white/5">
-                  <span className="text-[10px] uppercase tracking-wider text-slate-400 mb-1">Success Rate</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-400 mb-1">
+                    Success Rate
+                  </span>
                   <span className="font-mono font-bold text-slate-200">
                     {attempts.length > 0
                       ? `${Math.round((successfulAttemptsCount / attempts.length) * 100)}%`
@@ -340,7 +405,9 @@ export default function SystemStatus() {
                 </div>
 
                 <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-black/30 border border-white/5">
-                  <span className="text-[10px] uppercase tracking-wider text-slate-400 mb-1">Uptime</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-400 mb-1">
+                    Uptime
+                  </span>
                   <span className="font-mono font-bold text-slate-200">
                     {formatUptime(healthData?.uptime)}
                   </span>
@@ -354,14 +421,18 @@ export default function SystemStatus() {
                   className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-200 space-y-1.5"
                 >
                   <div className="flex items-center gap-2 font-semibold text-rose-300 text-xs">
-                    <AlertTriangle size={15} className="shrink-0 text-rose-400" />
+                    <AlertTriangle
+                      size={15}
+                      className="shrink-0 text-rose-400"
+                    />
                     <span>Error Reported in Recent Health Checks</span>
                   </div>
                   <div className="text-[11px] text-rose-200/90 font-mono bg-black/30 p-2 rounded border border-rose-500/20 break-all">
                     {recentErrors[0].errorMessage}
                   </div>
                   <div className="text-[10px] text-rose-300/80">
-                    Occurred at {recentErrors[0].timestamp.toLocaleTimeString()} ({formatRelativeTime(recentErrors[0].timestamp)})
+                    Occurred at {recentErrors[0].timestamp.toLocaleTimeString()}{' '}
+                    ({formatRelativeTime(recentErrors[0].timestamp)})
                   </div>
                 </div>
               )}
@@ -369,8 +440,14 @@ export default function SystemStatus() {
               {/* No Error Banner */}
               {recentErrors.length === 0 && attempts.length > 0 && (
                 <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-[11px]">
-                  <ShieldCheck size={16} className="text-emerald-400 shrink-0" />
-                  <span>All recent connection attempts completed with 0 errors. Backend responding normally.</span>
+                  <ShieldCheck
+                    size={16}
+                    className="text-emerald-400 shrink-0"
+                  />
+                  <span>
+                    All recent connection attempts completed with 0 errors.
+                    Backend responding normally.
+                  </span>
                 </div>
               )}
 
@@ -381,7 +458,9 @@ export default function SystemStatus() {
                     <Radio size={13} className="text-slate-400" />
                     Last 5 Connection Attempts
                   </span>
-                  <span className="text-[10px] text-slate-500">Newest first</span>
+                  <span className="text-[10px] text-slate-500">
+                    Newest first
+                  </span>
                 </div>
 
                 <div className="space-y-2" id="system-status-attempts-list">
@@ -405,9 +484,15 @@ export default function SystemStatus() {
                           <div className="flex items-center justify-between gap-2 mb-1.5">
                             <div className="flex items-center gap-2">
                               {isSuccess ? (
-                                <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
+                                <CheckCircle2
+                                  size={14}
+                                  className="text-emerald-400 shrink-0"
+                                />
                               ) : (
-                                <AlertCircle size={14} className="text-rose-400 shrink-0" />
+                                <AlertCircle
+                                  size={14}
+                                  className="text-rose-400 shrink-0"
+                                />
                               )}
                               <span className="font-semibold text-slate-200">
                                 Attempt #{attempts.length - index}
@@ -419,7 +504,9 @@ export default function SystemStatus() {
                                     : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
                                 }`}
                               >
-                                {attempt.httpStatus ? `HTTP ${attempt.httpStatus}` : attempt.statusText || 'Offline'}
+                                {attempt.httpStatus
+                                  ? `HTTP ${attempt.httpStatus}`
+                                  : attempt.statusText || 'Offline'}
                               </span>
                             </div>
 
@@ -431,7 +518,9 @@ export default function SystemStatus() {
                               )}
                               <div className="flex items-center gap-1 text-[10px] text-slate-400 font-mono">
                                 <Clock size={10} />
-                                <span>{formatRelativeTime(attempt.timestamp)}</span>
+                                <span>
+                                  {formatRelativeTime(attempt.timestamp)}
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -439,13 +528,17 @@ export default function SystemStatus() {
                           {/* Attempt Details or Error Message */}
                           {attempt.errorMessage ? (
                             <div className="mt-1 text-[11px] font-mono text-rose-300 bg-rose-950/40 border border-rose-500/20 rounded p-1.5 break-all">
-                              <span className="text-rose-400 font-semibold mr-1">Error:</span>
+                              <span className="text-rose-400 font-semibold mr-1">
+                                Error:
+                              </span>
                               {attempt.errorMessage}
                             </div>
                           ) : (
                             <div className="text-[11px] text-slate-400 flex items-center justify-between">
                               <span>
-                                {attempt.healthData?.service || 'Local Hub Service'} • Uptime:{' '}
+                                {attempt.healthData?.service ||
+                                  'Local Hub Service'}{' '}
+                                • Uptime:{' '}
                                 {formatUptime(attempt.healthData?.uptime)}
                               </span>
                               <span className="text-[10px] text-slate-500 font-mono">
@@ -471,7 +564,9 @@ export default function SystemStatus() {
                   </div>
                   {healthData.dependencies && (
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-400">Dependency Integrations:</span>
+                      <span className="text-slate-400">
+                        Dependency Integrations:
+                      </span>
                       <div className="flex items-center gap-2">
                         <span
                           className={`text-[10px] px-2 py-0.5 rounded-full border font-mono flex items-center gap-1 ${
@@ -481,7 +576,8 @@ export default function SystemStatus() {
                           }`}
                         >
                           <Activity size={10} />
-                          Gemini: {healthData.dependencies.gemini ? 'Ready' : 'Mock'}
+                          Gemini:{' '}
+                          {healthData.dependencies.gemini ? 'Ready' : 'Mock'}
                         </span>
                         <span
                           className={`text-[10px] px-2 py-0.5 rounded-full border font-mono flex items-center gap-1 ${
@@ -490,7 +586,10 @@ export default function SystemStatus() {
                               : 'bg-slate-800 text-slate-400 border-slate-700'
                           }`}
                         >
-                          Sentry: {healthData.dependencies.sentry ? 'Active' : 'Disabled'}
+                          Sentry:{' '}
+                          {healthData.dependencies.sentry
+                            ? 'Active'
+                            : 'Disabled'}
                         </span>
                       </div>
                     </div>
@@ -508,7 +607,10 @@ export default function SystemStatus() {
                   <WifiOff size={12} className="text-rose-400" />
                 )}
                 <span>
-                  {lastChecked ? `Last ping: ${lastChecked.toLocaleTimeString()}` : 'Initializing...'} (Auto 15s)
+                  {lastChecked
+                    ? `Last ping: ${lastChecked.toLocaleTimeString()}`
+                    : 'Initializing...'}{' '}
+                  (Auto 15s)
                 </span>
               </div>
               <button
