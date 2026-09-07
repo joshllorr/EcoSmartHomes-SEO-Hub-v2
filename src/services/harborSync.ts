@@ -18,7 +18,9 @@ export type HarborEventType =
   | 'multi_site_expansion'
   | 'conversational_knowledge'
   | 'article_generated'
-  | 'article_draft';
+  | 'article_draft'
+  | 'regional_moat_deployed'
+  | 'moat_deployed';
 
 export interface HarborPayload {
   type: HarborEventType;

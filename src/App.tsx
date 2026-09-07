@@ -24,10 +24,15 @@ const LinkBuilderTab = lazy(() => import('./components/LinkBuilderTab'));
 const ContentLibraryTab = lazy(() => import('./components/ContentLibraryTab'));
 const ContentAuditTab = lazy(() => import('./components/ContentAuditTab'));
 const ContentMap = lazy(() => import('./pages/ContentMap'));
-const KeywordResearchTab = lazy(() => import('./components/KeywordResearchTab'));
+const KeywordResearchTab = lazy(
+  () => import('./components/KeywordResearchTab'),
+);
 const SERPAnalyzerTab = lazy(() => import('./components/SERPAnalyzerTab'));
 const SiteAuditTab = lazy(() => import('./components/SiteAuditTab'));
-const EnergyEstimatorTab = lazy(() => import('./components/EnergyEstimatorTab'));
+const EnergyEstimatorTab = lazy(
+  () => import('./components/EnergyEstimatorTab'),
+);
+const RegionalMoatTab = lazy(() => import('./components/RegionalMoatTab'));
 import AIVisibilityCard from './components/AIVisibilityCard';
 import RankingStabilityMap from './components/RankingStabilityMap';
 
@@ -54,20 +59,46 @@ const GrantPdfAnalytics = lazy(() => import('./dashboard/GrantPdfAnalytics'));
 const AdvisorDashboard = lazy(() => import('./dashboard/AdvisorDashboard'));
 const HomeownerAnalytics = lazy(() => import('./dashboard/HomeownerAnalytics'));
 const RetrofitAnalytics = lazy(() => import('./dashboard/RetrofitAnalytics'));
-const ContractorDashboard = lazy(() => import('./dashboard/ContractorDashboard'));
-const RetrofitPdfAnalytics = lazy(() => import('./dashboard/RetrofitPdfAnalytics'));
-const GrantSubmissionsDashboard = lazy(() => import('./dashboard/GrantSubmissionsDashboard'));
-const PostInstallDashboard = lazy(() => import('./dashboard/PostInstallDashboard'));
+const ContractorDashboard = lazy(
+  () => import('./dashboard/ContractorDashboard'),
+);
+const RetrofitPdfAnalytics = lazy(
+  () => import('./dashboard/RetrofitPdfAnalytics'),
+);
+const GrantSubmissionsDashboard = lazy(
+  () => import('./dashboard/GrantSubmissionsDashboard'),
+);
+const PostInstallDashboard = lazy(
+  () => import('./dashboard/PostInstallDashboard'),
+);
 const JourneyDashboard = lazy(() => import('./dashboard/JourneyDashboard'));
-const ContractorQualityDashboard = lazy(() => import('./dashboard/ContractorQualityDashboard'));
-const ContractorScoreInsightsDashboard = lazy(() => import('./dashboard/ContractorScoreInsightsDashboard'));
-const HomeUpgradeInsightsDashboard = lazy(() => import('./dashboard/HomeUpgradeInsightsDashboard'));
-const NationalInsightsDashboard = lazy(() => import('./dashboard/NationalInsightsDashboard'));
-const RetrofitForecastDashboard = lazy(() => import('./dashboard/RetrofitForecastDashboard'));
-const AdvisorSessionsDashboard = lazy(() => import('./dashboard/AdvisorSessionsDashboard'));
-const SentimentIntelligenceDashboard = lazy(() => import('./dashboard/SentimentIntelligenceDashboard'));
-const CoachIntelligenceDashboard = lazy(() => import('./dashboard/CoachIntelligenceDashboard'));
-const OrchestratorConsole = lazy(() => import('./dashboard/OrchestratorConsole'));
+const ContractorQualityDashboard = lazy(
+  () => import('./dashboard/ContractorQualityDashboard'),
+);
+const ContractorScoreInsightsDashboard = lazy(
+  () => import('./dashboard/ContractorScoreInsightsDashboard'),
+);
+const HomeUpgradeInsightsDashboard = lazy(
+  () => import('./dashboard/HomeUpgradeInsightsDashboard'),
+);
+const NationalInsightsDashboard = lazy(
+  () => import('./dashboard/NationalInsightsDashboard'),
+);
+const RetrofitForecastDashboard = lazy(
+  () => import('./dashboard/RetrofitForecastDashboard'),
+);
+const AdvisorSessionsDashboard = lazy(
+  () => import('./dashboard/AdvisorSessionsDashboard'),
+);
+const SentimentIntelligenceDashboard = lazy(
+  () => import('./dashboard/SentimentIntelligenceDashboard'),
+);
+const CoachIntelligenceDashboard = lazy(
+  () => import('./dashboard/CoachIntelligenceDashboard'),
+);
+const OrchestratorConsole = lazy(
+  () => import('./dashboard/OrchestratorConsole'),
+);
 const HomeownerGrantFlow = lazy(() => import('./pages/HomeownerGrantFlow'));
 const HomeownerPortal = lazy(() => import('./portal/HomeownerPortal'));
 
@@ -101,6 +132,8 @@ export default function App() {
     '#/harbor-sync': 'dashboard',
     '/live': 'dashboard',
     '#/live': 'dashboard',
+    '/regional-moat': 'regional_moat',
+    '#/regional-moat': 'regional_moat',
     '/': 'dashboard',
     '': 'dashboard',
   };
@@ -115,7 +148,8 @@ export default function App() {
       window.location.hash === '#/portal');
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] =
+    useState<boolean>(false);
   const [dashboardState, setDashboardState] = useState<DashboardState>(
     INITIAL_DASHBOARD_DATA,
   );
@@ -124,7 +158,9 @@ export default function App() {
   );
 
   const [currentSerp, setCurrentSerp] = useState<any | null>(null);
-  const [serpKeyword, setSerpKeyword] = useState<string>('SEAI grants Limerick V94');
+  const [serpKeyword, setSerpKeyword] = useState<string>(
+    'SEAI grants Limerick V94',
+  );
   const [discoveryCount, setDiscoveryCount] = useState<number>(1);
   const [isSiteScanned, setIsSiteScanned] = useState<boolean>(false);
   const [isGlobalSearchOpen, setIsGlobalSearchOpen] = useState<boolean>(false);
@@ -308,7 +344,9 @@ export default function App() {
 
   if (isGrantRoute) {
     return (
-      <Suspense fallback={<TabLoadingSkeleton title="Loading SEAI Grant Flow..." />}>
+      <Suspense
+        fallback={<TabLoadingSkeleton title="Loading SEAI Grant Flow..." />}
+      >
         <HomeownerGrantFlow />
       </Suspense>
     );
@@ -316,7 +354,9 @@ export default function App() {
 
   if (isPortalRoute) {
     return (
-      <Suspense fallback={<TabLoadingSkeleton title="Loading Homeowner Portal..." />}>
+      <Suspense
+        fallback={<TabLoadingSkeleton title="Loading Homeowner Portal..." />}
+      >
         <HomeownerPortal />
       </Suspense>
     );
@@ -480,6 +520,9 @@ export default function App() {
 
       case 'p40_orchestrator':
         return <OrchestratorConsole />;
+
+      case 'regional_moat':
+        return <RegionalMoatTab />;
 
       case 'ranking_map':
         return <RankingStabilityMap onNavigateToSERP={handleNavigateToSERP} />;

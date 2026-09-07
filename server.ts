@@ -64,6 +64,12 @@ import {
 } from './src/server/marlGenome';
 
 import { globalEditorialWarRoomEngine } from './src/logic/editorialWarRoomEngine';
+import { globalRegionalSeoMoatEngine } from './src/logic/regionalSeoMoatEngine';
+import {
+  IRISH_COUNTIES_DATA,
+  getCountyBySlug,
+  searchCountiesByEircodeOrName,
+} from './src/data/irishCountiesData';
 
 import { publishToCMS } from './src/server/cmsPublisher';
 import { runBacklinkDiscoveryAgent } from './src/server/backlinkAgent';
@@ -4111,6 +4117,133 @@ app.post('/api/seo/war-room-generate', async (req, res) => {
   }
 });
 
+// 2.15 API: Programmatic Regional SEO Moat (26 Irish Counties + Eircodes)
+app.get('/api/seo/regional/counties', (req, res) => {
+  const { province, search } = req.query;
+  let data = IRISH_COUNTIES_DATA;
+
+  if (province && typeof province === 'string' && province !== 'all') {
+    data = data.filter(
+      (c) => c.province.toLowerCase() === province.toLowerCase(),
+    );
+  }
+
+  if (search && typeof search === 'string' && search.trim()) {
+    data = searchCountiesByEircodeOrName(search.trim());
+  }
+
+  const totalSearches = data.reduce((sum, c) => sum + c.monthlySearches, 0);
+  const totalContractors = data.reduce(
+    (sum, c) => sum + c.registeredContractors,
+    0,
+  );
+
+  return res.json({
+    success: true,
+    totalCounties: data.length,
+    totalMonthlySearches: totalSearches,
+    totalContractors,
+    counties: data,
+  });
+});
+
+app.get('/api/seo/regional/county/:slug', (req, res) => {
+  try {
+    const { slug } = req.params;
+    const page = globalRegionalSeoMoatEngine.generateCountyPage(slug);
+    return res.json({
+      success: true,
+      page,
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      success: false,
+      error: error.message || 'County not found',
+    });
+  }
+});
+
+app.post('/api/seo/regional/generate-page', async (req, res) => {
+  const { slug, customTone, useAi } = req.body || {};
+  if (!slug) {
+    return res
+      .status(400)
+      .json({ success: false, error: 'County slug is required' });
+  }
+
+  try {
+    const page = globalRegionalSeoMoatEngine.generateCountyPage(slug, {
+      customTone,
+      useAi,
+    });
+
+    broadcastToAll({
+      type: 'regional_page_generated',
+      slug: page.slug,
+      county: page.county,
+      eircode: page.eircode,
+      message: `Regional SEO: Programmatic page for ${page.county} (${page.eircode}) generated`,
+      timestamp: Date.now(),
+    });
+
+    syncToHarbor({
+      type: 'draft_created',
+      slug: `county-${page.slug}`,
+      title: page.metaTitle,
+      wordCount: page.wordCount,
+      message: `Regional Moat Page: ${page.county} (${page.eircode}) [Canonical: ${page.canonicalUrl}]`,
+    });
+
+    return res.json({
+      success: true,
+      page,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to generate regional county page',
+    });
+  }
+});
+
+app.post('/api/seo/regional/batch-generate', async (req, res) => {
+  try {
+    broadcastToAll({
+      type: 'regional_moat_batch_started',
+      totalCounties: 26,
+      message:
+        'Deploying Programmatic Regional SEO Moat across all 26 Irish Counties & Eircodes',
+      timestamp: Date.now(),
+    });
+
+    const summary = globalRegionalSeoMoatEngine.generateAllCountiesMoat();
+
+    broadcastToAll({
+      type: 'regional_moat_batch_completed',
+      totalCounties: summary.totalCounties,
+      totalMonthlySearches: summary.totalMonthlySearches,
+      message: `Regional Moat Active: All 26 Irish Counties indexed (${summary.totalMonthlySearches.toLocaleString()} searches/mo coverage)`,
+      timestamp: Date.now(),
+    });
+
+    syncToHarbor({
+      type: 'moat_deployed',
+      totalCounties: 26,
+      message: `Programmatic SEO Moat: 26 Counties & Eircode routing keys deployed (${summary.totalMonthlySearches.toLocaleString()} monthly search footprint)`,
+    });
+
+    return res.json({
+      success: true,
+      summary,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      error: error.message || 'Batch generation error',
+    });
+  }
+});
+
 // 2.2 API: Content Reworker Endpoint (Transform & Optimize Existing Content)
 app.post('/api/seo/rework-content', async (req, res) => {
   const { originalContent, title, reworkGoal, tone, audience, keywords } =
@@ -6123,6 +6256,13 @@ app.get('/sitemap.xml', (_req, res) => {
 </urlset>`);
 });
 
+// Programmatic Regional SEO Moat Sitemap: 26 Irish Counties + Eircodes
+app.get('/sitemap-regional.xml', (_req, res) => {
+  res.header('Content-Type', 'application/xml');
+  const xml = globalRegionalSeoMoatEngine.generateRegionalSitemapXml();
+  return res.send(xml);
+});
+
 app.get('/robots.txt', (_req, res) => {
   const robotsPath = path.join(process.cwd(), 'public', 'robots.txt');
   if (fs.existsSync(robotsPath)) {
@@ -6131,7 +6271,7 @@ app.get('/robots.txt', (_req, res) => {
   }
   res.header('Content-Type', 'text/plain');
   return res.send(
-    'User-agent: *\nAllow: /\nSitemap: https://ecosmarthomes.ie/sitemap.xml',
+    'User-agent: *\nAllow: /\nSitemap: https://ecosmarthomes.ie/sitemap.xml\nSitemap: https://ecosmarthomes.ie/sitemap-regional.xml',
   );
 });
 

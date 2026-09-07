@@ -3,3 +3,4 @@ Allow: /
 
 # Sitemap reference
 Sitemap: https://ecosmarthomes.ie/sitemap.xml
+Sitemap: https://ecosmarthomes.ie/sitemap-regional.xml
