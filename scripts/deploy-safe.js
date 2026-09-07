@@ -64,10 +64,24 @@ try {
 
 // 7. Stage raw source files
 console.log('📤 Step 7: Staging source files...');
-execSync(
-  'git add src public api articles logic retrofit data vercel.json index.html vite.config.ts package.json eslint.config.js scripts/',
-  { stdio: 'inherit' },
-);
+const candidateTargets = [
+  'src',
+  'public',
+  'api',
+  'articles',
+  'logic',
+  'assets',
+  'data',
+  'vercel.json',
+  'index.html',
+  'vite.config.ts',
+  'package.json',
+  'package-lock.json',
+  'eslint.config.js',
+  'scripts',
+];
+const validTargets = candidateTargets.filter((t) => fs.existsSync(t));
+execSync(`git add ${validTargets.join(' ')}`, { stdio: 'inherit' });
 
 // 8. Commit
 console.log('📝 Step 8: Committing...');
@@ -80,10 +94,12 @@ try {
 }
 
 // 9. Push to main
-console.log('⬆️ Step 9: Pushing to main...');
+console.log('⬆️ Step 9: Force pushing to main...');
 try {
-  execSync('git push origin main', { stdio: 'inherit' });
-  console.log('✅ Step 9: Successfully pushed main to GitHub (origin/main).');
+  execSync('git push --force origin main', { stdio: 'inherit' });
+  console.log(
+    '✅ Step 9: Successfully force pushed main to GitHub (origin/main).',
+  );
 } catch (err) {
   console.error('❌ Step 9: Push to origin/main failed.');
   process.exit(1);
