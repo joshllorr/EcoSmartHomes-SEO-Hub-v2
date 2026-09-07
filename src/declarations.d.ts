@@ -34,4 +34,18 @@ declare module '../server.ts' {
     model?: string,
     jsonSchema?: Record<string, unknown>,
   ): Promise<string | null>;
+  export function callUnifiedAI(
+    prompt: string,
+    options?: {
+      taskType?: string;
+      model?: string;
+      jsonSchema?: Record<string, unknown>;
+      timeoutMs?: number;
+      preferGemini?: boolean;
+    },
+  ): Promise<{
+    text: string | null;
+    provider: 'freellmapi' | 'gemini' | 'mock';
+    modelUsed?: string;
+  }>;
 }
