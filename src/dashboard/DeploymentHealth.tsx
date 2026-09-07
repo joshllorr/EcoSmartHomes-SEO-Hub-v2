@@ -66,19 +66,17 @@ export default function DeploymentHealth() {
     ];
 
     try {
-      const logicRootModules = import.meta.glob('/logic/**/*.ts');
-      const srcLogicModules = import.meta.glob('/src/logic/**/*.ts');
+      const logicModules = import.meta.glob('/src/engines/logic/**/*.ts');
       const serverModules = import.meta.glob('/src/server/*.ts');
       const allPaths = [
-        ...Object.keys(logicRootModules),
-        ...Object.keys(srcLogicModules),
+        ...Object.keys(logicModules),
         ...Object.keys(serverModules),
       ];
 
       const results: Record<string, boolean> = {};
       engineList.forEach((engine) => {
         results[engine] = allPaths.some((path) =>
-          path.toLowerCase().includes(`/${engine.toLowerCase()}.ts`),
+          path.includes(`/${engine}.ts`),
         );
       });
 

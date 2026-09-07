@@ -111,7 +111,7 @@ const INITIAL_LIBRARY_ITEMS: LibraryItem[] = [
     title: 'The New 8-Category BER Scale: 2026 Official Conversion Guide',
     topic: 'BER Rating Systems',
     content:
-      '# The New 8-Category BER Scale: 2026 Official Conversion Guide\n\nDetailed breakdown of the revised BER scale categories A0 to G, kWh/m²/yr primary energy thresholds, and compliance requirements for Irish landlords...',
+      '# The New 8-Category BER Scale: 2026 Official Conversion Guide\n\nDetailed breakdown of the revised BER scale categories A1 to G, kWh/m²/yr primary energy thresholds, and compliance requirements for Irish landlords...',
     status: 'Ready to Publish',
     date: '18/07/2026',
     wordCount: 800,

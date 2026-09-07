@@ -21,28 +21,25 @@
   },
   "dependencies": {
     "@exodus/bytes": "^1.15.1",
-    "@google-cloud/vertexai": "^1.12.0",
-    "@google/genai": "^2.18.0",
-    "@google/generative-ai": "^0.24.1",
-    "@sentry/node": "^10.71.0",
+    "@google/genai": "^2.4.0",
+    "@sentry/node": "^10.69.0",
     "@sentry/react": "^8.55.2",
     "@sentry/tracing": "^7.0.0",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.0.5",
     "axios": "^1.18.1",
     "cheerio": "^1.0.0",
-    "cors": "^2.8.6",
+    "cors": "^2.8.5",
     "cron-parser": "^5.7.0",
     "d3": "^7.9.0",
-    "dotenv": "^17.4.2",
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.6.2",
+    "express-rate-limit": "^8.6.1",
     "glob": "^13.0.6",
     "helmet": "^8.3.0",
     "jspdf": "^4.2.1",
     "lucide-react": "^0.475.0",
     "motion": "^12.23.24",
-    "multer": "^2.3.0",
     "node-schedule": "^2.1.1",
     "performance-now": "^2.1.0",
     "react": "^19.0.1",
@@ -51,9 +48,8 @@
     "react-router": "^8.3.0",
     "react-router-dom": "^7.18.2",
     "recharts": "^3.9.2",
-    "stripe": "^22.5.0",
     "twilio": "^6.1.0",
-    "ws": "^8.21.3",
+    "ws": "^8.21.1",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
@@ -61,7 +57,7 @@
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.0.0",
-    "@types/cors": "^2.8.19",
+    "@types/cors": "^2.8.17",
     "@types/d3": "^7.4.3",
     "@types/d3-array": "^3.2.2",
     "@types/d3-axis": "^3.0.6",
@@ -94,8 +90,6 @@
     "@types/d3-transition": "^3.0.9",
     "@types/d3-zoom": "^3.0.8",
     "@types/express": "^5.0.6",
-    "@types/helmet": "^0.0.48",
-    "@types/multer": "^2.2.0",
     "@types/node": "^22.14.0",
     "@types/node-schedule": "^2.1.7",
     "@types/react": "^19.2.17",
@@ -136,14 +130,5 @@
   "overrides": {
     "cron-parser": "^5.7.0",
     "glob": "^13.0.6"
-  },
-  "lavamoat": {
-    "allowScripts": {
-      "@google/genai#2.16.0": false,
-      "@google/genai>protobufjs#7.6.5": false,
-      "@vercel/node>esbuild#0.27.0": false,
-      "esbuild#0.28.2": false,
-      "jspdf>core-js#3.50.0": false
-    }
   }
 }

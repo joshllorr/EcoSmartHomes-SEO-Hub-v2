@@ -8,7 +8,7 @@
  * but talk to server.ts via HTTP, keeping a clean dependency graph.
  */
 
-const HUB_BASE = process.env.HUB_BASE || `http://localhost:${process.env.PORT || 5173}`;
+const HUB_BASE = 'http://localhost:3000';
 
 async function hubPost(
   path: string,

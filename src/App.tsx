@@ -9,10 +9,6 @@ import { ArticleDraft, DashboardState } from './types';
 import { useDashboardStore } from './store/useDashboardStore';
 import LiveVersion from './components/LiveVersion';
 import { checkDeploymentDrift } from './utils/deploymentCheck';
-import { useDashboardShortcuts } from './hooks/useDashboardShortcuts';
-import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
-import SettingsModal from './components/SettingsModal';
-import { Command } from 'lucide-react';
 
 // Code-split / Lazy-loaded Secondary Dashboards & Sub-tabs
 const CrawlerDashboard = lazy(() =>
@@ -26,15 +22,10 @@ const LinkBuilderTab = lazy(() => import('./components/LinkBuilderTab'));
 const ContentLibraryTab = lazy(() => import('./components/ContentLibraryTab'));
 const ContentAuditTab = lazy(() => import('./components/ContentAuditTab'));
 const ContentMap = lazy(() => import('./pages/ContentMap'));
-const KeywordResearchTab = lazy(
-  () => import('./components/KeywordResearchTab'),
-);
+const KeywordResearchTab = lazy(() => import('./components/KeywordResearchTab'));
 const SERPAnalyzerTab = lazy(() => import('./components/SERPAnalyzerTab'));
 const SiteAuditTab = lazy(() => import('./components/SiteAuditTab'));
-const EnergyEstimatorTab = lazy(
-  () => import('./components/EnergyEstimatorTab'),
-);
-const EircodeEngineTab = lazy(() => import('./components/EircodeEngineTab'));
+const EnergyEstimatorTab = lazy(() => import('./components/EnergyEstimatorTab'));
 import AIVisibilityCard from './components/AIVisibilityCard';
 import RankingStabilityMap from './components/RankingStabilityMap';
 
@@ -61,46 +52,20 @@ const GrantPdfAnalytics = lazy(() => import('./dashboard/GrantPdfAnalytics'));
 const AdvisorDashboard = lazy(() => import('./dashboard/AdvisorDashboard'));
 const HomeownerAnalytics = lazy(() => import('./dashboard/HomeownerAnalytics'));
 const RetrofitAnalytics = lazy(() => import('./dashboard/RetrofitAnalytics'));
-const ContractorDashboard = lazy(
-  () => import('./dashboard/ContractorDashboard'),
-);
-const RetrofitPdfAnalytics = lazy(
-  () => import('./dashboard/RetrofitPdfAnalytics'),
-);
-const GrantSubmissionsDashboard = lazy(
-  () => import('./dashboard/GrantSubmissionsDashboard'),
-);
-const PostInstallDashboard = lazy(
-  () => import('./dashboard/PostInstallDashboard'),
-);
+const ContractorDashboard = lazy(() => import('./dashboard/ContractorDashboard'));
+const RetrofitPdfAnalytics = lazy(() => import('./dashboard/RetrofitPdfAnalytics'));
+const GrantSubmissionsDashboard = lazy(() => import('./dashboard/GrantSubmissionsDashboard'));
+const PostInstallDashboard = lazy(() => import('./dashboard/PostInstallDashboard'));
 const JourneyDashboard = lazy(() => import('./dashboard/JourneyDashboard'));
-const ContractorQualityDashboard = lazy(
-  () => import('./dashboard/ContractorQualityDashboard'),
-);
-const ContractorScoreInsightsDashboard = lazy(
-  () => import('./dashboard/ContractorScoreInsightsDashboard'),
-);
-const HomeUpgradeInsightsDashboard = lazy(
-  () => import('./dashboard/HomeUpgradeInsightsDashboard'),
-);
-const NationalInsightsDashboard = lazy(
-  () => import('./dashboard/NationalInsightsDashboard'),
-);
-const RetrofitForecastDashboard = lazy(
-  () => import('./dashboard/RetrofitForecastDashboard'),
-);
-const AdvisorSessionsDashboard = lazy(
-  () => import('./dashboard/AdvisorSessionsDashboard'),
-);
-const SentimentIntelligenceDashboard = lazy(
-  () => import('./dashboard/SentimentIntelligenceDashboard'),
-);
-const CoachIntelligenceDashboard = lazy(
-  () => import('./dashboard/CoachIntelligenceDashboard'),
-);
-const OrchestratorConsole = lazy(
-  () => import('./dashboard/OrchestratorConsole'),
-);
+const ContractorQualityDashboard = lazy(() => import('./dashboard/ContractorQualityDashboard'));
+const ContractorScoreInsightsDashboard = lazy(() => import('./dashboard/ContractorScoreInsightsDashboard'));
+const HomeUpgradeInsightsDashboard = lazy(() => import('./dashboard/HomeUpgradeInsightsDashboard'));
+const NationalInsightsDashboard = lazy(() => import('./dashboard/NationalInsightsDashboard'));
+const RetrofitForecastDashboard = lazy(() => import('./dashboard/RetrofitForecastDashboard'));
+const AdvisorSessionsDashboard = lazy(() => import('./dashboard/AdvisorSessionsDashboard'));
+const SentimentIntelligenceDashboard = lazy(() => import('./dashboard/SentimentIntelligenceDashboard'));
+const CoachIntelligenceDashboard = lazy(() => import('./dashboard/CoachIntelligenceDashboard'));
+const OrchestratorConsole = lazy(() => import('./dashboard/OrchestratorConsole'));
 const HomeownerGrantFlow = lazy(() => import('./pages/HomeownerGrantFlow'));
 const HomeownerPortal = lazy(() => import('./portal/HomeownerPortal'));
 
@@ -148,20 +113,7 @@ export default function App() {
       window.location.hash === '#/portal');
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] =
-    useState<boolean>(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
-
-  const {
-    isShortcutsModalOpen,
-    setIsShortcutsModalOpen,
-    toastMessage,
-    dismissToast,
-  } = useDashboardShortcuts({
-    activeTab,
-    setActiveTab,
-  });
-
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
   const [dashboardState, setDashboardState] = useState<DashboardState>(
     INITIAL_DASHBOARD_DATA,
   );
@@ -170,9 +122,7 @@ export default function App() {
   );
 
   const [currentSerp, setCurrentSerp] = useState<any | null>(null);
-  const [serpKeyword, setSerpKeyword] = useState<string>(
-    'SEAI grants Limerick V94',
-  );
+  const [serpKeyword, setSerpKeyword] = useState<string>('SEAI grants Limerick V94');
   const [discoveryCount, setDiscoveryCount] = useState<number>(1);
   const [isSiteScanned, setIsSiteScanned] = useState<boolean>(false);
 
@@ -317,9 +267,7 @@ export default function App() {
 
   if (isGrantRoute) {
     return (
-      <Suspense
-        fallback={<TabLoadingSkeleton title="Loading SEAI Grant Flow..." />}
-      >
+      <Suspense fallback={<TabLoadingSkeleton title="Loading SEAI Grant Flow..." />}>
         <HomeownerGrantFlow />
       </Suspense>
     );
@@ -327,9 +275,7 @@ export default function App() {
 
   if (isPortalRoute) {
     return (
-      <Suspense
-        fallback={<TabLoadingSkeleton title="Loading Homeowner Portal..." />}
-      >
+      <Suspense fallback={<TabLoadingSkeleton title="Loading Homeowner Portal..." />}>
         <HomeownerPortal />
       </Suspense>
     );
@@ -350,14 +296,6 @@ export default function App() {
             onOptimizeAIVisibility={() => setActiveTab('writer')}
             onQuickAction={handleQuickAction}
             onNavigateToSERP={handleNavigateToSERP}
-            onUpdateDraft={handleUpdateDraft}
-            onUpdateDrafts={(updatedDrafts) => {
-              setDashboardState((prev) => ({
-                ...prev,
-                drafts: updatedDrafts,
-              }));
-            }}
-            onXPUnlock={handleXPUnlock}
           />
         );
 
@@ -611,9 +549,6 @@ export default function App() {
       case 'estimator':
         return <EnergyEstimatorTab />;
 
-      case 'eircode':
-        return <EircodeEngineTab />;
-
       case 'visibility':
         return (
           <div className="p-8 text-left max-w-4xl">
@@ -644,8 +579,6 @@ export default function App() {
         site={dashboardState.site}
         isMobileOpen={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
-        onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
-        onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
       {/* Main Content Shell */}
@@ -659,8 +592,6 @@ export default function App() {
             setIsMobileSidebarOpen(false);
           }}
           onToggleMobileMenu={() => setIsMobileSidebarOpen((prev) => !prev)}
-          onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
-          onOpenSettings={() => setIsSettingsOpen(true)}
         />
 
         {/* Dynamic Tab Body with Suspense & ErrorBoundary */}
@@ -672,46 +603,6 @@ export default function App() {
           </ErrorBoundary>
         </main>
       </div>
-
-      {/* Settings & Vite HMR Config Modal */}
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
-
-      {/* Keyboard Shortcuts Reference Modal */}
-      <KeyboardShortcutsModal
-        isOpen={isShortcutsModalOpen}
-        onClose={() => setIsShortcutsModalOpen(false)}
-        onSelectTab={(tabId) => {
-          setActiveTab(tabId);
-          setIsMobileSidebarOpen(false);
-        }}
-        activeTab={activeTab}
-      />
-
-      {/* Tactile Keyboard Shortcut Feedback Toast */}
-      {toastMessage && (
-        <div
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-3.5 py-2 bg-slate-900/95 text-white border border-emerald-500/40 rounded-xl shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-150 cursor-pointer"
-          onClick={dismissToast}
-          role="status"
-          aria-live="polite"
-        >
-          <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-            <Command size={13} />
-          </div>
-          <div className="text-xs font-medium">
-            Switched to{' '}
-            <span className="font-semibold text-emerald-300">
-              {toastMessage.tabName}
-            </span>
-          </div>
-          <kbd className="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-slate-950 border border-slate-700 rounded text-emerald-400 ml-1">
-            {toastMessage.shortcut}
-          </kbd>
-        </div>
-      )}
 
       {/* Live Version Fingerprint Badge */}
       <LiveVersion />

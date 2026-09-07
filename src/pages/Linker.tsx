@@ -98,7 +98,7 @@ export default function Linker() {
       id: 'pillar-1',
       title: 'The Ultimate 2026 Irish Home Retrofit & BER Rating Upgrade Bible',
       summary:
-        'A 5,000-word authoritative master guide detailing the exact sequence for upgrading home energy ratings from G to A0, SEAI grant claiming rules, heat pump integration, and airtightness standards.',
+        'A 5,000-word authoritative master guide detailing the exact sequence for upgrading home energy ratings from G to A2, SEAI grant claiming rules, heat pump integration, and airtightness standards.',
       targetQuery: 'complete home retrofit guide ireland',
       estimatedVolume: '18.5K/mo',
       authorityScore: 98,
@@ -160,7 +160,7 @@ export default function Linker() {
       title: '2026 Irish Home BER Letter Rating Upgrade Calculator',
       type: 'Interactive Calculator',
       summary:
-        'An embeddable JS widget that takes home age, current heating system, and insulation level to output projected BER grade (G to A0) and SEAI grant eligibility.',
+        'An embeddable JS widget that takes home age, current heating system, and insulation level to output projected BER grade (G to A2) and SEAI grant eligibility.',
       whyItAttractsLinks:
         'Home improvement blogs, mortgage advisors (green mortgages), and estate agents link to this calculator to show clients upgrade potentials.',
       targetBacklinkSources: [

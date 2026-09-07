@@ -35,15 +35,11 @@ cp .env.example .env.local
 
 Set the following at minimum:
 
-| Variable         | Required | Description                                   |
-| ---------------- | -------- | --------------------------------------------- |
-| `GEMINI_API_KEY` | Optional | Google Gemini API key for direct Google calls |
-| `AI_PROVIDER`    | Optional | `freellmapi` for local unified router         |
-| `AI_BASE_URL`    | Optional | `http://127.0.0.1:31415/v1`                   |
-| `AI_KEY`         | Optional | Unified API key (server-side)                 |
-| `AI_ROUTING`     | Optional | `adaptive` or `fastest`                       |
-| `APP_URL`        | Yes      | Public URL of the deployed application        |
-| `NODE_ENV`       | Yes      | `development`, `production`, or `test`        |
+| Variable         | Required | Description                                     |
+| ---------------- | -------- | ----------------------------------------------- |
+| `GEMINI_API_KEY` | Yes      | Google Gemini API key for AI content generation |
+| `APP_URL`        | Yes      | Public URL of the deployed application          |
+| `NODE_ENV`       | Yes      | `development`, `production`, or `test`          |
 
 ### Build
 
@@ -282,87 +278,6 @@ Connect to `ws://localhost:3000/ws`. The server broadcasts the following event t
 | `qa_query`                     | Q&A query processed             |
 | `conversational_knowledge`     | Knowledge interface event       |
 | `draft_created`                | Draft saved to Harbor           |
-
-## Antigravity × FreeLLMAPI Integration
-
-### 🚀 Overview
-
-This repository integrates Antigravity with the **FreeLLMAPI Unified Local Router**, enabling:
-
-- **Unified API key** (one key for all LLMs)
-- **Local routing** via `http://127.0.0.1:31415/v1`
-- **Adaptive model selection**
-- **Fastest‑model routing**
-- **Automatic fallback chains**
-- **Claude / Gemini / GPT interoperability**
-- **Full Vitest coverage**
-- **Vercel‑ready deployment**
-
-### 🧩 Architecture
-
-Antigravity communicates with the FreeLLMAPI router using:
-
-```
-Unified API Key → Local Router (http://127.0.0.1:31415/v1) → Provider Models (Gemini, Claude, GPT)
-```
-
-Routing is handled automatically using speed, reliability metrics, intelligence scores, and fallback chains.
-
-### ⚙️ Environment Variables
-
-Add these to `.env` or your deployment environment:
-
-```env
-AI_PROVIDER=freellmapi
-AI_BASE_URL=http://127.0.0.1:31415/v1
-AI_KEY=freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc
-AI_ROUTING=adaptive
-```
-
-### 📘 Antigravity YAML Configuration
-
-Create or update `antigravity.yaml` or `config/ai.yaml`:
-
-```yaml
-ai:
-  provider: freellmapi
-  base_url: 'http://127.0.0.1:31415/v1'
-  api_key: 'freellmapi-be532d4667d197dc9ac42d43152197d369dfad7cd0c97fdc'
-
-  routing:
-    mode: adaptive
-    metrics: ['speed', 'reliability', 'intelligence']
-    default_strategy: fastest
-
-  model_selector:
-    code: 'gemini-3.5-flash'
-    generation: 'gemini-3.5-flash'
-    reasoning: 'claude-3-opus'
-    analysis: 'claude-3-opus'
-    fallback: 'gpt-4-turbo'
-
-  fallback_chain:
-    auto_fastest:
-      - 'gemini-3.5-flash'
-      - 'claude-3-opus'
-      - 'gpt-4-turbo'
-
-  default_model: 'auto_fastest'
-```
-
-### 🧠 Python Client
-
-Ready-to-use client available at [`scripts/antigravity_ai.py`](scripts/antigravity_ai.py).
-
-### 🧪 Verification & Testing
-
-```bash
-npx vitest run src/utils/__tests__/freeLlmApiClient.test.ts # ✔ 6/6 tests passed
-npx vitest run src/logic/__tests__/ src/utils/__tests__/     # ✔ 148/148 tests passed (100%)
-npm run build:frontend                                     # ✔ Completed in 1.88s (0 errors)
-```
-
-See [`docs/FREELLMAPI_INTEGRATION.md`](docs/FREELLMAPI_INTEGRATION.md) for full integration details and troubleshooting.
 
 ## Troubleshooting
 

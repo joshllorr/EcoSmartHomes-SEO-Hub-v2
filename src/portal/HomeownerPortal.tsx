@@ -446,7 +446,7 @@ export default function HomeownerPortal() {
               <div className="p-4 bg-slate-900/80 border border-white/10 rounded-xl flex flex-col justify-between">
                 <span className="text-slate-400">BER Impact:</span>
                 <span className="text-2xl font-extrabold text-sky-400 mt-2">
-                  D → A0
+                  D2 → A2
                 </span>
               </div>
 

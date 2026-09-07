@@ -16,7 +16,7 @@ import {
   ExternalLink,
   Info,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function EnergyEstimatorTab() {
   // Calculator States

@@ -71,8 +71,8 @@ export default function GrantIntelligence({
       { county: 'Galway', count: 24, topUpgrade: 'Solar PV Panels' },
     ],
     berDistribution: {
-      preRetrofit: { G: 20, F: 28, E: 34, D: 42, C: 16 },
-      projectedPostRetrofit: { A0: 88, A: 44, B: 10 },
+      preRetrofit: { F: 28, E1: 34, D2: 42, D1: 22, C1: 16 },
+      projectedPostRetrofit: { A2: 88, B1: 44, A3: 10 },
     },
   });
 
@@ -259,8 +259,8 @@ export default function GrantIntelligence({
                     eircode: 'V94 X2C9',
                     homeType: 'Semi-Detached',
                     yearBuilt: 1998,
-                    currentBER: 'D',
-                    projectedBER: 'A0',
+                    currentBER: 'D2',
+                    projectedBER: 'A2',
                     timestamp: Date.now() - 3600000,
                   },
                   {
@@ -268,8 +268,8 @@ export default function GrantIntelligence({
                     eircode: 'T12 Y5R8',
                     homeType: 'Detached',
                     yearBuilt: 1985,
-                    currentBER: 'E',
-                    projectedBER: 'A0',
+                    currentBER: 'E1',
+                    projectedBER: 'A2',
                     timestamp: Date.now() - 7200000,
                   },
                 ]
@@ -354,19 +354,19 @@ export default function GrantIntelligence({
             <div className="flex flex-col gap-3 font-mono text-xs">
               <div className="p-3.5 bg-slate-950/80 border border-white/5 rounded-xl">
                 <span className="text-slate-400 font-bold">
-                  Pre-Retrofit Baseline BER (2026 EPBD):
+                  Pre-Retrofit Baseline BER:
                 </span>
                 <p className="text-rose-400 font-bold mt-1">
-                  D (30%), E (24%), F (20%), G (15%), C (11%)
+                  D2 (30%), E1 (24%), F (20%), D1 (15%), C1 (11%)
                 </p>
               </div>
 
               <div className="p-3.5 bg-slate-950/80 border border-emerald-500/20 rounded-xl">
                 <span className="text-slate-400 font-bold">
-                  Projected Post-Retrofit BER (2026 EPBD):
+                  Projected Post-Retrofit BER:
                 </span>
                 <p className="text-emerald-400 font-bold mt-1">
-                  A0 (62%), A (31%), B (7%)
+                  A2 (62%), B1 (31%), A3 (7%)
                 </p>
               </div>
             </div>

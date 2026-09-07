@@ -42,45 +42,18 @@ export interface ActivityItem {
   date: string;
 }
 
-export interface FeaturedImageMeta {
-  url: string;
-  alt: string;
-  caption?: string;
-  fileName?: string;
-  prompt?: string;
-  aspectRatio?: string;
-  style?: string;
-  dimensions?: { width: number; height: number };
-  generatedAt?: string;
-}
-
-export type FunnelStatus =
-  'Idea' | 'Research' | 'Drafted' | 'Review' | 'Published';
-
 export interface ArticleDraft {
   id: string;
   title: string;
   topic: string;
   content: string;
-  status: FunnelStatus | 'Drafted' | 'Published' | string;
+  status: 'Drafted' | 'Published';
   date: string;
   wordCount: number;
   metaTitle?: string;
   metaDescription?: string;
   keywords?: string[];
   tone?: string;
-  featuredImage?: FeaturedImageMeta;
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
-  pillar?: string;
-  seoScore?: number;
-  liveUrl?: string;
-  targetBER?: string;
-  estimatedReadTime?: string;
-  slug?: string;
-  grantTag?: string;
-  daysInStage?: number;
-  stageUpdatedAt?: number;
-  publishedAt?: number;
 }
 
 export interface DashboardState {

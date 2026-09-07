@@ -2,16 +2,8 @@
   "buildCommand": "npm run build",
   "rewrites": [
     {
-      "source": "/health",
-      "destination": "http://35.238.108.109:5173/health"
-    },
-    {
-      "source": "/ready",
-      "destination": "http://35.238.108.109:5173/ready"
-    },
-    {
-      "source": "/api/:path*",
-      "destination": "http://35.238.108.109:5173/api/:path*"
+      "source": "/((?!api|articles|assets|favicon.ico).*)",
+      "destination": "/index.html"
     }
   ]
 }
