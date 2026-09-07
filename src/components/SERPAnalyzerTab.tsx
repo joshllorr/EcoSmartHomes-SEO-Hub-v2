@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Search,
   TrendingUp,
@@ -41,6 +41,132 @@ export default function SERPAnalyzerTab({
     'attic insulation grant application process 2026',
   ];
 
+  const handleAnalyze = useCallback(
+    async (targetKw?: string) => {
+      const searchTarget = (targetKw || keyword).trim();
+      if (!searchTarget) return;
+      if (targetKw) {
+        setKeyword(targetKw);
+      }
+
+      setLoading(true);
+      setWarningMsg(null);
+      setErrorMsg(null);
+
+      try {
+        const response = await fetch('/api/seo/serp-analysis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ keyword: searchTarget }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: Failed to compile SERP analysis with Gemini.`);
+        }
+
+        const data = await response.json();
+        if (data.success && data.serp) {
+          onSerpAnalyzed(data.serp);
+          if (data.warning) {
+            setWarningMsg(data.warning);
+          }
+          // Reward SEO gamified XP!
+          if (onXPUnlock) {
+            onXPUnlock(40); // 40 indexing XP
+          }
+        } else {
+          throw new Error(data.error || 'Failed to receive SERP audit.');
+        }
+      } catch (err: any) {
+        console.warn('Backend SERP error, applying resilient fallback:', err);
+        // Construct fallback so the user is never blocked
+        const isSolar = searchTarget.toLowerCase().includes('solar') || searchTarget.toLowerCase().includes('pv');
+        const fallbackSERP: SERPResult = {
+          keyword: searchTarget,
+          intent: 'Informational & Commercial',
+          difficulty: isSolar ? 34 : 38,
+          search_volume: isSolar ? 18600 : 14200,
+          top_results: [
+            {
+              position: 1,
+              title: isSolar
+                ? 'SEAI Solar Electricity Grant (Up to €2,100) | SEAI Ireland'
+                : 'Home Energy Grants & Retrofitting | SEAI Ireland',
+              url: isSolar
+                ? 'https://www.seai.ie/grants/home-energy-grants/solar-electricity-grant/'
+                : 'https://www.seai.ie/grants/home-energy-grants/',
+              meta_description: isSolar
+                ? 'Discover SEAI solar PV grants for Irish domestic properties. Claim up to €2,100 for solar panel systems with Clean Export Guarantee (CEG).'
+                : 'Discover Sustainable Energy Authority of Ireland (SEAI) energy grants for insulation, heat pumps, solar panels, and deep home energy retrofits.',
+              domain_authority: 88,
+              monthly_traffic: 125000,
+              content_type: 'Government Portal',
+              themes: isSolar
+                ? ['Solar Electricity Grant', 'Clean Export Guarantee', 'SEAI Domestic Solar']
+                : ['Government Grants', 'SEAI Subsidies', 'Technical Specifications'],
+              strengths: ['Ultimate domain authority', 'Clear, official grant rates'],
+              weaknesses: ['Complex bureaucratic jargon', 'No live payback calculators'],
+              ranking_gaps: ['Lacks interactive battery vs standalone PV payback comparisons', 'No regional Limerick V94 installer matchmaking'],
+            },
+            {
+              position: 2,
+              title: isSolar
+                ? 'Solar Panels Ireland: Costs, SEAI Grants & Savings 2026 | Citizens Information'
+                : 'Retrofitting Your Home: Step-by-Step Energy Upgrade Guide',
+              url: isSolar
+                ? 'https://www.citizensinformation.ie/en/housing/housing_grants_and_schemes/solar_panels.html'
+                : 'https://www.citizensinformation.ie/en/housing/housing_grants_and_schemes/retrofitting.html',
+              meta_description:
+                'Objective homeowner advice on energy upgrades, VAT exemptions, and SEAI grant application procedures in Ireland.',
+              domain_authority: 82,
+              monthly_traffic: 98000,
+              content_type: 'Civic Advice Guide',
+              themes: ['Homeowner Rights', 'Step-by-Step Sequence', 'Grants'],
+              strengths: ['Highly structured content', 'Objective unbiased analysis'],
+              weaknesses: ['Visually dry', 'No real-time cost estimators'],
+              ranking_gaps: ['No specific BER upgrade letter calculations', 'Missing localized V94 Eircode guidance'],
+            },
+          ],
+          opportunities: [
+            'Explain the Clean Export Guarantee (CEG) feed-in tariff alongside SEAI grants in simple homeowner terms.',
+            'Detail the exact payback timeline for energy upgrades in Ireland with clear ROI tables.',
+            'Create a localized Limerick V94 contractor directory with verified SEAI registration.',
+          ],
+          ranking_gap_keywords: [
+            {
+              keyword: isSolar
+                ? 'SEAI solar pv grant battery storage Ireland 2026'
+                : `SEAI grant ${searchTarget} Limerick V94`,
+              competitor: 'SEAI Ireland',
+              competitorRank: 1,
+              volume: 4800,
+              difficulty: 32,
+              opportunityScore: 94,
+              suggestedAction: 'Create targeted regional landing page with V94 Eircode map and local installer directory.',
+            },
+          ],
+          recommended_outline: [
+            `Introduction: Why ${searchTarget} is the best long-term investment for Irish homes.`,
+            'Step 1: Understanding SEAI Grant Rates and 0% VAT rules.',
+            'Step 2: Clean Export Guarantee and bill savings calculations.',
+            'Step 3: Finding certified registered installers in Limerick V94.',
+            'Conclusion: Long-term comfort and energy independence.',
+          ],
+          summary_markdown: `### Key Insights for "${searchTarget}"\nTop ranking pages are authoritative government portals and commercial utility providers. Providing clear ROI calculations and localized Limerick V94 advice represents a major ranking opportunity.`,
+        };
+
+        onSerpAnalyzed(fallbackSERP);
+        setWarningMsg('SERP Competitor audit generated with topic-aware intelligence.');
+        if (onXPUnlock) {
+          onXPUnlock(40);
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+    [keyword, onSerpAnalyzed, onXPUnlock],
+  );
+
   useEffect(() => {
     if (initialKeyword && initialKeyword.trim()) {
       setKeyword(initialKeyword);
@@ -48,130 +174,7 @@ export default function SERPAnalyzerTab({
         handleAnalyze(initialKeyword);
       }
     }
-  }, [initialKeyword]);
-
-  const handleAnalyze = async (targetKw?: string) => {
-    const searchTarget = (targetKw || keyword).trim();
-    if (!searchTarget) return;
-    if (targetKw) {
-      setKeyword(targetKw);
-    }
-
-    setLoading(true);
-    setWarningMsg(null);
-    setErrorMsg(null);
-
-    try {
-      const response = await fetch('/api/seo/serp-analysis', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keyword: searchTarget }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: Failed to compile SERP analysis with Gemini.`);
-      }
-
-      const data = await response.json();
-      if (data.success && data.serp) {
-        onSerpAnalyzed(data.serp);
-        if (data.warning) {
-          setWarningMsg(data.warning);
-        }
-        // Reward SEO gamified XP!
-        if (onXPUnlock) {
-          onXPUnlock(40); // 40 indexing XP
-        }
-      } else {
-        throw new Error(data.error || 'Failed to receive SERP audit.');
-      }
-    } catch (err: any) {
-      console.warn('Backend SERP error, applying resilient fallback:', err);
-      // Construct fallback so the user is never blocked
-      const isSolar = searchTarget.toLowerCase().includes('solar') || searchTarget.toLowerCase().includes('pv');
-      const fallbackSERP: SERPResult = {
-        keyword: searchTarget,
-        intent: 'Informational & Commercial',
-        difficulty: isSolar ? 34 : 38,
-        search_volume: isSolar ? 18600 : 14200,
-        top_results: [
-          {
-            position: 1,
-            title: isSolar
-              ? 'SEAI Solar Electricity Grant (Up to €2,100) | SEAI Ireland'
-              : 'Home Energy Grants & Retrofitting | SEAI Ireland',
-            url: isSolar
-              ? 'https://www.seai.ie/grants/home-energy-grants/solar-electricity-grant/'
-              : 'https://www.seai.ie/grants/home-energy-grants/',
-            meta_description: isSolar
-              ? 'Discover SEAI solar PV grants for Irish domestic properties. Claim up to €2,100 for solar panel systems with Clean Export Guarantee (CEG).'
-              : 'Discover Sustainable Energy Authority of Ireland (SEAI) energy grants for insulation, heat pumps, solar panels, and deep home energy retrofits.',
-            domain_authority: 88,
-            monthly_traffic: 125000,
-            content_type: 'Government Portal',
-            themes: isSolar
-              ? ['Solar Electricity Grant', 'Clean Export Guarantee', 'SEAI Domestic Solar']
-              : ['Government Grants', 'SEAI Subsidies', 'Technical Specifications'],
-            strengths: ['Ultimate domain authority', 'Clear, official grant rates'],
-            weaknesses: ['Complex bureaucratic jargon', 'No live payback calculators'],
-            ranking_gaps: ['Lacks interactive battery vs standalone PV payback comparisons', 'No regional Limerick V94 installer matchmaking'],
-          },
-          {
-            position: 2,
-            title: isSolar
-              ? 'Solar Panels Ireland: Costs, SEAI Grants & Savings 2026 | Citizens Information'
-              : 'Retrofitting Your Home: Step-by-Step Energy Upgrade Guide',
-            url: isSolar
-              ? 'https://www.citizensinformation.ie/en/housing/housing_grants_and_schemes/solar_panels.html'
-              : 'https://www.citizensinformation.ie/en/housing/housing_grants_and_schemes/retrofitting.html',
-            meta_description:
-              'Objective homeowner advice on energy upgrades, VAT exemptions, and SEAI grant application procedures in Ireland.',
-            domain_authority: 82,
-            monthly_traffic: 98000,
-            content_type: 'Civic Advice Guide',
-            themes: ['Homeowner Rights', 'Step-by-Step Sequence', 'Grants'],
-            strengths: ['Highly structured content', 'Objective unbiased analysis'],
-            weaknesses: ['Visually dry', 'No real-time cost estimators'],
-            ranking_gaps: ['No specific BER upgrade letter calculations', 'Missing localized V94 Eircode guidance'],
-          },
-        ],
-        opportunities: [
-          'Explain the Clean Export Guarantee (CEG) feed-in tariff alongside SEAI grants in simple homeowner terms.',
-          'Detail the exact payback timeline for energy upgrades in Ireland with clear ROI tables.',
-          'Create a localized Limerick V94 contractor directory with verified SEAI registration.',
-        ],
-        ranking_gap_keywords: [
-          {
-            keyword: isSolar
-              ? 'SEAI solar pv grant battery storage Ireland 2026'
-              : `SEAI grant ${searchTarget} Limerick V94`,
-            competitor: 'SEAI Ireland',
-            competitorRank: 1,
-            volume: 4800,
-            difficulty: 32,
-            opportunityScore: 94,
-            suggestedAction: 'Create targeted regional landing page with V94 Eircode map and local installer directory.',
-          },
-        ],
-        recommended_outline: [
-          `Introduction: Why ${searchTarget} is the best long-term investment for Irish homes.`,
-          'Step 1: Understanding SEAI Grant Rates and 0% VAT rules.',
-          'Step 2: Clean Export Guarantee and bill savings calculations.',
-          'Step 3: Finding certified registered installers in Limerick V94.',
-          'Conclusion: Long-term comfort and energy independence.',
-        ],
-        summary_markdown: `### Key Insights for "${searchTarget}"\nTop ranking pages are authoritative government portals and commercial utility providers. Providing clear ROI calculations and localized Limerick V94 advice represents a major ranking opportunity.`,
-      };
-
-      onSerpAnalyzed(fallbackSERP);
-      setWarningMsg('SERP Competitor audit generated with topic-aware intelligence.');
-      if (onXPUnlock) {
-        onXPUnlock(40);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [initialKeyword, handleAnalyze, currentSerp]);
 
   return (
     <div className="space-y-6 text-left" id="serp-analyzer-tab">

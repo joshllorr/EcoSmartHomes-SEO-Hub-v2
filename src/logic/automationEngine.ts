@@ -178,7 +178,7 @@ export class AutomationEngine {
 
     defaultTargets.forEach((target) => {
       // Look for plain text occurrences not already inside a markdown link or HTML tag
-      const regex = new RegExp(`(?<!\\[)(?<!href=")(?<!>)\\b(${target.anchor})\\b(?!\\])(?!<\/a>)`, 'i');
+      const regex = new RegExp(`(?<!\\[)(?<!href=")(?<!>)\\b(${target.anchor})\\b(?!\\])(?!</a>)`, 'i');
       if (regex.test(content)) {
         content = content.replace(regex, `[$1](${target.url})`);
         linksAdded++;

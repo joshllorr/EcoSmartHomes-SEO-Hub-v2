@@ -27,6 +27,8 @@ export interface GlobalSearchResult {
   };
   metrics?: SearchMetric[];
   score?: number;
+  isSuggested?: boolean;
+  suggestedSection?: 'recent_draft' | 'frequent_nav';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -269,6 +271,7 @@ const DASHBOARD_NAV_TARGETS: Array<{
   snippet: string;
   targetTab: string;
   badgeLabel: string;
+  isFrequent?: boolean;
 }> = [
   {
     id: 'nav-overview',
@@ -277,6 +280,7 @@ const DASHBOARD_NAV_TARGETS: Array<{
     snippet: 'Pillar readiness score, weekly challenge progress, and SEO heatmap.',
     targetTab: 'dashboard',
     badgeLabel: 'Main View',
+    isFrequent: true,
   },
   {
     id: 'nav-writer',
@@ -285,6 +289,7 @@ const DASHBOARD_NAV_TARGETS: Array<{
     snippet: 'Draft, optimize, and polish SEAI & BER energy upgrade articles with AI.',
     targetTab: 'writer',
     badgeLabel: 'AI Studio',
+    isFrequent: true,
   },
   {
     id: 'nav-keywords',
@@ -293,6 +298,7 @@ const DASHBOARD_NAV_TARGETS: Array<{
     snippet: 'Explore volume, difficulty, and competitive clusters across Ireland & Munster.',
     targetTab: 'keywords',
     badgeLabel: 'SEO Tool',
+    isFrequent: true,
   },
   {
     id: 'nav-serp',
@@ -309,6 +315,7 @@ const DASHBOARD_NAV_TARGETS: Array<{
     snippet: 'Scan XML sitemaps, inspect Core Web Vitals, and verify technical SEO integrity.',
     targetTab: 'audit',
     badgeLabel: 'Technical',
+    isFrequent: true,
   },
   {
     id: 'nav-library',
@@ -317,6 +324,7 @@ const DASHBOARD_NAV_TARGETS: Array<{
     snippet: 'Manage your portfolio of drafted, published, and scheduled retrofit articles.',
     targetTab: 'content_library',
     badgeLabel: 'Repository',
+    isFrequent: true,
   },
   {
     id: 'nav-ideas',
@@ -341,6 +349,7 @@ const DASHBOARD_NAV_TARGETS: Array<{
     snippet: 'Real-time telemetry, automated publishing queue, and crawler event streams.',
     targetTab: 'crawler',
     badgeLabel: 'Live Sync',
+    isFrequent: true,
   },
   {
     id: 'nav-marl',
@@ -357,6 +366,7 @@ const DASHBOARD_NAV_TARGETS: Array<{
     snippet: 'Calculate €50,000 deep retrofit grants and heat pump subsidies for Irish homes.',
     targetTab: 'p23_grants',
     badgeLabel: 'Grants Flow',
+    isFrequent: true,
   },
   {
     id: 'nav-portal',
@@ -483,7 +493,7 @@ export function searchGlobalIndex(
       : DEFAULT_CONTENT_DRAFTS;
 
   if (category === 'all' || category === 'draft') {
-    draftsToIndex.forEach((draft) => {
+    draftsToIndex.forEach((draft, index) => {
       const titleMatch = draft.title.toLowerCase().includes(normalized);
       const topicMatch = draft.topic?.toLowerCase().includes(normalized);
       const keywordMatch = draft.keywords?.some((k) =>
@@ -493,11 +503,20 @@ export function searchGlobalIndex(
 
       if (!normalized || titleMatch || topicMatch || keywordMatch || contentMatch) {
         let score = 0;
-        if (titleMatch) score += 50;
-        if (topicMatch) score += 30;
-        if (keywordMatch) score += 25;
-        if (contentMatch) score += 10;
-        if (!normalized) score = 1;
+        let isSuggested = false;
+        let suggestedSection: 'recent_draft' | 'frequent_nav' | undefined = undefined;
+
+        if (!normalized) {
+          // Prioritize recent drafts at the top of Suggested items
+          score = 300 - Math.min(index * 5, 100);
+          isSuggested = true;
+          suggestedSection = 'recent_draft';
+        } else {
+          if (titleMatch) score += 50;
+          if (topicMatch) score += 30;
+          if (keywordMatch) score += 25;
+          if (contentMatch) score += 10;
+        }
 
         results.push({
           id: `draft-${draft.id}`,
@@ -514,7 +533,7 @@ export function searchGlobalIndex(
             item: draft,
           },
           badge: {
-            label: draft.status === 'Published' ? 'Published' : 'Draft',
+            label: draft.status === 'Published' ? 'Published' : !normalized ? 'Recent Draft' : 'Draft',
             variant: draft.status === 'Published' ? 'sky' : 'emerald',
           },
           metrics: [
@@ -525,6 +544,8 @@ export function searchGlobalIndex(
               : []),
           ],
           score,
+          isSuggested,
+          suggestedSection,
         });
       }
     });
@@ -539,10 +560,13 @@ export function searchGlobalIndex(
 
       if (!normalized || kwMatch || clusterMatch || intentMatch) {
         let score = 0;
-        if (kwMatch) score += 50;
-        if (clusterMatch) score += 20;
-        if (intentMatch) score += 15;
-        if (!normalized) score = 1;
+        if (!normalized) {
+          score = 30 - index;
+        } else {
+          if (kwMatch) score += 50;
+          if (clusterMatch) score += 20;
+          if (intentMatch) score += 15;
+        }
 
         results.push({
           id: `keyword-${index}`,
@@ -579,7 +603,7 @@ export function searchGlobalIndex(
 
   // 3. Index Site Audit Logs
   if (category === 'all' || category === 'audit') {
-    SEED_AUDIT_LOGS.forEach((audit) => {
+    SEED_AUDIT_LOGS.forEach((audit, index) => {
       const titleMatch = audit.title.toLowerCase().includes(normalized);
       const descMatch = audit.desc.toLowerCase().includes(normalized);
       const catMatch = audit.category.toLowerCase().includes(normalized);
@@ -587,11 +611,14 @@ export function searchGlobalIndex(
 
       if (!normalized || titleMatch || descMatch || catMatch || statusMatch) {
         let score = 0;
-        if (titleMatch) score += 50;
-        if (descMatch) score += 30;
-        if (catMatch) score += 20;
-        if (statusMatch) score += 15;
-        if (!normalized) score = 1;
+        if (!normalized) {
+          score = 20 - index;
+        } else {
+          if (titleMatch) score += 50;
+          if (descMatch) score += 30;
+          if (catMatch) score += 20;
+          if (statusMatch) score += 15;
+        }
 
         results.push({
           id: `audit-${audit.id}`,
@@ -625,17 +652,30 @@ export function searchGlobalIndex(
 
   // 4. Index Dashboard Navigations
   if (category === 'all' || category === 'nav') {
-    DASHBOARD_NAV_TARGETS.forEach((nav) => {
+    DASHBOARD_NAV_TARGETS.forEach((nav, index) => {
       const titleMatch = nav.title.toLowerCase().includes(normalized);
       const subtitleMatch = nav.subtitle.toLowerCase().includes(normalized);
       const snippetMatch = nav.snippet.toLowerCase().includes(normalized);
 
       if (!normalized || titleMatch || subtitleMatch || snippetMatch) {
         let score = 0;
-        if (titleMatch) score += 40;
-        if (subtitleMatch) score += 25;
-        if (snippetMatch) score += 15;
-        if (!normalized) score = 1;
+        let isSuggested = false;
+        let suggestedSection: 'recent_draft' | 'frequent_nav' | undefined = undefined;
+
+        if (!normalized) {
+          if (nav.isFrequent) {
+            // Prioritize frequent navigation destinations
+            score = 200 - Math.min(index * 3, 50);
+            isSuggested = true;
+            suggestedSection = 'frequent_nav';
+          } else {
+            score = 70 - index;
+          }
+        } else {
+          if (titleMatch) score += 40;
+          if (subtitleMatch) score += 25;
+          if (snippetMatch) score += 15;
+        }
 
         results.push({
           id: `nav-${nav.id}`,
@@ -653,6 +693,8 @@ export function searchGlobalIndex(
           },
           metrics: [{ label: 'Action', value: 'Jump to View ↵' }],
           score,
+          isSuggested,
+          suggestedSection,
         });
       }
     });
@@ -660,6 +702,28 @@ export function searchGlobalIndex(
 
   // Sort by relevance score descending
   return results.sort((a, b) => (b.score || 0) - (a.score || 0));
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Suggested Items Extraction Helper
+// ─────────────────────────────────────────────────────────────────────────────
+export function getSuggestedItems(customDrafts?: ArticleDraft[]): {
+  recentDrafts: GlobalSearchResult[];
+  frequentDestinations: GlobalSearchResult[];
+  allSuggested: GlobalSearchResult[];
+} {
+  const allResults = searchGlobalIndex('', 'all', customDrafts);
+  const recentDrafts = allResults.filter(
+    (r) => r.suggestedSection === 'recent_draft',
+  );
+  const frequentDestinations = allResults.filter(
+    (r) => r.suggestedSection === 'frequent_nav',
+  );
+  return {
+    recentDrafts,
+    frequentDestinations,
+    allSuggested: [...recentDrafts, ...frequentDestinations],
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -5,7 +5,9 @@ import {
   getRecentSearches,
   addRecentSearch,
   clearRecentSearches,
+  getSuggestedItems,
 } from '../services/globalSearchIndex';
+import { parseVoiceCommand } from '../services/voiceSearch';
 
 describe('Global Search Index Engine', () => {
   beforeEach(() => {
@@ -58,9 +60,28 @@ describe('Global Search Index Engine', () => {
     expect(auditResults.every((r) => r.category === 'audit')).toBe(true);
   });
 
-  it('handles empty query by returning all items ranked', () => {
+  it('handles empty query by prioritizing recent drafts and frequent navigation destinations in Suggested section', () => {
     const results = searchGlobalIndex('', 'all');
     expect(results.length).toBeGreaterThan(20);
+
+    // The top results must be recent drafts
+    const topDrafts = results.slice(0, 3);
+    expect(topDrafts.every((r) => r.category === 'draft' && r.suggestedSection === 'recent_draft')).toBe(true);
+
+    // Subsequent results must include frequent navigation destinations
+    const frequentNavs = results.filter((r) => r.suggestedSection === 'frequent_nav');
+    expect(frequentNavs.length).toBeGreaterThan(0);
+    expect(frequentNavs.some((r) => r.title.includes('SEO Dashboard'))).toBe(true);
+    expect(frequentNavs.some((r) => r.title.includes('AI Writer'))).toBe(true);
+  });
+
+  it('provides helper getSuggestedItems that extracts prioritized drafts and destinations', () => {
+    const suggested = getSuggestedItems();
+    expect(suggested.recentDrafts.length).toBeGreaterThan(0);
+    expect(suggested.frequentDestinations.length).toBeGreaterThan(0);
+    expect(suggested.allSuggested.length).toBe(
+      suggested.recentDrafts.length + suggested.frequentDestinations.length,
+    );
   });
 
   it('manages recent search queries properly', () => {
@@ -75,5 +96,53 @@ describe('Global Search Index Engine', () => {
     clearRecentSearches();
     const cleared = getRecentSearches();
     expect(cleared.length).toBe(0);
+  });
+
+  it('supports narrowing search results by category: Drafts, Audits, Research, and Navigation', () => {
+    // Drafts
+    const draftsOnly = searchGlobalIndex('', 'draft');
+    expect(draftsOnly.length).toBeGreaterThan(0);
+    expect(draftsOnly.every((r) => r.category === 'draft')).toBe(true);
+
+    // Audits
+    const auditsOnly = searchGlobalIndex('', 'audit');
+    expect(auditsOnly.length).toBeGreaterThan(0);
+    expect(auditsOnly.every((r) => r.category === 'audit')).toBe(true);
+
+    // Research / Keywords
+    const researchOnly = searchGlobalIndex('', 'keyword');
+    expect(researchOnly.length).toBeGreaterThan(0);
+    expect(researchOnly.every((r) => r.category === 'keyword')).toBe(true);
+
+    // Navigation
+    const navOnly = searchGlobalIndex('', 'nav');
+    expect(navOnly.length).toBeGreaterThan(0);
+    expect(navOnly.every((r) => r.category === 'nav')).toBe(true);
+  });
+
+  it('parses voice commands to filter by category: Drafts, Audits, and Research', () => {
+    const draftCmd = parseVoiceCommand('filter drafts');
+    expect(draftCmd.action.type).toBe('filter');
+    if (draftCmd.action.type === 'filter') {
+      expect(draftCmd.action.category).toBe('draft');
+    }
+
+    const auditCmd = parseVoiceCommand('filter audits');
+    expect(auditCmd.action.type).toBe('filter');
+    if (auditCmd.action.type === 'filter') {
+      expect(auditCmd.action.category).toBe('audit');
+    }
+
+    const researchCmd = parseVoiceCommand('filter research');
+    expect(researchCmd.action.type).toBe('filter');
+    if (researchCmd.action.type === 'filter') {
+      expect(researchCmd.action.category).toBe('keyword');
+    }
+
+    const allCmd = parseVoiceCommand('show all');
+    expect(allCmd.action.type).toBe('filter');
+    if (allCmd.action.type === 'filter') {
+      expect(allCmd.action.category).toBe('all');
+    }
   });
 });

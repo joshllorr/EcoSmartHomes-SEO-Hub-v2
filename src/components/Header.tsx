@@ -16,6 +16,7 @@ import {
   CheckCheck,
   MapPin,
   Search,
+  Mic,
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useDashboardStore } from '../store/useDashboardStore';
@@ -314,7 +315,7 @@ export default function Header({
         <button
           onClick={onOpenSearch}
           className="flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 hover:border-emerald-500/40 transition cursor-pointer text-xs group"
-          title="Open Global Search (Ctrl+K or ⌘K)"
+          title="Open Global Search (Cmd/Ctrl+K or /)"
           id="global-search-header-trigger"
         >
           <Search
@@ -327,9 +328,17 @@ export default function Header({
           <span className="sm:hidden text-slate-400 group-hover:text-slate-200">
             Search...
           </span>
-          <kbd className="hidden md:inline-flex items-center gap-0.5 font-mono text-[10px] bg-black/40 border border-white/10 px-1.5 py-0.5 rounded text-slate-400 group-hover:text-slate-200">
-            <span>⌘</span>K
-          </kbd>
+          <div className="hidden md:flex items-center gap-1">
+            <kbd className="inline-flex items-center gap-0.5 font-mono text-[10px] bg-black/40 border border-white/10 px-1.5 py-0.5 rounded text-slate-400 group-hover:text-slate-200">
+              <span>⌘</span>K
+            </kbd>
+            <kbd className="inline-flex items-center font-mono text-[10px] bg-black/40 border border-white/10 px-1 py-0.5 rounded text-slate-400 group-hover:text-slate-200" title="Press / to search">
+              /
+            </kbd>
+            <span className="p-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" title="Voice Search Supported">
+              <Mic size={10} />
+            </span>
+          </div>
         </button>
       )}
 
