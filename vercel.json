@@ -6,6 +6,22 @@
       "destination": "/api/health"
     },
     {
+      "source": "/api/grants/plan/:id/pdf",
+      "destination": "/api/pdf?id=:id"
+    },
+    {
+      "source": "/api/retrofit/plan/:id/pdf",
+      "destination": "/api/pdf?id=:id"
+    },
+    {
+      "source": "/api/grants/pdf-insights",
+      "destination": "/api/pdf-insights?type=grant"
+    },
+    {
+      "source": "/api/retrofit/pdf-insights",
+      "destination": "/api/pdf-insights?type=retrofit"
+    },
+    {
       "source": "/((?!api|articles|assets|favicon.ico).*)",
       "destination": "/index.html"
     }

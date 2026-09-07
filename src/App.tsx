@@ -101,6 +101,7 @@ const OrchestratorConsole = lazy(
 );
 const HomeownerGrantFlow = lazy(() => import('./pages/HomeownerGrantFlow'));
 const HomeownerPortal = lazy(() => import('./portal/HomeownerPortal'));
+const PdfViewer = lazy(() => import('./pages/PdfViewer'));
 
 export default function App() {
   const routeToTab: Record<string, string> = {
@@ -162,6 +163,10 @@ export default function App() {
     typeof window !== 'undefined' &&
     (window.location.pathname.startsWith('/portal') ||
       window.location.hash === '#/portal');
+  const isPdfRoute =
+    typeof window !== 'undefined' &&
+    (window.location.pathname.includes('/pdf') ||
+      window.location.hash.includes('/pdf'));
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] =
@@ -374,6 +379,18 @@ export default function App() {
         fallback={<TabLoadingSkeleton title="Loading Homeowner Portal..." />}
       >
         <HomeownerPortal />
+      </Suspense>
+    );
+  }
+
+  if (isPdfRoute) {
+    return (
+      <Suspense
+        fallback={
+          <TabLoadingSkeleton title="Generating SEAI Retrofit Blueprint PDF..." />
+        }
+      >
+        <PdfViewer />
       </Suspense>
     );
   }

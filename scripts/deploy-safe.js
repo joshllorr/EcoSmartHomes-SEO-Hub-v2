@@ -79,6 +79,7 @@ const candidateTargets = [
   'package-lock.json',
   'eslint.config.js',
   'scripts',
+  'server.ts',
 ];
 const validTargets = candidateTargets.filter((t) => fs.existsSync(t));
 execSync(`git add ${validTargets.join(' ')}`, { stdio: 'inherit' });
