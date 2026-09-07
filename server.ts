@@ -172,38 +172,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:', 'https:'],
-        fontSrc: ["'self'", 'https:'],
-        connectSrc: ["'self'", 'https:'],
-        frameSrc: ["'self'"],
-        objectSrc: ["'none'"],
-        baseUri: ["'self'"],
-        formAction: ["'self'"],
-        frameAncestors: ["'none'"],
-        upgradeInsecureRequests: [],
-      },
-    },
+    contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
-    crossOriginOpenerPolicy: { policy: 'same-origin' },
-    crossOriginResourcePolicy: { policy: 'same-origin' },
-    originAgentCluster: true,
-    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-    strictTransportSecurity: {
-      maxAge: 31536000,
-      includeSubDomains: true,
-      preload: true,
-    },
-    xContentTypeOptions: true,
-    xDnsPrefetchControl: true,
-    xFrameOptions: { action: 'deny' },
-    xPermittedCrossDomainPolicies: { permittedPolicies: 'none' },
-    xXssProtection: true,
-    hidePoweredBy: true,
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: false,
+    xFrameOptions: false,
   }),
 );
 

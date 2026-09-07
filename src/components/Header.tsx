@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useDashboardStore } from '../store/useDashboardStore';
+import SystemStatus from './SystemStatus';
 
 interface NotificationItem {
   id: string;
@@ -306,7 +307,10 @@ export default function Header({
       </div>
 
       {/* Right User Actions */}
-      <div className="flex items-center gap-4 shrink-0 justify-end">
+      <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0 justify-end">
+        {/* System Status Indicator */}
+        <SystemStatus />
+
         {/* Light/Dark Mode Theme Toggle */}
         <button
           onClick={toggleTheme}
