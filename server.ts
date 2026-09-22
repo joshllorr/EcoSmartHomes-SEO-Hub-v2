@@ -4608,16 +4608,12 @@ app.post('/api/cms/publish', async (req, res) => {
       .json({ error: 'Title and content are required to publish.' });
   }
 
-  // If no webhook URL provided, return local published status with setup notice
-  if (!webhookUrl || typeof webhookUrl !== 'string' || !webhookUrl.trim()) {
-    return res.json({
-      published: true,
-      mode: 'local',
-      message: `Article saved as Published in platform dashboard storage. To push live directly to ${domain || 'ecosmarthomes.ie'}, configure your CMS Webhook or REST API URL in Publish Settings.`,
-    });
-  }
-
-  const targetUrl = webhookUrl.trim();
+  // Default to live EcoSmartHomes publishing bridge if no custom webhook provided
+  const targetUrl =
+    webhookUrl && typeof webhookUrl === 'string' && webhookUrl.trim()
+      ? webhookUrl.trim()
+      : process.env.PUBLISH_WEBHOOK_URL ||
+        'https://www.ecosmarthomes.ie/api/publish';
 
   try {
     const headers: Record<string, string> = {
