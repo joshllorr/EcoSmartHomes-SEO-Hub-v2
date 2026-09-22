@@ -289,6 +289,7 @@ export default function QuickActionsGrid({
                   setTitleMeta(result);
                   // Redirect to the new SEO metadata result page
                   navigate('/title-meta');
+                  onActionClick('title_meta');
                 } catch (err: any) {
                   console.error(err);
                   setErrorMsg(

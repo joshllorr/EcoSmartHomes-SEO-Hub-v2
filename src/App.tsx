@@ -102,11 +102,14 @@ const OrchestratorConsole = lazy(
 const HomeownerGrantFlow = lazy(() => import('./pages/HomeownerGrantFlow'));
 const HomeownerPortal = lazy(() => import('./portal/HomeownerPortal'));
 const PdfViewer = lazy(() => import('./pages/PdfViewer'));
+const TitleMeta = lazy(() => import('./pages/TitleMeta'));
 
 export default function App() {
   const routeToTab: Record<string, string> = {
     '/dashboard': 'dashboard',
     '#/dashboard': 'dashboard',
+    '/title-meta': 'title_meta',
+    '#/title-meta': 'title_meta',
     '/intelligence-console': 'dashboard',
     '#/intelligence-console': 'dashboard',
     '/backlink-ai-engine': 'dashboard',
@@ -251,21 +254,45 @@ export default function App() {
   };
 
   const handleQuickAction = (actionId: string) => {
-    if (actionId === 'writer' || actionId === 'write_article') {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (
+      actionId === 'writer' ||
+      actionId === 'write_article' ||
+      actionId === 'generate_article'
+    ) {
+      setActiveTab('writer');
+    } else if (actionId === 'rewrite_content') {
+      setActiveTab('writer');
+    } else if (actionId === 'optimize_content') {
+      setActiveTab('content_audit');
+    } else if (actionId === 'research_keywords' || actionId === 'keywords') {
+      setActiveTab('keywords');
+    } else if (actionId === 'scout_trends') {
+      setActiveTab('regional_moat');
+    } else if (
+      actionId === 'discover_opps' ||
+      actionId === 'discover_ideas' ||
+      actionId === 'content_ideas'
+    ) {
+      setActiveTab('content_ideas');
+    } else if (actionId === 'build_links' || actionId === 'link_builder') {
+      setActiveTab('link_builder');
+    } else if (actionId === 'connect_cms') {
+      handleToggleTask('connect_cms');
       setActiveTab('writer');
     } else if (actionId === 'crawler') {
       setActiveTab('crawler');
-    } else if (actionId === 'discover_ideas' || actionId === 'content_ideas') {
-      setActiveTab('content_ideas');
-    } else if (actionId === 'link_builder') {
-      setActiveTab('link_builder');
-    } else if (actionId === 'keywords') {
-      setActiveTab('keywords');
     } else if (actionId === 'site_scan') {
       handleSiteHealthScan();
       setActiveTab('audit');
     } else if (actionId === 'audit') {
       setActiveTab('audit');
+    } else if (actionId === 'serp') {
+      setActiveTab('serp');
+    } else if (actionId === 'title_meta') {
+      setActiveTab('title_meta');
     }
   };
 
@@ -677,6 +704,17 @@ export default function App() {
               onOptimizeClick={() => setActiveTab('writer')}
             />
           </div>
+        );
+
+      case 'title_meta':
+        return (
+          <Suspense
+            fallback={
+              <TabLoadingSkeleton title="Loading SEO Title & Meta..." />
+            }
+          >
+            <TitleMeta onBack={() => setActiveTab('dashboard')} />
+          </Suspense>
         );
 
       default:

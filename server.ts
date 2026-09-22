@@ -1566,6 +1566,51 @@ Return ONLY a valid JSON object matching this schema (no markdown code blocks, n
   }
 });
 
+// 1.1. API: Generate SEO Title & Meta Endpoint
+app.post('/api/seo/generate-title-meta', (req, res) => {
+  const { topic = 'Raising BER from G to A', tone = 'professional' } =
+    req.body || {};
+  const cleanTopic = String(topic).trim();
+
+  const slug = cleanTopic
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+
+  let title = `${cleanTopic}: Complete Irish Retrofit Guide 2026`;
+  if (cleanTopic.toLowerCase().includes('ber')) {
+    title = `${cleanTopic}: Step-by-Step Irish SEAI Retrofit Guide 2026`;
+  } else if (cleanTopic.toLowerCase().includes('heat pump')) {
+    title = `${cleanTopic}: 2026 SEAI Grants Up to €12,500 & Savings`;
+  } else if (cleanTopic.toLowerCase().includes('solar')) {
+    title = `${cleanTopic}: SEAI Grants, Costs & Microgeneration 2026`;
+  }
+
+  const meta_description =
+    `Complete Irish homeowner guide to ${cleanTopic}. Discover SEAI 2026 grants up to €12,500 for heat pumps and €50k for One Stop Shop retrofits to cut bills.`.substring(
+      0,
+      158,
+    );
+
+  const alternatives = [
+    `How Irish Homeowners Can Master ${cleanTopic} in 2026`,
+    `SEAI Retrofit Blueprint: Practical Steps for ${cleanTopic}`,
+    `Cost, Grants & Execution Guide: ${cleanTopic} Ireland`,
+    `Achieving Net-Zero: Expert Advisor Roadmap for ${cleanTopic}`,
+  ];
+
+  return res.json({
+    success: true,
+    data: {
+      title,
+      slug: slug.startsWith('guide-') ? slug : `guide-${slug}`,
+      meta_description,
+      alternatives,
+      tone,
+    },
+  });
+});
+
 // 1.2. API: Discover Content Ideas Endpoint (Google Search Grounded)
 app.post('/api/seo/discover-content-ideas', async (req, res) => {
   const {
