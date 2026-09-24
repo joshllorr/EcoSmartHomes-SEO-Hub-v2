@@ -103,6 +103,7 @@ const HomeownerGrantFlow = lazy(() => import('./pages/HomeownerGrantFlow'));
 const HomeownerPortal = lazy(() => import('./portal/HomeownerPortal'));
 const PdfViewer = lazy(() => import('./pages/PdfViewer'));
 const TitleMeta = lazy(() => import('./pages/TitleMeta'));
+const TargetAssetPage = lazy(() => import('./pages/TargetAssetPage'));
 
 export default function App() {
   const routeToTab: Record<string, string> = {
@@ -110,6 +111,14 @@ export default function App() {
     '#/dashboard': 'dashboard',
     '/title-meta': 'title_meta',
     '#/title-meta': 'title_meta',
+    '/solar-pv-payback-estimator': 'target_asset',
+    '#/solar-pv-payback-estimator': 'target_asset',
+    '/limerick-v94-retrofit-grants': 'target_asset',
+    '#/limerick-v94-retrofit-grants': 'target_asset',
+    '/ber-rating-upgrade-guide': 'target_asset',
+    '#/ber-rating-upgrade-guide': 'target_asset',
+    '/heat-pump-cost-calculator': 'target_asset',
+    '#/heat-pump-cost-calculator': 'target_asset',
     '/intelligence-console': 'dashboard',
     '#/intelligence-console': 'dashboard',
     '/backlink-ai-engine': 'dashboard',
@@ -625,6 +634,7 @@ export default function App() {
             site={dashboardState.site}
             onOpenInWriter={handleOpenInWriter}
             onXPUnlock={handleXPUnlock}
+            onNavigateToTab={(tab: string) => setActiveTab(tab)}
           />
         );
 
@@ -714,6 +724,20 @@ export default function App() {
             }
           >
             <TitleMeta onBack={() => setActiveTab('dashboard')} />
+          </Suspense>
+        );
+
+      case 'target_asset':
+        return (
+          <Suspense
+            fallback={
+              <TabLoadingSkeleton title="Loading Interactive Target Asset..." />
+            }
+          >
+            <TargetAssetPage
+              onNavigateToTab={(tab: string) => setActiveTab(tab)}
+              onBack={() => setActiveTab('link_builder')}
+            />
           </Suspense>
         );
 

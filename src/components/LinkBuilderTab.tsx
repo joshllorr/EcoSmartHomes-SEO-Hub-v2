@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDashboardStore } from '../store/useDashboardStore';
+import TargetAssetModal from './TargetAssetModal';
 import {
   Link2,
   Sparkles,
@@ -68,12 +69,14 @@ interface LinkBuilderTabProps {
   site: string;
   onOpenInWriter: (suggestion: string) => void;
   onXPUnlock?: (amount: number) => void;
+  onNavigateToTab?: (tab: string) => void;
 }
 
 export default function LinkBuilderTab({
   site,
   onOpenInWriter,
   onXPUnlock,
+  onNavigateToTab,
 }: LinkBuilderTabProps) {
   const [activeSubTab, setActiveSubTab] = useState<
     'linker' | 'pillar_pages' | 'link_bait'
@@ -84,6 +87,8 @@ export default function LinkBuilderTab({
   const [websiteUrl, setWebsiteUrl] = useState(
     `https://${site.replace(/^https?:\/\//i, '')}/`,
   );
+  const [selectedOpportunityForPreview, setSelectedOpportunityForPreview] =
+    useState<LinkOpportunity | null>(null);
   const [previousSites] = useState<string[]>([
     site.replace(/^https?:\/\//i, ''),
     'ecosmarthomes.ie',
@@ -582,19 +587,33 @@ export default function LinkBuilderTab({
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                  <div className="space-y-1 bg-black/30 p-3 rounded-xl border border-white/5">
-                    <span className="text-slate-400 font-mono text-[10px] uppercase font-bold block">
-                      Target Page on Your Site
-                    </span>
-                    <a
-                      href={op.targetPage}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#34d399] hover:underline font-mono truncate block flex items-center gap-1"
+                  <div className="space-y-1.5 bg-black/30 p-3.5 rounded-xl border border-white/5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 font-mono text-[10px] uppercase font-bold block">
+                        Target Page on Your Site
+                      </span>
+                      <span className="text-[9px] font-mono text-[#34d399] bg-[#34d399]/15 border border-[#34d399]/30 px-2 py-0.5 rounded font-semibold flex items-center gap-1">
+                        <Sparkles size={9} />
+                        <span>Interactive Tool</span>
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedOpportunityForPreview(op)}
+                      className="text-[#34d399] hover:text-emerald-300 hover:underline font-mono truncate flex items-center gap-1.5 text-left w-full cursor-pointer group"
+                      title="Click to preview interactive target page & calculations"
                     >
-                      <span>{op.targetPage}</span>
-                      <ExternalLink size={11} className="shrink-0" />
-                    </a>
+                      <span className="truncate">{op.targetPage}</span>
+                      <ExternalLink
+                        size={11}
+                        className="shrink-0 text-[#34d399] group-hover:scale-110 transition-transform"
+                      />
+                    </button>
+                    <span className="text-[10px] text-slate-400 block">
+                      Click to open live in-hub calculator &amp; outreach angle
+                      preview
+                    </span>
                   </div>
 
                   <div className="space-y-1 bg-black/30 p-3 rounded-xl border border-white/5">
@@ -914,6 +933,14 @@ export default function LinkBuilderTab({
           </div>
         </div>
       )}
+
+      {/* Interactive Target Asset Preview Modal for Client Demo & Outreach */}
+      <TargetAssetModal
+        isOpen={Boolean(selectedOpportunityForPreview)}
+        onClose={() => setSelectedOpportunityForPreview(null)}
+        opportunity={selectedOpportunityForPreview}
+        onNavigateToTab={onNavigateToTab}
+      />
     </div>
   );
 }
